@@ -800,55 +800,55 @@ sub initialise_database {
     ###############################################
     # Create ConfigTb
     print STDERR "Creating ConfigTb table.\n";
-    $dbh->do(q~
-        CREATE TABLE IF NOT EXISTS ConfigTb (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            key TEXT UNIQUE,
-            value TEXT
+    $dbh->do("
+            CREATE TABLE IF NOT EXISTS ConfigTb (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                key TEXT UNIQUE,
+                value TEXT
             );
-        ~) or print STDERR "WARN: Failed to create ConfigTb: " . $dbh->errstr;
+        ") or print STDERR "WARN: Failed to create ConfigTb: " . $dbh->errstr;
 
     print STDERR "ConfigTb created. Populating.\n";
     $dbh->do("
-        INSERT INTO ConfigTb (key, value) VALUES 
-        ('database_schema_version', '1'),
-        ('active_list', '2'),
-        ('cfg_task_pagination_length', '$config->{cfg_task_pagination_length'}),
-        ('cfg_description_short_length', '$config->{cfg_description_short_length'}),
-        ('cfg_list_short_length', '$config->{cfg_list_short_length'}),
-        ('cfg_include_datatable_buttons', '$config->{cfg_include_datatable_buttons'}),
-        ('cfg_header_colour', '$config->{cfg_header_colour'})
-        ";
-        ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
+            INSERT INTO ConfigTb (key, value) VALUES 
+            ('database_schema_version', '1'),
+            ('active_list', '2'),
+            ('cfg_task_pagination_length', '$config->{cfg_task_pagination_length'}),
+            ('cfg_description_short_length', '$config->{cfg_description_short_length'}),
+            ('cfg_list_short_length', '$config->{cfg_list_short_length'}),
+            ('cfg_include_datatable_buttons', '$config->{cfg_include_datatable_buttons'}),
+            ('cfg_header_colour', '$config->{cfg_header_colour'})
+            ;
+        ") or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
 
     ###############################################
     # Create ListsTb
     print STDERR "Creating ListsTb table.\n";
-    $dbh->do(q~
-        CREATE TABLE IF NOT EXISTS ListsTb (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            Title TEXT NOT NULL,
-            Description TEXT,
-            CreatedDate TEXT DEFAULT CURRENT_TIMESTAMP,
-            DeletedDate TEXT,
-            Colour TEXT,
-            IsDefault INTEGER NOT NULL DEFAULT 0
-        );
-        ~) or print STDERR "WARN: Failed to create ListsTb: " . $dbh->errstr;
+    $dbh->do("
+            CREATE TABLE IF NOT EXISTS ListsTb (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Title TEXT NOT NULL,
+                Description TEXT,
+                CreatedDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                DeletedDate TEXT,
+                Colour TEXT,
+                IsDefault INTEGER NOT NULL DEFAULT 0
+            );
+        ") or print STDERR "WARN: Failed to create ListsTb: " . $dbh->errstr;
 
     # Populate with a default list
     print STDERR "ListsTb created. Populating with default lists.\n";
-    $dbh->do(q~
+    $dbh->do("
         INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES 
         (1, 'All Lists', 'View tasks from all lists', 0),
         (2, 'Main', 'Main day to day list', 1) 
         ON CONFLICT(id) DO NOTHING;
-        ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
+        ") or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
 
     ###############################################
     # Create TasksTb
     print STDERR "Creating TasksTb table.\n";
-    $dbh->do(q~
+    $dbh->do("
         CREATE TABLE IF NOT EXISTS TasksTb (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             Status INTEGER DEFAULT 1, -- 1 = Active, 2 = Deferred, 3 = Completed
@@ -859,16 +859,16 @@ sub initialise_database {
             StartDate TEXT,
             CompletedDate TEXT
             );
-        ~) or print STDERR "Failed to create TasksTb: " . $dbh->errstr;
+        ") or print STDERR "Failed to create TasksTb: " . $dbh->errstr;
 
     # Populate with some sample tasks
     print STDERR "TasksTb created. Populating with sample tasks.\n";
-    $dbh->do(q~
+    $dbh->do("
         INSERT INTO TasksTb (Title, Description, ListId) VALUES
         ('Sample Task 1', 'This is a sample task description.', 2),
         ('Sample Task 2', 'Another sample task for demonstration.', 2),
         ('Sample Task 3', 'Yet another task to show how it works.', 2);
-        ~) or print STDERR "WARN: Failed to populate TasksTb: " . $dbh->errstr;
+        ") or print STDERR "WARN: Failed to populate TasksTb: " . $dbh->errstr;
 
     print STDERR "Database initialisation complete, schema version 1.\n";
 
