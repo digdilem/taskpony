@@ -813,7 +813,7 @@ sub initialise_database {
         INSERT INTO ConfigTb (key, value) VALUES 
         ('database_schema_version', '1'),
         ('active_list', '2'),
-        ('cfg_include_datatable_buttons', '$cfg_include_datatable_buttons'),
+        ('cfg_task_pagination_length', '$cfg_task_pagination_length'),
         ('cfg_description_short_length', '$cfg_description_short_length'),
         ('cfg_list_short_length', '$cfg_list_short_length'),
         ('cfg_include_datatable_buttons', '$cfg_include_datatable_buttons'),
