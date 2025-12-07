@@ -809,7 +809,7 @@ sub initialise_database {
         ~) or print STDERR "WARN: Failed to create ConfigTb: " . $dbh->errstr;
 
     print STDERR "ConfigTb created. Populating.\n";
-    $dbh->do(q~
+    $dbh->do("
         INSERT INTO ConfigTb (key, value) VALUES 
         ('database_schema_version', '1'),
         ('active_list', '2'),
@@ -818,7 +818,7 @@ sub initialise_database {
         ('cfg_list_short_length', '$config->{cfg_list_short_length'}),
         ('cfg_include_datatable_buttons', '$config->{cfg_include_datatable_buttons'}),
         ('cfg_header_colour', '$config->{cfg_header_colour'})
-        ;
+        ";
         ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
 
     ###############################################
