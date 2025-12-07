@@ -813,11 +813,11 @@ sub initialise_database {
             INSERT INTO ConfigTb (key, value) VALUES 
             ('database_schema_version', '1'),
             ('active_list', '2'),
-            ('cfg_task_pagination_length', '$config->{cfg_task_pagination_length'}),
-            ('cfg_description_short_length', '$config->{cfg_description_short_length'}),
-            ('cfg_list_short_length', '$config->{cfg_list_short_length'}),
-            ('cfg_include_datatable_buttons', '$config->{cfg_include_datatable_buttons'}),
-            ('cfg_header_colour', '$config->{cfg_header_colour'})
+            ('cfg_task_pagination_length', '$config->{cfg_task_pagination_length}),
+            ('cfg_description_short_length', '$config->{cfg_description_short_length}),
+            ('cfg_list_short_length', '$config->{cfg_list_short_length}),
+            ('cfg_include_datatable_buttons', '$config->{cfg_include_datatable_buttons}),
+            ('cfg_header_colour', '$config->{cfg_header_colour})
             ;
         ") or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
 
