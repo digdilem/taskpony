@@ -1,0 +1,27 @@
+# Systemctl .service file to use for Task Pony
+# To install, ensire taskpony.psgi and taskpony.service (this file) are in /opt/taskpony  (or change all paths)
+# Link this file to the systemd service directory and start and enable it using the command below:
+#      cp /opt/taskpony/taskpony.service /etc/systemd/system
+#      systemctl daemon-reload
+#      systemctl enable --now taskpony
+
+
+[Unit]
+Description=Taskpony
+After=network.target
+After=mariadb.service
+
+[Service]
+ExecStart=/usr/bin/plackup -r -p 5006 /opt/taskpony/taskpony.psgi
+# Following to be used in higher volume production. Starman is multi-threaded.
+#ExecStart=/usr/bin/starman /opt/taskpony/taskpony.psgi
+WorkingDirectory=/opt/taskpony
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+# EOF

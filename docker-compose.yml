@@ -1,0 +1,13 @@
+services:
+
+  taskpony:
+#    image: 'jc21/nginx-proxy-manager:latest'
+    image: taskpony
+    ports:
+      - "5009:5000"
+    volumes:  # The sqlite database for tasks. It will be auto created if it doesn't exist
+      - ./data:/opt/tasks
+    restart: unless-stopped
+
+# End of file
+
