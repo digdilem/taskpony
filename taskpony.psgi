@@ -805,7 +805,7 @@ sub initialise_database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 key TEXT UNIQUE,
                 value TEXT
-            );
+                );
         ~) or print STDERR "WARN: Failed to create ConfigTb: " . $dbh->errstr;
 
     print STDERR "ConfigTb created. Populating.\n";
@@ -813,11 +813,11 @@ sub initialise_database {
             INSERT INTO ConfigTb (key, value) VALUES 
             ('database_schema_version', '1'),
             ('active_list', '2'),
-            ('cfg_task_pagination_length', '$config->{'cfg_task_pagination_length'}),
-            ('cfg_description_short_length', '$config->{'cfg_description_short_length'}),
-            ('cfg_list_short_length', '$config->{'cfg_list_short_length'}),
-            ('cfg_include_datatable_buttons', '$config->{'cfg_include_datatable_buttons'}),
-            ('cfg_header_colour', '$config->{'cfg_header_colour'})
+            ('cfg_task_pagination_length', '$config->{'cfg_task_pagination_length'}'),
+            ('cfg_description_short_length', '$config->{'cfg_description_short_length'}'),
+            ('cfg_list_short_length', '$config->{'cfg_list_short_length'}'),
+            ('cfg_include_datatable_buttons', '$config->{'cfg_include_datatable_buttons'}'),
+            ('cfg_header_colour', '$config->{'cfg_header_colour'}')
             ;
         ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
 
@@ -833,7 +833,7 @@ sub initialise_database {
                 DeletedDate TEXT,
                 Colour TEXT,
                 IsDefault INTEGER NOT NULL DEFAULT 0
-            );
+                );
         ~) or print STDERR "WARN: Failed to create ListsTb: " . $dbh->errstr;
 
     # Populate with a default list
