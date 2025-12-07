@@ -36,7 +36,7 @@ my $db_path = '/opt/taskpony/taskpony.db';    # Path to Sqlite database file int
 my $dbh;                        # Global database handle 
 my $list_id = 1;                # Current list id
 my $list_name;                  # Current list name
-my $debug = 1;                  # Set to 1 to enable debug messages to STDERR
+my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
