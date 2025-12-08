@@ -1,0 +1,2 @@
+# We don't want to sync the database to/from the repo
+taskpony.db
