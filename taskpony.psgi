@@ -516,7 +516,7 @@ my $app = sub {
                 # Loop through config keys and try to get them from param
                 for my $key (keys %$config) {
                     my $new_val;
-                    $new_val = $req->param($key) || $config->{$key};
+                    $new_val = $req->param($key); # || $config->{$key};
 
 
                     if ($new_val) {
