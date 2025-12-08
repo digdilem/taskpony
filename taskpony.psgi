@@ -562,7 +562,7 @@ my $app = sub {
                 <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                    <h5 class="mb-0">$app_title Settings</h5>
+                    <h2 class="mb-0">$app_title Settings</h2>
                     </div>
 
                     <div class="card-body bg-dark text-white">
