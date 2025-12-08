@@ -580,8 +580,8 @@ my $app = sub {
 
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List Name in the Task list before truncating it">
-                                Max length of List name in Tasks list
+                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it">
+                                Max length of popup description in Tasks list
                                 </span>
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_description_short_length}" 
@@ -590,8 +590,8 @@ my $app = sub {
 
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the task title before truncating it in Tasks list">
-                                Max length of Task name in Tasks list
+                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
+                                Max length of List name in Tasks list
                                 </span>
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_list_short_length}" 
