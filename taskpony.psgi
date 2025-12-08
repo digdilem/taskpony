@@ -557,7 +557,7 @@ my $app = sub {
         $retstr .= qq~
             <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-md-6">
+                <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-$config->{cfg_header_colour} text-white">
                     <h5 class="mb-0">$app_title Settings</h5>
@@ -581,7 +581,7 @@ my $app = sub {
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it">
-                                Max length of popup description in Tasks list
+                                Max length of popup task description
                                 </span>
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_description_short_length}" 
