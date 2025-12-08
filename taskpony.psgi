@@ -994,7 +994,17 @@ sub footer { # Return standard HTML footer
                 "info":     true,
                 "searching": false,
                 "pageLength": $config->{cfg_task_pagination_length},
-                dom: 'tiBfp', 
+                ~;
+
+            if ($config->{'cfg_include_datatable_buttons'} eq 'on') {
+#                $retstr .= "dom: 'tiBfp',";
+                $retstr .= "dom: 'ftiBp',";
+                } else {
+#                $retstr .= "dom: 'tifp',";
+                $retstr .= "dom: 'ftip',";
+                }
+
+            $retstr .= qq~
                 buttons: [
                     { extend: 'copy', className: 'btn btn-dark btn-sm' },
                     { extend: 'csv', className: 'btn btn-dark btn-sm' },
