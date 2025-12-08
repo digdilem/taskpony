@@ -1203,7 +1203,8 @@ sub show_tasks {
         # Completed tasks. Show strikethrough title and button to mark uncompleted
         if ($status == 2) { # Completed tasks
             $title_link = qq~
-                <del><a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$a->{'Description'}">~ . html_escape($a->{'Title'}) . qq~</a></del>
+                <del><a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~. 
+                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . qq~">~ . html_escape($a->{'Title'}) . qq~</a></del>
                 ~;
 
             $checkbox .= qq~
@@ -1221,7 +1222,6 @@ sub show_tasks {
                 <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
             </tr>
             ~;
-            print STDERR "TEST $config->{cfg_list_short_length})\n";
     } # End tasks loop
 
     # Close table
