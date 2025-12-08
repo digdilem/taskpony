@@ -1,11 +1,15 @@
+# Example docker-compose.yml file for Taskpony.
+# Copy this to a new directory and run "docker compose up -d" to fetch and run Taskpony on port 5000
+# Updates to Taskpoint can be applied by "docker compose down && docker compose up -d"
+
 services:
 
   taskpony:
-#    image: 'jc21/nginx-proxy-manager:latest'
-    image: taskpony
+    image: 'digdilem/taskpony:latest'
     ports:
-      - "5009:5000"
-    volumes:  # The sqlite database for tasks. It will be auto created if it doesn't exist
+      - "5000:5000"
+    volumes:  
+      # We need a persistent directory mounted in order to save our tasks database. This example uses ./data under this file to do so. It will be autocreated.
       - ./data:/opt/tasks
     restart: unless-stopped
 

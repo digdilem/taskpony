@@ -319,21 +319,22 @@ my $app = sub {
                 <div class="row g-3 mb-5">
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                            <h2 class="mb-0"> Lists Management</h2>
-                        </div>
-                        <table class="table table-dark table-striped">
-                            <thead>
-                                <tr>
-                                    <th>List</th>
-                                    <th>Description</th>
-                                    <th>Active Tasks</th>
-                                    <th>Completed Tasks</th>
-                                    <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="The default list appears at the top of the lists list">Default</span</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                        <tbody>
+                        <div class="card bg-dark border-secondary shadow-sm mb-4">
+                            <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                                <h2 class="mb-0"> Lists Management</h2>
+                            </div>
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>List</th>
+                                        <th>Description</th>
+                                        <th>Active Tasks</th>
+                                        <th>Completed Tasks</th>
+                                        <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="The default list appears at the top of the list picklist">Default</span</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                            <tbody>
         ~;
 
         # Add "All Lists" row
@@ -435,6 +436,7 @@ my $app = sub {
                     </div>
                 </div>
             </div>
+        </div>
         ~;
 
         $html .= footer();

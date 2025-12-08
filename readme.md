@@ -11,6 +11,8 @@
   - [Linux service](#linux-service)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
+- [Schema](#schema)
+- [Web paths](#web-paths)
 - [Credits](#credits)
 - [Licence](#licence)
 
@@ -30,76 +32,78 @@ Taskpony is intended to be easy to install and maintain. We document two ways to
 
 ## Docker
 
-!! TODO
+Install docker and run something like the following. 
+
+`docker run -d -p 5000:5000 digdilem/taskpony:latest`
+
+Within a few seconds, Taskpony should be available to your web browser on port 5000
+
+If you want it to run on a different port, change the *first* 5000 to something else.
 
 ## Docker Compose
 
-!! TODO
+There is an example `docker-compose.yml` file in the archive. 
+
+Copy this to your chosen directory and run: `docker compose up -d`
+
+Taskpony should be available within a few seconds of that command completing on http://localhost:5000 
+
+The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.  Backing up this file will preserve all your tasks, lists and configuration. 
 
 ## Linux Service
 
 Taskpony expects to be installed in `/opt/taskpony`
 
-1. Make the directory and 
+1. Make the directory and pull the files in from Github
 
-!!! TODO
+EITHER: using git clone:
 
+```
+cd /opt
+git clone https://github.com/digdilem/taskpony.git
+```
 
+OR, Download the zip from https://github.com/digdilem/taskpony and unpack into /opt/taskpony
+```
+cd /opt/
+wget https://codeload.github.com/digdilem/taskpony/zip/refs/heads/main
+unzip -a main
+mv taskpony-main taskpony
+```
 
+2. Copy the supplied `taskpony.service` to `/etc/systemd/system` and start and enable it
 
+```
+cp /opt/taskpony/taskpony.service /etc/systemd/system
+systemctl daemon-reload
+systemctl enable --now taskpony
+```
 
+3. Visit port 5000 of that machine with your web browser. Eg, if it's localhost: `http://localhost:5000` and you should see Taskpony initial list.
 
+Or if it's on a machine with an IP of 10.0.0.16, then `http://10.0.0.16:5000` - etc.
 
+If you want to use another port instead of 5000, edit `taskpony.service` and change the plackup line. Eg: `ExecStart=/usr/bin/plackup -r -p 5001 /opt/taskpony/taskpony.psgi`
 
+If you wish to run Taskpony in a directory other than `/opt/taskpony`, then change `$db_path` in `taskpony.psgi` and `WorkingDirectory` in `taskpony.service`
 
+# Documentation
 
+## Concepts: 
+- Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.
+- It should be easy to self host and maintain. 
+- Remain focused on a single user need and not spread into teamware. 
+- Taskpony aspires  to follow the linux design tenet of "Do one thing well"
 
-# Notes and jottings
-
-
-
-Why: I spent a long time trying various self hosted task apps in my search to replace Google Tasks. There are a lot, but I could not find one that suited my specific need, so I wrote this. 
-
-Concepts: 
-A web task system with a small footprint that is easy to install and uses very few resources. It should be usable on mobile devices.
-
-Roadmap:
-Some fairly opinionated decisions here. 
-
-   Task Pony will: 
-    - Remember that it's a simple tasks application.
-    - Be small and fast.
-    - Be easy to self-host, either natively or in Docker.
-    - Remain focused on a single user need. That means no teams, groups or individual user preferences or logins. 
-    - Automatically upgrade schema when required.
-    
-    Taskpony may, in future versions:
-    - Add recurring tasks
-    - Include bootstrap and datatables locally instead of CDN
-    - Support webhooks
-    - Add theming, background images etc.
-    - Support searching.
-    - Support notifications or daily task list announcements.
-    - Be able to export and import tasks.
-
-    Taskpony will not:
-    - Support multiple users, teams. There are plenty of good options if you want this.
-    - Include any features not directly related to tasks or lists of tasks.
-    - Dedicated optional fields like Location, People etc which can be put in Description.
-    - Include kanbans. 
-    - Complicated workflow; single click actions are preferred.
-    - Support https or an auth system. (Use a reverse proxy like NPM, Apache or Cloudflare for security. Don't connect this directly to the internet.)
-    - Use external databases for simplicity. (First version did use MariaDb but was redrafted for SQLite to keep it small and simple)
   
-The Name? 
-    This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. They are compact, tough and hard working. Also, cute.
+## The Name? 
+ - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
 
+# Schema
 
+Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
 
-
-Database schema: Sqlite for simplicity and small footprint. 
-
-/ TasksTb
+/ TasksDb
 
     / TasksTb
         id
@@ -121,20 +125,13 @@ Database schema: Sqlite for simplicity and small footprint.
         IsDefault
         
     /ConfigTb  (Configuration)
+        (Various key pairs of configuration values and persistent internal states. Many configurable on the /config page)
         id
         key
-        value
-        
-        Values:
-            active_project  = list_id
-            database_schema_version = 
-            + Contents of $config hashref, prefixed cfg_
-                
-            
+        value 
+   
     
-    
-    
-### Web Paths:
+# Web Paths:
 
 - /complete  
   - ?task_id=NN
@@ -210,23 +207,19 @@ Database schema: Sqlite for simplicity and small footprint.
   - ?delete_task=NN
     - Delete TasksTb.id=NN
     - Show / default page
-    
 
+  - /padd = Receive form to add a new project
 
-/padd = Form to add a new project
-
-/ust ?task_id=N
-
-
+  - /ust ?task_id=N = Unset a task from completed to active.    
 
 
 # Credits
 
 Taskpony uses:
 
-- Perl 5
-- Plack
-- SQLite
+- [Perl 5](https://www.perl.org/)
+- [Plack](https://plackperl.org/)
+- [SQLite](https://sqlite.org/index.html)
 - [Bootstrap 5](https://getbootstrap.com/)
 - [Datatables](https://datatables.net/)
 

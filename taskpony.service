@@ -12,9 +12,7 @@ After=network.target
 After=mariadb.service
 
 [Service]
-ExecStart=/usr/bin/plackup -r -p 5006 /opt/taskpony/taskpony.psgi
-# Following to be used in higher volume production. Starman is multi-threaded.
-#ExecStart=/usr/bin/starman /opt/taskpony/taskpony.psgi
+ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
 WorkingDirectory=/opt/taskpony
 StandardOutput=inherit
 StandardError=inherit

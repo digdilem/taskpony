@@ -1,4 +1,15 @@
 #!/bin/bash
+# To manually release the public version of Taskpony
+# Run on dev machine
+
+# 1. Fetch latest from local repo
+git pull
+
+# 2. Update github repo
+# # git remote add github https://github.com/digdilem/taskpony
+
+git push github main
+
 # Build the TaskPony Docker image
 
 # To be run on docker-host
