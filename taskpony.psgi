@@ -1218,9 +1218,10 @@ sub show_tasks {
                 <td>$checkbox</td>
                 <td>$title_link</td>
                 <td>$friendly_date</td>
-                <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,1) . qq~</td>
+                <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length})) . qq~</td>
             </tr>
             ~;
+            print STDERR "TEST $config->{cfg_list_short_length})\n";
     } # End tasks loop
 
     # Close table
