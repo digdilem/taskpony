@@ -658,7 +658,7 @@ my $app = sub {
     # End named paths
 
     ###############################################
-    # Default page - If no other paths have taken the request, then land here, list tasks and the quickadd form
+    # Default page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
     # /?delete_task=nn - Delete task nn 
     my $delete_task = $req->param('delete_task') // 0;        
@@ -694,8 +694,7 @@ my $app = sub {
                 </div>
                 <div class="col-md-10">
                     <div class="card card-dark text-white shadow-sm">
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
-       
+                        <div class="card-header bg-$config->{cfg_header_colour} text-white">       
             ~;
 
         # Only show quick input box if we have a specific list selected
@@ -1196,7 +1195,9 @@ sub show_tasks {
                 ~;
 
             $title_link = qq~
-                <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$a->{'Description'}">~ . html_escape($a->{'Title'}) . qq~</a>
+                <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~ .
+                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . 
+                qq~">~ . html_escape($a->{'Title'}) . qq~</a>
                 ~;
             } 
 
