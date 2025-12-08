@@ -609,7 +609,7 @@ my $app = sub {
                                     ~;
 
                                     # Precheck this if set
-                                    if ($config->{'cfg_include_datatable_buttons'} == 'on') { $retstr .= " checked "; }
+                                    if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $retstr .= " checked "; }
 
                                     $retstr .= qq~
                                     >
