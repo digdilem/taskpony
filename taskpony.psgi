@@ -704,10 +704,10 @@ my $app = sub {
             $html .= qq~            
                             <form method="post" action="/add" class="row g-3">
                                 <div class="col-10">
-                                    <input name="Title" class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
+                                    <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                                 </div>
                                 <div class="col-2">
-                                    <button class="btn btn-primary" type="submit">Go</button>   
+                                    <button class="btn btn-primary" type="submit">Add</button>   
                                 </div>
                             </form>
                     ~;
