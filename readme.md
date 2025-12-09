@@ -99,6 +99,13 @@ If you wish to run Taskpony in a directory other than `/opt/taskpony`, then chan
 ## The Name? 
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
 
+# Roadmap
+
+Some things for the future that may, or may not, be added. 
+
+- Basic recurring tasks. Not entirely sure how this will manifest yet
+
+
 # Schema
 
 Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
@@ -119,10 +126,10 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
         id
         Title
         AddedDate
-        DeletedDate
+        DeletedDate = NULL if active, otherwise when deleted
         Description
-        Colour
-        IsDefault
+        Colour = TBC
+        IsDefault = The default list is sorted top of the picklist regardless of its alphaness.
         
     /ConfigTb  (Configuration)
         (Various key pairs of configuration values and persistent internal states. Many configurable on the /config page)

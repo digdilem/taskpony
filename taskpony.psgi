@@ -703,10 +703,10 @@ my $app = sub {
         if ($list_id != 1) { 
             $html .= qq~            
                             <form method="post" action="/add" class="row g-3">
-                                <div class="col-10">
+                                <div class="col-11">
                                     <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                                 </div>
-                                <div class="col-2">
+                                <div class="col-1">
                                     <button class="btn btn-primary" type="submit">Add</button>   
                                 </div>
                             </form>
