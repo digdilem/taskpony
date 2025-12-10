@@ -746,7 +746,7 @@ my $app = sub {
 builder {
     # Enable Static middleware for specific paths, including favicon.ico  Launches main loop on first run.
     enable 'Plack::Middleware::Static', 
-        path => qr{^/(favicon.ico|robots.txt|taskpony-logo.png)},
+        path => qr{^/(favicon.ico|robots.txt|taskpony-logo.png|css/datatables.min.css)},
         root => $static_dir;
 
     $app;
