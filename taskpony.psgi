@@ -40,6 +40,18 @@ my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
+# Some inline SVG fontawesome icons
+my $fa-star-off = '<svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
+                    <path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.2 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.1L288 385.4l-124.3 65.1 23.7-138.1-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"/>
+                    </svg>';
+my $fa-star-on = '<svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
+                    <path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0z"/>
+                    </svg>';
+my $fa-gear = '<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
+                    <path fill="currentColor" d="M487.4 315.7l-42.5-24.6c4.3-23.2 4.3-47 0-70.2l42.5-24.6c12-6.9 17-22.1 11-34.7l-19.8-45.8c-6-12.6-20.3-18.6-33.6-14.6l-49 15.6c-17.9-15.4-38.7-27.3-61.4-35l-9.3-50.7C323.7 10.4 312 0 297.4 0h-54.8c-14.6 0-26.3 10.4-28.2 24.9l-9.3 50.7c-22.7 7.7-43.5 19.6-61.4 35l-49-15.6c-13.2-4-27.6 2-33.6 14.6L41.5 161.6c-6 12.6-.9 27.8 11 34.7L95 220.9c-4.3 23.2-4.3 47 0 70.2l-42.5 24.6c-12 6.9-17 22.1-11 34.7l19.8 45.8c6 12.6 20.3 18.6 33.6 14.6l49-15.6c17.9 15.4 38.7 27.3 61.4 35l9.3 50.7c1.9 14.5 13.6 24.9 28.2 24.9h54.8c14.6 0 26.3-10.4 28.2-24.9l9.3-50.7c22.7-7.7 43.5-19.6 61.4-35l49 15.6c13.2 4 27.6-2 33.6-14.6l19.8-45.8c6-12.5 1-27.7-11-34.6zM256 336c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"/>
+                    </svg>';
+
+
 # Preflight checks
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
@@ -378,18 +390,14 @@ my $app = sub {
             my $is_default_str = qq~
                 <a href="/set_default_list?id=$list->{'id'}">
                 <span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Make this the default list">                
-                    <svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
-                    <path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.2 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.1L288 385.4l-124.3 65.1 23.7-138.1-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"/>
-                    </svg>
+                    $fa-star-off
                 </span>
                 </a>
                 ~;
 
             if ($list->{'IsDefault'} == 1) {
                 $is_default_str = '<span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" title="This is the default list">
-                    <svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
-                    <path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0z"/>
-                    </svg>
+                    $fa-star_on
                 </span>';
                 }
 
@@ -975,16 +983,13 @@ sub header {
     # Add the list selection pulldown
     $retstr .= list_pulldown($list_id);  
 
-    # Use inline SVG for fa-cog instead of linking all of fontawesome.
     $retstr .= qq~
             </div>
             <div>
                 <a href="/lists" class="btn btn-secondary btn">Lists</a> 
                 &nbsp;
                 <a href="/config" class="btn btn-secondary btn">
-                    <svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
-                    <path fill="currentColor" d="M487.4 315.7l-42.5-24.6c4.3-23.2 4.3-47 0-70.2l42.5-24.6c12-6.9 17-22.1 11-34.7l-19.8-45.8c-6-12.6-20.3-18.6-33.6-14.6l-49 15.6c-17.9-15.4-38.7-27.3-61.4-35l-9.3-50.7C323.7 10.4 312 0 297.4 0h-54.8c-14.6 0-26.3 10.4-28.2 24.9l-9.3 50.7c-22.7 7.7-43.5 19.6-61.4 35l-49-15.6c-13.2-4-27.6 2-33.6 14.6L41.5 161.6c-6 12.6-.9 27.8 11 34.7L95 220.9c-4.3 23.2-4.3 47 0 70.2l-42.5 24.6c-12 6.9-17 22.1-11 34.7l19.8 45.8c6 12.6 20.3 18.6 33.6 14.6l49-15.6c17.9 15.4 38.7 27.3 61.4 35l9.3 50.7c1.9 14.5 13.6 24.9 28.2 24.9h54.8c14.6 0 26.3-10.4 28.2-24.9l9.3-50.7c22.7-7.7 43.5-19.6 61.4-35l49 15.6c13.2 4 27.6-2 33.6-14.6l19.8-45.8c6-12.5 1-27.7-11-34.6zM256 336c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"/>
-                    </svg>
+                    $fa-gear;
 
                 </i></a>
             </div>
