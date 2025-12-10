@@ -344,7 +344,7 @@ my $app = sub {
                     <div class="col-md-10">
                         <div class="card bg-dark border-secondary shadow-sm mb-4">
                             <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                                <h2 class="mb-0">Lists Management  <div class="text-end">$fa_list</div></h2>
+                                <h2 class="mb-0">Lists Management  <div class="float-end">$fa_list</div></h2>
                             </div>
                             <table class="table table-dark table-striped">
                                 <thead>
