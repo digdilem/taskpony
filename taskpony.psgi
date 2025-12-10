@@ -935,24 +935,23 @@ sub header {
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
-
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap\@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap\@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
  
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+
+    <script src="/static/js/dataTables.buttons.min.js"></script>
+    <script src="/static/js/buttons.html5.min.js"></script>
+    <script src="/static/js/buttons.print.min.js"></script>
+
+    <script src="/static/js/jszip.min.js"></script>
+    <script src="/static/js/pdfmake.min.js"></script>
+    <script src="/static/js/vfs_fonts.js"></script>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
 
 
     <style>
@@ -972,6 +971,7 @@ sub header {
     # Add the list selection pulldown
     $retstr .= list_pulldown($list_id);  
 
+    # Use inline SVG for fa-cog instead of linking all of fontawesome.
     $retstr .= qq~
             </div>
             <div>
