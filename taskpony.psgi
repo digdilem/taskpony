@@ -757,7 +757,6 @@ builder {
         path => qr{^/static/},
         root => $static_dir;
 
-print STDERR "TEST ($static_dir)($path)\n";
     $app;
     };
 
