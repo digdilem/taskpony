@@ -49,7 +49,7 @@ config_load();                  # Load saved config values
 
 my $static_dir = catdir($FindBin::Bin, 'static');
 
-print STDERR "TEST ($FindBin::Bin)\n";
+print STDERR "TEST ($FindBin::Bin)  ($static_dir)\n";
 
 my $app = sub {
     my $env = shift; 
