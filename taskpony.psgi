@@ -743,15 +743,22 @@ my $app = sub {
     return $res->finalize;
     };   # End main loop, pages and paths handling
 
+# builder {
+#     # Enable Static middleware for specific paths, including favicon.ico  Launches main loop on first run.
+#     enable 'Plack::Middleware::Static', 
+#         path => qr{^/(favicon.ico|robots.txt|taskpony-logo.png|/css/datatables.min.css)},
+#         root => $static_dir;
+
+#     $app;
+#     };
 builder {
     # Enable Static middleware for specific paths, including favicon.ico  Launches main loop on first run.
     enable 'Plack::Middleware::Static', 
-        path => qr{^/(favicon.ico|robots.txt|taskpony-logo.png|/css/datatables.min.css)},
+        path => qr{^/static/},
         root => $static_dir;
 
     $app;
     };
-
 
 ###############################################
 # Functions
