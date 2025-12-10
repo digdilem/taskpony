@@ -40,7 +40,7 @@ my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
-# Some inline SVG fontawesome icons
+# Some inline SVG fontawesome icons to prevent including the entire svg map
 my $fa_star_off = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
                     <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.2 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.1L288 385.4l-124.3 65.1 23.7-138.1-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"/>
@@ -56,6 +56,10 @@ my $fa_gear = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" 
 my $fa_list = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
                     <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path fill="currentColor" d="M152 304c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zm0-96c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zm0-96c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zM504 256c4.4 0 8-3.6 8-8V96c0-26.5-21.5-48-48-48H48C21.5 48 0 69.5 0 96v320c0 26.5 21.5 48 48 48h184c4.4 0 8-3.6 8-8s-3.6-8-8-8H48c-17.6 0-32-14.4-32-32V96c0-17.6 14.4-32 32-32h416c17.6 0 32 14.4 32 32v152c0 4.4 3.6 8 8 8zM346.5 431l-73.9-73.9c-6.2-6.2-16.4-6.2-22.6 0l-35.3 35.3c-6.2 6.2-6.2 16.4 0 22.6l96 96c6.2 6.2 16.4 6.2 22.6 0l128-128c6.2-6.2 6.2-16.4 0-22.6l-35.3-35.3c-6.2-6.2-16.4-6.2-22.6 0L346.5 431z"/>
+                    </svg>~;
+my $fa_rotate_left = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
+                    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                    <path fill="currentColor" d="M500.33 230.1c-11.7-10.8-30.2-9.8-41 2.2l-48.6 52.4c-10.8 11.7-9.8 30.2 2.2 41 11.7 10.8 30.2 9.8 41-2.2l48.6-52.4c10.8-11.7 9.8-30.2-2.2-41zM256 48c-114.9 0-208 93.1-208 208s93.1 208 208 208c99.7 0 183.9-68.3 202.3-160h-54.3c-8.8 0-16-7.2-16-16s7.2-16 16-16h88c8.8 0 16 7.2 16 16v88c0 8.8-7.2 16-16 16s-16-7.2-16-16v-41.3C426.5 383.9 346.5 448 256 448 141.1 448 48 354.9 48 240S141.1 32 256 32c82.7 0 154.3 46.7 189.2 116.5 4.2 7.3 13.4 10.1 20.7 5.8s10.1-13.4 5.8-20.7C409.6 61.9 338.2 0 256 0 114.6 0 0 114.6 0 256s114.6 256 256 256c100.3 0 187.6-58.1 228.1-144h-55.1c-8.8 0-16-7.2-16-16s7.2-16 16-16h88c8.8 0 16 7.2 16 16v88c0 8.8-7.2 16-16 16s-16-7.2-16-16v-46.1C445.7 405.7 359.4 464 256 464 114.6 464 0 349.4 0 208S114.6-48 256-48c82.7 0 154.3 46.7 189.2 116.5 4.2 7.3 13.4 10.1 20.7 5.8s10.1-13.4 5.8-20.7C409.6-186.1 338.2-248 256-248z"/>
                     </svg>~;
 
 
@@ -1255,7 +1259,7 @@ sub show_tasks {
 
             $checkbox .= qq~
                 <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-secondary" title="Mark as uncompleted">
-                <i class="fa-solid fa-rotate-left"></i>
+                $fa_rotate_left
                 </a>
                 ~;
             }
