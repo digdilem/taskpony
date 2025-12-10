@@ -396,9 +396,10 @@ my $app = sub {
                 ~;
 
             if ($list->{'IsDefault'} == 1) {
-                $is_default_str = '<span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" title="This is the default list">
-                    $fa_star_on
-                </span>';
+                $is_default_str = qq~
+                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" title="This is the default list">
+                        $fa_star_on
+                    </span>~;
                 }
 
             $html .= qq~
