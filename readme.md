@@ -1,6 +1,12 @@
 # Taskpony
 > "A small and simple self-hosted personal tasks organiser"
 
+# Features
+
+Taskpony is intended to be small, easy to install and operate with a clean and intuitive interface. It wants to do one thing well - add, display and complete tasks. 
+
+Taskpony supports unlimited Tasks organised within unlimited Lists, and free movement of tasks within Lists. 
+
 ## Table of contents
 
 - [Features](#features)
@@ -15,12 +21,6 @@
 - [Web paths](#web-paths)
 - [Credits](#credits)
 - [Licence](#licence)
-
-# Features
-
-Taskpony is intended to be small, easy to install and operate with a clean and intuitive interface. It wants to do one thing well - add, display and complete tasks. 
-
-This means that there is a design choice to not add features that detract from this, such as Teams, Kanbans, integration with other software using caldav and so on. There are plenty of other good options that do offer these features, but I couldn't find something simple that did what I wanted. So I wrote this.
 
 # Security 
 
@@ -92,9 +92,8 @@ If you wish to run Taskpony in a directory other than `/opt/taskpony`, then chan
 ## Concepts: 
 - Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.
 - It should be easy to self host and maintain. 
-- Remain focused on a single user need and not spread into teamware. 
 - Taskpony aspires  to follow the linux design tenet of "Do one thing well"
-
+- Remain focused on a single user need and not spread into teamware. There are plenty of good foss alternatives that do offer team support, Kanbans, integration with other softare using caldavs and so on. There are few single-user options like this. I couldn't find any that suited my own needs, or I wouldn't have written Taskpony!
   
 ## The Name? 
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
@@ -103,7 +102,10 @@ If you wish to run Taskpony in a directory other than `/opt/taskpony`, then chan
 
 Some things for the future that may, or may not, be added. 
 
-- Basic recurring tasks. Not entirely sure how this will manifest yet
+- Basic recurring tasks. Not entirely sure how this will manifest yet.
+- Automated deletion of old and completed tasks more than NN days since completion.
+- Add an icon to each List from Fontawesome
+- Move CDN resources to included. 
 
 
 # Schema
