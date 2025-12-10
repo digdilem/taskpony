@@ -42,15 +42,19 @@ my $show_completed = 0;         # If set to 1, show completed tasks instead of a
 
 # Some inline SVG fontawesome icons
 my $fa_star_off = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
+                    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path fill="currentColor" d="M528.1 171.5L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.2 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6zM388.6 312.3l23.7 138.1L288 385.4l-124.3 65.1 23.7-138.1-100.6-98 139-20.2 62.2-126 62.2 126 139 20.2-100.6 98z"/>
                     </svg>~;
 my $fa_star_on = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 576 512" width="24" height="24">
+                    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0z"/>
                     </svg>~;
 my $fa_gear = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
+                    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path fill="currentColor" d="M487.4 315.7l-42.5-24.6c4.3-23.2 4.3-47 0-70.2l42.5-24.6c12-6.9 17-22.1 11-34.7l-19.8-45.8c-6-12.6-20.3-18.6-33.6-14.6l-49 15.6c-17.9-15.4-38.7-27.3-61.4-35l-9.3-50.7C323.7 10.4 312 0 297.4 0h-54.8c-14.6 0-26.3 10.4-28.2 24.9l-9.3 50.7c-22.7 7.7-43.5 19.6-61.4 35l-49-15.6c-13.2-4-27.6 2-33.6 14.6L41.5 161.6c-6 12.6-.9 27.8 11 34.7L95 220.9c-4.3 23.2-4.3 47 0 70.2l-42.5 24.6c-12 6.9-17 22.1-11 34.7l19.8 45.8c6 12.6 20.3 18.6 33.6 14.6l49-15.6c17.9 15.4 38.7 27.3 61.4 35l9.3 50.7c1.9 14.5 13.6 24.9 28.2 24.9h54.8c14.6 0 26.3-10.4 28.2-24.9l9.3-50.7c22.7-7.7 43.5-19.6 61.4-35l49 15.6c13.2 4 27.6-2 33.6-14.6l19.8-45.8c6-12.5 1-27.7-11-34.6zM256 336c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"/>
                     </svg>~;
 my $fa_list = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
+                    <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                     <path fill="currentColor" d="M152 304c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zm0-96c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zm0-96c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zM504 256c4.4 0 8-3.6 8-8V96c0-26.5-21.5-48-48-48H48C21.5 48 0 69.5 0 96v320c0 26.5 21.5 48 48 48h184c4.4 0 8-3.6 8-8s-3.6-8-8-8H48c-17.6 0-32-14.4-32-32V96c0-17.6 14.4-32 32-32h416c17.6 0 32 14.4 32 32v152c0 4.4 3.6 8 8 8zM346.5 431l-73.9-73.9c-6.2-6.2-16.4-6.2-22.6 0l-35.3 35.3c-6.2 6.2-6.2 16.4 0 22.6l96 96c6.2 6.2 16.4 6.2 22.6 0l128-128c6.2-6.2 6.2-16.4 0-22.6l-35.3-35.3c-6.2-6.2-16.4-6.2-22.6 0L346.5 431z"/>
                     </svg>~;
 
