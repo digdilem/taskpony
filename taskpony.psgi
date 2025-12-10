@@ -47,8 +47,8 @@ config_load();                  # Load saved config values
 ####################################
 # Start main loop
 
-my $static_dir = catdir($FindBin::Bin, 'static');
-#my $static_dir = catdir($FindBin::Bin);
+#my $static_dir = catdir($FindBin::Bin, 'static');
+my $static_dir = catdir($FindBin::Bin);
 
 #print STDERR "TEST ($FindBin::Bin)  ($static_dir)\n";
 
@@ -969,7 +969,7 @@ sub header {
     <div class="container py-1">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/taskpony-logo.png" width="85"> $app_title</a> / 
+                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a> / 
                 ~;
     
     # Add the list selection pulldown
