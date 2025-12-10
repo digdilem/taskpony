@@ -759,7 +759,6 @@ builder {
     enable 'Plack::Middleware::Static', 
         path => qr{^/static/},
         root => $static_dir;
-
     $app;
     };
 
