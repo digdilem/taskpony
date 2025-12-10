@@ -47,9 +47,10 @@ config_load();                  # Load saved config values
 ####################################
 # Start main loop
 
-my $static_dir = catdir($FindBin::Bin, 'static');
+#my $static_dir = catdir($FindBin::Bin, 'static');
+my $static_dir = catdir($FindBin::Bin);
 
-print STDERR "TEST ($FindBin::Bin)  ($static_dir)\n";
+#print STDERR "TEST ($FindBin::Bin)  ($static_dir)\n";
 
 my $app = sub {
     my $env = shift; 
