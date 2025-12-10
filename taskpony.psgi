@@ -1008,7 +1008,7 @@ sub footer { # Return standard HTML footer
 
     $retstr .= qq~
         <footer class="mt-auto text-white-50 text-center">
-            <p>$app_title v.$app_version by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
+            <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
         </footer>
         </div>
 
