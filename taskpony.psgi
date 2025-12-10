@@ -344,7 +344,7 @@ my $app = sub {
                     <div class="col-md-10">
                         <div class="card bg-dark border-secondary shadow-sm mb-4">
                             <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                                <h2 class="mb-0"> $fa_list Lists Management</h2>
+                                <h2 class="mb-0">Lists Management  <div class="text-end">$fa_list</div></h2>
                             </div>
                             <table class="table table-dark table-striped">
                                 <thead>
@@ -586,7 +586,7 @@ my $app = sub {
                 <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                    <h2 class="mb-0">$app_title Settings</h2>
+                    <h2 class="mb-0">$app_title Settings <div class="text-end">$fa_gear</div></h2>
                     </div>
 
                     <div class="card-body bg-dark text-white">
@@ -998,7 +998,7 @@ sub header {
                 <a href="/lists" class="btn btn-secondary btn">Lists</a> 
                 &nbsp;
                 <a href="/config" class="btn btn-secondary btn">
-                    $fa_gear;
+                    $fa_gear
                 </i></a>
             </div>
             </h3>
