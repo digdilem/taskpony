@@ -940,7 +940,7 @@ sub header {
 
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 
-    <script src="/static/js/jquery-3.7.1.min"></script>
+    <script src="/static/js/jquery-3.7.1.min.css"></script>
     <script src="/static/js/datatables.min.js"></script>
 
     <!-- <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> -->
