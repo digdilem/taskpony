@@ -49,6 +49,8 @@ config_load();                  # Load saved config values
 
 my $static_dir = catdir($FindBin::Bin, 'static');
 
+print STDERR "TEST ($FindBin::Bin)\n";
+
 my $app = sub {
     my $env = shift; 
     my $req = Plack::Request->new($env);
