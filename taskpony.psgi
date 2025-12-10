@@ -390,7 +390,7 @@ my $app = sub {
             my $is_default_str = qq~
                 <a href="/set_default_list?id=$list->{'id'}">
                 <span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Make this the default list">                
-                    $fa_star-off
+                    $fa_star_off
                 </span>
                 </a>
                 ~;
