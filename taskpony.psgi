@@ -288,7 +288,7 @@ my $app = sub {
                             <div class="float-end">
                                 <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
                                 &nbsp;&nbsp;
-                                <a class="btn btn-danger" href="/?delete_task=$task_id">Delete</a>
+                                <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
                             </div>
                         </div>
                         </form>
