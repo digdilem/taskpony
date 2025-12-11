@@ -69,10 +69,7 @@ config_load();                  # Load saved config values
 ####################################
 # Start main loop
 
-#my $static_dir = catdir($FindBin::Bin, 'static');
 my $static_dir = catdir($FindBin::Bin);
-
-#print STDERR "TEST ($FindBin::Bin)  ($static_dir)\n";
 
 my $app = sub {
     my $env = shift; 
@@ -1089,7 +1086,14 @@ sub list_pulldown {
 
     # Redirect to root with ?lid=<id> when selection changes (no enclosing form required)
     my $html = qq~
-        <select name="lid" class="form-select form-select-sm" style="width:auto; display:inline-block; margin-left:10px;" onchange="window.location='/?lid=' + encodeURIComponent(this.value)">
+        <select name="lid" 
+            class="form-select form-select-sm" 
+            style="width:auto; display:inline-block; margin-left:10px;" 
+            onchange="
+                localStorage.setItem('list_id', this.value);
+                window.location='/?lid=' + encodeURIComponent(this.value);
+                "
+            ">
         ~;
 
     # Get lists from ListsTb
