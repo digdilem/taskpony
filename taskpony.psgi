@@ -115,19 +115,24 @@ my $app = sub {
     ###############################################
     # Set TASK nn as Status 2 in TasksTb (Completed)
     if ($req->path eq "/complete") {
-        if ($req->method && uc($req->method) eq 'POST') {
-            my $task_id = $req->param('task_id') // 0;
-            
-            if ($task_id > 0) {
-                my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?');
-                eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
-                debug("Task $task_id marked as complete");
-                add_alert("Task #$task_id marked as completed.");
-                }
-            }
+
+        # Accept task_id from GET or POST
+        my $task_id = $req->param('task_id') // 0;
+
+        if ($task_id > 0) {
+            my $sth = $dbh->prepare(
+                'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+            );
+            eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
+
+            debug("Task $task_id marked as complete");
+            add_alert("Task #$task_id marked as completed");
+        }
+
+        # Always redirect
         $res->redirect('/');
         return $res->finalize;
-        }
+    }
     # End /complete
 
     ###############################################
