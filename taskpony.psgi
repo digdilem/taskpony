@@ -1087,13 +1087,7 @@ sub list_pulldown {
     # Redirect to root with ?lid=<id> when selection changes (no enclosing form required)
     my $html = qq~
         <select name="lid" 
-            class="form-select form-select-sm" 
-            style="width:auto; display:inline-block; margin-left:10px;" 
-            onchange="
-                localStorage.setItem('list_id', this.value);
-                window.location='/?lid=' + encodeURIComponent(this.value);
-                "
-            ">
+            class="form-select form-select-sm" style="width:auto; display:inline-block; margin-left:10px;" onchange="window.location='/?lid=' + encodeURIComponent(this.value)">
         ~;
 
     # Get lists from ListsTb
