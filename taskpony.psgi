@@ -607,36 +607,6 @@ my $app = sub {
 
                             <input type="hidden" name="save_config" value="true">
 
-                            <!-- NUMBER ROW cfg_task_pagination_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating">
-                                Number of Tasks to show on each page
-                                </span>
-                                <input type="number" class="form-control w-50" 
-                                    value="$config->{cfg_task_pagination_length}" 
-                                    name="cfg_task_pagination_length">
-                            </div>
-
-                            <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it">
-                                Max length of popup task description
-                                </span>
-                                <input type="number" class="form-control w-50" 
-                                    value="$config->{cfg_description_short_length}" 
-                                    name="cfg_description_short_length">
-                            </div>
-
-                            <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
-                                Max length of List name in Tasks list
-                                </span>
-                                <input type="number" class="form-control w-50" 
-                                    value="$config->{cfg_list_short_length}" 
-                                    name="cfg_list_short_length">
-                            </div>
-
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
@@ -693,6 +663,36 @@ my $app = sub {
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- NUMBER ROW cfg_task_pagination_length -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label" data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating">
+                                Number of Tasks to show on each page
+                                </span>
+                                <input type="number" class="form-control w-50" 
+                                    value="$config->{cfg_task_pagination_length}" 
+                                    name="cfg_task_pagination_length">
+                            </div>
+
+                            <!-- NUMBER ROW cfg_description_short_length -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it">
+                                Max length of popup task description
+                                </span>
+                                <input type="number" class="form-control w-50" 
+                                    value="$config->{cfg_description_short_length}" 
+                                    name="cfg_description_short_length">
+                            </div>
+
+                            <!-- NUMBER ROW cfg_description_short_length -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
+                                Max length of List name in Tasks list
+                                </span>
+                                <input type="number" class="form-control w-50" 
+                                    value="$config->{cfg_list_short_length}" 
+                                    name="cfg_list_short_length">
+                            </div>                            
 
                             <div class="text-end">
                                 <button class="btn btn-primary">Save Settings</button>
