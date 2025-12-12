@@ -1197,7 +1197,7 @@ sub list_pulldown {
             $list_count = single_db_value( 'SELECT COUNT(*) FROM TasksTb WHERE Status = 1' ) // 0;
             $title = 'All Lists';
             }
-        $html .= qq~<option value="$row->{'id'}"$selected>$title ($list_count tasks)</option>~;
+        $html .= qq~<option value="$row->{'id'}"$selected>$title ($list_count tasks)</option>\n~;
         }
 
     $html .= '</select>';
