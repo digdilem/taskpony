@@ -60,12 +60,8 @@ my $fa_list = $fa_header . q~
 my $fa_rotate_left = $fa_header . q~
                     <path fill="currentColor" d="M88 256L232 256C241.7 256 250.5 250.2 254.2 241.2C257.9 232.2 255.9 221.9 249 215L202.3 168.3C277.6 109.7 386.6 115 455.8 184.2C530.8 259.2 530.8 380.7 455.8 455.7C380.8 530.7 259.3 530.7 184.3 455.7C174.1 445.5 165.3 434.4 157.9 422.7C148.4 407.8 128.6 403.4 113.7 412.9C98.8 422.4 94.4 442.2 103.9 457.1C113.7 472.7 125.4 487.5 139 501C239 601 401 601 501 501C601 401 601 239 501 139C406.8 44.7 257.3 39.3 156.7 122.8L105 71C98.1 64.2 87.8 62.1 78.8 65.8C69.8 69.5 64 78.3 64 88L64 232C64 245.3 74.7 256 88 256z"/>
                     </svg>~;
-# my $fa_info = $fa_header . q~
-#                     <path fill="red" d="M272 112C272 85.5 293.5 64 320 64C346.5 64 368 85.5 368 112C368 138.5 346.5 160 320 160C293.5 160 272 138.5 272 112zM224 256C224 238.3 238.3 224 256 224L320 224C337.7 224 352 238.3 352 256L352 512L384 512C401.7 512 416 526.3 416 544C416 561.7 401.7 576 384 576L256 576C238.3 576 224 561.7 224 544C224 526.3 238.3 512 256 512L288 512L288 288L256 288C238.3 288 224 273.7 224 256z"/>
-#                     </svg>~;
-
 my $fa_info = $fa_header . q~
-                    <path fill="red" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z"/>
+                    <path fill="currentColor" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z"/>
                     </svg>~;
 
 # Preflight checks
@@ -618,7 +614,7 @@ my $app = sub {
                                     Display Search Box
                                     <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table"> 
                                         $fa_info
-                                        </span> 
+                                    </span> 
                                 </span>
                                 <div class="form-check form-switch m-0">
                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
@@ -634,8 +630,11 @@ my $app = sub {
 
                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
-                                Display export buttons
+                                <span class="config-label">                                    
+                                    Display export buttons
+                                    <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
+                                        $fa_info
+                                    </span>
                                 </span>
                                 <div class="form-check form-switch m-0">
                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_buttons" 
