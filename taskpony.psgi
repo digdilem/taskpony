@@ -658,6 +658,8 @@ my $app = sub {
                                     </span>
                                 </span>
 
+                                <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
+                                
                                 <div class="mb-3">
                                     <select class="form-select" id="themeColor" name="cfg_header_colour">                                        
                                         <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
