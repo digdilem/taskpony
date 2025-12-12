@@ -682,7 +682,7 @@ my $app = sub {
                                         $fa_info
                                     </span>
                                 </span>
-                                
+
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_task_pagination_length}" 
                                     name="cfg_task_pagination_length">
@@ -690,9 +690,13 @@ my $app = sub {
 
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it">
-                                Max length of popup task description
+                                <span class="config-label">                                    
+                                    Max length of popup task description
+                                    <span data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it">
+                                        $fa_info
+                                    </span>
                                 </span>
+
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_description_short_length}" 
                                     name="cfg_description_short_length">
@@ -700,9 +704,13 @@ my $app = sub {
 
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
-                                Max length of List name in Tasks list
+                                <span class="config-label">                                    
+                                    Max length of List name in Tasks list
+                                    <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
+                                        $fa_info
+                                    </span>
                                 </span>
+
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_list_short_length}" 
                                     name="cfg_list_short_length">
