@@ -1017,14 +1017,6 @@ sub header {
         .muted { color: rgba(255,255,255,0.65); }
     </style>
 
-  <style>
-    .icon {
-      width: 1em;
-      height: 1em;
-      vertical-align: -0.125em;
-    }
-  </style>    
-
     </head>
     <body class="text-white">
     <div class="container py-1">
