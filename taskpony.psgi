@@ -42,7 +42,7 @@ my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map
-my $fa_header = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="12" height="12">
+my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
                 <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                 ~;
 my $fa_star_off = $fa_header . q~
@@ -63,6 +63,7 @@ my $fa_rotate_left = $fa_header . q~
 my $fa_info = $fa_header . q~
                     <path fill="currentColor" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z"/>
                     </svg>
+
                     ~;
 
 # Preflight checks
@@ -1015,6 +1016,14 @@ sub header {
         .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
         .muted { color: rgba(255,255,255,0.65); }
     </style>
+
+  <style>
+    .icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+    }
+  </style>    
 
     </head>
     <body class="text-white">
