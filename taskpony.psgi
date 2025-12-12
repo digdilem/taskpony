@@ -24,6 +24,7 @@ our $config = {
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
+    cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
@@ -648,6 +649,27 @@ my $app = sub {
                                     >
                                 </div>
                             </div>
+
+                            <!-- TOGGLE ROW cfg_export_all_cols -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label">                                    
+                                    Export date and list
+                                    <span data-bs-toggle="tooltip" title="When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task">
+                                        $fa_info
+                                    </span>
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_export_all_cols" 
+                                    id="autoUpdateToggle"
+                                    ~;
+
+                                    # Precheck this if set
+                                    if ($config->{'cfg_export_all_cols'} eq 'on') { $retstr .= " checked "; }
+
+                                    $retstr .= qq~
+                                    >
+                                </div>
+                            </div>                            
 
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
