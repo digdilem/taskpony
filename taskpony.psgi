@@ -594,7 +594,7 @@ my $app = sub {
         ###############################################
         # Show configuration page
         my $retstr .= header();
-print "DEBUG ($config->{'cfg_export_all_cols'})\n";
+print STDERR "DEBUG ($config->{'cfg_export_all_cols'})\n";
         $retstr .= qq~
             <div class="container py-5">
             <div class="row justify-content-center">
