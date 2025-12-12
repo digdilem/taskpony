@@ -796,13 +796,12 @@ my $app = sub {
                             </form>
                     ~;
             } else { # Show banner for all lists instead
-                if ($show_completed == 1) { 
+                if ($show_completed == 1) {
                     $html .= "Showing completed tasks from all lists";
                     } else {
                     $html .= "Showing active tasks from all lists";
                     }
-                }
-            } # End all lists quick add check
+                } # End all lists quick add check
 
         $html .= qq~
                         </div>
