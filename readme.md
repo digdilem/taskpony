@@ -93,19 +93,24 @@ If you wish to run Taskpony in a directory other than `/opt/taskpony`, then chan
 # FAQ
 
 > Is there an Android or IOS app?
+
 Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)
 
 > When will support for multiple users, groups or teams be added?
+
 Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with this ability if it is important to you.
 
 > How can I tell you about bugs or suggest improvements? 
+
 Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues)
 
 > How do I add HTTPS? 
-Use a reverse proxy - see #security
+
+Use a reverse proxy - see [#security](#security)
 
 > How do I protect my Taskpony with a username and password?
-Use a reverse proxy - see #security
+
+Use a reverse proxy - see [#security](#security)
 
 
 
