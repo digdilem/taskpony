@@ -653,7 +653,7 @@ my $app = sub {
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Title Background Colour
-                                    <span data-bs-toggle="tooltip" title="Select colour for title background">
+                                    <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
                                         $fa_info
                                     </span>
                                 <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
@@ -676,9 +676,13 @@ my $app = sub {
 
                             <!-- NUMBER ROW cfg_task_pagination_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating">
-                                Number of Tasks to show on each page
+                                <span class="config-label">                                    
+                                    Number of Tasks to show on each page
+                                    <span data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating">
+                                        $fa_info
+                                    </span>
                                 </span>
+                                
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_task_pagination_length}" 
                                     name="cfg_task_pagination_length">
