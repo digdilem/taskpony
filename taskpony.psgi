@@ -42,7 +42,7 @@ my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map
-my $fa_header = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="24" height="24">
+my $fa_header = q~<svg aria-hidden="true" focusable="false" viewBox="0 0 256 256" width="24" height="24">
                 <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                 ~;
 my $fa_star_off = $fa_header . q~
