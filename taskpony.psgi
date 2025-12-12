@@ -627,6 +627,23 @@ my $app = sub {
                                     name="cfg_description_short_length">
                             </div>
 
+                            <!-- TOGGLE ROW cfg_include_datatable_search -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
+                                Display Search Box
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
+                                    id="autoUpdateToggle"
+                                    ~;
+                                    # Precheck this if set
+                                    if ($config->{'cfg_include_datatable_search'} eq 'on') { $retstr .= " checked "; }
+
+                                    $retstr .= qq~
+                                    >
+                                </div>
+                            </div>                            
+
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
@@ -655,23 +672,6 @@ my $app = sub {
                                 </div>
                             </div>
 
-                            <!-- TOGGLE ROW cfg_include_datatable_search -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
-                                Display Search Box
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
-                                    id="autoUpdateToggle"
-                                    ~;
-                                    # Precheck this if set
-                                    if ($config->{'cfg_include_datatable_search'} eq 'on') { $retstr .= " checked "; }
-
-                                    $retstr .= qq~
-                                    >
-                                </div>
-                            </div>
-
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label" data-bs-toggle="tooltip" title="Select colour for title background">
@@ -693,7 +693,7 @@ my $app = sub {
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="text-end">
                                 <button class="btn btn-primary">Save Settings</button>
                             </div>
