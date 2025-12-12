@@ -64,7 +64,7 @@ my $fa_rotate_left = q~<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 
                     </svg>~;
 
 # Preflight checks
-print STDERR "\n+-----Welcome to Taskpony ----------------+\n";
+print STDERR "\n+-----Welcome to Taskpony! ---------------+\n";
 print STDERR "|  [X] Install Taskpony                   |\n";
 print STDERR "|  [ ] Do the thing                       |\n";
 print STDERR "|  [ ] Buy milk                           |\n";
@@ -664,7 +664,7 @@ my $app = sub {
                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
                                     id="autoUpdateToggle"
                                     ~;
-
+print STDERR "DEBUG: ($config->{'cfg_include_datatable_search'})\n";
                                     # Precheck this if set
                                     if ($config->{'cfg_include_datatable_search'} eq 'true') { $retstr .= " checked "; }
 
