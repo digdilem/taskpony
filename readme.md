@@ -102,11 +102,10 @@ If you wish to run Taskpony in a directory other than `/opt/taskpony`, then chan
 
 Some things for the future that may, or may not, be added. 
 
-- Basic recurring tasks. Not entirely sure how this will manifest yet.
-- Automated deletion of old and completed tasks more than NN days since completion.
-- Add an icon to each List from Fontawesome
-- Move CDN resources to included. 
-
+- (Probably) Automated deletion of old and completed tasks more than NN days since completion.
+- (Probably) Do some basic stats. Number of active and completed tasks. Tasks completed today, this week, etc.
+- (Maybe) Basic recurring tasks. Not entirely sure how this will manifest yet.
+- (Maybe) Add an icon to each List from Fontawesome
 
 # Schema
 

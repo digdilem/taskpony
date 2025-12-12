@@ -436,7 +436,7 @@ my $app = sub {
                                         <form method="post" action="/lists" style="display:inline;">
                                             <input type="hidden" name="action" value="delete" />
                                             <input type="hidden" name="list_id" value="$list->{'id'}" />
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this list?');">Delete</button>                                            
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Permanently delete this list?');">Delete</button>                                            
                                         </form>
                                     </td>
                                 </tr>
