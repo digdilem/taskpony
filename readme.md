@@ -45,11 +45,11 @@ If you want it to run on a different port, change the *first* 5000 to something 
 
 ## Docker Compose
 
-There is an example `docker-compose.yml` file in the archive. 
+There is an example `docker-compose.yml` file in the repository. 
 
-Copy this to your chosen directory and run: `docker compose up -d`
+Copy this to your chosen directory, inspect and adjust if it desired, and run: `docker compose up -d`
 
-Taskpony should be available within a few seconds of that command completing on http://localhost:5000 
+On completion, Taskpony should be available on http://localhost:5000 
 
 The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.  Backing up this file will preserve all your tasks, lists and configuration. 
 
@@ -100,6 +100,13 @@ Never, sorry. This is a hard design choice to keep Taskpony small and simple and
 
 > How can I tell you about bugs or suggest improvements? 
 Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues)
+
+> How do I add HTTPS? 
+Use a reverse proxy - see #security
+
+> How do I protect my Taskpony with a username and password?
+Use a reverse proxy - see #security
+
 
 
 # Documentation
