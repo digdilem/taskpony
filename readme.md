@@ -5,7 +5,9 @@
 
 Taskpony is intended to be small, easy to install and operate with a clean and intuitive interface. It wants to do one thing well - add, display and complete tasks. 
 
-Taskpony supports unlimited Tasks organised within unlimited Lists, and free movement of tasks within Lists. 
+Taskpony supports unlimited Tasks organised within unlimited Lists, and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
+
+No phone app required. The interface is responsive and scales well to phones. There are no trackers and does not require access to the internet to function; all required files are contained.
 
 ## Table of contents
 
@@ -15,6 +17,7 @@ Taskpony supports unlimited Tasks organised within unlimited Lists, and free mov
   - [Docker](#docker)
   - [Docker Compose](#docker-compose)
   - [Linux service](#linux-service)
+- [FAQ](#faq)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Schema](#schema)
@@ -24,7 +27,7 @@ Taskpony supports unlimited Tasks organised within unlimited Lists, and free mov
 
 # Security 
 
-Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare](https://www.cloudflare.com) Tunnels protected by a suitable Access policy.
+Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare](https://www.cloudflare.com) Tunnels protected by an Access policy.
 
 # Installation
 
@@ -87,6 +90,18 @@ If you want to use another port instead of 5000, edit `taskpony.service` and cha
 
 If you wish to run Taskpony in a directory other than `/opt/taskpony`, then change `$db_path` in `taskpony.psgi` and `WorkingDirectory` in `taskpony.service`
 
+# FAQ
+
+> Is there an Android or IOS app?
+Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)
+
+> When will support for multiple users, groups or teams be added?
+Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with this ability if it is important to you.
+
+> How can I tell you about bugs or suggest improvements? 
+Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues)
+
+
 # Documentation
 
 ## Concepts: 
@@ -137,7 +152,6 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
         id
         key
         value 
-   
     
 # Web Paths:
 
@@ -220,16 +234,17 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
 
   - /ust ?task_id=N = Unset a task from completed to active.    
 
-
 # Credits
 
-Taskpony uses:
+Taskpony uses this great FOSS software:
 
 - [Perl 5](https://www.perl.org/)
 - [Plack](https://plackperl.org/)
-- [SQLite](https://sqlite.org/index.html)
-- [Bootstrap 5](https://getbootstrap.com/)
-- [Datatables](https://datatables.net/)
+- [SQLite](https://sqlite.org/index.html) 
+- [Bootstrap 5](https://getbootstrap.com/) (Bundled)
+- [JQuery](https://jquery.com/) (Bundled)
+- [Datatables](https://datatables.net/) (Bundled)
+- [Fontawesome](https://fontawesome.com/) (Embedded SVGs)
 
 # Licence
 
