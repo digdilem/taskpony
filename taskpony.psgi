@@ -1107,7 +1107,7 @@ sub footer { # Return standard HTML footer
                 buttons: [
                     { extend: 'copy', className: 'btn btn-dark btn-sm' },
                     { extend: 'csv', className: 'btn btn-dark btn-sm' },
-                    { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [0]} },
+                    { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]} },
                     { extend: 'print', className: 'btn btn-dark btn-sm' }
                 ],
                 "language": {
