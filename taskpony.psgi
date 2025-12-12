@@ -627,6 +627,16 @@ my $app = sub {
                                     name="cfg_description_short_length">
                             </div>
 
+                            <!-- NUMBER ROW cfg_description_short_length -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
+                                Max length of List name in Tasks list
+                                </span>
+                                <input type="number" class="form-control w-50" 
+                                    value="$config->{cfg_list_short_length}" 
+                                    name="cfg_list_short_length">
+                            </div>
+
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
@@ -642,17 +652,7 @@ my $app = sub {
                                     $retstr .= qq~
                                     >
                                 </div>
-                            </div>                            
-
-                            <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list">
-                                Max length of List name in Tasks list
-                                </span>
-                                <input type="number" class="form-control w-50" 
-                                    value="$config->{cfg_list_short_length}" 
-                                    name="cfg_list_short_length">
-                            </div>                    
+                            </div>
 
                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
