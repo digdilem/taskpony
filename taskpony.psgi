@@ -23,6 +23,7 @@ our $config = {
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
     cfg_include_datatable_buttons => 1,         # Include the CSV/Copy/PDF etc buttons at the bottom of each table
+    cfg_include_datatable_search -> 'true',     # Include the search box at the top right of each table
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
@@ -556,7 +557,7 @@ my $app = sub {
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key eq 'cfg_include_datatable_buttons') {
+                        if ($key =~ 'cfg_include_datatable_') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -642,6 +643,24 @@ my $app = sub {
 
                                     # Precheck this if set
                                     if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $retstr .= " checked "; }
+
+                                    $retstr .= qq~
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- TOGGLE ROW cfg_include_datatable_search -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
+                                Display Search Box
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
+                                    id="autoUpdateToggle"
+                                    ~;
+
+                                    # Precheck this if set
+                                    if ($config->{'cfg_include_datatable_search'} eq 'true') { $retstr .= " checked "; }
 
                                     $retstr .= qq~
                                     >
@@ -1033,15 +1052,28 @@ sub footer { # Return standard HTML footer
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
+                ~;
+
+            # Show search if configured
+            if ($config->{'cfg_include_datatable_search'} eq 'on') {
+                $retstr .= qq~
                 "searching": true,
+                ~;
+                } else {
+                $retstr .= qq~
+                "searching": false,
+                ~;
+                }
+
+            # Continue
+            $retstr .= qq~
                 "pageLength": $config->{cfg_task_pagination_length},
                 ~;
 
+            # Show buttons if configured, otherwise show default dom
             if ($config->{'cfg_include_datatable_buttons'} eq 'on') {
-#                $retstr .= "dom: 'tiBfp',";
                 $retstr .= "dom: 'ftiBp',";
                 } else {
-#                $retstr .= "dom: 'tifp',";
                 $retstr .= "dom: 'ftip',";
                 }
 
