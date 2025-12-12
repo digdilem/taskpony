@@ -64,8 +64,13 @@ my $fa_rotate_left = q~<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 
                     </svg>~;
 
 # Preflight checks
-print STDERR "--------------------------------------------\n";
-print STDERR "Welcome to Taskpony v$app_version\n"; 
+print STDERR "\n+-----Welcome to Taskpony -------------+\n";
+print STDERR "|  [ ] Do the thing                                 |\n";
+print STDERR "|  [X] Pay the bills                                |\n";
+print STDERR "|  [ ] Buy milk                                     |\n";
+print STDERR "+---------------------------------------------------+\n\n";
+
+
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
 
