@@ -1105,10 +1105,25 @@ sub footer { # Return standard HTML footer
 
             $retstr .= qq~
                 buttons: [
+                ~;
+
+            # Set buttons configuration, including whether to export all columns or just the first
+            if ($config->{'cfg_export_all_cols'} eq 'on') {
+                    $retstr .= qq~
                     { extend: 'copy', className: 'btn btn-dark btn-sm' },
                     { extend: 'csv', className: 'btn btn-dark btn-sm' },
-                    { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]} },
+                    { extend: 'pdf', className: 'btn btn-dark btn-sm'},
                     { extend: 'print', className: 'btn btn-dark btn-sm' }
+                    ~;
+                    } else {
+                    { extend: 'copy', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
+                    { extend: 'csv', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
+                    { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]} },
+                    { extend: 'print', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  }
+                    ~;
+                    }
+                    
+            $retstr .= qq~
                 ],
                 "language": {
                     "emptyTable": "All tasks completed! 🎉",
