@@ -770,22 +770,6 @@ my $app = sub {
         return $res->finalize;
         }
 
-    if ($list_id == 1) { # Show ALL Lists, but hide the quick input box as we won't know which list to add a new task to
-        $html .= q~
-            <div class="alert alert-primary text-center mb-3" role="alert">
-                Showing 
-            ~;
-
-        if ($show_completed == 1) { 
-            $html .= q~ completed ~;
-            } else {
-            $html .= q~ active ~;
-            }
-                
-        $html .= q~ tasks from <strong>all </strong> list.
-            </div>
-            ~;    
-        } 
         
         # Start the main box
         $html .= qq~
@@ -811,7 +795,14 @@ my $app = sub {
                                 </div>
                             </form>
                     ~;
-            }
+            } else { # Show banner for all lists instead
+                if ($show_completed == 1) { 
+                    $html .= "Showing completed tasks from all lists";
+                    } else {
+                    $html .= "Showing active tasks from all lists";
+                    }
+                }
+            } # End all lists quick add check
 
         $html .= qq~
                         </div>
