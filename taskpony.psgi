@@ -1116,13 +1116,14 @@ sub footer { # Return standard HTML footer
                     { extend: 'print', className: 'btn btn-dark btn-sm' }
                     ~;
                     } else {
+                    $retstr .= qq~
                     { extend: 'copy', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
                     { extend: 'csv', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
                     { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]} },
                     { extend: 'print', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  }
                     ~;
                     }
-                    
+
             $retstr .= qq~
                 ],
                 "language": {
