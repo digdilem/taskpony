@@ -1033,7 +1033,7 @@ sub footer { # Return standard HTML footer
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
-                "searching": false,
+                "searching": true,
                 "pageLength": $config->{cfg_task_pagination_length},
                 ~;
 
