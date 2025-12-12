@@ -651,11 +651,13 @@ my $app = sub {
 
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Select colour for title background">
-                                Title Background Colour 
-                                &nbsp;&nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
+                                <span class="config-label">                                    
+                                    Title Background Colour
+                                    <span data-bs-toggle="tooltip" title="Select colour for title background">
+                                        $fa_info
+                                    </span>
                                 </span>
+
                                 <div class="mb-3">
                                     <select class="form-select" id="themeColor" name="cfg_header_colour">                                        
                                         <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
