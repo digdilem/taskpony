@@ -594,7 +594,7 @@ my $app = sub {
         ###############################################
         # Show configuration page
         my $retstr .= header();
-print STDERR "DEBUG ($config->{'cfg_export_all_cols'})\n";
+
         $retstr .= qq~
             <div class="container py-5">
             <div class="row justify-content-center">
@@ -801,7 +801,7 @@ print STDERR "DEBUG ($config->{'cfg_export_all_cols'})\n";
         if ($list_id != 1) { 
             $html .= qq~            
                             <form method="post" action="/add" class="row g-3">
-                                <div class="col-11">
+                                <div class="col-9">
                                     <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                                 </div>
                                 <div class="col-1">
