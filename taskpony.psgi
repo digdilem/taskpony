@@ -23,7 +23,7 @@ our $config = {
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
     cfg_include_datatable_buttons => 1,         # Include the CSV/Copy/PDF etc buttons at the bottom of each table
-    cfg_include_datatable_search -> 'true',     # Include the search box at the top right of each table
+    cfg_include_datatable_search => 'true',     # Include the search box at the top right of each table
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
