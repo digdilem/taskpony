@@ -565,7 +565,7 @@ my $app = sub {
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
