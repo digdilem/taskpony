@@ -92,6 +92,36 @@ If you wish to run Taskpony in a directory other than `/opt/taskpony`, then chan
 
 # FAQ
 
+> How can I tell you about bugs or suggest improvements? 
+
+Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues)
+
+> How do I back up my tasks?
+
+All tasks, lists and settings are kept within `taskpony.db`. This can be copied somewhere safe to back it up. If you need to restore a backup, just copy that file to where Taskpony expects it and restart it.
+
+> There's a new version out, how do I upgrade Taskpony?
+
+## Linux 
+
+Follow the installation steps above and copy the new files over the existing ones. It's recommended that you back up the database first, but taskpony should automatically upgrade that if its needed. 
+
+## Docker
+
+Stop the existing container and repeat the installation instructions to pull the new image.
+
+## Docker-Compose
+
+Change to the directory you put your `docker-compose.yml`
+
+Check the compose file with that of the new version and overwrite it if it's changed, then:
+
+```
+docker compose down
+docker compose pull
+docker compose up -d
+```
+
 > Is there an Android or IOS app?
 
 Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)
@@ -99,10 +129,6 @@ Sorry, no. Taskpony was designed to be a responsive web app and works well on bo
 > When will support for multiple users, groups or teams be added?
 
 Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with this ability if it is important to you.
-
-> How can I tell you about bugs or suggest improvements? 
-
-Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues)
 
 > How do I add HTTPS? 
 
@@ -112,9 +138,13 @@ Use a reverse proxy - see [#security](#security)
 
 Use a reverse proxy - see [#security](#security)
 
+> Can I use a different database?
 
+Not presently. SQLite was chosen to keep things small and simple. I think it should suffice for a task application.
 
 # Documentation
+
+Follow the [install guides](#installation) above, and you should be able to access 
 
 ## Concepts: 
 - Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.

@@ -1093,7 +1093,6 @@ sub footer { # Return standard HTML footer
         <footer class="mt-auto text-white-50 text-center">
             <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
         </footer>
-        </div>
 
         <script>
             \$(document).ready(function() {
