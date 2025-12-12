@@ -610,9 +610,10 @@ my $app = sub {
                             <input type="hidden" name="save_config" value="true">
 
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
+                            <div class="mb-3 d-flex justify-content-between align-items-center">                                
                                 Display Search Box
+                                <span class="config-label" data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
+                                $fa_info
                                 </span>
                                 <div class="form-check form-switch m-0">
                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
