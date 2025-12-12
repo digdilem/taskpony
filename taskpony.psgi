@@ -656,9 +656,8 @@ my $app = sub {
                                     <span data-bs-toggle="tooltip" title="Select colour for title background">
                                         $fa_info
                                     </span>
-                                </span>
-
                                 <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
+                                </span>
                                 
                                 <div class="mb-3">
                                     <select class="form-select" id="themeColor" name="cfg_header_colour">                                        
