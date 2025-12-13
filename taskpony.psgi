@@ -1199,9 +1199,10 @@ sub list_pulldown {
         ~;
 
     # We should check whether there is a default list. If so, select the oldest non-deleted one.
-    my $default_cnt = single_db_value( 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NOT NULL' );
-    print STDERR "DEBUG ($default_cnt) default list count check\n";
-    if ($default_cnt == 0) {    
+    my $default_cnt_sql = 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NULL';
+    my $default_cnt = $dbh->selectrow_array($default_cnt_sql);
+    
+    if ($default_cnt == 0) {
         print STDERR "Odd. There's no default, active list. Maybe it just got deleted. Making the oldest list the new default.\n";
         # Clear any old isDefault lists, even if they're isDeleted
         single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1');
@@ -1265,11 +1266,11 @@ sub html_escape {
 # Execute a SQL query that returns a single value
 sub single_db_value {
     my ($sql, @params) = @_;
-    print STDERR "single_db_value: Executing SQL: $sql with params: [" . join(',', @params) . "]" . "\n";
+#    print STDERR "single_db_value: Executing SQL: $sql with params: [" . join(',', @params) . "]" . "\n";
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
-    print STDERR "RETURNING ($value)\n";
+#    print STDERR "RETURNING ($value)\n";
     return $value;
     }
     # End single_db_value()
