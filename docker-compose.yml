@@ -10,8 +10,8 @@ services:
     ports:
       - "5000:5000"
     volumes:  
-      # We need a persistent directory mounted in order to save our tasks database. This example uses ./data under this compose file to do so. It will be autocreated.
-      - ./data:/opt/taskpony
+      # We need a persistent directory mounted in order to save our tasks database. 
+      - ./data:/opt/taskpony/db
     restart: unless-stopped
     networks:
       - taskpony_net    
