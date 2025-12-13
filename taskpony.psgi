@@ -33,7 +33,8 @@ our $config = {
 my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.01';               # Version of app
 my $database_schema_version = 1;        # Current database schema version. Do not change this, it will be modified during updates.
-my $db_path = '/opt/taskpony/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created.
+my $db_dir = '/opt/taskpony/db/';       # Directory to hold Sqlite database file internal to docker. If not present, it will be auto created.
+my $db_filename = 'taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created.
 
 my $dbh;                        # Global database handle 
 my $list_id = 1;                # Current list id
@@ -858,15 +859,22 @@ builder {
 # Checks whether the sqlite database file exists and if not, creates it, populates schema, and connects to it
 sub connect_db { 
     # Check database exists. 
-    if (! -e $db_path) {
+    if (! -e $db_filename) {
         # Database file does not exist, so create it and initialise it.
-        print STDERR "Database file $db_path not found. Assuming new install and creating new database\n";
+        print STDERR "Database file $db_filename not found. Assuming new install and creating new database\n";
+        if (! -d $data_dir) {
+            print STDERR "Data directory $data_dir does not exist, creating it now.\n";
+            mkdir $data_dir or die "Failed to create data directory $data_dir: $!\n";
+            print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $db_filename\n" unless -d $data_dir;
+            exit 1;
+            }
+
         print STDERR "----------------------------------------------------\n";
         print STDERR "Welcome to $app_title!\n";
         print STDERR "----------------------------------------------------\n\n";
 
         # Create new database connection which will autocreate the new database file
-        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $dbh = DBI->connect("dbi:SQLite:dbname=$db_filename", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -876,7 +884,7 @@ sub connect_db {
         } else { 
 
         # The database does exist, so connect to it.
-        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $dbh = DBI->connect("dbi:SQLite:dbname=$db_filename", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
