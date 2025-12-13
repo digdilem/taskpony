@@ -12,8 +12,9 @@ COPY static/ static/
 COPY taskpony.psgi taskpony.psgi
 COPY README.md README.md
 
-RUN carton install
-
+RUN ls -l && \
+    carton install
+    
 COPY . .
 
 # Expose Plack on port 5000
