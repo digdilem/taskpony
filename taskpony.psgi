@@ -1269,6 +1269,7 @@ sub single_db_value {
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
+    print STDERR "RETURNING ($value)\n";
     return $value;
     }
     # End single_db_value()
