@@ -9,7 +9,7 @@ Taskpony supports unlimited Tasks organised within unlimited Lists, and free mov
 
 No phone app required. The interface is responsive and scales well to phones. There are no trackers and does not require access to the internet to function; all required files are contained.
 
-![Main Task List](docs/tasklist.jpg)
+![Main Task List](docs/tasks_short.jpg)
 
 See some more [Screenshots](#screenshots)
 
