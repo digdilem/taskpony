@@ -24,8 +24,8 @@ docker build -t taskpony:latest .
 
 docker tag taskpony:latest digdilem/taskpony:latest
 
-# docker push digdilem/taskpony:latest
+docker push digdilem/taskpony:latest
 
-# To confirm upload, check it at:  https://hub.docker.com/repositories/digdilem
+echo "To confirm upload, check it at:  https://hub.docker.com/repositories/digdilem"
 
 # End of file

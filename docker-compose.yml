@@ -1,6 +1,6 @@
 # Example docker-compose.yml file for Taskpony.
 # Copy this to a new directory and run "docker compose up -d" to fetch and run Taskpony on port 5000
-# Updates to Taskpoint can be applied by "docker compose down && docker compose up -d"
+# Updates to Taskpoint can be applied by "docker compose down && docker compose pull & docker compose up -d"
 
 services:
 
@@ -14,11 +14,11 @@ services:
       - ./data:/opt/taskpony/db
     restart: unless-stopped
     networks:
-      - taskpony_net    
+      - taskpony_net
 
 networks:
   taskpony_net:
-    name: taskpony_network    
+    name: taskpony_network
 
 # End of file
 
