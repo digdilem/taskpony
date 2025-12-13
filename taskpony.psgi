@@ -1095,6 +1095,7 @@ sub footer { # Return standard HTML footer
     my $retstr = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it
 
     $retstr .= qq~
+        <br>
         <footer class="mt-auto text-white-50 text-center">
             <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
         </footer>

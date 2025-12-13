@@ -101,7 +101,6 @@ Please do! The best place is to use [Github issues](https://github.com/digdilem/
 
 All tasks, lists and settings are kept within `taskpony.db`. This can be copied somewhere safe to back it up. If you need to restore a backup, just copy that file to where Taskpony expects it and restart it.
 
-
 > Is there an Android or IOS app?
 
 Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)
@@ -148,7 +147,46 @@ docker compose up -d
 
 # Documentation
 
-Follow the [install guides](#installation) above, and you should be able to access 
+Follow the [install guides](#installation) above, and you should be able to access Taskpony on http port 5000 with your web browser.
+
+## About Tasks
+
+The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
+
+Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect with the mouse. This form will be missing if "All lists" is selected. 
+
+Then the main tasks lists is shown. Tick the checkbox to mark a task as *completed* which removes it from the *active* tasks. 
+
+A Filter or Search box is displayed top right if `Display Search Box` is selected in Settings that will only display matching strings.
+
+Hover over the task Title to see a popup of the task's description if one was set. Tasks can be edited, and descriptions added to them, by clicking the title and completing the resulting form.
+
+The tasks list can be sorted by clicking the header values.
+
+If there are enough tasks to trigger the `Number of Tasks to show on each page` value in Settings, then the list will automatically paginate and show the number of pages together with Next/Previous buttons below it.
+
+If `Display export buttons` is selected in Settings, then extra "Export" buttons appear under the list. These are:
+
+- `Copy` = Copy the contents of the List into the clipboard, allowing you to paste it elsewhere.
+- `CSV` = Triggers a download of the chosen tasks as a CSV file allowing you to import them into a spreadsheet. 
+- `PDF` = Generates a PDF of the tasks and downloads it.
+- `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
+
+Below that is a final button to show completed tasks. This changes the view to show *completed* tasks instead of *active* ones. This allows you to "oops" and mark any completed tasks back as active. 
+
+## About Lists
+
+The header shows a Lists button at the top right which takes you to `/lists` where you can manage Taskpony's Lists.
+
+Here you can see all the Lists along with how many tasks, active or completed, within them.
+
+You can edit any List by clicking on its title.
+
+The `Default` button allows you to select a Default List. The Default List appears at the top of the Lists Picklist in the header.
+
+If a Default List is deleted, Taskpony will automatically select the oldest active list and make that default to avoid being without one. 
+
+When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected. 
 
 ## Concepts: 
 - Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.
