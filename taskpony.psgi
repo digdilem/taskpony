@@ -174,7 +174,7 @@ my $app = sub {
                 my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set default lid update failed: $@";                
                 add_alert("List #$lid set as default.");
-                }            
+                }
             }
         $res->redirect('/lists'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
