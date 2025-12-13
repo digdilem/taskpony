@@ -1265,7 +1265,7 @@ sub html_escape {
 # Execute a SQL query that returns a single value
 sub single_db_value {
     my ($sql, @params) = @_;
-#    debug("single_db_value: Executing SQL: $sql with params: [" . join(',', @params) . "]");
+    debug("single_db_value: Executing SQL: $sql with params: [" . join(',', @params) . "]");
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
