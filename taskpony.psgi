@@ -862,8 +862,8 @@ sub connect_db {
         # Database file does not exist, so create it and initialise it.
         print STDERR "Database file $db_path not found. Assuming new install and creating new database\n";
         # Ensure data directory exists
-        my $data_dir = dirname($db_path);
-        
+        my ($data_dir) = $db_path =~ m{^(.*)/[^/]+$};
+
         if (! -d $data_dir) {
             print STDERR "Data directory $data_dir does not exist, creating it now.\n";
             mkdir $data_dir or die "Failed to create data directory $data_dir: $!\n";
