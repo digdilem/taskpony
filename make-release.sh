@@ -20,7 +20,7 @@ git pull
 
 docker build -t taskpony:latest .
 
-docker login
+#docker login
 
 docker tag taskpony:latest digdilem/taskpony:latest
 
