@@ -10,7 +10,7 @@ WORKDIR /opt/taskpony
 COPY cpanfile cpanfile
 COPY static/ static/
 COPY taskpony.psgi taskpony.psgi
-COPY READNE.md README.md
+COPY README.md README.md
 
 RUN carton install
 
