@@ -7,6 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /opt/taskpony
 
+COPY Dockerfile Dockerfile
 COPY cpanfile cpanfile
 COPY static/ static/
 COPY taskpony.psgi taskpony.psgi
@@ -14,7 +15,7 @@ COPY README.md README.md
 
 RUN ls -l && \
     carton install
-    
+
 COPY . .
 
 # Expose Plack on port 5000
