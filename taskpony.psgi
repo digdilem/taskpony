@@ -1202,14 +1202,12 @@ sub list_pulldown {
     if ($deleted_cnt == 0) {
         print STDERR "There's no default and active list. Making the oldest list the new default.\n";
         # Clear any old isDefault lists, even if they're isDeleted
-        single_db_value( 'UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1' );
+        single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1');
         # Pick the oldest non-deleted list and set it as default
         print STDERR "( UPDATE ListsTb SET IsDefault = 1 WHERE id = (SELECT id FROM ListsTb WHERE DeletedDate IS NULL ORDER BY CreatedDate ASC LIMIT 1) )\n";
-        my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = (SELECT id FROM ListsTb WHERE DeletedDate IS NULL ORDER BY CreatedDate ASC LIMIT 1)');
-        $sth->execute();
-        # End isdefault check
+        single_db_value('UPDATE ListsTb SET IsDefault = 1 WHERE id = (SELECT id FROM ListsTb WHERE DeletedDate IS NULL ORDER BY CreatedDate ASC LIMIT 1)');
+        # End is there a default check
         }
-
 
     # Get lists from ListsTb
     my $sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
