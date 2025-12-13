@@ -1199,8 +1199,9 @@ sub list_pulldown {
         ~;
 
     # We should check whether there is a default list. If so, select the oldest non-deleted one.
-    my $deleted_cnt = single_db_value( 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NOT NULL' ) // 0;
-    if ($deleted_cnt == 0) {
+    my $default_cnt = single_db_value( 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NOT NULL' );
+    print STDERR "DEBUG ($default_cnt) default list count check\n";
+    if ($default_cnt == 0) {    
         print STDERR "Odd. There's no default, active list. Maybe it just got deleted. Making the oldest list the new default.\n";
         # Clear any old isDefault lists, even if they're isDeleted
         single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1');
