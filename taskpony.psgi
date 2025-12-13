@@ -340,6 +340,7 @@ my $app = sub {
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
                 add_alert("List updated.");                
                 } elsif ($action eq 'delete' && $list_id > 1) {
+                # Soft delete - set DeletedDate to current timestamp                
                 my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
@@ -1195,6 +1196,19 @@ sub list_pulldown {
         <select name="lid" 
             class="form-select form-select-sm" style="width:auto; display:inline-block; margin-left:10px;" onchange="window.location='/?lid=' + encodeURIComponent(this.value)">
         ~;
+
+    # We should check whether there is a default list. If so, select the oldest non-deleted one.
+    my $deleted_cnt = single_db_value( 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NOT NULL' ) // 0;
+    if ($deleted_cnt == 0) {
+        print STDERR "There's no default and active list. Making the oldest list the new default.\n";
+        # Clear any old isDefault lists, even if they're isDeleted
+        single_db_value( 'UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1' );
+        # Pick the oldest non-deleted list and set it as default
+        my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = (SELECT id FROM ListsTb WHERE DeletedDate IS NULL ORDER BY CreatedDate ASC LIMIT 1)');
+        $sth->execute();
+        # End isdefault check
+        }
+
 
     # Get lists from ListsTb
     my $sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
