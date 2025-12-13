@@ -866,9 +866,12 @@ sub connect_db {
 
         if (! -d $data_dir) {
             print STDERR "Data directory $data_dir does not exist, creating it now.\n";
-            mkdir $data_dir or die "Failed to create data directory $data_dir: $!\n";
-            print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $db_path\n" unless -d $data_dir;
-            exit 1;
+            mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $db_path\n";
+
+            if (! -d $data_dir) {
+                print STDERR "I tried to create the data directory $data_dir but it still does not exist. Cannot continue.\n";
+                exit 1;
+                }
             }
 
         print STDERR "----------------------------------------------------\n";
