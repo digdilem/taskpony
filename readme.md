@@ -18,6 +18,7 @@ No phone app required. The interface is responsive and scales well to phones. Th
   - [Docker Compose](#docker-compose)
   - [Linux service](#linux-service)
 - [FAQ](#faq)
+- [Upgrading](#upgrading)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Schema](#schema)
@@ -100,27 +101,6 @@ Please do! The best place is to use [Github issues](https://github.com/digdilem/
 
 All tasks, lists and settings are kept within `taskpony.db`. This can be copied somewhere safe to back it up. If you need to restore a backup, just copy that file to where Taskpony expects it and restart it.
 
-> There's a new version out, how do I upgrade Taskpony?
-
-## Linux 
-
-Follow the installation steps above and copy the new files over the existing ones. It's recommended that you back up the database first, but taskpony should automatically upgrade that if its needed. 
-
-## Docker
-
-Stop the existing container and repeat the installation instructions to pull the new image.
-
-## Docker-Compose
-
-Change to the directory you put your `docker-compose.yml`
-
-Check the compose file with that of the new version and overwrite it if it's changed, then:
-
-```
-docker compose down
-docker compose pull
-docker compose up -d
-```
 
 > Is there an Android or IOS app?
 
@@ -141,6 +121,30 @@ Use a reverse proxy - see [#security](#security)
 > Can I use a different database?
 
 Not presently. SQLite was chosen to keep things small and simple. I think it should suffice for a task application.
+
+# Upgrading
+
+Upgrading Taskpony should be quite simple - overwrite the files and ensure taskpony.db survives. 
+
+## Linux 
+
+Follow the installation steps above and copy the new files over the existing ones. It's recommended that you back up the database first, but taskpony should automatically upgrade that if its needed. 
+
+## Docker
+
+Stop the existing container and repeat the installation instructions to pull the new image.
+
+## Docker-Compose
+
+Change to the directory you put your `docker-compose.yml`
+
+Check the compose file with that of the new version and overwrite it if it's changed, then:
+
+```
+docker compose down
+docker compose pull
+docker compose up -d
+```
 
 # Documentation
 
