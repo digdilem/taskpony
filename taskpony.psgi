@@ -887,7 +887,8 @@ sub connect_db {
 
         initialise_database();  # Create tables etc.
 
-        } else { 
+        } else {
+        print STDERR "Database file $db_path found, connecting to existing database.\n";
 
         # The database does exist, so connect to it.
         $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
