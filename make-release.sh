@@ -28,3 +28,4 @@ docker tag taskpony:latest digdilem/taskpony:latest
 
 # To confirm upload, check it at:  https://hub.docker.com/repositories/digdilem
 
+# End of file
