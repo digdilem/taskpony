@@ -10,7 +10,7 @@ services:
     ports:
       - "5000:5000"
     volumes:  
-      # We need a persistent directory mounted in order to save our tasks database. This example uses ./data under this file to do so. It will be autocreated.
+      # We need a persistent directory mounted in order to save our tasks database. This example uses ./data under this compose file to do so. It will be autocreated.
       - ./data:/opt/tasks
     restart: unless-stopped
     networks:

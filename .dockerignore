@@ -1,0 +1,16 @@
+# Don't include taskpony.db or any non-essential files
+
+# Exclude everything by default
+**
+
+# Allow only these files/directories
+!Dockerfile
+!.dockerignore
+!static/
+!cpanfile
+!docker-compose.yml
+!readme.md
+!taskpony.service
+!taskpony.psgi
+
+# End of file
