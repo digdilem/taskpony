@@ -210,6 +210,7 @@ Some things for the future that may, or may not, be added.
 - (Probably) Do some basic stats. Number of active and completed tasks. Tasks completed today, this week, etc.
 - (Maybe) Basic recurring tasks. Not entirely sure how this will manifest yet.
 - (Maybe) Add an icon to each List from Fontawesome
+- (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Needs consideration.
 
 # Screenshots
 
