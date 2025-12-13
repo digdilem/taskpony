@@ -14,7 +14,7 @@ git push github main
 
 # To be run on docker-host
 
-cd /docker-data/taskpony/my-scripts/taskpony
+cd /opt/taskpony
 
 git pull
 

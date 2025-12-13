@@ -22,7 +22,9 @@ COPY . .
 EXPOSE 5000
 
 # Start the PSGI app using plackup
-CMD ["carton", "exec", "plackup", "-R", ".", "-p", "5000", "taskpony.psgi"]
+# We don't want it to automatically restart whenver the database changes, so we omit the --reload option.
+# CMD ["carton", "exec", "plackup", "-R", ".", "-p", "5000", "taskpony.psgi"]
+CMD ["carton", "exec", "plackup", "-p", "5000", "taskpony.psgi"]
 
 # End of file
 
