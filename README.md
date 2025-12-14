@@ -178,6 +178,10 @@ Sorry, no. Taskpony was designed to be a responsive web app and works well on bo
 
 Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with groupware ability if it is important to you.
 
+> But I really want to run a copy for more than one person!
+
+One way around this is to run multiple instances using docker, each with their own port.
+
 > How do I add HTTPS? 
 
 Use a reverse proxy - see [#security](#security)
