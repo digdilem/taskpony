@@ -1,6 +1,5 @@
 #!/bin/bash
 # To manually release the public version of Taskpony
-# Run on dev machine
 
 # 1. Fetch latest from local repo
 echo "Fetching latest from local repo..."
