@@ -57,6 +57,7 @@ Taskpony has no artificial limits beyond those of the technologies, mostly SQLit
 
 - Tasks and Lists - a maximum of 9.22 quintillian of each. 
 - Text for each task or list's title or description can be up to a billion characters each. (Truncated in tables, but not everywhere. It's hoped users will be sane.)
+- A total database size of 281 terabytes. (Subject to file system limits)
 
 In reality, disk i/o performance is likely to be the limiting factor long before the above is reached.
 
@@ -74,7 +75,7 @@ If you want it to run on a different port, change the *first* 5000 to something 
 
 ## Docker Compose
 
-There is an example `docker-compose.yml` file in the repository. 
+There is an example `docker-compose.yml` file in the repository which should work for most situations.
 
 Copy this to your chosen directory, inspect and adjust as desired, and run: `docker compose up -d`
 
@@ -264,11 +265,11 @@ If a Default List is deleted, Taskpony will automatically select the oldest acti
 
 When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected. 
 
-## Concepts: 
+## Concepts
 - Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.
 - It should be easy to self host and maintain. 
 - Taskpony aspires  to follow the linux design tenet of "Do one thing well"
-- Remain focused on a single user need and not spread into teamware. There are plenty of good foss alternatives that do offer team support, Kanbans, integration with other softare using caldavs and so on. There are few single-user options like this. I couldn't find any that suited my own needs, or I wouldn't have written Taskpony!
+- Remain focused on a single user need and not spread into teamware. There are plenty of good foss alternatives that do offer team support, Kanbans, integration with other softare and so on. There are fewew good, single-user options like this. I couldn't find any that suited my own needs which led to me writing Taskpony.
   
 ## The Name? 
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
@@ -283,6 +284,7 @@ Some things for the future that may, or may not, be added.
 - (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
 - (Maybe) Add an icon to each List from Fontawesome for cosmetic identification.
 - (Maybe) Add default sorting option, rather than just newest-first.
+- (Maybe) Add colour to tasks lists.
 - (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads and only write on change. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Also, most page loads involve a change, so benefit may not be significant. Needs consideration, possibly a problem that doesn't need solving.
 - (Maybe) Automated database backups.
 - (Maybe) New release notification. 
@@ -299,7 +301,7 @@ Some things for the future that may, or may not, be added.
 
 # Schema
 
-Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
+Database schema: Taskpony uses Sqlite for simplicity and a small footprint. The schema is:
 
 / TasksDb
 
@@ -411,7 +413,7 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint.
 
 # Credits
 
-Taskpony uses this great FOSS software:
+Taskpony is built with the help of this great FOSS software:
 
 - [Perl 5](https://www.perl.org/)
 - [Plack](https://plackperl.org/)
