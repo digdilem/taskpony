@@ -13,6 +13,8 @@ No phone app required. The interface is responsive and scales well to phones. Th
 
 See some more [Screenshots](#screenshots)
 
+**Quick start** - Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
+
 ## Table of contents 
 
 - [Features](#features)
@@ -176,6 +178,10 @@ Use a reverse proxy - see [#security](#security)
 > How do I protect my Taskpony with a username and password?
 
 Use a reverse proxy - see [#security](#security)
+
+> Does Taskpony support Caldav?
+
+No. It may do in the future but there are no initial plans to do so.
 
 > Can I use a different database type?
 
