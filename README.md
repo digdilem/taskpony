@@ -35,7 +35,7 @@ See some more [Screenshots](#screenshots)
 
 # Security 
 
-Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare](https://www.cloudflare.com) Tunnels protected by an Access policy.
+Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare Tunnels](https://www.cloudflare.com) protected by an Access policy.
 
 # Installation
 
@@ -59,6 +59,8 @@ Taskpony has no artificial limits beyond those of the technologies, mostly SQLit
 In reality, disk i/o performance is likely to be the limiting factor long before the above is reached.
 
 ## Docker
+
+### The latest version of Taskpony is on Dockerhub as `digdilem/taskpony:latest`
 
 Install docker and run something like the following. 
 
