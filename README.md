@@ -141,7 +141,7 @@ systemctl enable --now taskpony
 
 4. Visit port 5000 of that machine with your web browser. Eg, if it's localhost: `http://localhost:5000` and you should see Taskpony initial list.
 
-Or if it's on a machine with an IP of 10.0.0.16, then `http://10.0.0.16:5000` - etc.
+Or if it's on a machine with, say, an IP of 10.0.0.16, then `http://10.0.0.16:5000`
 
 If you want to use another port instead of 5000, edit `taskpony.service` and change the plackup line. Eg: `ExecStart=/usr/bin/plackup -r -p 5001 /opt/taskpony/taskpony.psgi`
 
@@ -161,17 +161,17 @@ See output logs with `journalctl -u taskpony` or the current status with `system
 
 # FAQ
 
-> How can I tell you about bugs or suggest improvements? 
+> Can I tell you about bugs or suggest improvements? 
 
-Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues)
+Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues) and raise a `New Issue`
 
 > How do I back up my tasks?
 
-All tasks, lists and settings are kept within the single file, `taskpony.db`. This can be copied somewhere safe to back it up. If you need to restore a backup, just copy that file to where Taskpony expects it and restart it.
+All tasks, lists and settings are kept within the single file, `taskpony.db` stored in `/opt/taskpony/db` (Local if systemd, within `./data` if docker). This can be copied somewhere safe to back it up. If you need to restore a backup, just stop Taskpony, copy that file to where Taskpony expects it and restart Taskpony.
 
 > Is there an Android or IOS app?
 
-Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)   If anyone wants to create an app for Taskpony, that's great, and if it's good I'll reference it here.
+Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)   If anyone wants to create an app for Taskpony, that's great, and if it's good then let me know and I'll reference it here.
 
 > When will support for multiple users, groups or teams be added?
 
@@ -225,7 +225,7 @@ Follow the [install guides](#installation) above, and you should be able to acce
 
 The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
 
-Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect with the mouse. This form will be missing if "All lists" is selected. 
+Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This form will be missing if "All lists" is selected. 
 
 Then the main tasks lists is shown. Tick the checkbox to mark a task as *completed* which removes it from the *active* tasks. 
 
@@ -243,6 +243,8 @@ If `Display export buttons` is selected in Settings, then extra "Export" buttons
 - `CSV` = Triggers a download of the chosen tasks as a CSV file allowing you to import them into a spreadsheet. 
 - `PDF` = Generates a PDF of the tasks and downloads it.
 - `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
+
+![The Export Buttons](buttons.jpg)
 
 Below that is a final button to show completed tasks. This changes the view to show *completed* tasks instead of *active* ones. This allows you to "oops" and mark any completed tasks back as active. 
 
