@@ -239,12 +239,12 @@ If there are enough tasks to trigger the `Number of Tasks to show on each page` 
 
 If `Display export buttons` is selected in Settings, then extra "Export" buttons appear under the list. These are:
 
+![The Export Buttons](docs/buttons.jpg)
+
 - `Copy` = Copy the contents of the List into the clipboard, allowing you to paste it elsewhere.
 - `CSV` = Triggers a download of the chosen tasks as a CSV file allowing you to import them into a spreadsheet. 
 - `PDF` = Generates a PDF of the tasks and downloads it.
 - `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
-
-![The Export Buttons](docs/buttons.jpg)
 
 Below that is a final button to show completed tasks. This changes the view to show *completed* tasks instead of *active* ones. This allows you to "oops" and mark any completed tasks back as active. 
 
