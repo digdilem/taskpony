@@ -244,7 +244,7 @@ If `Display export buttons` is selected in Settings, then extra "Export" buttons
 - `PDF` = Generates a PDF of the tasks and downloads it.
 - `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
 
-![The Export Buttons](buttons.jpg)
+![The Export Buttons](docs/buttons.jpg)
 
 Below that is a final button to show completed tasks. This changes the view to show *completed* tasks instead of *active* ones. This allows you to "oops" and mark any completed tasks back as active. 
 
