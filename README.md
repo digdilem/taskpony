@@ -18,9 +18,11 @@ See some more [Screenshots](#screenshots)
 - [Features](#features)
 - [Security](#security)
 - [Installation](#installation)
+  - [Requirements](#requirements)
   - [Docker](#docker)
   - [Docker Compose](#docker-compose)
   - [Linux service](#linux-service)
+- [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
 - [Upgrading](#upgrading)
 - [Documentation](#documentation)
@@ -38,6 +40,23 @@ Part of Taskpony's design choice is that there are no authentication systems bui
 # Installation
 
 Taskpony is intended to be easy to install and maintain. We document two ways to install it, using Docker or as a standalone Linux systemd service. 
+
+# Requirements
+
+Taskpony needs very little to run. 
+* Disk space: The first release docker image is around 500Mb, but installing as systemd will need a lot less, around 200kb including the initial database. Obviously, more tasks = more disk space used by the database, but even so, it's KBs, not MBs unless you really have a lot to do!
+* Memory: Around 30MB (systemd or docker)
+* CPU: Almost any CPU will be fast enough.
+* Clients: Browsers will typically use around 2-3MB of memory to load and display Taskpony.
+
+## Limits
+
+Taskpony has no artificial limits beyond those of the technologies, mostly SQLite. These are theoretically;
+
+- Tasks and Lists - a maximum of 9.22 quintillian of each. 
+- Text for each task or list's title or description can be up to a billion characters each. (Truncated in tables, but not everywhere. It's hoped users will be sane.)
+
+In reality, disk i/o performance is likely to be the limiting factor long before the above is reached.
 
 ## Docker
 
@@ -61,7 +80,22 @@ The default version mounts a persistant volume in `./data` where the Sqlite data
 
 ## Linux Service
 
-Taskpony expects to be installed in `/opt/taskpony`
+Taskpony expects to be installed in `/opt/taskpony`. 
+
+### Installing it elsewhere than /opt/taskpony
+
+If you want it to exist elsewhere, you'll need to 
+
+A) Edit `taskpony.psgi` and change `my $db_path = '/opt/taskpony/db/taskpony.db';` to point to the intended location of the database file that Taskpony will create.
+
+B) Amend `taskpony.service` and change these lines to match your new path:
+
+```
+ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
+WorkingDirectory=/opt/taskpony
+```
+
+## Installing the program
 
 1. Make the directory and pull the files in from Github
 
@@ -69,6 +103,7 @@ EITHER: using git clone:
 
 ```
 cd /opt
+apt-get install -y git
 git clone https://github.com/digdilem/taskpony.git
 ```
 
@@ -80,7 +115,13 @@ unzip -a main
 mv taskpony-main taskpony
 ```
 
-2. Copy the supplied `taskpony.service` to `/etc/systemd/system` and start and enable it
+2. Install the perl modules that taskpony requires
+
+```
+apt-get install libdbi-perl libdbd-sqlite3-perl libplack-perl perl
+```
+
+3. Copy the supplied `taskpony.service` to `/etc/systemd/system` and start and enable it
 
 ```
 cp /opt/taskpony/taskpony.service /etc/systemd/system
@@ -88,13 +129,25 @@ systemctl daemon-reload
 systemctl enable --now taskpony
 ```
 
-3. Visit port 5000 of that machine with your web browser. Eg, if it's localhost: `http://localhost:5000` and you should see Taskpony initial list.
+4. Visit port 5000 of that machine with your web browser. Eg, if it's localhost: `http://localhost:5000` and you should see Taskpony initial list.
 
 Or if it's on a machine with an IP of 10.0.0.16, then `http://10.0.0.16:5000` - etc.
 
 If you want to use another port instead of 5000, edit `taskpony.service` and change the plackup line. Eg: `ExecStart=/usr/bin/plackup -r -p 5001 /opt/taskpony/taskpony.psgi`
 
 If you wish to run Taskpony in a directory other than `/opt/taskpony`, then change `$db_path` in `taskpony.psgi` and `WorkingDirectory` in `taskpony.service`
+
+# Troubleshooting
+
+If Taskpony doesn't work as expected, then:
+
+## Docker
+
+See output logs with `docker compose logs`
+
+## Systemd
+
+See output logs with `journalctl -u taskpony` or the current status with `systemctl status taskpony`
 
 # FAQ
 
@@ -206,11 +259,15 @@ When a List is chosen from the picklist, it will be automatically chosen on subs
 
 Some things for the future that may, or may not, be added. 
 
-- (Probably) Automated deletion of old and completed tasks more than NN days since completion.
-- (Probably) Do some basic stats. Number of active and completed tasks. Tasks completed today, this week, etc.
-- (Maybe) Basic recurring tasks. Not entirely sure how this will manifest yet.
-- (Maybe) Add an icon to each List from Fontawesome
-- (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Needs consideration.
+- (Probably) Configurable and automated deletion of tasks more than NN days since completion.
+- (Probably) Do some basic stats. Number of active and completed tasks. Tasks completed today, this week, etc. Either in new /stats page, or as a small configurable task list footer.
+- (Maybe) Basic recurring tasks. Not entirely sure how this could manifest yet.
+- (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
+- (Maybe) Add an icon to each List from Fontawesome for cosmetic identification.
+- (Maybe) Add default sorting option, rather than just newest-first.
+- (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads and only write on change. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Also, most page loads involve a change, so benefit may not be significant. Needs consideration, possibly a problem that doesn't need solving.
+- (Maybe) Automated database backups.
+- (Maybe) New release notification. 
 
 # Screenshots
 
@@ -351,3 +408,5 @@ Taskpony uses this great FOSS software:
 Taskpony is released under the MIT Licence. 
 
 You may use, copy, modify, and distribute your code for any purpose, as long as they include my original copyright notice and licence text.
+
+\# End of file
