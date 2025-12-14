@@ -84,15 +84,11 @@ The default version mounts a persistant volume in `./data` where the Sqlite data
 
 ## Linux Service
 
-Taskpony expects to be installed in `/opt/taskpony`. 
+Taskpony expects to be installed in `/opt/taskpony`. If you want it to exist elsewhere, you'll need to:
 
-### Installing it elsewhere than /opt/taskpony
+1. Edit `taskpony.psgi` and change `my $db_path = '/opt/taskpony/db/taskpony.db';` to point to the intended location of the database file that Taskpony will create.
 
-If you want it to exist elsewhere, you'll need to 
-
-A) Edit `taskpony.psgi` and change `my $db_path = '/opt/taskpony/db/taskpony.db';` to point to the intended location of the database file that Taskpony will create.
-
-B) Amend `taskpony.service` and change these lines to match your new path:
+2. Amend `taskpony.service` and change these lines to match your new path:
 
 ```
 ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
