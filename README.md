@@ -60,7 +60,7 @@ In reality, disk i/o performance is likely to be the limiting factor long before
 
 ## Docker
 
-### The latest version of Taskpony is on Dockerhub as `digdilem/taskpony:latest`
+> The latest version of Taskpony is on Dockerhub as `digdilem/taskpony:latest`
 
 Install docker and run something like the following. 
 
