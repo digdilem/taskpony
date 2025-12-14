@@ -60,7 +60,7 @@ In reality, disk i/o performance is likely to be the limiting factor long before
 
 ## Docker
 
-> The latest version of Taskpony is on Dockerhub as `digdilem/taskpony:latest`
+> The latest version of Taskpony is on [Dockerhub](https://hub.docker.com/repositories/digdilem) as `digdilem/taskpony:latest`
 
 Install docker and run something like the following. 
 
@@ -74,11 +74,11 @@ If you want it to run on a different port, change the *first* 5000 to something 
 
 There is an example `docker-compose.yml` file in the repository. 
 
-Copy this to your chosen directory, inspect and adjust if it desired, and run: `docker compose up -d`
+Copy this to your chosen directory, inspect and adjust as desired, and run: `docker compose up -d`
 
 On completion, Taskpony should be available on http://localhost:5000 
 
-The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.  Backing up this file will preserve all your tasks, lists and configuration. 
+The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.
 
 ## Linux Service
 
@@ -159,15 +159,15 @@ Please do! The best place is to use [Github issues](https://github.com/digdilem/
 
 > How do I back up my tasks?
 
-All tasks, lists and settings are kept within `taskpony.db`. This can be copied somewhere safe to back it up. If you need to restore a backup, just copy that file to where Taskpony expects it and restart it.
+All tasks, lists and settings are kept within the single file, `taskpony.db`. This can be copied somewhere safe to back it up. If you need to restore a backup, just copy that file to where Taskpony expects it and restart it.
 
 > Is there an Android or IOS app?
 
-Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)
+Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)   If anyone wants to create an app for Taskpony, that's great, and if it's good I'll reference it here.
 
 > When will support for multiple users, groups or teams be added?
 
-Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with this ability if it is important to you.
+Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with groupware ability if it is important to you.
 
 > How do I add HTTPS? 
 
@@ -177,7 +177,7 @@ Use a reverse proxy - see [#security](#security)
 
 Use a reverse proxy - see [#security](#security)
 
-> Can I use a different database?
+> Can I use a different database type?
 
 Not presently. SQLite was chosen to keep things small and simple. I think it should suffice for a task application.
 
