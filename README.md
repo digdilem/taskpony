@@ -118,7 +118,17 @@ mv taskpony-main taskpony
 2. Install the perl modules that taskpony requires
 
 ```
+Debian 13
 apt-get install libdbi-perl libdbd-sqlite3-perl libplack-perl perl
+```
+
+*For other distros, you'll need your distro packages for the following perl modules, or use cpanm/cpan to install them*
+
+```
+Plack::Request
+Plack::Response
+Plack::Builder
+DBI
 ```
 
 3. Copy the supplied `taskpony.service` to `/etc/systemd/system` and start and enable it
