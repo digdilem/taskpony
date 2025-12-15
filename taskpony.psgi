@@ -1583,7 +1583,8 @@ sub start_card {
         $retstr .= qq~
                                 <div class="float-end">$card_icon</div>
                                 ~;
-        $retstr .= qq~
+        }
+    $retstr .= qq~
                             </h2>
                         </div>
 
