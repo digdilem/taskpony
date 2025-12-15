@@ -478,13 +478,11 @@ my $app = sub {
                         </table>
                     </div>
                 </div>
+                ~;
 
-                <div class="row g-3">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <div class="card card-dark text-white shadow-sm">
-                            <div class="card-body">
-                                <h5 class="mb-3">Add New List</h5>
+        # Add New List form
+        $html .= start_mini_card('Add New List', $fa_list);
+        $html .= qq~
                                 <form method="post" action="/lists" class="row g-3">
                                     <input type="hidden" name="action" value="add" />
                                     <div class="col-12">
@@ -500,14 +498,9 @@ my $app = sub {
                                         <a class="btn btn-secondary" href="/">Cancel</a>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        ~;
+                                ~;
 
+        $html .= end_card();
         $html .= footer();
         $res->body($html);
         return $res->finalize;
@@ -1574,12 +1567,37 @@ sub config_load {
 # Open a consistent looking card
 sub start_card {
     my $card_title = shift || 'Title Missing';
-#    my $card_icon = shift || $fa_info;
     my $card_icon = shift || '';
     my $retstr = qq~
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-md-10">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                            <h2 class="mb-0">
+                                $card_title
+                                ~;
+    if ($card_icon ne '') {
+        $retstr .= qq~
+                                <div class="float-end">$card_icon</div>
+                                ~;
+        }
+    $retstr .= qq~
+                            </h2>
+                        </div>
+
+                        <div class="card-body bg-dark text-white">        ~;
+    return $retstr;
+    }
+
+# As above, but smaller. Used for second cards on a page
+sub start_mini_card {
+    my $card_title = shift || 'Title Missing';
+    my $card_icon = shift || '';
+    my $retstr = qq~
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
                     <div class="card shadow-sm">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
