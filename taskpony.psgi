@@ -272,7 +272,7 @@ my $app = sub {
                     }
                 $list_dropdown .= '</select>';
                 
-                $html .= qq~
+
  $html .= qq~
 <div class="container py-4">
   <div class="row justify-content-center">
@@ -317,7 +317,19 @@ my $app = sub {
               <a class="btn btn-secondary ms-2" href="/">Cancel</a>
 
               <div class="ms-auto">
-                <a class="btn btn-warning" href="/complete?task_id=$task_id">C
+                <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
+                <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+~;
 
 
                 $html .= footer();
