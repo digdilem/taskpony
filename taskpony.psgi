@@ -272,13 +272,14 @@ my $app = sub {
                     }
                 $list_dropdown .= '</select>';
                 
-   $html .= qq~
+                $html .= qq~
+ $html .= qq~
 <div class="container py-4">
   <div class="row justify-content-center">
     <div class="col-lg-8">
 
-      <div class="card shadow-sm">
-        <div class="card-header">
+      <div class="card bg-dark text-white shadow-sm">
+        <div class="card-header border-secondary">
           <h5 class="mb-0">Edit Task</h5>
         </div>
 
@@ -289,7 +290,7 @@ my $app = sub {
               <label class="form-label">Title</label>
               <input
                 name="Title"
-                class="form-control"
+                class="form-control bg-dark text-white border-secondary"
                 required
                 maxlength="255"
                 value="~ . html_escape($task->{'Title'}) . qq~"
@@ -300,7 +301,7 @@ my $app = sub {
               <label class="form-label">Description</label>
               <textarea
                 name="Description"
-                class="form-control"
+                class="form-control bg-dark text-white border-secondary"
                 rows="4"
                 maxlength="2000"
               >~ . html_escape($task->{'Description'}) . qq~</textarea>
@@ -316,19 +317,8 @@ my $app = sub {
               <a class="btn btn-secondary ms-2" href="/">Cancel</a>
 
               <div class="ms-auto">
-                <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
-                <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
-              </div>
-            </div>
+                <a class="btn btn-warning" href="/complete?task_id=$task_id">C
 
-          </form>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-~;
 
                 $html .= footer();
                 $res->body($html);
