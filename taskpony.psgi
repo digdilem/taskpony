@@ -1021,7 +1021,7 @@ sub header {
     </style>
 
     </head>
-    <body class="text-white">
+    <body class="text-white d-flex flex-column min-vh-100">
     <div class="container py-1">
         <div class="d-flex justify-content-between align-items-center">
             <div>
