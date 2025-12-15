@@ -402,15 +402,8 @@ my $app = sub {
             }
 
         # Page - Display List of Lists
-        $html .= qq~
-            <div class="container py-4">
-                <div class="row g-3 mb-5">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <div class="card bg-dark border-secondary shadow-sm mb-4">
-                            <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                                <h2 class="mb-0">Lists Management  <div class="float-end">$fa_list</div></h2>
-                            </div>
+        $html .= start_card('Lists Management', $fa_list);
+        $html .= qq~  
                             <table class="table table-dark table-striped">
                                 <thead>
                                     <tr>
@@ -644,7 +637,7 @@ my $app = sub {
         # Show configuration page
         my $retstr .= header();
 
-        $retstr .= start_card("Settings <div class='float-end'>$fa_gear</div>");
+        $retstr .= start_card("Settings", $fa_gear);
         $retstr .= qq~
                          <form method="post" action="/config" style="display:inline;">
 
@@ -1567,7 +1560,8 @@ sub config_load {
 
 # Open a consistent looking card
 sub start_card {
-    my $card_title = shift || 'Title Missing';    
+    my $card_title = shift || 'Title Missing';
+    my $card_icon = shift || $fa_info;
     my $retstr = qq~
         <div class="container py-5">
             <div class="row justify-content-center">
@@ -1575,6 +1569,7 @@ sub start_card {
                     <div class="card shadow-sm">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">$card_title</h2>
+                            <div class="float-end">$card_icon</div>
                         </div>
 
                         <div class="card-body bg-dark text-white">        ~;
