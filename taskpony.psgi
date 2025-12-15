@@ -1356,10 +1356,11 @@ sub show_tasks {
                 </form>
                 ~;
 
-            $title_link = qq~
-                <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$description - Completed $friendly_date">
-                ~ . html_escape($a->{'Title'}) . qq~</a>  
-                ~;
+$title_link = "FUCKSOCKS";
+            # $title_link = qq~
+            #     <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$description - Completed $friendly_date">
+            #     ~ . html_escape($a->{'Title'}) . qq~</a>  
+            #     ~;
             } 
 
         # Completed tasks. Show strikethrough title and button to mark uncompleted
