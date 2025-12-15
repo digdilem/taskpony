@@ -89,6 +89,8 @@ my $app = sub {
 
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
+config_load();
+
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
@@ -1303,15 +1305,14 @@ sub show_tasks {
         ~;
 
         # Show or hide date and list columns based on config
-print STDERR "DEBUG: cfg_show_just_tasks is set to: $config->{'cfg_show_just_tasks'}\n";        
         if ($config->{'cfg_show_just_tasks'} eq 'on') {
-print STDERR "DEBUG: Hiding date and list columns as per config\n";        
 
             if ($status == 1) {  # Active tasks. Show added date
-                $retstr .= "<th>Added</th>\n";
+                $retstr .= "            <th>Added</th>\n";
                 } else { # Completed tasks. Show completed date
                 $retstr .= "<th>Completed</th>\n";
                 }
+
             $retstr .= qq~
                     <th>List</th>
                     ~;
