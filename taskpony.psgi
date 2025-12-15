@@ -457,7 +457,7 @@ my $app = sub {
 
             $html .= qq~
                                 <tr>
-                                    <td><strong><span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/edit-list?id=$list->{'id'}">$title</a></span></strong></td>
+                                    <td><strong><span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">$title</a></span></strong></td>
                                     <td>$desc</td>
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
@@ -516,7 +516,7 @@ my $app = sub {
 
     ###############################################
     # Handle editing a list
-    if ($req->path eq "/edit-list") {
+    if ($req->path eq "/editlist") {
         my $list_id = $req->param('id') // 0;
 
         # If POST, update the list in DB and redirect
@@ -544,10 +544,9 @@ my $app = sub {
 
             if ($list) {
                 my $html = header();
+                $html .= start_card("Edit List", $fa_list);
                 $html .= qq~
-                    <div class="container py-4">
-                        <h3 class="mb-3">Edit List</h3>
-                        <form method="post" action="/edit-list?id=$list_id" class="row g-3">
+                        <form method="post" action="/editlist?id=$list_id" class="row g-3">
                             <div class="col-12">
                                 <label class="form-label">Title</label>
                                 <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
@@ -563,6 +562,7 @@ my $app = sub {
                         </form>
                     </div>
                 ~;
+                $html .= end_card();
                 $html .= footer();
                 $res->body($html);
                 return $res->finalize;
@@ -573,7 +573,7 @@ my $app = sub {
         $res->body("List not found");
         return $res->finalize;
         }
-    # End /edit-list
+    # End /editlist
 
   ###############################################
     # Handle config changes

@@ -384,7 +384,7 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint. The 
       - Sanitize strings and insert into ListsTb as a new entry
       - Show main lists page
     
-- /edit-list
+- /editlist
   - Page
     - ?id=NN
       - Get information for list from ListsTb.id=NN
