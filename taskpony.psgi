@@ -1385,7 +1385,7 @@ sub show_tasks {
             <tr>
                 <td>$checkbox</td>
                 <td>$title_link</td>
-                <td>$friendly_date</td>
+                <td data-order="$a->{'CompletedDate'}">$friendly_date</td>
                 <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
             </tr>
             ~;
