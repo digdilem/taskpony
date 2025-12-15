@@ -792,42 +792,60 @@ my $app = sub {
         }
 
         
-        # Start the main box
-        $html .= qq~
-            <div class="row g-1">
-                <div class="col-md-1">
-                </div>
-                <div class="col-md-10">
-                    <div class="card card-dark text-white shadow-sm">
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">       
-            ~;
+        # # Start the main box
+        # $html .= qq~
+        #     <div class="row g-1">
+        #         <div class="col-md-1">
+        #         </div>
+        #         <div class="col-md-10">
+        #             <div class="card card-dark text-white shadow-sm">
+        #                 <div class="card-header bg-$config->{cfg_header_colour} text-white">       
+        #     ~;
 
-        # Only show quick input box if we have a specific list selected
-        if ($list_id != 1) { 
-            $html .= qq~            
-                            <form method="post" action="/add" class="row g-3">
-                                <div class="col-1">
-                                </div>
-                                <div class="col-9">
-                                    <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
-                                </div>
-                                <div class="col-2">
-                                    <button class="btn btn-primary" type="submit">Add</button>   
-                                </div>
-                            </form>
+        # # Only show quick input box if we have a specific list selected
+        # if ($list_id != 1) { 
+        #     $html .= qq~            
+        #                     <form method="post" action="/add" class="row g-3">
+        #                         <div class="col-1">
+        #                         </div>
+        #                         <div class="col-9">
+        #                             <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
+        #                         </div>
+        #                         <div class="col-2">
+        #                             <button class="btn btn-primary" type="submit">Add</button>   
+        #                         </div>
+        #                     </form>
+        #             ~;
+        #     } else { # Show banner for all lists instead
+        #         if ($show_completed == 1) {
+        #             $html .= "Showing completed tasks from all lists";
+        #             } else {
+        #             $html .= "Showing active tasks from all lists";
+        #             }
+        #         } # End all lists quick add check
+
+        # $html .= qq~
+        #                 </div>
+        #                 <div class="card-body">
+        #     ~; 
+
+        # Set default titlebar to be the quick add form for the selected list
+    my $titlebar = qq~
+                    <form method="post" action="/add" class="row g-3">
+                        <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
+                        <button class="btn btn-primary" type="submit">Add</button>                               
+                    </form>
                     ~;
-            } else { # Show banner for all lists instead
-                if ($show_completed == 1) {
-                    $html .= "Showing completed tasks from all lists";
-                    } else {
-                    $html .= "Showing active tasks from all lists";
-                    }
-                } # End all lists quick add check
+    # If showing all lists, change titlebar to show what is being displayed instead of the form
+    if ($list_id == 1) {
+        if ($show_completed == 1) {
+            $titlebar = "Showing completed tasks from all lists";
+            } else {
+            $titlebar = "Showing active tasks from all lists";
+            }
+        }
 
-        $html .= qq~
-                        </div>
-                        <div class="card-body">
-            ~; 
+    start_card($titlebar, $fa_tasks);
 
     ####################################
     # Show main list of tasks
@@ -842,12 +860,14 @@ my $app = sub {
     # End list of tasks, continue with box
     #####################################
 
-    $html .= qq~
-                    </div>
-                </div>
-            </div>
-        </div>
-        ~;
+    $html .= end_card();
+
+    # $html .= qq~
+    #                 </div>
+    #             </div>
+    #         </div>
+    #     </div>
+    #     ~;
 
     $html .= footer();
     $res->body($html);
