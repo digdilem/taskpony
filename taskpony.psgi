@@ -42,7 +42,7 @@ my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
-# Some inline SVG fontawesome icons to prevent including the entire svg map
+# Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
 my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="30" height="30">
                 <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                 ~;
@@ -64,14 +64,16 @@ my $fa_info = $fa_header . q~
                     </svg>~;
 
 # Preflight checks
+print STDERR "Loading Taskpony $app_version...\n";
+connect_db();                   # Connect to the database
+config_load();                  # Load saved config values
+
 print STDERR "\n+-----Welcome to Taskpony! ----------+\n";
 print STDERR "|  [X] Install Taskpony              |\n";
 print STDERR "|  [ ] Do the thing                  |\n";
 print STDERR "|  [ ] Buy milk                      |\n";
 print STDERR "+------------------------------------+\n\n";
 
-connect_db();                   # Connect to the database
-config_load();                  # Load saved config values
 # Get additional config values.
 $list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
 $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
