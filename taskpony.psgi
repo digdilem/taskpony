@@ -644,7 +644,7 @@ my $app = sub {
         # Show configuration page
         my $retstr .= header();
 
-        $retstr .= start_card("Settings <div class="float-end">$fa_gear</div>");
+        $retstr .= start_card("Settings <div class='float-end'>$fa_gear</div>");
         $retstr .= qq~
                          <form method="post" action="/config" style="display:inline;">
 
