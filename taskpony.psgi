@@ -1567,7 +1567,7 @@ sub start_card {
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-$config->{cfg_header_colour}text-white">
+                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
                                 <div class="float-end">$card_icon</div>
