@@ -1357,10 +1357,8 @@ sub show_tasks {
 
             $title_link = qq~
                 <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~ .
-                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . 
-                qq~ - Added: $friendly_date">
-                ~ . 
-                html_escape($a->{'Title'}) . qq~</a>
+                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . $friendly_date .
+                qq~">~ . html_escape($a->{'Title'}) . qq~</a>
                 ~;
             } 
 
