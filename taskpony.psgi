@@ -1574,6 +1574,33 @@ sub config_load {
     }
      # End config_load()
 
+# Open a consistent looking card
+sub start_card {
+    my $card_title = shift || 'Title Missing';    
+    my $retstr = qq~
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                            <h2 class="mb-0">$card_title</h2>
+                        </div>
+
+                        <div class="card-body bg-dark text-white">        ~;
+    return $retstr;
+    }
+
+# Close the card
+sub end_card {
+    my $retstr = qq~
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ~;
+    return $retstr;
+    }
 
 ##############################################
 # End Functions
