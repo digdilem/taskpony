@@ -1335,16 +1335,22 @@ sub show_tasks {
             ~;
 
     # Loop through each task and output a row for each
-    while (my $a = $sth->fetchrow_hashref()) {        
+    while (my $a = $sth->fetchrow_hashref()) {
         my $friendly_date = qq~
-            <a href="#" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">~
-            . human_friendly_date($a->{'AddedDate'}) . qq~</a>
+            <td data-order="$a->{'AddedDate'}">
+                <a href="#" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">
+                ~
+                . human_friendly_date($a->{'AddedDate'}) . qq~</a> 
+            </td>
             ~;
 
         if ($status != 1) { # Completed tasks, show CompletedDate instead
             $friendly_date = qq~
-            <a href="#" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">~
-            . human_friendly_date($a->{'CompletedDate'}) . qq~</a>
+            <td data-order="$a->{'CompletedDate'}">
+                <a href="#" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">
+                ~
+                . human_friendly_date($a->{'CompletedDate'}) . qq~</a>
+            </td>
             ~;
             }
 
@@ -1385,7 +1391,7 @@ sub show_tasks {
             <tr>
                 <td>$checkbox</td>
                 <td>$title_link</td>
-                <td data-order="$a->{'CompletedDate'}">$friendly_date</td>
+                $friendly_date
                 <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
             </tr>
             ~;
