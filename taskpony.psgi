@@ -257,7 +257,7 @@ my $app = sub {
         if ($task_id > 0) {
             my $sth = $dbh->prepare('SELECT id, Title, Description, ListId FROM TassanitizeRE id = ?');
             $sth->execute($task_id);
-    sanitizemy $task = $sth->fetchrow_hashref();
+            my $task = $sth->fetchrow_hashref();
 
             if ($task) {
                 my $html = header();
