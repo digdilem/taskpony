@@ -1593,6 +1593,13 @@ sub end_card {
 #################################################
 # End of file
 
+use Digest::SHA qw(sha256_hex);
+
+sub csrf_token {
+    my ($session) = @_;
+    $session->{csrf_token} ||= sha256_hex(rand() . $$ . time());
+    return $session->{csrf_token};
+}
 
 
 
