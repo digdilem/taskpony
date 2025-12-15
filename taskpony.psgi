@@ -85,15 +85,11 @@ my $app = sub {
 
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
-    # Load config
-    # !!
-    # config_load();
-
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
 
-    # If no list lid specified by argument, get the active list from ConfigTb to provide consistency to user
+    # If no list lid specified, get the active list from ConfigTb to provide consistency to user
     if ($list_id == 0) {
         $list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
         debug("List id (lid) was specified, using active list id from ConfigTb of: $list_id");
@@ -108,8 +104,10 @@ my $app = sub {
             ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
         }
 
-    # Get name of active list for later us
-    $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+    # Get name of active list for later use if unset
+    if (! $list_name) {
+        $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+        }
 
     # Start building page
     my $html = header();
