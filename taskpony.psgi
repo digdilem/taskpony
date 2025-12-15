@@ -614,7 +614,7 @@ my $app = sub {
                             <!-- TOGGLE ROW cfg_show_just_tasks -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">                                
                                 <span class="config-label">
-                                    Just Show Tasks
+                                    Hide Dates and Lists in Tasks Table
                                     <span data-bs-toggle="tooltip" title="Hide the Dates and Lists columns in the Tasks table, showing just Task names"> 
                                         $fa_info
                                     </span> 
