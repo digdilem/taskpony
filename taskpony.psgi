@@ -72,6 +72,8 @@ print STDERR "+------------------------------------+\n\n";
 
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
+$list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+
 
 ####################################
 # Start main loop
