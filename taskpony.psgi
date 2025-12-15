@@ -833,7 +833,7 @@ my $app = sub {
     my $titlebar = qq~                    
                         <form method="post" action="/add" class="row g-3">
                             <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
-                            <button class="btn btn-primary" type="submit">Add</button>                               
+                            <button class="btn btn-primary" type="submit">Add</button>
                         </form>
                     ~;
     # If showing all lists, change titlebar to show what is being displayed instead of the form
@@ -1578,7 +1578,12 @@ sub start_card {
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
+                                ~;
+    if ($card_icon ne '') {
+        $retstr .= qq~
                                 <div class="float-end">$card_icon</div>
+                                ~;
+        $retstr .= qq~
                             </h2>
                         </div>
 
