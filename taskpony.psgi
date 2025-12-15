@@ -25,6 +25,7 @@ our $config = {
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
+    cfg_show_just_tasks => 'off',                    # Show just tasks, hide Date and List columns in task list
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
@@ -610,6 +611,25 @@ my $app = sub {
 
                             <input type="hidden" name="save_config" value="true">
 
+                            <!-- TOGGLE ROW cfg_show_just_tasks -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">                                
+                                <span class="config-label">
+                                    Just Show Tasks
+                                    <span data-bs-toggle="tooltip" title="Hide the Dates and Lists columns in the Tasks table, showing just Task names"> 
+                                        $fa_info
+                                    </span> 
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_show_just_tasks" 
+                                    id="autoUpdateToggle"
+                                    ~;
+                                    # Precheck this if set
+                                    if ($config->{'cfg_show_just_tasks'} eq 'on') { $retstr .= " checked "; }
+
+                                    $retstr .= qq~
+                                    >
+                                </div>
+                            </div>
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">                                
                                 <span class="config-label">
