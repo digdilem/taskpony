@@ -1345,7 +1345,8 @@ sub show_tasks {
 
         my $checkbox = '';  # Default empty
         my $title_link;
-        my $description = substr($a->{'Description'},0,$config->{'cfg_description_short_length'});
+        my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
+        my $title = html_escape($a->{'Title'});
         
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {  
@@ -1356,11 +1357,16 @@ sub show_tasks {
                 </form>
                 ~;
 
-$title_link = "FUCKSOCKS";
-            # $title_link = qq~
-            #     <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$description - Completed $friendly_date">
-            #     ~ . html_escape($a->{'Title'}) . qq~</a>  
-            #     ~;
+            $title_link = qq~
+                    <a 
+                    href="/edittask?id=$a->{'id'}"
+                    class="text-white text-decoration-none" 
+                    data-bs-toggle="tooltip" 
+                    title="$description - Completed $friendly_date"
+                    >
+                    $title
+                    </a>
+                     ~;
             } 
 
         # Completed tasks. Show strikethrough title and button to mark uncompleted
