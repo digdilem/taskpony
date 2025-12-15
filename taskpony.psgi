@@ -1568,7 +1568,8 @@ sub config_load {
 # Open a consistent looking card
 sub start_card {
     my $card_title = shift || 'Title Missing';
-    my $card_icon = shift || $fa_info;
+#    my $card_icon = shift || $fa_info;
+    my $card_icon = shift || '';
     my $retstr = qq~
         <div class="container py-5">
             <div class="row justify-content-center">
