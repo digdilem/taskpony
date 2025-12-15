@@ -1022,6 +1022,7 @@ sub header {
 
     </head>
     <body class="text-white d-flex flex-column min-vh-100">
+    <main class="flex-grow-1 container py-4">
     <div class="container py-1">
         <div class="d-flex justify-content-between align-items-center">
             <div>
@@ -1061,7 +1062,8 @@ sub footer {
 
     $retstr .= qq~
         <br>
-        <footer class="mt-auto text-white-50 text-center fixed-bottom ">
+        </main>
+        <footer class="text-center text-white-50 py-2">
             <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
         </footer>
 
