@@ -272,35 +272,64 @@ my $app = sub {
                     }
                 $list_dropdown .= '</select>';
                 
-                $html .= qq~
-                    <div class="container py-4">
-                        <h3 class="mb-3">Edit Task</h3>
-                        <form method="post" action="/edittask?id=$task_id" class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">Title</label>
-                            <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($task->{'Title'}) . qq~" />
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($task->{'Description'}) . qq~</textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">List</label>
-                            $list_dropdown
-                        </div>
-                        <br>
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Save Task</button>
-                            <a class="btn btn-secondary" href="/">Cancel</a>
-                            <div class="float-end">
-                                <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
-                                &nbsp;&nbsp;
-                                <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                    ~;
+   $html .= qq~
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h5 class="mb-0">Edit Task</h5>
+        </div>
+
+        <div class="card-body">
+          <form method="post" action="/edittask?id=$task_id" class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label">Title</label>
+              <input
+                name="Title"
+                class="form-control"
+                required
+                maxlength="255"
+                value="~ . html_escape($task->{'Title'}) . qq~"
+              />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              <textarea
+                name="Description"
+                class="form-control"
+                rows="4"
+                maxlength="2000"
+              >~ . html_escape($task->{'Description'}) . qq~</textarea>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">List</label>
+              $list_dropdown
+            </div>
+
+            <div class="col-12 d-flex align-items-center">
+              <button class="btn btn-primary" type="submit">Save Task</button>
+              <a class="btn btn-secondary ms-2" href="/">Cancel</a>
+
+              <div class="ms-auto">
+                <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
+                <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+~;
+
                 $html .= footer();
                 $res->body($html);
                 return $res->finalize;
