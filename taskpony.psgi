@@ -102,13 +102,16 @@ my $app = sub {
             $list_id,
             $list_id
             ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
+        } else { # ?lid list_id was specified, presume user has changed. Get new list name
+                $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+
         }
 
     # Get name of active list for later use if unset
 
 #    if (! $list_name) {
-        $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
- #       }
+#         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+#  #       }
 
     # Start building page
     my $html = header();
