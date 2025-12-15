@@ -326,10 +326,10 @@ my $app = sub {
 
                                 <div class="ms-auto">
                                 ~;
-                                
+
                                 if ($task->{'Status'} == 1) {
                                     $html .= qq~
-                                    <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
+                                    <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
                                     ~;
                                     } else {
                                     $html .= qq~
