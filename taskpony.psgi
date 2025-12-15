@@ -17,7 +17,7 @@ use File::Spec::Functions qw(catdir);
 use FindBin;
 
 ###############################################
-# Default configuration, overriden by ConfigTb values, change them via webui at /config
+# Default configuration, overriden by ConfigTb values, change them via settings page
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page 
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
@@ -25,6 +25,7 @@ our $config = {
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
+    cfg_show_dates_lists => 'on',                    # Show just tasks, hide Date and List columns in task list
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
@@ -43,7 +44,7 @@ my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map
-my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="20" height="20">
+my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="30" height="30">
                 <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                 ~;
 my $fa_star_off = $fa_header . q~
@@ -53,11 +54,9 @@ my $fa_star_on = $fa_header . q~
                     <path fill="currentColor" d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23 46 46.4 33.7L288 439.6l130.7 68.7c23.4 12.3 50.9-7.5 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17c-11.7-23.6-45.6-23.9-57.4 0z"/>
                     </svg>~;
 my $fa_gear = $fa_header . q~
-                    <path fill="currentColor" d="M487.4 315.7l-42.5-24.6c4.3-23.2 4.3-47 0-70.2l42.5-24.6c12-6.9 17-22.1 11-34.7l-19.8-45.8c-6-12.6-20.3-18.6-33.6-14.6l-49 15.6c-17.9-15.4-38.7-27.3-61.4-35l-9.3-50.7C323.7 10.4 312 0 297.4 0h-54.8c-14.6 0-26.3 10.4-28.2 24.9l-9.3 50.7c-22.7 7.7-43.5 19.6-61.4 35l-49-15.6c-13.2-4-27.6 2-33.6 14.6L41.5 161.6c-6 12.6-.9 27.8 11 34.7L95 220.9c-4.3 23.2-4.3 47 0 70.2l-42.5 24.6c-12 6.9-17 22.1-11 34.7l19.8 45.8c6 12.6 20.3 18.6 33.6 14.6l49-15.6c17.9 15.4 38.7 27.3 61.4 35l9.3 50.7c1.9 14.5 13.6 24.9 28.2 24.9h54.8c14.6 0 26.3-10.4 28.2-24.9l9.3-50.7c22.7-7.7 43.5-19.6 61.4-35l49 15.6c13.2 4 27.6-2 33.6-14.6l19.8-45.8c6-12.5 1-27.7-11-34.6zM256 336c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"/>
-                    </svg>~;
+                    <path fill="currentColor" d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/></svg>~;
 my $fa_list = $fa_header . q~
-                    <path fill="currentColor" d="M152 304c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zm0-96c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zm0-96c-6.6 0-12 5.4-12 12s5.4 12 12 12h208c6.6 0 12-5.4 12-12s-5.4-12-12-12H152zM504 256c4.4 0 8-3.6 8-8V96c0-26.5-21.5-48-48-48H48C21.5 48 0 69.5 0 96v320c0 26.5 21.5 48 48 48h184c4.4 0 8-3.6 8-8s-3.6-8-8-8H48c-17.6 0-32-14.4-32-32V96c0-17.6 14.4-32 32-32h416c17.6 0 32 14.4 32 32v152c0 4.4 3.6 8 8 8zM346.5 431l-73.9-73.9c-6.2-6.2-16.4-6.2-22.6 0l-35.3 35.3c-6.2 6.2-6.2 16.4 0 22.6l96 96c6.2 6.2 16.4 6.2 22.6 0l128-128c6.2-6.2 6.2-16.4 0-22.6l-35.3-35.3c-6.2-6.2-16.4-6.2-22.6 0L346.5 431z"/>
-                    </svg>~;
+                    <path fill="currentColor" d="M197.8 100.3C208.7 107.9 211.3 122.9 203.7 133.7L147.7 213.7C143.6 219.5 137.2 223.2 130.1 223.8C123 224.4 116 222 111 217L71 177C61.7 167.6 61.7 152.4 71 143C80.3 133.6 95.6 133.7 105 143L124.8 162.8L164.4 106.2C172 95.3 187 92.7 197.8 100.3zM197.8 260.3C208.7 267.9 211.3 282.9 203.7 293.7L147.7 373.7C143.6 379.5 137.2 383.2 130.1 383.8C123 384.4 116 382 111 377L71 337C61.6 327.6 61.6 312.4 71 303.1C80.4 293.8 95.6 293.7 104.9 303.1L124.7 322.9L164.3 266.3C171.9 255.4 186.9 252.8 197.7 260.4zM288 160C288 142.3 302.3 128 320 128L544 128C561.7 128 576 142.3 576 160C576 177.7 561.7 192 544 192L320 192C302.3 192 288 177.7 288 160zM288 320C288 302.3 302.3 288 320 288L544 288C561.7 288 576 302.3 576 320C576 337.7 561.7 352 544 352L320 352C302.3 352 288 337.7 288 320zM224 480C224 462.3 238.3 448 256 448L544 448C561.7 448 576 462.3 576 480C576 497.7 561.7 512 544 512L256 512C238.3 512 224 497.7 224 480zM128 440C150.1 440 168 457.9 168 480C168 502.1 150.1 520 128 520C105.9 520 88 502.1 88 480C88 457.9 105.9 440 128 440z"/></svg>~;
 my $fa_rotate_left = $fa_header . q~
                     <path fill="currentColor" d="M88 256L232 256C241.7 256 250.5 250.2 254.2 241.2C257.9 232.2 255.9 221.9 249 215L202.3 168.3C277.6 109.7 386.6 115 455.8 184.2C530.8 259.2 530.8 380.7 455.8 455.7C380.8 530.7 259.3 530.7 184.3 455.7C174.1 445.5 165.3 434.4 157.9 422.7C148.4 407.8 128.6 403.4 113.7 412.9C98.8 422.4 94.4 442.2 103.9 457.1C113.7 472.7 125.4 487.5 139 501C239 601 401 601 501 501C601 401 601 239 501 139C406.8 44.7 257.3 39.3 156.7 122.8L105 71C98.1 64.2 87.8 62.1 78.8 65.8C69.8 69.5 64 78.3 64 88L64 232C64 245.3 74.7 256 88 256z"/>
                     </svg>~;
@@ -74,6 +73,9 @@ print STDERR "+------------------------------------+\n\n";
 
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
+# Get additional config values.
+$list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+$list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
 
 ####################################
 # Start main loop
@@ -87,15 +89,11 @@ my $app = sub {
 
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
-    # Load config
-    # !!
-    # config_load();
-
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
 
-    # If no list lid specified by argument, get the active list from ConfigTb to provide consistency to user
+    # If no list lid specified, get the active list from ConfigTb to provide consistency to user
     if ($list_id == 0) {
         $list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
         debug("List id (lid) was specified, using active list id from ConfigTb of: $list_id");
@@ -108,19 +106,14 @@ my $app = sub {
             $list_id,
             $list_id
             ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
+        $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
         }
-
-    # Get name of active list for later us
-    $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
 
     # Start building page
     my $html = header();
 
     ###############################################
     # Step through named paths
-    ###############################################
-
-
     ###############################################
     # Set TASK nn as Status 2 in TasksTb (Completed)
     if ($req->path eq "/complete") {
@@ -135,14 +128,13 @@ my $app = sub {
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
 
             debug("Task $task_id marked as complete");
-            add_alert("Task #$task_id markedsanitize( as completed");
+            add_alert("Task #$task_id marked as completed");
         }
 
         # Always redirect
         $res->redirect('/');
         return $res->finalize;
-    }
-    # End /complete
+    } # End /complete
 
     ###############################################
     # Set TASK nn as Status 1 in TasksTb (Active)
@@ -159,8 +151,7 @@ my $app = sub {
         }
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
-        }
-    # End /ust
+        } # End /ust
 
     ###############################################
     # Handle setting a list as default
@@ -178,8 +169,7 @@ my $app = sub {
             }
         $res->redirect('/lists'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
-        }
-    # End /set_default_list
+        } # End /set_default_list
 
     ###############################################
     # Create a new task
@@ -200,7 +190,7 @@ my $app = sub {
             add_alert("Task '$title' added.");
             $res->redirect('/');
             return $res->finalize;
-            }
+            } # End /add form submission handling
 
         # If page, show the add-task form
         my $html = header();
@@ -208,8 +198,8 @@ my $app = sub {
             <div class="container py-4">
                 <h3 class="mb-3">Add Task</h3>
                 <form method="post" action="/add" class="row g-3">
- sanitize       <div class="col-12">
-                    <labelsanitizeform-label">Title</label>
+                <div class="col-12">
+                    <label class="form-label">Title</label>
                     <input name="Title" class="form-control" required maxlength="255" />
                 </div>
                 <div class="col-12">
@@ -226,8 +216,7 @@ my $app = sub {
         $html .= footer();
         $res->body($html);
         return $res->finalize;
-        }
-    # End /add
+        } # End /add
 
     ###############################################
     # Handle editing a task
@@ -251,11 +240,11 @@ my $app = sub {
             add_alert("Task $task_id updated.");
             $res->redirect('/');
             return $res->finalize;
-            }
+            } # End /edittask form submission handling
 
-        # If Page, show the edit-task form
+        # Display edit form
         if ($task_id > 0) {
-            my $sth = $dbh->prepare('SELECT id, Title, Description, ListId FROM TassanitizeRE id = ?');
+            my $sth = $dbh->prepare('SELECT id, Status, Title, Description, ListId FROM TasksTb WHERE id = ?');
             $sth->execute($task_id);
             my $task = $sth->fetchrow_hashref();
 
@@ -267,42 +256,80 @@ my $app = sub {
                 my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
                 $list_sth->execute();
                 
+                # Build list 
                 while (my $list= $list_sth->fetchrow_hashref()) {
                     my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
-                    my $title = sanitize($list->{'Title'});
+                    my $title = html_escape($list->{'Title'});
                     $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
                     }
                 $list_dropdown .= '</select>';
-                
+
+                my $task_status = 'Completed';
+                if ($task->{'Status'} == 1) { $task_status = 'Active'; }
+
+                $html .= start_card("Edit Task #$task_id - $task_status", $fa_info);
+
                 $html .= qq~
-                    <div class="container py-4">
-                        <h3 class="mb-3">Edit Task</h3>
-                        <form method="post" action="/edittask?id=$task_id" class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">Title</label>
-                            <input name="Title" class="form-control" required maxlength="255" value="~ . sanitize($task->{'Title'}) . qq~" />
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Description</label>
-                            <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . sanitize($task->{'Description'}) . qq~</textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">List</label>
-                            $list_dropdown
-                        </div>
-                        <br>
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="submit">Save Task</button>
-                            <a class="btn btn-secondary" href="/">Cancel</a>
-                            <div class="float-end">
-                                <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
-                                &nbsp;&nbsp;
-                                <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
+                            <form method="post" action="/edittask?id=$task_id" class="row g-3">
+
+                                <div class="col-12">
+                                <label class="form-label">Title</label>
+                                <input
+                                    name="Title"
+                                    class="form-control bg-dark text-white border-secondary"
+                                    required
+                                    maxlength="255"
+                                    value="~ . html_escape($task->{'Title'}) . qq~"
+                                />
+                                </div>
+
+                                <div class="col-12">
+                                <label class="form-label">Description</label>
+                                <textarea
+                                    name="Description"
+                                    class="form-control bg-dark text-white border-secondary"
+                                    rows="4"
+                                    maxlength="2000"
+                                >~ . html_escape($task->{'Description'}) . qq~</textarea>
+                                </div>
+
+                                <div class="col-12">
+                                <label class="form-label">List</label>
+                                $list_dropdown
+                                </div>
+
+                                <div class="col-12 d-flex align-items-center">
+                                <button class="btn btn-primary" type="submit">Save Task</button>
+                                <a class="btn btn-secondary ms-2" href="/">Cancel</a>
+
+                                <div class="ms-auto">
+                                ~;
+
+                                if ($task->{'Status'} == 1) {
+                                    $html .= qq~
+                                    <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
+                                    ~;
+                                    } else {
+                                    $html .= qq~
+                                    <a class="btn btn-warning" href="/ust?task_id=$task_id">Set Task as Active</a>
+                                    ~;
+                                    }
+                                    
+
+                                $html .= qq~
+                                    <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
+                                </div>
+                                </div>
+
+                            </form>
                             </div>
                         </div>
-                        </form>
+
+                        </div>
+                    </div>
                     </div>
                     ~;
+
                 $html .= footer();
                 $res->body($html);
                 return $res->finalize;
@@ -312,8 +339,7 @@ my $app = sub {
         $res->status(404);
         $res->body("Task not found");
         return $res->finalize;
-        }
-    # End /edittask
+        } # End /edittask
 
     ###############################################
     # Lists Management page
@@ -350,18 +376,11 @@ my $app = sub {
 
             $res->redirect('/lists');
             return $res->finalize;
-            }
+            } # End /lists form submission handling
 
         # Page - Display List of Lists
-        $html .= qq~
-            <div class="container py-4">
-                <div class="row g-3 mb-5">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <div class="card bg-dark border-secondary shadow-sm mb-4">
-                            <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                                <h2 class="mb-0">Lists Management  <div class="float-end">$fa_list</div></h2>
-                            </div>
+        $html .= start_card('Lists Management', $fa_list);
+        $html .= qq~  
                             <table class="table table-dark table-striped">
                                 <thead>
                                     <tr>
@@ -407,8 +426,8 @@ my $app = sub {
                 $list->{'id'}
                 ) // 0;
 
-            my $title = sanitize($list->{'Title'});
-            my $desc = substr(sanitize($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
+            my $title = html_escape($list->{'Title'});
+            my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
             
             # Show toggles for default list
             my $is_default_str = qq~
@@ -428,7 +447,7 @@ my $app = sub {
 
             $html .= qq~
                                 <tr>
-                                    <td><strong><span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/edit-list?id=$list->{'id'}">$title</a></span></strong></td>
+                                    <td><strong><span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">$title</a></span></strong></td>
                                     <td>$desc</td>
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
@@ -449,13 +468,11 @@ my $app = sub {
                         </table>
                     </div>
                 </div>
+                ~;
 
-                <div class="row g-3">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <div class="card card-dark text-white shadow-sm">
-                            <div class="card-body">
-                                <h5 class="mb-3">Add New List</h5>
+        # Add New List form
+        $html .= start_mini_card('Add New List', $fa_list);
+        $html .= qq~
                                 <form method="post" action="/lists" class="row g-3">
                                     <input type="hidden" name="action" value="add" />
                                     <div class="col-12">
@@ -471,23 +488,17 @@ my $app = sub {
                                         <a class="btn btn-secondary" href="/">Cancel</a>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        ~;
+                                ~;
 
+        $html .= end_card();
         $html .= footer();
         $res->body($html);
         return $res->finalize;
-        } 
-    # End /lists
+        } # End /lists
 
     ###############################################
     # Handle editing a list
-    if ($req->path eq "/edit-list") {
+    if ($req->path eq "/editlist") {
         my $list_id = $req->param('id') // 0;
 
         # If POST, update the list in DB and redirect
@@ -505,7 +516,7 @@ my $app = sub {
 
             $res->redirect('/lists');
             return $res->finalize;
-            }
+            } # End /editlist form submission handling
 
         # If GET, show the edit-list form
         if ($list_id > 1) {
@@ -515,17 +526,16 @@ my $app = sub {
 
             if ($list) {
                 my $html = header();
+                $html .= start_card("Edit List", $fa_list);
                 $html .= qq~
-                    <div class="container py-4">
-                        <h3 class="mb-3">Edit List</h3>
-                        <form method="post" action="/edit-list?id=$list_id" class="row g-3">
+                        <form method="post" action="/editlist?id=$list_id" class="row g-3">
                             <div class="col-12">
                                 <label class="form-label">Title</label>
-                                <input name="Title" class="form-control" required maxlength="255" value="~ . sanitize($list->{'Title'}) . qq~" />
+                                <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Description</label>
-                                <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . sanitize($list->{'Description'} // '') . qq~</textarea>
+                                <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
                             </div>
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Save List</button>
@@ -534,6 +544,7 @@ my $app = sub {
                         </form>
                     </div>
                 ~;
+                $html .= end_card();
                 $html .= footer();
                 $res->body($html);
                 return $res->finalize;
@@ -543,10 +554,9 @@ my $app = sub {
         $res->status(404);
         $res->body("List not found");
         return $res->finalize;
-        }
-    # End /edit-list
+        } # End /editlist
 
-  ###############################################
+    ###############################################
     # Handle config changes
     if ($req->path eq "/config") {
         # If POST, update the config in DB and redirect to root
@@ -560,13 +570,12 @@ my $app = sub {
                     my $new_val;
                     $new_val = $req->param($key); # || $config->{$key};
 
-
                     if ($new_val) {
                         debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -590,26 +599,37 @@ my $app = sub {
             add_alert("Configuration saved");
             $res->redirect('/');
             return $res->finalize;
-            }        
+            } # End /config form submission handling
 
         ###############################################
         # Show configuration page
         my $retstr .= header();
 
+        $retstr .= start_card("Settings", $fa_gear);
         $retstr .= qq~
-            <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                    <h2 class="mb-0">$app_title Settings <div class="float-end">$fa_gear</div></h2>
-                    </div>
-
-                    <div class="card-body bg-dark text-white">
                          <form method="post" action="/config" style="display:inline;">
 
                             <input type="hidden" name="save_config" value="true">
 
+                            <!-- TOGGLE ROW cfg_show_dates_lists -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">                                
+                                <span class="config-label">
+                                    Show Dates and Lists in Tasks Table
+                                    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
+                                        $fa_info
+                                    </span> 
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists" 
+                                    id="autoUpdateToggle"
+                                    ~;
+                                    # Precheck this if set
+                                    if ($config->{'cfg_show_dates_lists'} eq 'on') { $retstr .= " checked "; }
+
+                                    $retstr .= qq~
+                                    >
+                                </div>
+                            </div>
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">                                
                                 <span class="config-label">
@@ -752,8 +772,7 @@ my $app = sub {
         $retstr .= footer();
         $res->body($retstr);
         return $res->finalize;
-        }
-    # End /config
+        } # End /config
 
     ###############################################
     # End named paths
@@ -771,43 +790,23 @@ my $app = sub {
         return $res->finalize;
         }
 
-        
-        # Start the main box
-        $html .= qq~
-            <div class="row g-1">
-                <div class="col-md-1">
-                </div>
-                <div class="col-md-10">
-                    <div class="card card-dark text-white shadow-sm">
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">       
-            ~;
-
-        # Only show quick input box if we have a specific list selected
-        if ($list_id != 1) { 
-            $html .= qq~            
-                            <form method="post" action="/add" class="row g-3">
-                                <div class="col-1">
-                                </div>
-                                <div class="col-9">
-                                    <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
-                                </div>
-                                <div class="col-2">
-                                    <button class="btn btn-primary" type="submit">Add</button>   
-                                </div>
-                            </form>
+    # Set default titlebar to be the quick add form for the selected list
+    my $titlebar = qq~                    
+                        <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
+                            <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </form>
                     ~;
-            } else { # Show banner for all lists instead
-                if ($show_completed == 1) {
-                    $html .= "Showing completed tasks from all lists";
-                    } else {
-                    $html .= "Showing active tasks from all lists";
-                    }
-                } # End all lists quick add check
+    # If showing all lists, change titlebar to show what is being displayed instead of the form
+    if ($list_id == 1) {
+        if ($show_completed == 1) {
+            $titlebar = "Showing completed tasks from all lists";
+            } else {
+            $titlebar = "Showing active tasks from all lists";
+            }
+        }
 
-        $html .= qq~
-                        </div>
-                        <div class="card-body">
-            ~; 
+    $html .= start_card($titlebar);
 
     ####################################
     # Show main list of tasks
@@ -822,28 +821,14 @@ my $app = sub {
     # End list of tasks, continue with box
     #####################################
 
-    $html .= qq~
-                    </div>
-                </div>
-            </div>
-        </div>
-        ~;
+    $html .= end_card();
 
     $html .= footer();
     $res->body($html);
     return $res->finalize;
     };   # End main loop, pages and paths handling
 
-# builder {
-#     # Enable Static middleware for specific paths, including favicon.ico  Launches main loop on first run.
-#     enable 'Plack::Middleware::Static', 
-#         path => qr{^/(favicon.ico|robots.txt|taskpony-logo.png|/css/datatables.min.css)},
-#         root => $static_dir;
-
-#     $app;
-#     };
-builder {
-    # Enable Static middleware for specific paths, including favicon.ico  Launches main loop on first run.
+builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
     enable 'Plack::Middleware::Static', 
         path => qr{^/static/},
         root => $static_dir;
@@ -855,7 +840,6 @@ builder {
 ###############################################
 
 ###############################################
-# connect_db()
 # Checks whether the sqlite database file exists and if not, creates it, populates schema, and connects to it
 sub connect_db { 
     # Check database exists. 
@@ -899,8 +883,7 @@ sub connect_db {
 
     # Check for any needed schema upgrades each time we connect
     check_database_upgrade(); 
-    } 
-    # End connect_db()
+    }  # End connect_db()
 
 ###############################################
 # initialise_database
@@ -908,7 +891,6 @@ sub connect_db {
 
 # Create the v.1 database schema in a new database. New DB is created and we are connected via the global $dbh
 sub initialise_database { 
-
     ###############################################
     # Create ConfigTb
     print STDERR "Creating ConfigTb table.\n";
@@ -984,10 +966,9 @@ sub initialise_database {
 
     print STDERR "Database initialisation complete, schema version 1.\n";
 
-}    # End initialise_database()
+    } # End initialise_database()
 
 ###############################################
-# check_database_upgrade()
 # Check the database schema version and apply any needed upgrades
 sub check_database_upgrade  {
     # Check database_schema_version in ConfigTb and compare to this script's $database_schema_version  - assume v.1 if it's missing
@@ -1021,11 +1002,10 @@ sub check_database_upgrade  {
         } else {
         print STDERR "Preflight checks: Database schema version is up to date at version $current_db_version.\n";
         }
-    } 
-    # End check_database_upgrade()
+    } # End check_database_upgrade()
 
 ###############################################
-# header() Return HTML header including CDN loads for Bootstrap, Datatables and Fontawesome
+# Return HTML header for all pages
 sub header { 
     my $retstr = qq~
     <!doctype html>
@@ -1061,7 +1041,8 @@ sub header {
     </style>
 
     </head>
-    <body class="text-white">
+    <body class="text-white d-flex flex-column min-vh-100">
+    <main class="flex-grow-1 container py-4">
     <div class="container py-1">
         <div class="d-flex justify-content-between align-items-center">
             <div>
@@ -1073,30 +1054,36 @@ sub header {
 
     $retstr .= qq~
             </div>
-            <div>
-                <a href="/lists" class="btn btn-secondary btn">Lists</a> 
-                &nbsp;
-                <a href="/config" class="btn btn-secondary btn">
+
+            <div class="d-flex gap-2">
+                <a href="/lists"
+                    class="btn btn-secondary d-inline-flex align-items-center">
+                    Lists
+                </a>
+
+                <a href="/config"
+                    class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
                     $fa_gear
-                </i></a>
+                </a>
             </div>
+
             </h3>
         </div>
     </div>
     ~;
 
     return $retstr;
-    }
-    # End header()
+    } # End header()
 
 ###############################################
-# footer() Return standard HTML footer
-sub footer { # Return standard HTML footer
-    my $retstr = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it
+# Return standard HTML footer for all pages
+sub footer { 
+    my $retstr = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $retstr .= qq~
         <br>
-        <footer class="mt-auto text-white-50 text-center fixed-bottom ">
+        </main>
+        <footer class="text-center text-white-50 py-2">
             <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
         </footer>
 
@@ -1184,8 +1171,7 @@ sub footer { # Return standard HTML footer
         ~;
 
     return $retstr;
-    }
-    # End footer()
+    } # End footer()
 
 ###############################################
 # list_pulldown($selected_lid)
@@ -1209,7 +1195,6 @@ sub list_pulldown {
         single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1');
         # Pick the oldest non-deleted list and set it as default
         single_db_value('UPDATE ListsTb SET IsDefault = 1 WHERE id = (SELECT id FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY CreatedDate ASC LIMIT 1)');
-        # End is there a default check
         }
 
     # Get lists from ListsTb
@@ -1219,7 +1204,7 @@ sub list_pulldown {
     # Prepend the "All lists" option and then loop through, adding each. 
     while (my $row = $sth->fetchrow_hashref()) {
         my $selected = ($row->{'id'} == $selected_lid) ? ' selected' : '';
-        my $title = sanitize_and_escape($row->{'Title'});
+        my $title = html_escape($row->{'Title'});
         my $list_count = single_db_value( 'SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 1', $row->{'id'} ) // 0;
 
         if ($row->{'id'} == 1) { # All lists option
@@ -1231,8 +1216,7 @@ sub list_pulldown {
 
     $html .= '</select>';
     return $html;
-    }
-    # End list_pulldown()
+    } # End list_pulldown()
 
 ###############################################
 # sanitize($s)
@@ -1243,29 +1227,33 @@ sub sanitize {
     $s =~ s/\r?\n/ /g;            # collapse newlines
     $s =~ s/[^\t[:print:]]+//g;   # remove non-printables
     $s =~ s/^\s+|\s+$//g;         # trim
-    # Now remove html entities
+    return $s;
+    } # End sanitize()
+
+###############################################
+# html_escape($s)
+# Escape HTML special characters in a string
+sub html_escape {
+    my ($s) = @_;
+    return '' unless defined $s;
     $s =~ s/&/&amp;/g;
     $s =~ s/</&lt;/g;
     $s =~ s/>/&gt;/g;
     $s =~ s/"/&quot;/g;
-    $s =~ s/'/&#39;/g;    
+    $s =~ s/'/&#39;/g;
     return $s;
-    }
-    # End sanitize()
+    } # End html_escape()
 
 ###############################################
 # single_db_value($sql, @params)
 # Execute a SQL query that returns a single value
 sub single_db_value {
     my ($sql, @params) = @_;
-#    print STDERR "single_db_value: Executing SQL: $sql with params: [" . join(',', @params) . "]" . "\n";
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
-#    print STDERR "RETURNING ($value)\n";
     return $value;
-    }
-    # End single_db_value()
+    } # End single_db_value()
 
 ###############################################
 # debug($msg)
@@ -1314,35 +1302,51 @@ sub show_tasks {
                     <th>Title</th>
         ~;
 
-        if ($status == 1) {  # Active tasks. Show added date
-            $retstr .= "<th>Added</th>\n";
-            } else { # Completed tasks. Show completed date
-            $retstr .= "<th>Completed</th>\n";
-            }
+        # Show or hide date and list columns based on config
+        if ($config->{'cfg_show_dates_lists'} eq 'on') {
 
-        $retstr .= qq~
+            if ($status == 1) {  # Active tasks. Show added date
+                $retstr .= "            <th>Added</th>\n";
+                } else { # Completed tasks. Show completed date
+                $retstr .= "<th>Completed</th>\n";
+                }
+
+            $retstr .= qq~
                     <th>List</th>
+                    ~;
+            } 
+        
+        # Close row
+        $retstr .= qq~
                 </tr>
             </thead>
             <tbody>
             ~;
 
-    # Loop through each task and output a row for each
-    while (my $a = $sth->fetchrow_hashref()) {        
+    # Loop through each task and output a row for each. Add data-order sso that Datatables can sort by actual date value instead of human friendly string
+    while (my $a = $sth->fetchrow_hashref()) {
         my $friendly_date = qq~
-            <a href="#" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">~
-            . human_friendly_date($a->{'AddedDate'}) . qq~</a>
+            <td data-order="$a->{'AddedDate'}">
+                <a href="#" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">
+                ~
+                . human_friendly_date($a->{'AddedDate'}) . qq~</a> 
+            </td>
             ~;
 
         if ($status != 1) { # Completed tasks, show CompletedDate instead
             $friendly_date = qq~
-            <a href="#" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">~
-            . human_friendly_date($a->{'CompletedDate'}) . qq~</a>
+            <td data-order="$a->{'CompletedDate'}">
+                <a href="#" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">
+                ~
+                . human_friendly_date($a->{'CompletedDate'}) . qq~</a>
+            </td>
             ~;
             }
 
-        my $checkbox = '&nbsp;';  # Default empty
+        my $checkbox = '';  # Default empty
         my $title_link;
+        my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
+        my $title = html_escape($a->{'Title'});        
         
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {  
@@ -1354,18 +1358,29 @@ sub show_tasks {
                 ~;
 
             $title_link = qq~
-                <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~ .
-                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . 
-                qq~">~ . sanitize($a->{'Title'}) . qq~</a>
-                ~;
+                    <a 
+                    href="/edittask?id=$a->{'id'}"
+                    class="text-white text-decoration-none" 
+                    data-bs-toggle="tooltip" 
+                    title="$description Added ~ . human_friendly_date($a->{'AddedDate'}) . qq~"
+                    >
+                    $title
+                    </a>
+                     ~;
             } 
 
         # Completed tasks. Show strikethrough title and button to mark uncompleted
         if ($status == 2) { # Completed tasks
             $title_link = qq~
-                <del><a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~. 
-                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . qq~">~ . sanitize($a->{'Title'}) . qq~</a></del>
-                ~;
+                    <a 
+                    href="/edittask?id=$a->{'id'}"
+                    class="text-white text-decoration-none" 
+                    data-bs-toggle="tooltip" 
+                    title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
+                    >
+                    $title
+                    </a>
+                     ~;
 
             $checkbox .= qq~
                 <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-secondary" title="Mark as uncompleted">
@@ -1374,14 +1389,25 @@ sub show_tasks {
                 ~;
             }
         
+        # Output the table row
         $retstr .= qq~
             <tr>
                 <td>$checkbox</td>
                 <td>$title_link</td>
-                <td>$friendly_date</td>
-                <td>~ . substr(sanitize($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
-            </tr>
-            ~;
+                ~;
+
+        # Show or hide date and list column header based on config var cfg_show_dates_lists
+        if ($config->{'cfg_show_dates_lists'} eq 'on') {
+            $retstr .= qq~
+                $friendly_date
+                <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
+                ~;
+            }
+
+        # Close the row
+        $retstr .= qq~
+        </tr>
+        ~;
     } # End tasks loop
 
     # Close table
@@ -1403,8 +1429,7 @@ sub show_tasks {
         }
 
     return $retstr;
-    }
-    # End show_tasks()
+    } # End show_tasks()
 
 ###############################################
 # show_alert() 
@@ -1421,7 +1446,7 @@ sub show_alert {
             </div>
             <div class="col-md-6">
               <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">                
-                ~ . sanitize_and_escape($alert_text) . qq~
+                $alert_text
               <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 
             </div>
@@ -1432,8 +1457,7 @@ sub show_alert {
         # No alerts to show, return empty string
         return '';
         }
-    }
-    # End show_alert()
+    } # End show_alert()
 
 ###############################################
 # add_alert($alert_text)
@@ -1447,8 +1471,7 @@ sub add_alert {
         $alert_text,
         $alert_text
         ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
-    }
-    # End add_alert()
+    } # End add_alert()
 
 ###############################################
 # human_friendly_date($db_date)
@@ -1456,14 +1479,11 @@ sub add_alert {
 sub human_friendly_date {
     my ($db_date) = @_;
     return '' unless defined $db_date;
-    
-    # Parse the database datetime (format: YYYY-MM-DD HH:MM:SS)
-    my ($year, $month, $day, $hour, $min, $sec) = 
-        $db_date =~ /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
+        
+    my ($year, $month, $day, $hour, $min, $sec) =  $db_date =~ /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
     
     return $db_date unless $year;  # Return original if parse fails
     
-    # Create Unix timestamp for the db date    
     my $db_time = timelocal($sec, $min, $hour, $day, $month - 1, $year);
     my $now = time();
     my $diff_seconds = $now - $db_time;
@@ -1488,8 +1508,7 @@ sub human_friendly_date {
     
     my $diff_years = int($diff_days / 365);
     return "$diff_years year" . ($diff_years == 1 ? '' : 's') . " ago";
-    }
-    # End human_friendly_date()
+    } # End human_friendly_date()
 
 ###############################################
 # config_load()
@@ -1507,9 +1526,71 @@ sub config_load {
             debug("WARN: no value found in ConfigTb for ($key), using config default");  # Value already declared at head, no need to change
             }
         }
-    }
-     # End config_load()
+    } # End config_load()
 
+# Open a consistent bootstrap 5 card for most pages
+sub start_card {
+    my $card_title = shift || 'Title Missing';
+    my $card_icon = shift || '';
+    my $retstr = qq~
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                            <h2 class="mb-0">
+                                $card_title
+                                ~;
+    if ($card_icon ne '') {
+        $retstr .= qq~
+                                <div class="float-end">$card_icon</div>
+                                ~;
+        }
+    $retstr .= qq~
+                            </h2>
+                        </div>
+
+                        <div class="card-body bg-dark text-white">        ~;
+    return $retstr;
+    } # End start_card()
+
+# As above, but smaller. Used for second cards on a page (Eg: Add List)
+sub start_mini_card {
+    my $card_title = shift || 'Title Missing';
+    my $card_icon = shift || '';
+    my $retstr = qq~
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                            <h2 class="mb-0">
+                                $card_title
+                                ~;
+    if ($card_icon ne '') {
+        $retstr .= qq~
+                                <div class="float-end">$card_icon</div>
+                                ~;
+        }
+    $retstr .= qq~
+                            </h2>
+                        </div>
+
+                        <div class="card-body bg-dark text-white">        ~;
+    return $retstr;
+    } # End start_mini_card()
+
+# Close the card
+sub end_card {
+    my $retstr = qq~
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ~;
+    return $retstr;
+    } # End end_card()
 
 ##############################################
 # End Functions
