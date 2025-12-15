@@ -1372,9 +1372,15 @@ sub show_tasks {
         # Completed tasks. Show strikethrough title and button to mark uncompleted
         if ($status == 2) { # Completed tasks
             $title_link = qq~
-                <del><a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$description - Completed $friendly_date">~ 
-                . html_escape($a->{'Title'}) . qq~</a></del>
-                ~;
+                    <a 
+                    href="/edittask?id=$a->{'id'}"
+                    class="text-white text-decoration-none" 
+                    data-bs-toggle="tooltip" 
+                    title="$description - Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
+                    >
+                    $title
+                    </a>
+                     ~;                
 
             $checkbox .= qq~
                 <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-secondary" title="Mark as uncompleted">
