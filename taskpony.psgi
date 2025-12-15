@@ -831,10 +831,15 @@ my $app = sub {
 
         # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~
-                    <form method="post" action="/add" class="row g-3">
-                        <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
-                        <button class="btn btn-primary" type="submit">Add</button>                               
-                    </form>
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <form method="post" action="/add" class="row g-3">
+                            <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
+                    </div>
+                    <div class="col-1">
+                            <button class="btn btn-primary" type="submit">Add</button>                               
+                        </form>
+                    </div>
                     ~;
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($list_id == 1) {
