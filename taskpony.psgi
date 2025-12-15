@@ -325,7 +325,8 @@ my $app = sub {
                                 <a class="btn btn-secondary ms-2" href="/">Cancel</a>
 
                                 <div class="ms-auto">
-                                ~
+                                ~;
+                                
                                 if ($task->{'Status'} == 1) {
                                     $html .= qq~
                                     <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
