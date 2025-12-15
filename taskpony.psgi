@@ -836,7 +836,7 @@ my $app = sub {
                             <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                     </div>
                     <div class="col-1">
-                            <button class="btn btn-primary" type="submit">Add</button>                               
+                                                           
                         </form>
                     </div>
                     ~;
@@ -849,7 +849,7 @@ my $app = sub {
             }
         }
 
-    $html .= start_card($titlebar, $fa_list);
+    $html .= start_card($titlebar, '<button class="btn btn-primary" type="submit">Add</button>');
 
     ####################################
     # Show main list of tasks
@@ -1581,6 +1581,7 @@ sub start_card {
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
+                                <div class="float-end">$card_icon</div>
                             </h2>
                         </div>
 
