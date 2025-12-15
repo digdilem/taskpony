@@ -282,7 +282,7 @@ When a List is chosen from the picklist, it will be automatically chosen on subs
 
 Some things for the future that may, or may not, be added. 
 
-- (Probably) Configurable and automated deletion of tasks more than NN days since completion.
+- (Probably) Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
 - (Probably) Do some basic stats. Number of active and completed tasks. Tasks completed today, this week, etc. Either in new /stats page, or as a small configurable task list footer.
 - (Maybe) Basic recurring tasks. Not entirely sure how this could manifest yet.
 - (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
@@ -296,6 +296,8 @@ Some things for the future that may, or may not, be added.
 # Screenshots
 
 ![Main Task List](docs/tasklist.jpg)
+
+![Main Tasks List with dates and lists hidden](docs/tasklist_justtasks.jpg)
 
 ![List Management Page](docs/lists.jpg)
 
