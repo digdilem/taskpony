@@ -1380,7 +1380,7 @@ sub show_tasks {
                     >
                     $title
                     </a>
-                     ~;                
+                     ~;
 
             $checkbox .= qq~
                 <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-secondary" title="Mark as uncompleted">
