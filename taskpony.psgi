@@ -17,7 +17,7 @@ use File::Spec::Functions qw(catdir);
 use FindBin;
 
 ###############################################
-# Default configuration, overriden by ConfigTb values, change them via webui at /config
+# Default configuration, overriden by ConfigTb values, change them via settings page
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page 
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
@@ -609,7 +609,6 @@ my $app = sub {
                     my $new_val;
                     $new_val = $req->param($key); # || $config->{$key};
 
-
                     if ($new_val) {
                         debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
                         } else { # No parameter passed for key, store existing
@@ -645,16 +644,8 @@ my $app = sub {
         # Show configuration page
         my $retstr .= header();
 
+        $retstr .= start_card("Settings <div class="float-end">$fa_gear</div>");
         $retstr .= qq~
-            <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                    <h2 class="mb-0">$app_title Settings <div class="float-end">$fa_gear</div></h2>
-                    </div>
-
-                    <div class="card-body bg-dark text-white">
                          <form method="post" action="/config" style="display:inline;">
 
                             <input type="hidden" name="save_config" value="true">
