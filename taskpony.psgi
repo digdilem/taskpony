@@ -1303,7 +1303,7 @@ sub show_tasks {
         ~;
 
         # Show or hide date and list columns based on config
-        if ($config->{'cfg_show_just_tasks'} ne 'off') {
+        if ($config->{'cfg_show_just_tasks'} eq 'on') {
 
             if ($status == 1) {  # Active tasks. Show added date
                 $retstr .= "<th>Added</th>\n";
@@ -1382,8 +1382,8 @@ sub show_tasks {
                 <td>$title_link</td>
                 ~;
 
-        # Show or hide date and list columns based on config
-        if ($config->{'cfg_show_just_tasks'} ne 'off') {
+        # Show or hide date and list column header based on config var cfg_show_just_tasks
+        if ($config->{'cfg_show_just_tasks'} eq 'on') {
             $retstr .= qq~
                 $friendly_date
                 <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
