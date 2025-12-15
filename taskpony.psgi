@@ -139,7 +139,7 @@ my $app = sub {
         }
 
         # Always redirect
-        $res->red)irect('/');
+        $res->redirect('/');
         return $res->finalize;
     }
     # End /complete
