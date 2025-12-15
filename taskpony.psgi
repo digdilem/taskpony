@@ -25,7 +25,7 @@ our $config = {
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
-    cfg_show_just_tasks => 'off',                    # Show just tasks, hide Date and List columns in task list
+    cfg_show_dates_lists => 'on',                    # Show just tasks, hide Date and List columns in task list
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
@@ -575,7 +575,7 @@ my $app = sub {
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_just_tasks') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -611,20 +611,20 @@ my $app = sub {
 
                             <input type="hidden" name="save_config" value="true">
 
-                            <!-- TOGGLE ROW cfg_show_just_tasks -->
+                            <!-- TOGGLE ROW cfg_show_dates_lists -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">                                
                                 <span class="config-label">
-                                    Hide Dates and Lists in Tasks Table
-                                    <span data-bs-toggle="tooltip" title="Hide the Dates and Lists columns in the Tasks table, showing just Task names"> 
+                                    Show Dates and Lists in Tasks Table
+                                    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
                                         $fa_info
                                     </span> 
                                 </span>
                                 <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_show_just_tasks" 
+                                <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists" 
                                     id="autoUpdateToggle"
                                     ~;
                                     # Precheck this if set
-                                    if ($config->{'cfg_show_just_tasks'} eq 'on') { $retstr .= " checked "; }
+                                    if ($config->{'cfg_show_dates_lists'} eq 'on') { $retstr .= " checked "; }
 
                                     $retstr .= qq~
                                     >
@@ -1303,7 +1303,7 @@ sub show_tasks {
         ~;
 
         # Show or hide date and list columns based on config
-        if ($config->{'cfg_show_just_tasks'} eq 'on') {
+        if ($config->{'cfg_show_dates_lists'} eq 'on') {
 
             if ($status == 1) {  # Active tasks. Show added date
                 $retstr .= "            <th>Added</th>\n";
@@ -1383,8 +1383,8 @@ sub show_tasks {
                 <td>$title_link</td>
                 ~;
 
-        # Show or hide date and list column header based on config var cfg_show_just_tasks
-        if ($config->{'cfg_show_just_tasks'} eq 'on') {
+        # Show or hide date and list column header based on config var cfg_show_dates_lists
+        if ($config->{'cfg_show_dates_lists'} eq 'on') {
             $retstr .= qq~
                 $friendly_date
                 <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>

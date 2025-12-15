@@ -234,6 +234,8 @@ Below that is a quick entry form that allows you to add a task to the current li
 
 Then the main tasks lists is shown. Tick the checkbox to mark a task as *completed* which removes it from the *active* tasks. 
 
+To reduce clutter, the dates and list name for tasks can be hidden in the main tasks list be disabling  `Show Dates and Lists in Tasks Table` in Settings.
+
 A Filter or Search box is displayed top right if `Display Search Box` is selected in Settings that will only display matching strings.
 
 Hover over the task Title to see a popup of the task's description if one was set. Tasks can be edited, and descriptions added to them, by clicking the title and completing the resulting form.
