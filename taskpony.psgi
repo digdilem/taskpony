@@ -249,11 +249,11 @@ my $app = sub {
             add_alert("Task $task_id updated.");
             $res->redirect('/');
             return $res->finalize;
-            }
+            } # End receive form
 
-        # If Page, show the edit-task form
+        # Display edit form        
         if ($task_id > 0) {
-            my $sth = $dbh->prepare('SELECT id, Title, Description, ListId FROM TasksTb WHERE id = ?');
+            my $sth = $dbh->prepare('SELECT id, Status, Title, Description, ListId FROM TasksTb WHERE id = ?');
             $sth->execute($task_id);
             my $task = $sth->fetchrow_hashref();
 
@@ -265,72 +265,76 @@ my $app = sub {
                 my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
                 $list_sth->execute();
                 
+                # Build list 
                 while (my $list= $list_sth->fetchrow_hashref()) {
                     my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
                     my $title = html_escape($list->{'Title'});
                     $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
                     }
-                $list_dropdown .= '</select>';
-                
+                $list_dropdown .= '</select>';                
 
- $html .= qq~
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
+                $html .= qq~
+                    <div class="container py-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
 
-      <div class="card bg-dark text-white shadow-sm">
-        <div class="card-header border-secondary">
-          <h5 class="mb-0">Edit Task</h5>
-        </div>
+                        <div class="card bg-dark text-white shadow-sm">
+                            <div class="card-header border-secondary">
+                            <h5 class="mb-0">
+                                Edit Task
+                                <span class="float-end">
+                                    #$task_id - $task->{'Status'}
+                                </span>
+                                </h5>
+                            </div>
 
-        <div class="card-body">
-          <form method="post" action="/edittask?id=$task_id" class="row g-3">
+                            <div class="card-body">
+                            <form method="post" action="/edittask?id=$task_id" class="row g-3">
 
-            <div class="col-12">
-              <label class="form-label">Title</label>
-              <input
-                name="Title"
-                class="form-control bg-dark text-white border-secondary"
-                required
-                maxlength="255"
-                value="~ . html_escape($task->{'Title'}) . qq~"
-              />
-            </div>
+                                <div class="col-12">
+                                <label class="form-label">Title</label>
+                                <input
+                                    name="Title"
+                                    class="form-control bg-dark text-white border-secondary"
+                                    required
+                                    maxlength="255"
+                                    value="~ . html_escape($task->{'Title'}) . qq~"
+                                />
+                                </div>
 
-            <div class="col-12">
-              <label class="form-label">Description</label>
-              <textarea
-                name="Description"
-                class="form-control bg-dark text-white border-secondary"
-                rows="4"
-                maxlength="2000"
-              >~ . html_escape($task->{'Description'}) . qq~</textarea>
-            </div>
+                                <div class="col-12">
+                                <label class="form-label">Description</label>
+                                <textarea
+                                    name="Description"
+                                    class="form-control bg-dark text-white border-secondary"
+                                    rows="4"
+                                    maxlength="2000"
+                                >~ . html_escape($task->{'Description'}) . qq~</textarea>
+                                </div>
 
-            <div class="col-12">
-              <label class="form-label">List</label>
-              $list_dropdown
-            </div>
+                                <div class="col-12">
+                                <label class="form-label">List</label>
+                                $list_dropdown
+                                </div>
 
-            <div class="col-12 d-flex align-items-center">
-              <button class="btn btn-primary" type="submit">Save Task</button>
-              <a class="btn btn-secondary ms-2" href="/">Cancel</a>
+                                <div class="col-12 d-flex align-items-center">
+                                <button class="btn btn-primary" type="submit">Save Task</button>
+                                <a class="btn btn-secondary ms-2" href="/">Cancel</a>
 
-              <div class="ms-auto">
-                <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
-                <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
-              </div>
-            </div>
+                                <div class="ms-auto">
+                                    <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
+                                    <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
+                                </div>
+                                </div>
 
-          </form>
-        </div>
-      </div>
+                            </form>
+                            </div>
+                        </div>
 
-    </div>
-  </div>
-</div>
-~;
-
+                        </div>
+                    </div>
+                    </div>
+                    ~;
 
                 $html .= footer();
                 $res->body($html);
