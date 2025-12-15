@@ -1391,7 +1391,7 @@ sub show_tasks {
             }
 
         # Close the row
-        $retrstr .= qq~
+        $retstr .= qq~
         </tr>
         ~;
     } # End tasks loop
