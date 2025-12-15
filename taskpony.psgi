@@ -357,19 +357,22 @@ my $app = sub {
                 my $sth = $dbh->prepare(
                     'INSERT INTO ListsTb (Title, Description) VALUES (?, ?)'
                     );
+
                 eval { $sth->execute($title, $desc); 1 } or print STDERR "Insert failed: $@";
                 add_alert("List '$title' added.");
                 } elsif ($action eq 'edit' && $list_id > 1 && length $title) {
                 my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
                     );
+
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
-                add_alert("List updated.");                
+                add_alert("List updated.");
                 } elsif ($action eq 'delete' && $list_id > 1) {
-                # Soft delete - set DeletedDate to current timestamp                
+                # Soft delete - set DeletedDate to current timestamp
                 my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
+
                 eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted.");
                 }
