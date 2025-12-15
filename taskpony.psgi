@@ -1113,13 +1113,19 @@ sub header {
 
     $retstr .= qq~
             </div>
-            <div>
-                <a href="/lists" class="btn btn-secondary btn">Lists</a> 
-                &nbsp;
-                <a href="/config" class="btn btn-secondary btn">
-                    $fa_gear
-                </i></a>
+
+            <div class="d-flex gap-2">
+            <a href="/lists"
+                class="btn btn-secondary d-inline-flex align-items-center">
+                Lists
+            </a>
+
+            <a href="/config"
+                class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
+                $fa_gear
+            </a>
             </div>
+
             </h3>
         </div>
     </div>
