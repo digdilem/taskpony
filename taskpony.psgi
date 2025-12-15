@@ -830,9 +830,8 @@ my $app = sub {
         #     ~; 
 
         # Set default titlebar to be the quick add form for the selected list
-    my $titlebar = qq~
-                    <div class="col-1"></div>
-                    <div class="col-9">
+    my $titlebar = qq~                    
+                    <div class="col-10">
                         <form method="post" action="/add" class="row g-3">
                             <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                     </div>
