@@ -273,13 +273,12 @@ my $app = sub {
                     }
                 $list_dropdown .= '</select>';
 
+                my $task_status = 'Completed';
                 if ($task->{'Status'} == 1) {
                     $task_status = 'Active';
                     } elsif ($task->{'Status'} == 2) {
                     $task_status = 'Deferred';
-                    } else {
-                    $task_status = 'Completed';
-                    }
+                    } 
 
                 $html .= qq~
                     <div class="container py-4">
