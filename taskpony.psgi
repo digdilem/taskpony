@@ -1581,7 +1581,6 @@ sub start_card {
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
-                                <div class="float-end">$card_icon</div>
                             </h2>
                         </div>
 
