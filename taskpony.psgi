@@ -72,6 +72,8 @@ print STDERR "+------------------------------------+\n\n";
 
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
+# Get additional config values.
+$list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
 $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
 
 
