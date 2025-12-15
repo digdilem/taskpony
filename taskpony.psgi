@@ -845,7 +845,7 @@ my $app = sub {
             }
         }
 
-    $html .= start_card($titlebar, $fa_list);
+    $html .= start_card($titlebar);
 
     ####################################
     # Show main list of tasks
