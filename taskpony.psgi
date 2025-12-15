@@ -1362,7 +1362,7 @@ sub show_tasks {
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" 
-                    title="$description - Added ~ . human_friendly_date($a->{'AddedDate'}) . qq~"
+                    title="$description Added ~ . human_friendly_date($a->{'AddedDate'}) . qq~"
                     >
                     $title
                     </a>
@@ -1376,7 +1376,7 @@ sub show_tasks {
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" 
-                    title="$description - Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
+                    title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
                     >
                     $title
                     </a>
