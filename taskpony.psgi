@@ -1302,14 +1302,21 @@ sub show_tasks {
                     <th>Title</th>
         ~;
 
-        if ($status == 1) {  # Active tasks. Show added date
-            $retstr .= "<th>Added</th>\n";
-            } else { # Completed tasks. Show completed date
-            $retstr .= "<th>Completed</th>\n";
-            }
+        # Show or hide date and list columns based on config
+        if ($config->{'cfg_show_just_tasks'} ne 'off') {
 
-        $retstr .= qq~
+            if ($status == 1) {  # Active tasks. Show added date
+                $retstr .= "<th>Added</th>\n";
+                } else { # Completed tasks. Show completed date
+                $retstr .= "<th>Completed</th>\n";
+                }
+            $retstr .= qq~
                     <th>List</th>
+                    ~;
+            } 
+        
+        # Close row
+        $retstr .= qq~
                 </tr>
             </thead>
             <tbody>
@@ -1368,14 +1375,25 @@ sub show_tasks {
                 ~;
             }
         
+        # Output the table row
         $retstr .= qq~
             <tr>
                 <td>$checkbox</td>
                 <td>$title_link</td>
+                ~;
+
+        # Show or hide date and list columns based on config
+        if ($config->{'cfg_show_just_tasks'} ne 'off') {
+            $retstr .= qq~
                 $friendly_date
                 <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
-            </tr>
-            ~;
+                ~;
+            }
+
+        # Close the row
+        $retrstr .= qq~
+        </tr>
+        ~;
     } # End tasks loop
 
     # Close table
