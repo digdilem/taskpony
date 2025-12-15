@@ -89,8 +89,6 @@ my $app = sub {
 
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
-config_load();
-
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
@@ -577,7 +575,7 @@ config_load();
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_just_tasks') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
