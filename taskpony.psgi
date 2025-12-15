@@ -276,7 +276,8 @@ my $app = sub {
                 my $task_status = 'Completed';
                 if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
-                $html .= start_card('Edit Task #$task_id - $task_status', $fa_info);
+                $html .= start_card("Edit Task #$task_id - $task_status", $fa_info);
+
                 $html .= qq~
                             <form method="post" action="/edittask?id=$task_id" class="row g-3">
 
