@@ -271,7 +271,15 @@ my $app = sub {
                     my $title = html_escape($list->{'Title'});
                     $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
                     }
-                $list_dropdown .= '</select>';                
+                $list_dropdown .= '</select>';
+
+                if ($task->{'Status'} == 1) {
+                    $task_status = 'Active';
+                    } elsif ($task->{'Status'} == 2) {
+                    $task_status = 'Deferred';
+                    } else {
+                    $task_status = 'Completed';
+                    }
 
                 $html .= qq~
                     <div class="container py-4">
@@ -283,7 +291,7 @@ my $app = sub {
                             <h5 class="mb-0">
                                 Edit Task
                                 <span class="float-end">
-                                    #$task_id - $task->{'Status'}
+                                    #$task_id - $task_status
                                 </span>
                                 </h5>
                             </div>
