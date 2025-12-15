@@ -1345,6 +1345,7 @@ sub show_tasks {
 
         my $checkbox = '';  # Default empty
         my $title_link;
+        my $description = substr($a->{'Description'},0,$config->{'cfg_description_short_length'});
         
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {  
@@ -1356,19 +1357,15 @@ sub show_tasks {
                 ~;
 
             $title_link = qq~
-                <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~ .
-                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . $friendly_date .
-                qq~">~ . html_escape($a->{'Title'}) . qq~</a>  BING
+                <a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$description - Completed $friendly_date">
+                ~ . html_escape($a->{'Title'}) . qq~</a>  
                 ~;
             } 
 
         # Completed tasks. Show strikethrough title and button to mark uncompleted
         if ($status == 2) { # Completed tasks
             $title_link = qq~
-                <del><a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="~. 
-                substr($a->{'Description'},0,$config->{'cfg_description_short_length'}) . qq~
-                Completed $friendly_date
-                ">~ 
+                <del><a href="/edittask?id=$a->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" title="$description - Completed $friendly_date">~ 
                 . html_escape($a->{'Title'}) . qq~</a></del>
                 ~;
 
