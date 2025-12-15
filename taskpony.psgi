@@ -1396,7 +1396,7 @@ sub show_tasks {
             ~;
             }
 
-        my $checkbox = '&nbsp;';  # Default empty
+        my $checkbox = '';  # Default empty
         my $title_link;
         
         # Active tasks. Show checkbox to mark complete
