@@ -105,9 +105,10 @@ my $app = sub {
         }
 
     # Get name of active list for later use if unset
-    if (! $list_name) {
+
+#    if (! $list_name) {
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
-        }
+ #       }
 
     # Start building page
     my $html = header();
