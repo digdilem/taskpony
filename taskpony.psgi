@@ -274,11 +274,7 @@ my $app = sub {
                 $list_dropdown .= '</select>';
 
                 my $task_status = 'Completed';
-                if ($task->{'Status'} == 1) {
-                    $task_status = 'Active';
-                    } elsif ($task->{'Status'} == 2) {
-                    $task_status = 'Deferred';
-                    } 
+                if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
                 $html .= qq~
                     <div class="container py-4">
@@ -329,7 +325,19 @@ my $app = sub {
                                 <a class="btn btn-secondary ms-2" href="/">Cancel</a>
 
                                 <div class="ms-auto">
+                                ~
+                                if ($task->{'Status'} == 1) {
+                                    $html .= qq~
                                     <a class="btn btn-warning" href="/complete?task_id=$task_id">Complete Task</a>
+                                    ~;
+                                    } else {
+                                    $html .= qq~
+                                    <a class="btn btn-warning" href="/ust?task_id=$task_id">Set Task as Active</a>
+                                    ~;
+                                    }
+                                    
+
+                                $html .= qq~
                                     <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
                                 </div>
                                 </div>

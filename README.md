@@ -311,7 +311,7 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint. The 
 
     / TasksTb
         id
-        Status (1 Active, 2 Deferred, 3 Completed)
+        Status (1 Active, 2 Completed)
         Title
         Description
         AddedDate = When created
