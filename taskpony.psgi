@@ -1305,6 +1305,7 @@ sub show_tasks {
         # Show or hide date and list columns based on config
 print STDERR "DEBUG: cfg_show_just_tasks is set to: $config->{'cfg_show_just_tasks'}\n";        
         if ($config->{'cfg_show_just_tasks'} eq 'on') {
+print STDERR "DEBUG: Hiding date and list columns as per config\n";        
 
             if ($status == 1) {  # Active tasks. Show added date
                 $retstr .= "<th>Added</th>\n";
