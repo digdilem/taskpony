@@ -515,7 +515,7 @@ my $app = sub {
 
             $res->redirect('/lists');
             return $res->finalize;
-            } / End /editlist form submission handling
+            } # End /editlist form submission handling
 
         # If GET, show the edit-list form
         if ($list_id > 1) {
