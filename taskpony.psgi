@@ -276,22 +276,8 @@ my $app = sub {
                 my $task_status = 'Completed';
                 if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
+                $html .= start_card('Edit Task #$task_id - $task_status', $fa_info);
                 $html .= qq~
-                    <div class="container py-4">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-8">
-
-                        <div class="card bg-dark text-white shadow-sm">
-                            <div class="card-header border-secondary">
-                            <h5 class="mb-0">
-                                Edit Task
-                                <span class="float-end">
-                                    #$task_id - $task_status
-                                </span>
-                                </h5>
-                            </div>
-
-                            <div class="card-body">
                             <form method="post" action="/edittask?id=$task_id" class="row g-3">
 
                                 <div class="col-12">
