@@ -25,7 +25,7 @@ our $config = {
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
-    cfg_show_dates_lists => 'on',                    # Show just tasks, hide Date and List columns in task list
+    cfg_show_dates_lists => 'on',               # Show just tasks, hide Date and List columns in task list
     cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
     };
 
@@ -1592,14 +1592,3 @@ sub end_card {
 
 #################################################
 # End of file
-
-use Digest::SHA qw(sha256_hex);
-
-sub csrf_token {
-    my ($session) = @_;
-    $session->{csrf_token} ||= sha256_hex(rand() . $$ . time());
-    return $session->{csrf_token};
-}
-
-
-
