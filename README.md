@@ -437,6 +437,8 @@ Taskpony is built with the help of this great FOSS software:
 
 ## 0.02
 
+- Bugfix: Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
+
 
 # Licence
 

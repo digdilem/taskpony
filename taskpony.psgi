@@ -405,7 +405,7 @@ my $app = sub {
         
         $html .= qq~
                                 <tr>
-                                    <td><strong><a href="/?lid=1" class="text-white text-decoration-none">All Lists</a></strong></td>
+                                    <td><strong><a href="/?lid=1" class="text-white text-decoration-none">All Tasks List</a></strong></td>
                                     <td>View tasks from all lists</td>
                                     <td><a href="/tasks-by-status?status=1" class="text-white text-decoration-none">$all_active</a></td>
                                     <td><a href="/tasks-by-status?status=2" class="text-white text-decoration-none">$all_completed</a></td>
