@@ -160,7 +160,7 @@ my $app = sub {
         if ($req->method && uc($req->method) eq 'GET') {
             my $lid = $req->param('id');
 
-            if ($lid > 1) { # Don't allow setting "All Lists" as default
+            if ($lid > 1) { # Don't allow setting "All Tasks Lists" as default
                 print STDERR "Setting list $lid as default list.\n";
                 single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
                 my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
@@ -399,7 +399,7 @@ my $app = sub {
                             <tbody>
         ~;
 
-        # Add "All Lists" row
+        # Add "All Tasks Lists" row
         my $all_active = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 1') // 0;
         my $all_completed = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 2') // 0;
         
@@ -938,7 +938,7 @@ sub initialise_database {
     print STDERR "ListsTb created. Populating with default lists.\n";
     $dbh->do(qq~
         INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES 
-        (1, 'All Lists', 'View tasks from all lists', 0),
+        (1, 'All Tasks', 'View tasks from all lists', 0),
         (2, 'Main', 'Main day to day list', 1) 
         ON CONFLICT(id) DO NOTHING;
         ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
@@ -986,25 +986,30 @@ sub check_database_upgrade  {
             # Add schema step changes here, v.1 to v.2
             print STDERR "Upgrading database schema from version 1 to version 2.\n";
 
-            if ($current_db_version == 2) {
-                # !!! Add upgrade steps here for version 1 to 2 upgrade. If error, return without updating version number 
+            # List of queries required to upgrade from v.1 to v.2
+            my @db_upgrade_steps_1_to_2 = (
+                "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists' LIMIT 1;",        # Change internal name of 'All Lists' to 'All Tasks'                    
+                "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';"        # Update version number in ConfigTb
+                );
+
+            foreach my $upgrade_query (@db_upgrade_steps_1_to_2) {
+                print STDERR "Applying DB upgrade step: $upgrade_query\n";
+                eval { $dbh->do($upgrade_query); 1 } or print STDERR "WARN: Failed to apply DB upgrade step: $upgrade_query : " . $dbh->errstr;
                 }
 
-            # Repeat for each version upgrade step as needed
-            ###############################################
+            # Re-fetch current DB version after upgrade steps to ensure it's updated
+            $current_db_version = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'database_schema_version' LIMIT 1") || 1;
+            if ($current_db_version != 2) {
+                print STDERR "WARN: Database schema upgrade to version 2 did not complete successfully. Current version is still $current_db_version.\n";
+                } else {
+                print STDERR "INFO: Database schema successfully upgraded to version 2.\n";
+                }
+            } # End db v.1 to v.2 upgrade
 
-            # After successfully applying upgrades, update the version number in ConfigTb
-            $dbh->do(
-                "UPDATE ConfigTb SET `value` = ? WHERE `key` = 'database_schema_version'",
-                undef,
-                $database_schema_version
-                ) or print STDERR "WARN: Failed to update database schema version: " . $dbh->errstr;
+        # !! Add v.2 to v.3 upgrade steps here !!
 
-            print STDERR "INFO: Database schema successfully upgraded from $current_db_version to version $database_schema_version.\n";
-            }
-        # Database schema is already at required version
         } else {
-        print STDERR "Preflight checks: Database schema version is up to date at version $current_db_version.\n";
+        print STDERR "Preflight checks: Database schema version is up to date at version $current_db_version. Required version is $database_schema_version. We're good.\n";
         }
     } # End check_database_upgrade()
 
@@ -1213,7 +1218,7 @@ sub list_pulldown {
 
         if ($row->{'id'} == 1) { # All lists option
             $list_count = single_db_value( 'SELECT COUNT(*) FROM TasksTb WHERE Status = 1' ) // 0;
-            $title = 'All Lists';
+            $title = 'All Tasks';
             }
         $html .= qq~<option value="$row->{'id'}"$selected>$title ($list_count tasks)</option>\n~;
         }
