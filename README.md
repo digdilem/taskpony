@@ -431,6 +431,13 @@ Taskpony is built with the help of this great FOSS software:
 - [Datatables](https://datatables.net/) (Bundled)
 - [Fontawesome](https://fontawesome.com/) (Embedded SVGs)
 
+# Version History
+
+## 0.01 Initial release, 15th December 2025
+
+## 0.02
+
+
 # Licence
 
 Taskpony is released under the MIT Licence. 

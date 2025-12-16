@@ -31,7 +31,7 @@ our $config = {
 ###############################################
 # Global variables that are used throughout - do not change these. They will not persist during app updates.
 my $app_title = 'Taskpony';             # Name of app.
-my $app_version = '0.01';               # Version of app
+my $app_version = '0.02';               # Version of app
 my $database_schema_version = 1;        # Current database schema version. Do not change this, it will be modified during updates.
 my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
 
@@ -260,7 +260,7 @@ my $app = sub {
                 # Build list 
                 while (my $list= $list_sth->fetchrow_hashref()) {
                     my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
-                    my $title = sanitize($list->{'Title'});
+                    my $title = html_escape($list->{'Title'});
                     $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
                     }
                 $list_dropdown .= '</select>';
@@ -280,7 +280,7 @@ my $app = sub {
                                     class="form-control bg-dark text-white border-secondary"
                                     required
                                     maxlength="255"
-                                    value="~ . sanitize($task->{'Title'}) . qq~"
+                                    value="~ . html_escape($task->{'Title'}) . qq~"
                                 />
                                 </div>
 
@@ -291,7 +291,7 @@ my $app = sub {
                                     class="form-control bg-dark text-white border-secondary"
                                     rows="4"
                                     maxlength="2000"
-                                >~ . sanitize($task->{'Description'}) . qq~</textarea>
+                                >~ . html_escape($task->{'Description'}) . qq~</textarea>
                                 </div>
 
                                 <div class="col-12">
@@ -430,8 +430,8 @@ my $app = sub {
                 $list->{'id'}
                 ) // 0;
 
-            my $title = sanitize($list->{'Title'});
-            my $desc = substr(sanitize($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
+            my $title = html_escape($list->{'Title'});
+            my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
             
             # Show toggles for default list
             my $is_default_str = qq~
@@ -535,11 +535,11 @@ my $app = sub {
                         <form method="post" action="/editlist?id=$list_id" class="row g-3">
                             <div class="col-12">
                                 <label class="form-label">Title</label>
-                                <input name="Title" class="form-control" required maxlength="255" value="~ . sanitize($list->{'Title'}) . qq~" />
+                                <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Description</label>
-                                <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . sanitize($list->{'Description'} // '') . qq~</textarea>
+                                <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
                             </div>
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Save List</button>
@@ -1231,14 +1231,23 @@ sub sanitize {
     $s =~ s/\r?\n/ /g;            # collapse newlines
     $s =~ s/[^\t[:print:]]+//g;   # remove non-printables
     $s =~ s/^\s+|\s+$//g;         # trim
-    # Now also remove html elements
+    return $s;
+    } # End sanitize()
+
+###############################################
+# html_escape($s)
+# Escape HTML special characters in a string
+sub html_escape {
+    my ($s) = @_;
+    return '' unless defined $s;
     $s =~ s/&/&amp;/g;
     $s =~ s/</&lt;/g;
     $s =~ s/>/&gt;/g;
     $s =~ s/"/&quot;/g;
     $s =~ s/'/&#39;/g;
     return $s;
-    } # End sanitize()
+    } # End html_escape()
+
 
 ###############################################
 # single_db_value($sql, @params)
@@ -1341,8 +1350,8 @@ sub show_tasks {
 
         my $checkbox = '';  # Default empty
         my $title_link;
-        my $description = sanitize(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
-        my $title = sanitize($a->{'Title'});        
+        my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
+        my $title = html_escape($a->{'Title'});        
         
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {  
@@ -1396,7 +1405,7 @@ sub show_tasks {
         if ($config->{'cfg_show_dates_lists'} eq 'on') {
             $retstr .= qq~
                 $friendly_date
-                <td>~ . substr(sanitize($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
+                <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
                 ~;
             }
 
