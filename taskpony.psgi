@@ -1367,7 +1367,7 @@ sub show_tasks {
             $list_title = '[--No List--]';
 
             # Prefix task title with an orphaned marker, coloured red
-            $title_list .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
             }
         
         # Active tasks. Show checkbox to mark complete
