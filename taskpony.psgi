@@ -1261,6 +1261,7 @@ sub html_escape {
 # Execute a SQL query that returns a single value
 sub single_db_value {
     my ($sql, @params) = @_;
+    print STDERR "QUERY ($sql, @params) \n";
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
@@ -1365,7 +1366,7 @@ sub show_tasks {
         # Check to see whether the List this task belongs to is deleted and if so, mark it as orphaned
 
         my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NOT NULL", $a->{'ListId'}) // 0;
-print STDERR "DEBUG ($list_deleted) ($a->{'ListId'}) \n";        
+print STDERR "DEBUG ($list_deleted)  \n";        
         if ($list_deleted != 0) { # List is deleted, this task is an orphan
             $list_title = '[--No List--]';
 
