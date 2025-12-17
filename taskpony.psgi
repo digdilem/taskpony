@@ -1367,6 +1367,7 @@ sub show_tasks {
             $list_title = '[--No List--]';
 
             # Prefix task title with an orphaned marker, coloured red
+print STDERR "Task #$a->{'id'} belongs to deleted list #$a->{'ListId'}. Marking as orphaned in task list display.\n";            
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
             }
         
