@@ -1286,7 +1286,7 @@ sub show_tasks {
 
     # Build SQL query
     my $sql = "
-        SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, p.Title AS ListTitle, t.ListId
+        SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, p.Title AS ListTitle, p.ListId
         FROM TasksTb t
         LEFT JOIN ListsTb p ON t.ListId = p.id
         WHERE t.Status = ? 
@@ -1365,8 +1365,8 @@ sub show_tasks {
 ###############################################
         # Check to see whether the List this task belongs to is deleted and if so, mark it as orphaned
 
-        my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NOT NULL", $a->{'t.ListId'}) // 0;
-print STDERR "DEBUG ($list_deleted) ($a->{'t.ListId'})  \n";        
+        my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NOT NULL", $a->{'p.ListId'}) // 0;
+print STDERR "DEBUG ($list_deleted) ($a->{'p.ListId'})  \n";        
         if ($list_deleted != 0) { # List is deleted, this task is an orphan
             $list_title = '[--No List--]';
 
