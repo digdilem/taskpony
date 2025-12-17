@@ -62,6 +62,8 @@ my $fa_rotate_left = $fa_header . q~
 my $fa_info = $fa_header . q~
                     <path fill="currentColor" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z"/>
                     </svg>~;
+my $fa_link_slash = $fa_header . q~
+                    <path fill="currentColor" d="M73 39.1C63.6 29.7 48.4 29.7 39.1 39.1C29.8 48.5 29.7 63.7 39 73.1L567 601.1C576.4 610.5 591.6 610.5 600.9 601.1C610.2 591.7 610.3 576.5 600.9 567.2L478.9 445.2C483.1 441.8 487.2 438.1 491 434.3L562.1 363.2C591.4 333.9 607.9 294.1 607.9 252.6C607.9 166.2 537.9 96.1 451.4 96.1C414.1 96.1 378.3 109.4 350.1 133.3C370.4 143.4 388.8 156.8 404.6 172.8C418.7 164.5 434.8 160.1 451.4 160.1C502.5 160.1 543.9 201.5 543.9 252.6C543.9 277.1 534.2 300.6 516.8 318L445.7 389.1C441.8 393 437.6 396.5 433.1 399.6L385.6 352.1C402.1 351.2 415.3 337.7 415.8 321C415.8 319.7 415.8 318.4 415.8 317.1C415.8 230.8 345.9 160.2 259.3 160.2C240.1 160.2 221.4 163.7 203.8 170.4L73 39.1zM257.9 224C258.5 224 259 224 259.6 224C274.7 224 289.1 227.7 301.7 234.2C303.5 235.4 305.3 236.5 307.2 237.3C334 253.6 352 283.2 352 316.9C352 317.3 352 317.7 352 318.1L257.9 224zM378.2 480L224 325.8C225.2 410.4 293.6 478.7 378.1 479.9zM171.7 273.5L126.4 228.2L77.8 276.8C48.5 306.1 32 345.9 32 387.4C32 473.8 102 543.9 188.5 543.9C225.7 543.9 261.6 530.6 289.8 506.7C269.5 496.6 251 483.2 235.2 467.2C221.2 475.4 205.1 479.8 188.5 479.8C137.4 479.8 96 438.4 96 387.3C96 362.8 105.7 339.3 123.1 321.9L171.7 273.3z"/></svg>~;
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
@@ -1356,7 +1358,17 @@ sub show_tasks {
         my $checkbox = '';  # Default empty
         my $title_link;
         my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
-        my $title = html_escape($a->{'Title'});        
+        my $title = html_escape($a->{'Title'});                
+        my $list_title = substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length});
+
+        # Check to see whether the List this task belongs to is deleted and if so, mark it as orphaned
+        my $list_deleted = single_db_value("SELECT DeletedDate FROM ListsTb WHERE id = ? LIMIT 1", $a->{'ListId'});        
+        if ($list_deleted) { # List is deleted, this task is an orphan
+            $list_title = '[--No List--]';
+
+            # Prefix task title with an orphaned marker, coloured red
+            $title_list .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
+            }
         
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {  
@@ -1367,7 +1379,7 @@ sub show_tasks {
                 </form>
                 ~;
 
-            $title_link = qq~
+            $title_link .= qq~
                     <a 
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
@@ -1381,7 +1393,7 @@ sub show_tasks {
 
         # Completed tasks. Show strikethrough title and button to mark uncompleted
         if ($status == 2) { # Completed tasks
-            $title_link = qq~
+            $title_link .= qq~
                     <a 
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
@@ -1410,7 +1422,7 @@ sub show_tasks {
         if ($config->{'cfg_show_dates_lists'} eq 'on') {
             $retstr .= qq~
                 $friendly_date
-                <td>~ . substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length}) . qq~</td>
+                <td>$list_title</td>
                 ~;
             }
 

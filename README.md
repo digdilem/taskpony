@@ -294,6 +294,8 @@ Some things for the future that may, or may not, be added.
 - (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads and only write on change. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Also, most page loads involve a change, so benefit may not be significant. Needs consideration, possibly a problem that doesn't need solving.
 - (Maybe) Automated database backups.
 - (Maybe) New release notification. 
+- (Maybe) Multi-language support.
+- (Maybe) A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)
 
 # Screenshots
 
@@ -438,6 +440,10 @@ Taskpony is built with the help of this great FOSS software:
 ## 0.02
 
 - Bugfix: Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
+- QOL: Renamed "All Lists" to "All Tasks" @halcyonloon https://github.com/digdilem/taskpony/issues/1
+
+
+- Feature: Orphaned task handling. !! See workflow in obsidian
 
 
 # Licence
