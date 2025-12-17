@@ -43,7 +43,7 @@ my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
-my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="30" height="30">
+my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="25" height="25">
                 <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                 ~;
 my $fa_star_off = $fa_header . q~
@@ -1366,12 +1366,10 @@ sub show_tasks {
         # Check to see whether the List this task belongs to is deleted and if so, mark it as orphaned
 
         my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NOT NULL", $a->{'ListId'}) // 0;
-print STDERR "DEBUG ($list_deleted) ($a->{'ListId'})  \n";        
         if ($list_deleted != 0) { # List is deleted, this task is an orphan
             $list_title = '[--No List--]';
 
             # Prefix task title with an orphaned marker, coloured red
-print STDERR "Task #$a->{'id'} belongs to deleted list #$a->{'ListId'}. Marking as orphaned in task list display.\n";            
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
             }
         
