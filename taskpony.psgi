@@ -1361,10 +1361,11 @@ sub show_tasks {
         my $title = html_escape($a->{'Title'});                
         my $list_title = substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length});
 
+###############################################
         # Check to see whether the List this task belongs to is deleted and if so, mark it as orphaned
 
-        my $list_deleted = single_db_value("SELECT DeletedDate FROM ListsTb WHERE id = ? LIMIT 1", $a->{'ListId'}) // 0;
-print STDERR "DEBUG ($list_deleted) ($a->{'t.ListId'}) {$list_id}\n";        
+        my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id=$a->{'ListId'} AND DeletedDate IS NOT NULL") // 0;
+print STDERR "DEBUG ($list_deleted) ($a->{'ListId'}) \n";        
         if ($list_deleted != 0) { # List is deleted, this task is an orphan
             $list_title = '[--No List--]';
 
