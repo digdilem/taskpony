@@ -62,7 +62,7 @@ my $fa_rotate_left = $fa_header . q~
 my $fa_info = $fa_header . q~
                     <path fill="currentColor" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z"/>
                     </svg>~;
-                    
+
 # Smaller FA icons for inline use in tables
 my $fa_header_small = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="20" height="20">
                 <!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
@@ -1354,7 +1354,7 @@ sub show_tasks {
         if ($status != 1) { # Completed tasks, show CompletedDate instead
             $friendly_date = qq~
             <td data-order="$a->{'CompletedDate'}">
-                <a href="#" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">
+                <a href="#" class="link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">
                 ~
                 . human_friendly_date($a->{'CompletedDate'}) . qq~</a>
             </td>
