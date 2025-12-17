@@ -1345,7 +1345,7 @@ sub show_tasks {
     while (my $a = $sth->fetchrow_hashref()) {
         my $friendly_date = qq~
             <td data-order="$a->{'AddedDate'}">
-                <a href="#" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">
+                <a href="#" class="link-body-emphasis text-decoration-none" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">
                 ~
                 . human_friendly_date($a->{'AddedDate'}) . qq~</a> 
             </td>

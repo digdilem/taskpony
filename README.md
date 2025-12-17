@@ -440,8 +440,9 @@ Taskpony is built with the help of this great FOSS software:
 ## 0.02
 
 - Bugfix: Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
-- QOL: Renamed "All Lists" to "All Tasks" @halcyonloon https://github.com/digdilem/taskpony/issues/1
-
+- UX: Renamed "All Lists" to "All Tasks" @halcyonloon https://github.com/digdilem/taskpony/issues/1
+- UX: Removed blue link colour for dates in main list. (Link only there for tooltip on hover)
+- UX: Orphaned tasks in "All Tasks" list now have a new in-line icon before the task title, and their List name changed to "[--No List--]" (if List and dates enabled)
 
 - Feature: Orphaned task handling. !! See workflow in obsidian
 
