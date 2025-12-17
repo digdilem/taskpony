@@ -1430,7 +1430,15 @@ sub show_tasks {
         if ($config->{'cfg_show_dates_lists'} eq 'on') {
             $retstr .= qq~
                 $friendly_date
-                <td>$list_title</td>
+                <td>
+                    <a 
+                    href="/?lid=$a->{'ListId'}"
+                    class="text-white text-decoration-none" 
+                    data-bs-toggle="tooltip" 
+                    title="Jump to List '$a->{'ListTitle'}'"
+                    >
+                    $list_title
+                </td>
                 ~;
             }
 
