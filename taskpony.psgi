@@ -1364,7 +1364,7 @@ sub show_tasks {
 ###############################################
         # Check to see whether the List this task belongs to is deleted and if so, mark it as orphaned
 
-        my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id=$a->{'ListId'} AND DeletedDate IS NOT NULL");
+        my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NOT NULL", $a->{'ListId'}) // 0;
 print STDERR "DEBUG ($list_deleted) ($a->{'ListId'}) \n";        
         if ($list_deleted != 0) { # List is deleted, this task is an orphan
             $list_title = '[--No List--]';
