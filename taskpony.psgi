@@ -751,7 +751,7 @@ my $app = sub {
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Number of daily database backups to keep
-                                    <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of the database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically.">
+                                    <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of the database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Set to 0 to not create backups at all.">
                                         $fa_info
                                     </span>
                                 </span>
@@ -1844,9 +1844,28 @@ sub run_daily_tasks {
     } # End run_daily_tasks()
 
 ###############################################
-# Backup the database by rotating old backups and creating a new one
+# Backup the database by rotating old backups and creating a new one. Will only be called once a day from run_daily_tasks() logic
 sub backup_database {
     print STDERR "Backing up database...  Keeping " . $config->{cfg_backup_number_to_keep} . " backups\n";
+
+    # Start counting back from the currently defined max backups to keep. Delete the oldest, then rename each one down by 1, then create the new backup as .0
+    for (my $i = $config->{cfg_backup_number_to_keep} - 1; $i >= 0; $i--) {
+        my $old_backup = "$db_path.$i";
+        my $new_backup = "$db_path." . ($i + 1);
+
+        if (-e $old_backup) {
+            if ($i == $config->{cfg_backup_number_to_keep} - 1) {
+                # This is the oldest backup, delete it
+                print STDERR "Deleting oldest backup: $old_backup\n";
+                unlink $old_backup or print STDERR "WARN: Failed to delete old backup $old_backup: $!\n";
+                } else {
+                # Rename the backup down by 1
+                print STDERR "Renaming backup: $old_backup to $new_backup\n";
+                rename $old_backup, $new_backup or print STDERR "WARN: Failed to rename backup $old_backup to $new_backup: $!\n";
+                }
+            }
+        }
+
 
     } # End backup_database()
 
