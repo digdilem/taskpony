@@ -915,7 +915,7 @@ my $app = sub {
     # End named paths
 
     ###############################################
-    # Default page - If no other paths have taken the request then land here, list tasks and the quickadd form
+    # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
     # /?delete_task=nn - Delete task nn 
     my $delete_task = $req->param('delete_task') // 0;        
@@ -1183,8 +1183,8 @@ sub header {
     </head>
     <body class="text-white d-flex flex-column min-vh-100">
     <main class="flex-grow-1 container py-4">
-    <div class="container py-1">
-        <div class="d-flex justify-content-between align-items-center">
+    <div class="container py-1">        
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">        
             <div>
                 <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a> / 
                 ~;
