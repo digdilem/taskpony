@@ -822,13 +822,9 @@ my $app = sub {
             $html .= qq~
                 <tr>
                     <td>Tasks</td>
-                    <td>
-                        Total: $stats->{'total_tasks'} 
-                        &nbsp;::&nbsp;
-                        Active: $stats->{'active_tasks'} 
-                        &nbsp;::&nbsp;
-                        Completed: $stats->{'completed_tasks'}
-                    </td>
+                    <td>Total: $stats->{'total_tasks'} </td>
+                    <td>Active: $stats->{'active_tasks'} </td>
+                    <td>Completed: $stats->{'completed_tasks'}</td>
                     ~;
 
             #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb') // 0) . qq~ active</td>
