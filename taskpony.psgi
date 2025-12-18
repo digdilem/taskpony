@@ -823,18 +823,12 @@ my $app = sub {
                 <tr>
                     <td>Tasks</td>
                     <td>
-                        Total: $stats->{'total_tasks'} 
+                        <span class="badge bg-$config->{cfg_header_colour} me-2">Total: $stats->{'total_tasks'} </span>
                         &nbsp;::&nbsp;
-                        Active: $stats->{'active_tasks'} 
+                        <span class="badge bg-$config->{cfg_header_colour} text-dark me-2">Active: $stats->{'active_tasks'} </span>
                         &nbsp;::&nbsp;
-                        Completed: $stats->{'completed_tasks'}
+                        <span class="badge bg-$config->{cfg_header_colour}">Completed: $stats->{'completed_tasks'}</span>
                     </td>
-
-<td>
-  <span class="badge bg-secondary me-2">Total 175</span>
-  <span class="badge bg-warning text-dark me-2">Active 79</span>
-  <span class="badge bg-success">Completed 96</span>
-</td>
 
 
                     ~;
