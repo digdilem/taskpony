@@ -55,6 +55,7 @@ my $stats = {                           # Hashref to hold various stats for dash
     total_active_lists => 0,
     stats_last_calculated => 0,
     stats_first_task_created => 0,
+    stats_first_task_created_daysago => 0,
     };
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
@@ -881,6 +882,9 @@ my $app = sub {
                             <td>Misc</td>
                             <td>
                                 <span class="badge bg-$config->{cfg_header_colour} me-2">First task created: $stats->{'stats_first_task_created'} </span>
+                                &nbsp;
+                                ($stats->{'stats_first_task_created_daysago'} days ago)
+                                
                             </td>
                         </tr>                        
 
@@ -1786,6 +1790,7 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
 #    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %m %Y\',MIN(AddedDate)) FROM TasksTb');
     $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT MIN(AddedDate) FROM TasksTb');
+    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array('SELECT CAST((julianday(\'now\') - julianday(MIN(AddedDate))) AS INTEGER) FROM TasksTb');
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()    
