@@ -26,6 +26,8 @@ our $config = {
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
     cfg_show_dates_lists => 'on',               # Show just tasks, hide Date and List columns in task list
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
+    cfg_last_daily_run => 0,                    # Date of last daily run
+    cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
     };
 
 ###############################################
@@ -42,6 +44,7 @@ my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
+# Statistics variables. Not stored in config, but calculated periodically.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
 my $stats = {                           # Hashref to hold various stats for dashboard
     total_tasks => 0,
@@ -1032,14 +1035,12 @@ sub initialise_database {
     $dbh->do(qq~
             INSERT INTO ConfigTb (key, value) VALUES 
             ('database_schema_version', '1'),
-            ('active_list', '2'),
-            ('cfg_task_pagination_length', '$config->{'cfg_task_pagination_length'}'),
-            ('cfg_description_short_length', '$config->{'cfg_description_short_length'}'),
-            ('cfg_list_short_length', '$config->{'cfg_list_short_length'}'),
-            ('cfg_include_datatable_buttons', '$config->{'cfg_include_datatable_buttons'}'),
-            ('cfg_header_colour', '$config->{'cfg_header_colour'}')
+            ('active_list', '2')
             ;
         ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
+
+    # Save initial config values from local config hash
+    save_config();
 
     ###############################################
     # Create ListsTb
@@ -1087,7 +1088,7 @@ sub initialise_database {
         INSERT INTO TasksTb (Title, Description, ListId) VALUES
         ('Sample Task 1', 'This is a sample task description.', 2),
         ('Sample Task 2', 'Another sample task for demonstration.', 2),
-        ('Sample Task 3', 'Yet another task to show how it works.', 2);
+        ('Sample Task 3', 'Install Taskpony. Hey, you did this, you can tick it off!', 2);
         ~) or print STDERR "WARN: Failed to populate TasksTb: " . $dbh->errstr;
 
     print STDERR "Database initialisation complete, schema version 1.\n";
@@ -1110,7 +1111,7 @@ sub check_database_upgrade  {
 
             # List of queries required to upgrade from v.1 to v.2
             my @db_upgrade_steps_1_to_2 = (
-                "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists' LIMIT 1;",        # Change internal name of 'All Lists' to 'All Tasks'                    
+                "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists' LIMIT 1;",        # Change name of 'All Lists' to 'All Tasks'
                 "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';"        # Update version number in ConfigTb
                 );
 
@@ -1697,6 +1698,7 @@ sub config_load {
         }
     } # End config_load()
 
+###############################################
 # Open a consistent bootstrap 5 card for most pages
 sub start_card {
     my $card_title = shift || 'Title Missing';
@@ -1723,6 +1725,7 @@ sub start_card {
     return $retstr;
     } # End start_card()
 
+###############################################
 # As above, but smaller. Used for second cards on a page (Eg: Add List)
 sub start_mini_card {
     my $card_title = shift || 'Title Missing';
@@ -1749,6 +1752,7 @@ sub start_mini_card {
     return $retstr;
     } # End start_mini_card()
 
+###############################################
 # Close the card
 sub end_card {
     my $retstr = qq~
@@ -1761,9 +1765,14 @@ sub end_card {
     return $retstr;
     } # End end_card()
 
+###############################################
+# calculate_stats()
 sub calculate_stats { # Calculate stats and populate the global $stats hashref
     # Check to see whether we've run this recently. If so, return before hitting the database
     if ( $stats->{stats_last_calculated} && time - $stats->{stats_last_calculated} < $calculate_stats_interval ) { return; }
+
+    # Before we get onto working out the stats, check whether the daily tasks have been run today
+    run_daily_tasks();  # Will return early if already run today
 
     print STDERR "Calculating task statistics...\n";
     my $sql = q{
@@ -1791,12 +1800,90 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
 
     $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
     $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
-#    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %m %Y\',MIN(AddedDate)) FROM TasksTb');
     $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT MIN(AddedDate) FROM TasksTb');
     $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array('SELECT CAST((julianday(\'now\') - julianday(MIN(AddedDate))) AS INTEGER) FROM TasksTb');
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()    
+
+###############################################
+# Run any daily tasks we need to. Return if already run today.
+sub run_daily_tasks {
+    # 
+    my $tasks_ran_today =  $dbh->selectrow_array(q~
+        SELECT CASE
+        WHEN value = date('now') THEN 1
+        ELSE 0
+        END
+        FROM ConfigTb
+        WHERE key = 'cfg_last_daily_run';
+        ~;
+
+    if ($tasks_ran_today == 1) { return; }  # Already ran today, return
+
+    print STDERR "Running daily tasks...\n";
+
+    ###############################################
+    # Run daily tasks here, such as backing up the database, sending email summaries, etc.
+    backup_database();  # Backup the database by one iteration
+
+
+    ###############################################
+
+
+    # We ran today, so let's update the last run time and return
+    $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
+    return;
+    } # End run_daily_tasks()
+
+###############################################
+# Backup the database by rotating old backups and creating a new one
+sub backup_database {
+    print STDERR "Backing up database...  Keeping " . $cfg{cfg_backup_number_to_keep} . " backups\n";
+
+    } # End backup_database()
+
+###############################################
+# save_config()
+# Save contents of $config hashref to ConfigTb
+sub save_config {
+    print STDERR "Saving configuration\n";
+
+    # Loop through $config keys and save each of them to ConfigTb
+    for my $key (keys %$config) {
+        my $sql = "INSERT INTO ConfigTb (`key`,`value`) 
+            VALUES (?, ?) 
+            ON CONFLICT(key) 
+            DO UPDATE SET value = excluded.value;";
+
+        $dbh->do(
+            $sql,
+            undef,
+            $key,
+            $config->{$key},
+            ) or warn "Failed to save config key ($key): " . $dbh->errstr;
+        }
+    } # End save_config()
+
+###############################################
+# load_config($dbh, $config)
+# Load all key/value pairs from ConfigTb into $config hashref
+sub load_config {
+    print STDERR "Loading configuration from ConfigTb\n";
+
+    my $sth = $dbh->prepare(
+        'SELECT key, value FROM ConfigTb'
+        ) or die $dbh->errstr;
+
+    $sth->execute or die $sth->errstr;
+
+    while (my ($key, $value) = $sth->fetchrow_array) {
+        $config->{$key} = $value;
+        }
+
+    return;
+    } # End load_config()
+
 
 ##############################################
 # End Functions
