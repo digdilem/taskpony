@@ -40,7 +40,7 @@ my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file 
 my $dbh;                        # Global database handle 
 my $list_id = 1;                # Current list id
 my $list_name;                  # Current list name
-my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
+my $debug = 1;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
@@ -618,17 +618,12 @@ my $app = sub {
                             }
                         }
 
-                    # Set current local config value to avoid needing to reload config
+                    # Set current local config value
                     $config->{$key} = $new_val;
 
-                    my $sth = $dbh->prepare(
-                        "INSERT INTO ConfigTb (`key`, `value`)
-                        VALUES (?, ?)
-                        ON CONFLICT(`key`) DO UPDATE SET `value` = ?"
-                        );
-                    eval { $sth->execute($key, $new_val, $new_val); 1 } or print STDERR "WARN: Failed to store config key '$key': " . $dbh->errstr . "\n";
-                    debug("Stored ($key) with ($new_val) OK");
-                    } # End keys lookup               
+                    } # End keys lookup
+                # Save config to db
+                save_config();
                 } 
             
             add_alert("Configuration saved");
