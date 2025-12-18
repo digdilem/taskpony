@@ -1441,7 +1441,7 @@ sub show_tasks {
                     href="/?lid=$a->{'ListId'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" 
-                    title="Jump to List '$a->{'ListTitle'}'"
+                    title="Jump to $a->{'ListTitle'}"
                     >
                     $list_title
                 </td>
