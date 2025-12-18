@@ -59,6 +59,7 @@ my $stats = {                           # Hashref to hold various stats for dash
     stats_last_calculated => 0,
     stats_first_task_created => 0,
     stats_first_task_created_daysago => 0,
+    tasks_added_today => 0,    
     };
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
@@ -156,12 +157,13 @@ my $app = sub {
         if ($task_id > 0) {
             my $sth = $dbh->prepare(
                 'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
-            );
+                );
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
 
             debug("Task $task_id marked as complete");
             add_alert("Task #$task_id marked as completed");
-        }
+            $stats->{tasks_completed_today} += 1; 
+            }
 
         # Always redirect
         $res->redirect('/');
@@ -179,6 +181,7 @@ my $app = sub {
                 eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
                 debug("Task $task_id marked as active again");
                 add_alert("Task #$task_id re-activated.");
+                $stats->{tasks_completed_today} -= 1; 
             }
         }
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
@@ -220,6 +223,7 @@ my $app = sub {
                 }
 
             add_alert("Task '$title' added.");
+            $stats->{tasks_added_today} += 1; 
             $res->redirect('/');
             return $res->finalize;
             } # End /add form submission handling
@@ -392,6 +396,8 @@ my $app = sub {
 
                 eval { $sth->execute($title, $desc); 1 } or print STDERR "Insert failed: $@";
                 add_alert("List '$title' added.");
+                $stats->{total_lists} += 1;
+                $stats->{total_active_lists} += 1;
                 } elsif ($action eq 'edit' && $list_id > 1 && length $title) {
                 my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
@@ -407,6 +413,8 @@ my $app = sub {
 
                 eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted.");
+                $stats->{total_lists} -= 1;
+                $stats->{total_active_lists} -= 1;
                 }
 
             $res->redirect('/lists');
