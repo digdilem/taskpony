@@ -820,41 +820,29 @@ my $app = sub {
             ~;
             # Tasks
             $html .= qq~
-                <tr>
-                    <td>Tasks</td>
-                    <td>
-                        <span class="badge bg-$config->{cfg_header_colour} me-2">Total: $stats->{'total_tasks'} </span>
-                        &nbsp;
-                        <span class="badge bg-$config->{cfg_header_colour} me-2">Active: $stats->{'active_tasks'} </span>
-                        &nbsp;
-                        <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'completed_tasks'}</span>
-                    </td>
+                        <tr>
+                            <td>Tasks</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Total: $stats->{'total_tasks'} </span>
+                                &nbsp;
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Active: $stats->{'active_tasks'} </span>
+                                &nbsp;
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'completed_tasks'}</span>
+                            </td>
+                        </tr>                
+
+                        <tr>
+                            <td>Today</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_today'} </span>
+                                &nbsp;
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_today'}</span>
+                            </td>
+                        </tr>
 
 
-                    ~;
 
-            #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb') // 0) . qq~ active</td>
-            #     </tr>
-            #     <tr>
-            #         <td>Active Tasks</td>
-            #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 1') // 0) . qq~</td>
-            #     </tr>
-            #     <tr>
-            #         <td>Completed Tasks</td>
-            #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 2') // 0) . qq~</td>
-            #     </tr>
 
-            # for my $k (sort keys %$stats) {
-            #     my $v = defined $stats->{$k} ? $stats->{$k} : '';
-            #     $html .= qq~
-            #         <tr>
-            #             <td>~ . html_escape($k) . qq~</td>
-            #             <td>~ . html_escape($v) . qq~</td>
-            #         </tr>
-            #     ~;
-            # }
-
-            $html .= qq~
                     </tbody>
                 </table>
                 </div>
