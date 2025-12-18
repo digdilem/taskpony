@@ -824,9 +824,9 @@ my $app = sub {
                     <td>Tasks</td>
                     <td>
                         <span class="badge bg-$config->{cfg_header_colour} text-white me-2">Total: $stats->{'total_tasks'} </span>
-                        &nbsp;::&nbsp;
+                        &nbsp;
                         <span class="badge bg-$config->{cfg_header_colour} text-white me-2">Active: $stats->{'active_tasks'} </span>
-                        &nbsp;::&nbsp;
+                        &nbsp;
                         <span class="badge bg-$config->{cfg_header_colour} text-white me-2">Completed: $stats->{'completed_tasks'}</span>
                     </td>
 
