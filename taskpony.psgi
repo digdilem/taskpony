@@ -52,7 +52,8 @@ my $stats = {                           # Hashref to hold various stats for dash
     tasks_completed_past_month => 0,
     tasks_completed_past_year => 0,
     total_lists => 0,
-    stats_last_calculated => 0
+    stats_last_calculated => 0,
+    stats_first_task_created => 0,
     };
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
@@ -1718,8 +1719,9 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     @$stats{ keys %$row } = values %$row;
 
     $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
+    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %b %Y\',MIN(AddedDate)) FROM TasksTb');
 
-    $stats->{stats_last_calculated} = time;
+    $stats->{stats_last_calculated} = human_friendly_date(time);
     } # End calculate_stats()    
 
 ##############################################
