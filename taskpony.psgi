@@ -824,10 +824,10 @@ my $app = sub {
                     <td>Tasks</td>
                     <td>
                         Total: $stats->{'total_tasks'} 
-                        &nbsp;
-                        | Active: $stats->{'active_tasks'} 
-                        &nbsp;
-                        | Completed: $stats->{'completed_tasks'}
+                        &nbsp;::&nbsp;
+                        Active: $stats->{'active_tasks'} 
+                        &nbsp;::&nbsp;
+                        Completed: $stats->{'completed_tasks'}
                     </td>
                     ~;
 
