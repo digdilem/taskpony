@@ -1849,7 +1849,7 @@ sub save_config {
     print STDERR "Saving configuration\n";
 
     # Loop through $config keys and save each of them to ConfigTb
-    for my $key (keys %$config) {
+    for my $key (keys %{$config}) {
         my $sql = "INSERT INTO ConfigTb (`key`,`value`) 
             VALUES (?, ?) 
             ON CONFLICT(key) 
