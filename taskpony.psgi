@@ -1784,7 +1784,8 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
 
     $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
     $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
-    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %m %Y\',MIN(AddedDate)) FROM TasksTb');
+#    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %m %Y\',MIN(AddedDate)) FROM TasksTb');
+    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT MIN(AddedDate) FROM TasksTb');
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()    
