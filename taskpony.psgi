@@ -614,7 +614,7 @@ my $app = sub {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
-                            $new_val = $config->{$key};
+                            $new_val = $config->{$key}; # No value supplied, use existing
                             }
                         }
 
@@ -747,6 +747,20 @@ my $app = sub {
                                 </div>
                             </div>
 
+                            <!-- NUMBER ROW cfg_backup_number_to_keep -->
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="config-label">                                    
+                                    Number of daily database backups to keep
+                                    <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of the database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically.">
+                                        $fa_info
+                                    </span>
+                                </span>
+
+                                <input type="number" class="form-control w-50" 
+                                    value="$config->{cfg_backup_number_to_keep}" 
+                                    name="cfg_backup_number_to_keep">
+                            </div>
+
                             <!-- NUMBER ROW cfg_task_pagination_length -->
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
@@ -769,7 +783,6 @@ my $app = sub {
                                         $fa_info
                                     </span>
                                 </span>
-
                                 <input type="number" class="form-control w-50" 
                                     value="$config->{cfg_description_short_length}" 
                                     name="cfg_description_short_length">
