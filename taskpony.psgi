@@ -76,6 +76,9 @@ my $fa_rotate_left = $fa_header . q~
 my $fa_info = $fa_header . q~
                     <path fill="currentColor" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z"/>
                     </svg>~;
+my $fa_chart = $fa_header . q~
+                    <path fill="currentColor" d="M128 128C128 110.3 113.7 96 96 96C78.3 96 64 110.3 64 128L64 464C64 508.2 99.8 544 144 544L544 544C561.7 544 576 529.7 576 512C576 494.3 561.7 480 544 480L144 480C135.2 480 128 472.8 128 464L128 128zM534.6 214.6C547.1 202.1 547.1 181.8 534.6 169.3C522.1 156.8 501.8 156.8 489.3 169.3L384 274.7L326.6 217.4C314.1 204.9 293.8 204.9 281.3 217.4L185.3 313.4C172.8 325.9 172.8 346.2 185.3 358.7C197.8 371.2 218.1 371.2 230.6 358.7L304 285.3L361.4 342.7C373.9 355.2 394.2 355.2 406.7 342.7L534.7 214.7z"/>
+                    </svg>~;
 
 # Smaller FA icons for inline use in tables
 my $fa_header_small = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="20" height="20">
@@ -1134,6 +1137,12 @@ sub header {
                     class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
                     $fa_gear
                 </a>
+
+                <a href="/stats"
+                    class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
+                    $fa_chart
+                </a>
+
             </div>
 
             </h3>
@@ -1721,7 +1730,7 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
     $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %b %Y\',MIN(AddedDate)) FROM TasksTb');
 
-    $stats->{stats_last_calculated} = human_friendly_date(time);
+    $stats->{stats_last_calculated} = time;
     } # End calculate_stats()    
 
 ##############################################
