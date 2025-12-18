@@ -446,6 +446,8 @@ Taskpony is built with the help of this great FOSS software:
 - UX: Clicking the task's List in the "All tasks" List now jumps to that List.
 - Feature: Local stats calculated. Rate limited to 1/hr to avoid performance hit.
 - Feature: /stats page (and icon button) added with some basic statistics.
+- Change: Config save rewritten to make it easier to expand in the future.
+
 
 - Feature: Orphaned task handling. !! See workflow in obsidian
 - Config option - Show stats
