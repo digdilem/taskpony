@@ -1809,15 +1809,14 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
 ###############################################
 # Run any daily tasks we need to. Return if already run today.
 sub run_daily_tasks {
-    # 
-    my $tasks_ran_today =  $dbh->selectrow_array(q~
+    my $tasks_ran_today = $dbh->selectrow_array("
         SELECT CASE
         WHEN value = date('now') THEN 1
         ELSE 0
         END
         FROM ConfigTb
         WHERE key = 'cfg_last_daily_run';
-        ~;
+        ";
 
     if ($tasks_ran_today == 1) { return; }  # Already ran today, return
 
