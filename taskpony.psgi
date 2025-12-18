@@ -1816,7 +1816,7 @@ sub run_daily_tasks {
         END
         FROM ConfigTb
         WHERE key = 'cfg_last_daily_run';
-        ";
+        ");
 
     if ($tasks_ran_today == 1) { return; }  # Already ran today, return
 
