@@ -1188,7 +1188,8 @@ sub header {
 
             <div class="d-flex gap-2">
                 <a href="/lists"
-                    class="btn btn-secondary d-inline-flex align-items-center">
+                    class="btn btn-secondary d-inline-flex align-items-center"
+                    data-bs-toggle="tooltip" title="Manage Lists" >
                     Lists
                 </a>
 
