@@ -1431,6 +1431,12 @@ sub show_tasks {
             $retstr .= qq~
                 $friendly_date
                 <td>
+                ~;
+                
+            if (if ($list_deleted != 0) { # List is deleted, no link
+                $retstr .= "$list_title</td>\n";
+                } else {
+                $retstr .= qq~
                     <a 
                     href="/?lid=$a->{'ListId'}"
                     class="text-white text-decoration-none" 
@@ -1440,6 +1446,7 @@ sub show_tasks {
                     $list_title
                 </td>
                 ~;
+                }
             }
 
         # Close the row
