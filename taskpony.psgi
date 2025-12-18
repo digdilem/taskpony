@@ -810,7 +810,7 @@ my $app = sub {
         # Stats page - show calculated statistics
         if ($req->path eq "/stats") {
             my $html = header();
-            $html .= start_card('Statistics', $fa_info);
+            $html .= start_card('Statistics', $fa_chart);
 
             $html .= qq~
                 <div class="table-responsive">
