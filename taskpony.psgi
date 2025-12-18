@@ -840,7 +840,46 @@ my $app = sub {
                             </td>
                         </tr>
 
+                        <tr>
+                            <td>Past Week</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_week'} </span>
+                                &nbsp;
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_week'}</span>
+                            </td>
+                        </tr>
 
+                        <tr>
+                            <td>Past Month</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_month'} </span>
+                                &nbsp;
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_month'}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Past Year</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_year'} </span>
+                                &nbsp;
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_year'}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Lists</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Total Active: $stats->{'total_lists'} </span>
+                            </td>
+                        </tr>                        
+
+                        <tr>
+                            <td>Misc</td>
+                            <td>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">First task created: $stats->{'stats_first_task_created'} </span>
+                            </td>
+                        </tr>                        
 
 
                     </tbody>
