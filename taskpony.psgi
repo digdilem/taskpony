@@ -1432,8 +1432,8 @@ sub show_tasks {
                 $friendly_date
                 <td>
                 ~;
-                
-            if (if ($list_deleted != 0) { # List is deleted, no link
+
+            if ($list_deleted != 0) { # List is deleted, no link
                 $retstr .= "$list_title</td>\n";
                 } else {
                 $retstr .= qq~
