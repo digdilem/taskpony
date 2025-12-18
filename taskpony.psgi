@@ -818,16 +818,39 @@ my $app = sub {
                     </thead>
                     <tbody>
             ~;
+            # Tasks
+            $html .= qq~
+                <tr>
+                    <td>Tasks</td>
+                    <td>
+                        Total: $stats->{'total_tasks'} 
+                        &nbsp;
+                        | Active: $stats->{'active_tasks'} 
+                        &nbsp;
+                        | Completed: $stats->{'completed_tasks'}
+                    </td>
+                    ~;
 
-            for my $k (sort keys %$stats) {
-                my $v = defined $stats->{$k} ? $stats->{$k} : '';
-                $html .= qq~
-                    <tr>
-                        <td>~ . html_escape($k) . qq~</td>
-                        <td>~ . html_escape($v) . qq~</td>
-                    </tr>
-                ~;
-            }
+            #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb') // 0) . qq~ active</td>
+            #     </tr>
+            #     <tr>
+            #         <td>Active Tasks</td>
+            #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 1') // 0) . qq~</td>
+            #     </tr>
+            #     <tr>
+            #         <td>Completed Tasks</td>
+            #         <td>~ . (single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 2') // 0) . qq~</td>
+            #     </tr>
+
+            # for my $k (sort keys %$stats) {
+            #     my $v = defined $stats->{$k} ? $stats->{$k} : '';
+            #     $html .= qq~
+            #         <tr>
+            #             <td>~ . html_escape($k) . qq~</td>
+            #             <td>~ . html_escape($v) . qq~</td>
+            #         </tr>
+            #     ~;
+            # }
 
             $html .= qq~
                     </tbody>
@@ -1133,14 +1156,14 @@ sub header {
                     Lists
                 </a>
 
-                <a href="/config"
-                    class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
-                    $fa_gear
-                </a>
-
                 <a href="/stats"
                     class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
                     $fa_chart
+                </a>
+
+                <a href="/config"
+                    class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon">
+                    $fa_gear
                 </a>
 
             </div>
