@@ -52,6 +52,7 @@ my $stats = {                           # Hashref to hold various stats for dash
     tasks_completed_past_month => 0,
     tasks_completed_past_year => 0,
     total_lists => 0,
+    total_active_lists => 0,
     stats_last_calculated => 0,
     stats_first_task_created => 0,
     };
@@ -818,6 +819,7 @@ my $app = sub {
                     </thead>
                     <tbody>
             ~;
+
             # Tasks
             $html .= qq~
                         <tr>
@@ -870,7 +872,8 @@ my $app = sub {
                         <tr>
                             <td>Lists</td>
                             <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Total Active: $stats->{'total_lists'} </span>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Total Lists: $stats->{'total_lists'}</span>
+                                <span class="badge bg-$config->{cfg_header_colour} me-2">Currently Active: $stats->{'total_active_lists'}</span>
                             </td>
                         </tr>                        
 
@@ -1780,6 +1783,7 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     @$stats{ keys %$row } = values %$row;
 
     $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
+    $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
     $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT strftime(\'%d %b %Y\',MIN(AddedDate)) FROM TasksTb');
 
     $stats->{stats_last_calculated} = time;
