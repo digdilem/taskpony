@@ -800,6 +800,43 @@ my $app = sub {
         return $res->finalize;
         } # End /config
 
+        ###############################################
+        # Stats page - show calculated statistics
+        if ($req->path eq "/stats") {
+            my $html = header();
+            $html .= start_card('Statistics', $fa_info);
+
+            $html .= qq~
+                <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr><th>Statistic</th><th>Value</th></tr>
+                    </thead>
+                    <tbody>
+            ~;
+
+            for my $k (sort keys %$stats) {
+                my $v = defined $stats->{$k} ? $stats->{$k} : '';
+                $html .= qq~
+                    <tr>
+                        <td>~ . html_escape($k) . qq~</td>
+                        <td>~ . html_escape($v) . qq~</td>
+                    </tr>
+                ~;
+            }
+
+            $html .= qq~
+                    </tbody>
+                </table>
+                </div>
+            ~;
+
+            $html .= end_card();
+            $html .= footer();
+            $res->body($html);
+            return $res->finalize;
+        }
+
     ###############################################
     # End named paths
 
