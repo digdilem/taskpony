@@ -444,7 +444,8 @@ Taskpony is built with the help of this great FOSS software:
 - UX: Removed blue link colour for dates in main list. (Link only there for tooltip on hover)
 - UX: Orphaned tasks in "All Tasks" list now have a new in-line icon before the task title, and their List name changed to "[--No List--]" (if List and dates enabled)
 - UX: Clicking the task's List in the "All tasks" List now jumps to that List.
-
+- Feature: Local stats calculated. Rate limited to 1/hr to avoid performance hit.
+- 
 
 - Feature: Orphaned task handling. !! See workflow in obsidian
 - Config option - Show stats
