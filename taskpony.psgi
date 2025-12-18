@@ -25,7 +25,7 @@ our $config = {
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
     cfg_show_dates_lists => 'on',               # Show just tasks, hide Date and List columns in task list
-    cfg_header_colour => 'secondary',           # Bootstrap 5 colour of pane backgrounds
+    cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     };
 
 ###############################################
@@ -41,6 +41,19 @@ my $list_name;                  # Current list name
 my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
+
+my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
+my $stats = {                           # Hashref to hold various stats for dashboard
+    total_tasks => 0,
+    active_tasks => 0,
+    completed_tasks => 0,
+    tasks_completed_today => 0,
+    tasks_completed_past_week => 0,
+    tasks_completed_past_month => 0,
+    tasks_completed_past_year => 0,
+    total_lists => 0,
+    stats_last_calculated => 0
+    };
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
 my $fa_header = q~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" width="30" height="30">
@@ -100,6 +113,8 @@ my $app = sub {
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
+
+    calculate_stats();                    # Update stats hashref if needed
 
     # If no list lid specified, get the active list from ConfigTb to provide consistency to user
     if ($list_id == 0) {
@@ -1636,6 +1651,39 @@ sub end_card {
         ~;
     return $retstr;
     } # End end_card()
+
+sub calculate_stats { # Calculate stats and populate the global $stats hashref
+    # Check to see whether we've run this recently. If so, return before hitting the database
+    if ( $stats->{stats_last_calculated} && time - $stats->{stats_last_calculated} < $calculate_stats_interval ) { return; }
+
+    print STDERR "Calculating task statistics...\n";
+    my $sql = q{
+        SELECT
+            COUNT(*)                                                    AS total_tasks,
+            SUM(CompletedDate IS NULL)                                 AS active_tasks,
+
+            SUM(date(AddedDate) = date('now','localtime'))             AS tasks_added_today,
+            SUM(AddedDate >= date('now','-7 days','localtime'))        AS tasks_added_past_week,
+            SUM(AddedDate >= date('now','-1 month','localtime'))       AS tasks_added_past_month,
+            SUM(AddedDate >= date('now','-1 year','localtime'))        AS tasks_added_past_year,
+
+            SUM(CompletedDate IS NOT NULL)                              AS completed_tasks,
+            SUM(date(CompletedDate) = date('now','localtime'))         AS tasks_completed_today,
+            SUM(CompletedDate >= date('now','-7 days','localtime'))    AS tasks_completed_past_week,
+            SUM(CompletedDate >= date('now','-1 month','localtime'))   AS tasks_completed_past_month,
+            SUM(CompletedDate >= date('now','-1 year','localtime'))    AS tasks_completed_past_year
+        FROM TasksTb
+        };
+
+    my $row = $dbh->selectrow_hashref($sql);
+
+    # Merge DB values into existing stats hashref
+    @$stats{ keys %$row } = values %$row;
+
+    $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
+
+    $stats->{stats_last_calculated} = time;
+    } # End calculate_stats()    
 
 ##############################################
 # End Functions
