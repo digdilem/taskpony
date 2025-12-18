@@ -1838,7 +1838,7 @@ sub run_daily_tasks {
 ###############################################
 # Backup the database by rotating old backups and creating a new one
 sub backup_database {
-    print STDERR "Backing up database...  Keeping " . $cfg{cfg_backup_number_to_keep} . " backups\n";
+    print STDERR "Backing up database...  Keeping " . $config->{cfg_backup_number_to_keep} . " backups\n";
 
     } # End backup_database()
 
@@ -1849,7 +1849,7 @@ sub save_config {
     print STDERR "Saving configuration\n";
 
     # Loop through $config keys and save each of them to ConfigTb
-    for my $key (keys %{$config}) {
+    for my $key (keys %$config) {
         my $sql = "INSERT INTO ConfigTb (`key`,`value`) 
             VALUES (?, ?) 
             ON CONFLICT(key) 
