@@ -339,6 +339,21 @@ my $app = sub {
 
                                 <div class="col-6">
                                 <label class="form-label">box61</label>
+                                        <span class="config-label">
+                                            Repeat this task after completion
+                                            <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
+                                                $fa_info_small
+                                            </span>
+                                        </span>
+                                        <div class="form-check form-switch m-0">
+                                            <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
+                                        ~;
+
+                                        # Precheck the box if IsRecurring is already 'on'
+                                        if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
+                                        
+                                        $html .= qq~
+                                        </div>
                                 </div>
 
                                 <div class="col-6">
