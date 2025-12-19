@@ -284,7 +284,7 @@ my $app = sub {
 
         # Display edit form
         if ($task_id > 0) {
-            my $sth = $dbh->prepare('SELECT id, Status, Title, Description, ListId FROM TasksTb WHERE id = ?');
+            my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
             $sth->execute($task_id);
             my $task = $sth->fetchrow_hashref();
 
@@ -332,6 +332,50 @@ my $app = sub {
                                     maxlength="2000"
                                 >~ . html_escape($task->{'Description'}) . qq~</textarea>
                                 </div>
+
+
+
+
+                                <div class="col-6">
+                                    <span class="config-label">
+                                        Repeat this task after completion
+                                        <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days."> 
+                                            $fa_info_small
+                                        </span> 
+                                    </span>
+                                    <div class="form-check form-switch m-0">
+                                    <input class="form-check-input" type="checkbox" name="IsRecurring" 
+                                        id="autoUpdateToggle"
+                                        ~;
+                                        # Precheck this if set
+                                        if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
+
+                                        $html .= qq~
+                                        >
+                                    </div>
+                                </div>
+
+ 
+                                <div class="col-6">
+                                    <span class="config-label">                                    
+                                        Repeat every 
+                                        <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-365">
+                                            $fa_info_small
+                                        </span>
+                                    </span>
+
+                                    <input type="number" class="form-control" 
+                                        value="$task->{RecurringIntervalDay}" 
+                                        name="RecurringIntervalDay">
+
+                                     days.
+                                </div>
+
+          
+
+
+
+
 
                                 <div class="col-12">
                                 <label class="form-label">List</label>
@@ -894,6 +938,7 @@ my $app = sub {
                                 </div>
                                 </div>
                             </div>
+
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -1205,7 +1250,7 @@ $html .= qq~
                         <td colspan="2" class="pt-3 small text-white-50">
                             First task created: 
                             <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
-                            <span class="ms-2"><em>($stats->{'stats_first_task_created_daysago'} days ago)</em></span>
+                            <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
                         </td>
                         </tr>
 
