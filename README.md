@@ -459,6 +459,7 @@ Some things for the future that may, or may not, be added.
 - UX: Renamed "All Lists" to "All Tasks" @halcyonloon https://github.com/digdilem/taskpony/issues/1
 - UX: Removed blue link colour for dates in main list. (Link only there for tooltip on hover)
 - UX: Orphaned tasks in "All Tasks" list now have a new in-line icon before the task title, and their List name changed to "[--No List--]" (if List and dates enabled)
+- UX: List Management - when deleting a list, user is now presented with several options so they can decide what happens to any tasks within that list.
 - UX: Clicking the task's List in the "All tasks" List now jumps to that List.
 - UX: Top-right buttons: "Lists" changed to icon. Stats button added. All benefit from description popups. Slight change to div to wrap them onto second line for small devices as they were flowing off screen.
 - UX: "N tasks completed today!" added to task completed banned

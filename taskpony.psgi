@@ -623,26 +623,26 @@ my $app = sub {
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <p>How would you like to handle tasks in <strong id="modalListTitle"></strong>?</p>
+                <p>How would you like to handle any existing tasks in <strong id="modalListTitle"></strong>?</p>
                 <form id="deleteListForm" method="post" action="/lists">
                   <input type="hidden" name="list_id" id="modalListId" value="">
                   <div class="mb-3">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteOrphan" value="delete_orphan" checked>
                       <label class="form-check-label" for="deleteOrphan">
-                        Delete List and orphan active tasks (tasks will remain with no list)
+                        Delete List and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List')</i>
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
                       <label class="form-check-label" for="deleteComplete">
-                        Delete List and complete all its tasks (mark as done)
+                        Delete List and mark any tasks as Completed?
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
                       <label class="form-check-label" for="deleteMove">
-                        Delete List and move all active tasks to another list
+                        Delete List and move all active tasks to another list?
                       </label>
                     </div>
                     <div id="moveListContainer" class="mt-2" style="display:none;">
@@ -674,7 +674,7 @@ my $app = sub {
             var activeTasksCount = button.getAttribute('data-active-tasks');
             
             document.getElementById('modalListId').value = listId;
-            document.getElementById('modalListTitle').textContent = listTitle + ' (' + activeTasksCount + ' active tasks)';
+            document.getElementById('modalListTitle').innerHTML = listTitle + ' <i>(' + activeTasksCount + ' active tasks)</i>';
             
             // Populate target list dropdown, excluding the list being deleted
             var selectElement = document.getElementById('targetListId');
