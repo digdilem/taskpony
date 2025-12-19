@@ -13,6 +13,7 @@ use Time::Local;            # For human friendly date function
 
 use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
+use File::Copy;             # For database backup copy function
 use FindBin;
 
 ###############################################
