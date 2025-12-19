@@ -1176,7 +1176,7 @@ $html .= qq~
   <td class="pt-2">Past Month</td>
   <td class="pt-2">
     <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-secondary">Added: $stats->{'tasks_added_past_month'}</span>
+      <span class="badge bg-success">Added: $stats->{'tasks_added_past_month'}</span>
       <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_month'}</span>
     </div>
   </td>
@@ -1186,7 +1186,7 @@ $html .= qq~
   <td>Past Year</td>
   <td>
     <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-secondary">Added: $stats->{'tasks_added_past_year'}</span>
+      <span class="badge bg-success">Added: $stats->{'tasks_added_past_year'}</span>
       <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_year'}</span>
     </div>
   </td>
@@ -1203,7 +1203,7 @@ $html .= qq~
 </tr>
 
 <tr class="border-top">
-  <td colspan="2" class="pt-3 small text-muted">
+  <td colspan="2" class="pt-3 small text-white-50">
     First task created:
     <strong class="text-body">$stats->{'stats_first_task_created'}</strong>
     <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
