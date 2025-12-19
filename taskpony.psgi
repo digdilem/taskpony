@@ -409,8 +409,52 @@ my $app = sub {
 
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
                 add_alert("List updated.");
+                } elsif ($action eq 'delete_orphan' && $list_id > 1) {
+                # Delete list, leave tasks orphaned (no list assignment)
+                my $sth = $dbh->prepare(
+                    'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+                    );
+                eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                add_alert("List deleted. Active tasks have been orphaned.");
+                $stats->{total_lists} -= 1;
+                $stats->{total_active_lists} -= 1;
+                } elsif ($action eq 'delete_complete' && $list_id > 1) {
+                # Mark all tasks in this list as completed, then delete list
+                my $update_sth = $dbh->prepare(
+                    'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1'
+                    );
+                eval { $update_sth->execute($list_id); 1 } or print STDERR "Task completion failed: $@";
+                
+                my $delete_sth = $dbh->prepare(
+                    'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+                    );
+                eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                add_alert("List deleted and all active tasks marked as completed.");
+                $stats->{total_lists} -= 1;
+                $stats->{total_active_lists} -= 1;
+                } elsif ($action eq 'delete_move' && $list_id > 1) {
+                # Move all active tasks to another list, then delete the list
+                my $target_list_id = $req->param('target_list_id') // 0;
+                
+                if ($target_list_id > 1 && $target_list_id != $list_id) {
+                    my $move_sth = $dbh->prepare(
+                        'UPDATE TasksTb SET ListId = ? WHERE ListId = ? AND Status = 1'
+                        );
+                    eval { $move_sth->execute($target_list_id, $list_id); 1 } or print STDERR "Task move failed: $@";
+                    
+                    my $delete_sth = $dbh->prepare(
+                        'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+                        );
+                    eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                    
+                    add_alert("List deleted and active tasks moved to target list.");
+                    $stats->{total_lists} -= 1;
+                    $stats->{total_active_lists} -= 1;
+                } else {
+                    add_alert("Invalid target list selected.");
+                }
                 } elsif ($action eq 'delete' && $list_id > 1) {
-                # Soft delete - set DeletedDate to current timestamp
+                # Legacy delete (orphan) - for backwards compatibility
                 my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
@@ -499,12 +543,8 @@ my $app = sub {
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
                                     <td>$is_default_str</td>
-                                    <td>                                        
-                                        <form method="post" action="/lists" style="display:inline;">
-                                            <input type="hidden" name="action" value="delete" />
-                                            <input type="hidden" name="list_id" value="$list->{'id'}" />
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Permanently delete this list?');">Delete</button>                                            
-                                        </form>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">Delete</button>
                                     </td>
                                 </tr>
                 ~;
@@ -516,6 +556,130 @@ my $app = sub {
                     </div>
                 </div>
                 ~;
+
+        # Build the list of available lists for moving tasks (exclude the current list)
+        my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+        $move_lists_sth->execute();
+        my @move_lists;
+        while (my $ml = $move_lists_sth->fetchrow_hashref()) {
+            push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
+        }
+        my $move_lists_json = '';
+        foreach my $ml (@move_lists) {
+            $move_lists_json .= qq~<option value="$ml->{'id'}">$ml->{'title'}</option>~;
+        }
+
+        # Add delete list modal
+        $html .= qq~
+        <!-- Delete List Modal -->
+        <div class="modal fade" id="deleteListModal" tabindex="-1" aria-labelledby="deleteListModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteListModalLabel">Delete List</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>How would you like to handle tasks in <strong id="modalListTitle"></strong>?</p>
+                <form id="deleteListForm" method="post" action="/lists">
+                  <input type="hidden" name="list_id" id="modalListId" value="">
+                  <div class="mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="delete_option" id="deleteOrphan" value="delete_orphan" checked>
+                      <label class="form-check-label" for="deleteOrphan">
+                        Delete List and orphan active tasks (tasks will remain with no list)
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
+                      <label class="form-check-label" for="deleteComplete">
+                        Delete List and complete all its tasks (mark as done)
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
+                      <label class="form-check-label" for="deleteMove">
+                        Delete List and move all active tasks to another list
+                      </label>
+                    </div>
+                    <div id="moveListContainer" class="mt-2" style="display:none;">
+                      <label for="targetListId" class="form-label">Move tasks to:</label>
+                      <select class="form-select bg-dark text-white border-secondary" id="targetListId" name="target_list_id">
+                        $move_lists_json
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete List</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Handle modal opening - populate with list details
+          var deleteListModal = document.getElementById('deleteListModal');
+          deleteListModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var listId = button.getAttribute('data-list-id');
+            var listTitle = button.getAttribute('data-list-title');
+            var activeTasksCount = button.getAttribute('data-active-tasks');
+            
+            document.getElementById('modalListId').value = listId;
+            document.getElementById('modalListTitle').textContent = listTitle + ' (' + activeTasksCount + ' active tasks)';
+          });
+
+          // Handle radio button changes for move option visibility
+          var deleteOrphan = document.getElementById('deleteOrphan');
+          var deleteComplete = document.getElementById('deleteComplete');
+          var deleteMove = document.getElementById('deleteMove');
+          var moveListContainer = document.getElementById('moveListContainer');
+
+          [deleteOrphan, deleteComplete, deleteMove].forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              if (deleteMove.checked) {
+                moveListContainer.style.display = 'block';
+                document.getElementById('targetListId').focus();
+              } else {
+                moveListContainer.style.display = 'none';
+              }
+            });
+          });
+
+          // Handle delete button click
+          document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            var selectedOption = document.querySelector('input[name="delete_option"]:checked').value;
+            
+            // Validate that move option has a target list selected
+            if (selectedOption === 'delete_move') {
+              var targetListId = document.getElementById('targetListId').value;
+              var currentListId = document.getElementById('modalListId').value;
+              if (!targetListId) {
+                alert('Please select a target list for moving tasks.');
+                return;
+              }
+              if (targetListId == currentListId) {
+                alert('Cannot move tasks to the same list. Please select a different list.');
+                return;
+              }
+            }
+
+            // Add action to form and submit
+            var form = document.getElementById('deleteListForm');
+            var actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = selectedOption;
+            form.appendChild(actionInput);
+            form.submit();
+          });
+        });
+        </script>
+        ~;
 
         # Add New List form
         $html .= start_mini_card('Add New List', $fa_list);
