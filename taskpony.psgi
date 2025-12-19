@@ -1481,7 +1481,9 @@ sub check_database_upgrade  {
             # List of queries required to upgrade from v.1 to v.2
             my @db_upgrade_steps_1_to_2 = (
                 "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists' LIMIT 1;",        # Change name of 'All Lists' to 'All Tasks'
-                "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';"        # Update version number in ConfigTb
+                "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';",       # Update version number in ConfigTb
+                "ALTER TABLE TasksTb ADD COLUMN IsRecurring TEXT DEFAULT 'off';",                   # New column to indicate whether task is recurring
+                "ALTER TABLE TasksTb ADD COLUMN RecurringIntervalDay INTEGER DEFAULT 1;",           # New column to indicate recurring interval in days
                 );
 
             foreach my $upgrade_query (@db_upgrade_steps_1_to_2) {
