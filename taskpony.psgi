@@ -1893,7 +1893,7 @@ sub show_tasks {
 
             # Add a repeat icon if the task is recurring
             if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a recurring task">$fa_repeat</span> ~;
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a recurring task">$fa_repeat_small</span> ~;
                 }
 
             $title_link .= qq~  
