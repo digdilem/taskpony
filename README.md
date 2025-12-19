@@ -255,6 +255,8 @@ If `Display export buttons` is selected in Settings, then extra "Export" buttons
 
 Below that is a final button to show completed tasks. This changes the view to show *completed* tasks instead of *active* ones. This allows you to "oops" and mark any completed tasks back as active. 
 
+### Repeating Tasks
+
 ## About Lists
 
 ![Lists button](docs/lists-button.jpg)
@@ -437,7 +439,6 @@ Taskpony is built with the help of this great FOSS software:
 Some things for the future that may, or may not, be added. 
 
 - (Probably) Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
-- (Maybe) Basic recurring tasks. Not entirely sure how this could manifest yet.
 - (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
 - (Maybe) Add an icon to each List from Fontawesome for cosmetic identification.
 - (Maybe) Add default sorting option, rather than just newest-first.
@@ -467,6 +468,7 @@ Some things for the future that may, or may not, be added.
 - Feature: /stats page added with some basic statistics.
 - Change: Config save rewritten to make it easier to expand in the future.
 - Feature: Daily backups of the database are now created. Number of them is configurable in /settings
+- Feature: Recurring tasks added.
 - Change: Daily functions call added. 
 
 
