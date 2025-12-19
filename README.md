@@ -257,6 +257,21 @@ Below that is a final button to show completed tasks. This changes the view to s
 
 ### Repeating Tasks
 
+![Repeating Tasks](docs/repeating-task-list.jpg)
+
+Tasks can be set to repeat a set number of days after completing. This is useful for tasks that need to be done every NN days - watering the plants, taking the bins out and so on. 
+
+To enable this, create a task as normal and then click on it to Edit the task, then you can check these two fields to enable Repeat behaviour and set the number of days. 
+
+![Repeating Task Settings](docs/repeating-form.jpg)
+
+When this task is next checked as completed, it will disappear as normal. Once that number of days has passed, it will re-appear in the list as before.
+
+To stop a task for repeating, you can either 
+
+- Edit the Task, Untick the `Repeat this Task` box, or
+- Edit the Task and click `Delete Task` to permanently remove it.
+
 ## About Lists
 
 ![Lists button](docs/lists-button.jpg)
