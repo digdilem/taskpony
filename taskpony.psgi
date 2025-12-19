@@ -1140,75 +1140,74 @@ my $app = sub {
             #             </tr>                        
 
 $html .= qq~
+                        <tr class="table-borderless">
+                        <td class="fw-semibold">Tasks</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
+                            <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
+                            <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
+                            </div>
+                        </td>
+                        </tr>
 
-<tr class="table-borderless">
-  <td class="fw-semibold">Tasks</td>
-  <td>
-    <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
-      <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
-      <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
-    </div>
-  </td>
-</tr>
+                        <tr>
+                        <td class="fw-semibold pt-3">Today</td>
+                        <td class="pt-3">
+                            <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-success">Added: $stats->{'tasks_added_today'}</span>
+                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_today'}</span>
+                            </div>
+                        </td>
+                        </tr>
 
-<tr>
-  <td class="fw-semibold pt-3">Today</td>
-  <td class="pt-3">
-    <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-success">Added: $stats->{'tasks_added_today'}</span>
-      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_today'}</span>
-    </div>
-  </td>
-</tr>
+                        <tr>
+                        <td class="fw-semibold pt-3">Past Week</td>
+                        <td class="pt-3">
+                            <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-success">Added: $stats->{'tasks_added_past_week'}</span>
+                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_week'}</span>
+                            </div>
+                        </td>
+                        </tr>
 
-<tr>
-  <td class="fw-semibold pt-3">Past Week</td>
-  <td class="pt-3">
-    <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-success">Added: $stats->{'tasks_added_past_week'}</span>
-      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_week'}</span>
-    </div>
-  </td>
-</tr>
+                        <tr class="text-muted">
+                        <td class="pt-2">Past Month</td>
+                        <td class="pt-2">
+                            <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-success">Added: $stats->{'tasks_added_past_month'}</span>
+                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_month'}</span>
+                            </div>
+                        </td>
+                        </tr>
 
-<tr class="text-muted">
-  <td class="pt-2">Past Month</td>
-  <td class="pt-2">
-    <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-success">Added: $stats->{'tasks_added_past_month'}</span>
-      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_month'}</span>
-    </div>
-  </td>
-</tr>
+                        <tr class="text-muted">
+                        <td>Past Year</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-success">Added: $stats->{'tasks_added_past_year'}</span>
+                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_year'}</span>
+                            </div>
+                        </td>
+                        </tr>
 
-<tr class="text-muted">
-  <td>Past Year</td>
-  <td>
-    <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-success">Added: $stats->{'tasks_added_past_year'}</span>
-      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_year'}</span>
-    </div>
-  </td>
-</tr>
+                        <tr>
+                        <td class="fw-semibold pt-3">Lists</td>
+                        <td class="pt-3">
+                            <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-primary">Total Lists: $stats->{'total_lists'}</span>
+                            <span class="badge bg-success">Currently Active: $stats->{'total_active_lists'}</span>
+                            </div>
+                        </td>
+                        </tr>
 
-<tr>
-  <td class="fw-semibold pt-3">Lists</td>
-  <td class="pt-3">
-    <div class="d-flex flex-wrap gap-2">
-      <span class="badge bg-primary">Total Lists: $stats->{'total_lists'}</span>
-      <span class="badge bg-success">Currently Active: $stats->{'total_active_lists'}</span>
-    </div>
-  </td>
-</tr>
-
-<tr class="border-top">
-  <td colspan="2" class="pt-3 small text-white-50">
-    First task created:
-    <strong class="text-body">$stats->{'stats_first_task_created'}</strong>
-    <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
-  </td>
-</tr>
+                        <tr class="border-top">
+                        <td colspan="2" class="pt-3 small text-white-50">
+                            First task created: 
+                            <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
+                            <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
+                        </td>
+                        </tr>
 
 
 
