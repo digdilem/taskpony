@@ -345,14 +345,14 @@ my $app = sub {
                                             
                                             <div class="form-check form-switch m-0">
                                             Repeat this task after completion
-                                                <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle">
+                                                <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
                                             ~;
 
                                             # Precheck the box if IsRecurring is already 'on'
-print STDERR "HERE ($task->{'IsRecurring'})\n";                                            
+
                                             if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
                                             
-                                            $html .= qq~
+                                            $html .= qq~>
                                             <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
                                                 $fa_info_small
                                             </span>
