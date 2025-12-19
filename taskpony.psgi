@@ -336,6 +336,16 @@ my $app = sub {
 
 
 
+
+                                <div class="col-6">
+                                <label class="form-label">box61</label>
+                                </div>
+
+                                <div class="col-6">
+                                <label class="form-label">box62</label>
+                                </div>
+
+
                                 <div class="d-flex justify-content-between align-items-center w-100">
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="config-label">
