@@ -472,6 +472,7 @@ my $app = sub {
         # Page - Display List of Lists
         $html .= start_card('Lists Management', $fa_list);
         $html .= qq~  
+                            <div class="table-responsive">
                             <table class="table table-dark table-striped">
                                 <thead>
                                     <tr>
@@ -553,6 +554,7 @@ my $app = sub {
         $html .= qq~
                             </tbody>
                         </table>
+                            </div>
                     </div>
                 </div>
                 ~;
@@ -578,7 +580,7 @@ my $app = sub {
         $html .= qq~
         <!-- Delete List Modal -->
         <div class="modal fade" id="deleteListModal" tabindex="-1" aria-labelledby="deleteListModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white">
               <div class="modal-header">
                 <h5 class="modal-title" id="deleteListModalLabel">Delete List</h5>
