@@ -400,7 +400,7 @@ my $app = sub {
 
                                 <div class="col-12">
                                 <div class="d-flex flex-wrap gap-2">
-                                <button class="btn btn-primary" type="submit">Save Task</button>
+                                <button class="btn btn-primary me-auto" type="submit">Save Task</button>
                                 <a class="btn btn-secondary" href="/">Cancel</a>
 
                                 ~;
