@@ -340,8 +340,9 @@ my $app = sub {
                                     <div class="d-flex gap-3">
                                         <!-- Inner box 1 -->
                                         <div class="border p-3 flex-fill text-center">
-                                            Repeat this task after completion
+                                            
                                             <div class="form-check form-switch m-0">
+                                            Repeat this task after completion
                                                 <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
                                             ~;
 
