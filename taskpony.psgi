@@ -1060,7 +1060,8 @@ my $app = sub {
 
                                 <input type="number" class="form-control" 
                                     value="$config->{cfg_backup_number_to_keep}" 
-                                    name="cfg_backup_number_to_keep">
+                                    name="cfg_backup_number_to_keep"
+                                    min="1" max="100">
                             </div>
 
                             <!-- NUMBER ROW cfg_task_pagination_length -->
