@@ -1075,7 +1075,8 @@ my $app = sub {
 
                                 <input type="number" class="form-control" 
                                     value="$config->{cfg_task_pagination_length}" 
-                                    name="cfg_task_pagination_length">
+                                    name="cfg_task_pagination_length"
+                                    min="3" max="1000">
                             </div>
 
                             <!-- NUMBER ROW cfg_description_short_length -->
@@ -1088,7 +1089,8 @@ my $app = sub {
                                 </span>
                                 <input type="number" class="form-control" 
                                     value="$config->{cfg_description_short_length}" 
-                                    name="cfg_description_short_length">
+                                    name="cfg_description_short_length"
+                                    min="3" max="1000">
                             </div>
 
                             <!-- NUMBER ROW cfg_description_short_length -->
@@ -1102,7 +1104,8 @@ my $app = sub {
 
                                 <input type="number" class="form-control" 
                                     value="$config->{cfg_list_short_length}" 
-                                    name="cfg_list_short_length">
+                                    name="cfg_list_short_length"
+                                    min="1" max="100">
                             </div>                            
 
                             <div class="col-12">
