@@ -1860,6 +1860,7 @@ sub backup_database {
     for (my $i = $config->{cfg_backup_number_to_keep} - 1; $i >= 0; $i--) {
         my $old_backup = "$db_path.$i";
         my $new_backup = "$db_path." . ($i + 1);
+        print STDERR "Processing backup rotation: $old_backup to $new_backup\n";
 
         if (-e $old_backup) {
             if ($i == $config->{cfg_backup_number_to_keep} - 1) {
