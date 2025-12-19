@@ -338,7 +338,7 @@ my $app = sub {
 
 
                                 <div class="col-6">
-                                    <span class="config-label">
+                                    
                                         Repeat this task after completion
                                         <div class="form-check form-switch m-0">
                                             <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
@@ -351,7 +351,7 @@ my $app = sub {
                                         <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
                                             $fa_info_small
                                         </span>
-                                    </span>
+                                    
                                         </div>
                                 </div>
 
