@@ -2235,7 +2235,7 @@ sub run_daily_tasks {
             SELECT date(?, '+' || ? || ' days')
             ", $completed_date, $interval_days);
 
-print STDERR "Recurring task ID $task->{id} ('$task->{Title}') completed on $completed_date with interval $interval_days days. Next activation date: $next_activation_date\n";            
+        debug("Recurring task ID $task->{id} ('$task->{Title}') completed on $completed_date with interval $interval_days days. Next activation date: $next_activation_date\n");
 
         # If the next activation date is today or earlier, reactivate the task
         if ($next_activation_date le single_db_value("SELECT date('now')")) {
