@@ -346,7 +346,12 @@ my $app = sub {
                                         </span>
                                         <div class="form-check form-switch m-0">
                                             <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
-                                            <?php if ($task->{'IsRecurring'} eq 'on') echo ' checked'; ?>>
+                                        ~;
+
+                                        # Precheck the box if IsRecurring is already 'on'
+                                        if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
+                                        
+                                        $html .= qq~
                                         </div>
                                     </div>
 
@@ -354,13 +359,16 @@ my $app = sub {
                                     <div class="d-flex align-items-center gap-2">
                                         <span class="config-label">
                                             Repeat every
-                                            <span data-bs-toggle="tooltip" title="How many days after completion should this task re-activate? Range 1-365">
-                                                $fa_info_small
-                                            </span>
+
                                         </span>
                                         <input type="number" class="form-control form-control-sm" style="width: 80px;"
-                                            name="RecurringIntervalDay" min="1" max="365" value="<?= $task->{RecurringIntervalDay} ?>">
-                                        <span>days</span>
+                                            name="RecurringIntervalDay" min="1" max="365" value="$task->{RecurringIntervalDay}">
+                                        <span>
+                                            days
+                                        </span>
+                                        <span data-bs-toggle="tooltip" title="How many days after completion should this task re-activate? Range 1-365">
+                                            $fa_info_small
+                                        </span>                                        
                                     </div>
                                 </div>
 
