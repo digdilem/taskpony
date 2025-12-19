@@ -1872,6 +1872,11 @@ sub show_tasks {
             # Prefix task title with an orphaned marker, coloured red
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
             }
+
+        # Add a repeat icon if the task is recurring
+        if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a recurring task">$fa_repeat_small</span> ~;
+            }            
         
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {  
@@ -1888,15 +1893,7 @@ sub show_tasks {
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" 
                     title="$description Added ~ . human_friendly_date($a->{'AddedDate'}) . qq~"
-                    >
-                    ~;
-
-            # Add a repeat icon if the task is recurring
-            if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a recurring task">$fa_repeat_small</span> ~;
-                }
-
-            $title_link .= qq~  
+                    >                   
                     $title
                     </a>
                      ~;
