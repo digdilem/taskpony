@@ -271,6 +271,22 @@ If a Default List is deleted, Taskpony will automatically select the oldest acti
 
 When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected. 
 
+## Database Backups
+
+Each day, Taskpony will automatically make a backup of its database by copying `taskpony.db` to `taskpony.db.0`, and rename any previous backups incrementally (.1 to .2, .0 to .1 etc) You can configure how many backups to keep in Settings -> `Number of daily database backups to keep`. 
+
+Restoring a database is a manual process:
+
+1. Stop Taskpony. (Either `systemctl stop taskpony` or if Docker, change to the compose location and `docker compose down`)
+2. Change to the directory containing taskpony.db (`cd /opt/taskpony/db` or if docker `cd data`)
+3. Move the existing taskpony.db elsewhere (`mv taskpony.db taskpony.db.old`)
+4. Copy the chosen backup to taskpony.db (`cp taskpony.db.3 taskpony.db`)
+5. Restart Taskpony and it should now be using the restored database. 
+
+Any issues during this process are likely to be file or permission related, and Taskpony should show them in its console. (`journalctl -u taskpony` or `docker compose logs`)
+
+Because Taskpony's database is a simple sqlite3 file, it would be possible to automate this process allowing some interesting thoughts about resetting a demo instance or swapping datasets around for some purpose.
+
 ## Concepts
 - Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.
 - It should be easy to self host and maintain. 

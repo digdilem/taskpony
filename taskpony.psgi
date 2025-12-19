@@ -760,7 +760,7 @@ my $app = sub {
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Number of daily database backups to keep
-                                    <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of the database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Set to 0 to not create backups at all.">
+                                    <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
                                         $fa_info
                                     </span>
                                 </span>
