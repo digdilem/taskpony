@@ -296,23 +296,6 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 ## The Name? 
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
 
-# Roadmap
-
-Some things for the future that may, or may not, be added. 
-
-- (Probably) Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
-- (Probably) Do some basic stats. Number of active and completed tasks. Tasks completed today, this week, etc. Either in new /stats page, or as a small configurable task list footer.
-- (Maybe) Basic recurring tasks. Not entirely sure how this could manifest yet.
-- (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
-- (Maybe) Add an icon to each List from Fontawesome for cosmetic identification.
-- (Maybe) Add default sorting option, rather than just newest-first.
-- (Maybe) Add colour to tasks lists.
-- (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads and only write on change. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Also, most page loads involve a change, so benefit may not be significant. Needs consideration, possibly a problem that doesn't need solving.
-- (Maybe) Automated database backups.
-- (Maybe) New release notification. 
-- (Maybe) Multi-language support.
-- (Maybe) A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)
-
 # Screenshots
 
 ![Main Task List](docs/tasklist.jpg)
@@ -448,6 +431,23 @@ Taskpony is built with the help of this great FOSS software:
 - [JQuery](https://jquery.com/) (Bundled)
 - [Datatables](https://datatables.net/) (Bundled)
 - [Fontawesome](https://fontawesome.com/) (Embedded SVGs)
+
+# Roadmap
+
+Some things for the future that may, or may not, be added. 
+
+- (Probably) Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
+- (Maybe) Basic recurring tasks. Not entirely sure how this could manifest yet.
+- (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
+- (Maybe) Add an icon to each List from Fontawesome for cosmetic identification.
+- (Maybe) Add default sorting option, rather than just newest-first.
+- (Maybe) Add colour to tasks lists. (Possibly based on priority, possibly a per-task setting)
+- (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads and only write on change. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Also, most page loads involve a change, so benefit may not be significant. Needs consideration, possibly a problem that doesn't need solving.
+- (Maybe) Automated database backups.
+- (Maybe) New release notification. 
+- (Maybe) Multi-language support.
+- (Maybe) A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
+- (Maybe) Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
 
 # Version History
 

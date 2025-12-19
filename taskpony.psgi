@@ -13,7 +13,7 @@ use Time::Local;            # For human friendly date function
 
 use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
-use File::Copy;             # For database backup copy function
+use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;
 
 ###############################################
@@ -45,7 +45,7 @@ my $debug = 1;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
 
-# Statistics variables. Not stored in config, but calculated periodically.
+# Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
 my $stats = {                           # Hashref to hold various stats for dashboard
     total_tasks => 0,
@@ -1887,6 +1887,12 @@ sub backup_database {
 sub save_config {
     print STDERR "Saving configuration\n";
 
+    # First, check any numbers are sensible
+    ensure_sensible_config_range('cfg_task_pagination_length', 3, 1000);        # Number of tasks to show per page 
+    ensure_sensible_config_range('cfg_description_short_length', 3, 1000);      # Number of characters to show in task list before truncating description 
+    ensure_sensible_config_range('cfg_list_short_length', 1, 1000);             # Number of characters to show in task list before truncating list name
+    ensure_sensible_config_range('cfg_backup_number_to_keep', 1, 30);           # Number of database backups to keep
+
     # Loop through $config keys and save each of them to ConfigTb
     for my $key (keys %$config) {
         my $sql = "INSERT INTO ConfigTb (`key`,`value`) 
@@ -1922,6 +1928,26 @@ sub load_config {
     return;
     } # End load_config()
 
+###############################################
+# ensure_sensible_config_range($value, $min, $max)
+# Ensure a numeric value is within a sensible range, otherwise return the nearest bound
+sub ensure_sensible_config_range {
+    my ($config_key, $min, $max) = @_;
+    my $value = $config->{$config_key};
+
+    if ($value !~ /^\d+$/) {
+        print STDERR "WARN: Config value for $config_key is not a number. Resetting to $min.\n";
+        $config->{$config_key} = $min;
+        }
+    if ($value < $min) {
+        print STDERR "WARN: Config value for $config_key ($value) is below minimum ($min). Resetting to $min.\n";
+        $config->{$config_key} = $min;
+        }
+    if ($value > $max) {
+        print STDERR "WARN: Config value for $config_key ($value) is above maximum ($max). Resetting to $max.\n";
+        $config->{$config_key} = $max;
+        }
+    }
 
 ##############################################
 # End Functions
