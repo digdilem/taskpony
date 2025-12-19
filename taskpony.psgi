@@ -1205,7 +1205,7 @@ $html .= qq~
                         <td colspan="2" class="pt-3 small text-white-50">
                             First task created: 
                             <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
-                            <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
+                            <span class="ms-2"><em>($stats->{'stats_first_task_created_daysago'} days ago)</em></span>
                         </td>
                         </tr>
 
