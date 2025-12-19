@@ -418,6 +418,15 @@ my $app = sub {
                 add_alert("List deleted. Active tasks have been orphaned.");
                 $stats->{total_lists} -= 1;
                 $stats->{total_active_lists} -= 1;
+                
+                # Check if deleted list was the active list, if so switch to default
+                my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+                if ($current_active == $list_id) {
+                    my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+                    if ($default_list) {
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                    }
+                }
                 } elsif ($action eq 'delete_complete' && $list_id > 1) {
                 # Mark all tasks in this list as completed, then delete list
                 my $update_sth = $dbh->prepare(
@@ -432,6 +441,15 @@ my $app = sub {
                 add_alert("List deleted and all active tasks marked as completed.");
                 $stats->{total_lists} -= 1;
                 $stats->{total_active_lists} -= 1;
+                
+                # Check if deleted list was the active list, if so switch to default
+                my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+                if ($current_active == $list_id) {
+                    my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+                    if ($default_list) {
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                    }
+                }
                 } elsif ($action eq 'delete_move' && $list_id > 1) {
                 # Move all active tasks to another list, then delete the list
                 my $target_list_id = $req->param('target_list_id') // 0;
@@ -450,6 +468,15 @@ my $app = sub {
                     add_alert("List deleted and active tasks moved to target list.");
                     $stats->{total_lists} -= 1;
                     $stats->{total_active_lists} -= 1;
+                    
+                    # Check if deleted list was the active list, if so switch to default
+                    my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+                    if ($current_active == $list_id) {
+                        my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+                        if ($default_list) {
+                            $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                        }
+                    }
                 } else {
                     add_alert("Invalid target list selected.");
                 }
@@ -463,6 +490,15 @@ my $app = sub {
                 add_alert("List deleted.");
                 $stats->{total_lists} -= 1;
                 $stats->{total_active_lists} -= 1;
+                
+                # Check if deleted list was the active list, if so switch to default
+                my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+                if ($current_active == $list_id) {
+                    my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+                    if ($default_list) {
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                    }
+                }
                 }
 
             $res->redirect('/lists');
