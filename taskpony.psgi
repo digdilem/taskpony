@@ -338,11 +338,11 @@ my $app = sub {
                                 $list_dropdown
                                 </div>
 
-                                <div class="col-12 d-flex align-items-center">
+                                <div class="col-12">
+                                <div class="d-flex flex-wrap gap-2">
                                 <button class="btn btn-primary" type="submit">Save Task</button>
-                                <a class="btn btn-secondary ms-2" href="/">Cancel</a>
+                                <a class="btn btn-secondary" href="/">Cancel</a>
 
-                                <div class="ms-auto">
                                 ~;
 
                                 if ($task->{'Status'} == 1) {
@@ -357,7 +357,7 @@ my $app = sub {
                                     
 
                                 $html .= qq~
-                                    <a class="btn btn-danger ms-2" href="/?delete_task=$task_id">Delete Task</a>
+                                    <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
                                 </div>
                                 </div>
 
@@ -838,7 +838,8 @@ my $app = sub {
                             <input type="hidden" name="save_config" value="true">
 
                             <!-- TOGGLE ROW cfg_show_dates_lists -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">                                
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">
                                     Show Dates and Lists in Tasks Table
                                     <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
@@ -855,9 +856,11 @@ my $app = sub {
                                     $retstr .= qq~
                                     >
                                 </div>
+                                </div>
                             </div>
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">                                
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">
                                     Display Search Box
                                     <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table"> 
@@ -874,10 +877,12 @@ my $app = sub {
                                     $retstr .= qq~
                                     >
                                 </div>
+                                </div>
                             </div>
 
                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Display export buttons
                                     <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
@@ -895,10 +900,12 @@ my $app = sub {
                                     $retstr .= qq~
                                     >
                                 </div>
+                                </div>
                             </div>
 
                             <!-- TOGGLE ROW cfg_export_all_cols -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Export date and list
                                     <span data-bs-toggle="tooltip" title="When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task">
@@ -916,10 +923,11 @@ my $app = sub {
                                     $retstr .= qq~
                                     >
                                 </div>
+                                </div>
                             </div>                            
 
                             <!-- PICKLIST row cfg_header_colour -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
                                 <span class="config-label">                                    
                                     Title Background Colour
                                     <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
@@ -928,7 +936,7 @@ my $app = sub {
                                 <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
                                 </span>
                                 
-                                <div class="mb-3">
+                                <div>
                                     <select class="form-select" id="themeColor" name="cfg_header_colour">                                        
                                         <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
                                         <option value="primary" class="bg-primary text-white">Primary</option>
@@ -944,7 +952,7 @@ my $app = sub {
                             </div>
 
                             <!-- NUMBER ROW cfg_backup_number_to_keep -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
                                 <span class="config-label">                                    
                                     Number of daily database backups to keep
                                     <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
@@ -952,13 +960,13 @@ my $app = sub {
                                     </span>
                                 </span>
 
-                                <input type="number" class="form-control w-50" 
+                                <input type="number" class="form-control" 
                                     value="$config->{cfg_backup_number_to_keep}" 
                                     name="cfg_backup_number_to_keep">
                             </div>
 
                             <!-- NUMBER ROW cfg_task_pagination_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
                                 <span class="config-label">                                    
                                     Number of Tasks to show on each page
                                     <span data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating. Range 3-1000">
@@ -966,26 +974,26 @@ my $app = sub {
                                     </span>
                                 </span>
 
-                                <input type="number" class="form-control w-50" 
+                                <input type="number" class="form-control" 
                                     value="$config->{cfg_task_pagination_length}" 
                                     name="cfg_task_pagination_length">
                             </div>
 
                             <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
                                 <span class="config-label">                                    
                                     Max length of popup task description
                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000">
                                         $fa_info_small
                                     </span>
                                 </span>
-                                <input type="number" class="form-control w-50" 
+                                <input type="number" class="form-control" 
                                     value="$config->{cfg_description_short_length}" 
                                     name="cfg_description_short_length">
                             </div>
 
                             <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                            <div class="mb-3">
                                 <span class="config-label">                                    
                                     Max length of List name in Tasks list
                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
@@ -993,12 +1001,12 @@ my $app = sub {
                                     </span>
                                 </span>
 
-                                <input type="number" class="form-control w-50" 
+                                <input type="number" class="form-control" 
                                     value="$config->{cfg_list_short_length}" 
                                     name="cfg_list_short_length">
                             </div>                            
 
-                            <div class="text-end">
+                            <div class="col-12">
                                 <button class="btn btn-primary">Save Settings</button>
                             </div>
                         </form>
