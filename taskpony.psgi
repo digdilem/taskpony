@@ -642,7 +642,7 @@ my $app = sub {
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
                       <label class="form-check-label" for="deleteMove">
-                        Delete List and move all active tasks to another list?
+                        Delete List and move any active tasks to another list?
                       </label>
                     </div>
                     <div id="moveListContainer" class="mt-2" style="display:none;">
@@ -1552,7 +1552,7 @@ sub footer {
             alert.classList.remove('show'); // triggers Bootstrap fade-out
             setTimeout(() => alert.remove(), 150); // optional: remove once faded
             }
-        }, 3000);
+        }, 5000);
         </script>
 
         </body>
