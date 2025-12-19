@@ -336,47 +336,34 @@ my $app = sub {
 
 
 
-                                <div class="col-6">
-                                    <span class="config-label">
-                                        Repeat this task after completion
-                                        <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days."> 
-                                            $fa_info_small
-                                        </span> 
-                                    </span>
-                                    <div class="form-check form-switch m-0">
-                                    <input class="form-check-input" type="checkbox" name="IsRecurring" 
-                                        id="autoUpdateToggle"
-                                        ~;
-                                        # Precheck this if set
-                                        if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
+<div class="d-flex justify-content-between align-items-center w-100">
+    <!-- Recurring toggle -->
+    <div class="d-flex align-items-center gap-2">
+        <span class="config-label">
+            Repeat this task after completion
+            <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
+                <?= $fa_info_small ?>
+            </span>
+        </span>
+        <div class="form-check form-switch m-0">
+            <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
+            <?php if ($task->{'IsRecurring'} eq 'on') echo ' checked'; ?>>
+        </div>
+    </div>
 
-                                        $html .= qq~
-                                        >
-                                    </div>
-                                </div>
-
- 
-                   
-
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="config-label">
-                                        Repeat every
-                                        <span data-bs-toggle="tooltip"
-                                            title="How many days after completion should this task re-activate? Range 1-365">
-                                            $fa_info_small
-                                            </span>
-                                        </span>
-                                    </span>
-
-                                    <input type="number"
-                                        class="form-control form-control-sm"
-                                        style="width: 80px;"
-                                        value="$task->{RecurringIntervalDay}"
-                                        name="RecurringIntervalDay">
-
-                                    <span>days</span>
-                                </div>
-          
+    <!-- Repeat interval input -->
+    <div class="d-flex align-items-center gap-2">
+        <span class="config-label">
+            Repeat every
+            <span data-bs-toggle="tooltip" title="How many days after completion should this task re-activate? Range 1-365">
+                <?= $fa_info_small ?>
+            </span>
+        </span>
+        <input type="number" class="form-control form-control-sm" style="width: 80px;"
+            name="RecurringIntervalDay" min="1" max="365" value="<?= $task->{RecurringIntervalDay} ?>">
+        <span>days</span>
+    </div>
+</div>
 
 
 
