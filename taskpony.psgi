@@ -1786,7 +1786,7 @@ sub show_tasks {
 
     # Build SQL query
     my $sql = "
-        SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringInterval, p.Title AS ListTitle
+        SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
         FROM TasksTb t
         LEFT JOIN ListsTb p ON t.ListId = p.id
         WHERE t.Status = ? 
@@ -1875,7 +1875,7 @@ sub show_tasks {
 
         # Add a repeat icon if the task is recurring
         if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
-            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a recurring task. Once completed, it will reactivate after $a->{RecurringInterval} days">$fa_repeat_small</span> ~;
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a recurring task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">$fa_repeat_small</span> ~;
             }            
         
         # Active tasks. Show checkbox to mark complete
