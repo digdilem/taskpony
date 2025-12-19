@@ -343,7 +343,7 @@ my $app = sub {
                                             
                                             <div class="form-check form-switch m-0">
                                             Repeat this task after completion
-                                                <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
+                                                <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle">
                                             ~;
 
                                             # Precheck the box if IsRecurring is already 'on'
