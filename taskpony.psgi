@@ -165,8 +165,8 @@ my $app = sub {
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
 
             debug("Task $task_id marked as complete");
-            add_alert("Task #$task_id marked as completed");
             $stats->{tasks_completed_today} += 1; 
+            add_alert("Task #$task_id marked as completed - $stats->{tasks_completed_today} tasks completed today!");
             }
 
         # Always redirect
