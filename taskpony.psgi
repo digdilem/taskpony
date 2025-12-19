@@ -1874,8 +1874,10 @@ sub backup_database {
                 }
             }
         }
-
-
+    # Now create the new backup as .0
+    my $new_backup_0 = "$db_path.0";
+    print STDERR "Creating new backup by copying $db_path to $new_backup_0\n";
+    copy($db_path, $new_backup_0) or print STDERR "WARN: Failed to create new backup $new_backup_0: $!\n";
     } # End backup_database()
 
 ###############################################
