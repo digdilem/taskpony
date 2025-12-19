@@ -1073,71 +1073,144 @@ my $app = sub {
             ~;
 
             # Tasks
-            $html .= qq~
-                        <tr>
-                            <td>Tasks</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Total: $stats->{'total_tasks'} </span>
-                                &nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Active: $stats->{'active_tasks'} </span>
-                                &nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'completed_tasks'}</span>
-                            </td>
-                        </tr>                
+            # $html .= qq~
+            #             <tr>
+            #                 <td>Tasks</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Total: $stats->{'total_tasks'} </span>
+            #                     &nbsp;
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Active: $stats->{'active_tasks'} </span>
+            #                     &nbsp;
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'completed_tasks'}</span>
+            #                 </td>
+            #             </tr>                
 
-                        <tr>
-                            <td>Today</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_today'} </span>
-                                &nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_today'}</span>
-                            </td>
-                        </tr>
+            #             <tr>
+            #                 <td>Today</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_today'} </span>
+            #                     &nbsp;
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_today'}</span>
+            #                 </td>
+            #             </tr>
 
-                        <tr>
-                            <td>Past Week</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_week'} </span>
-                                &nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_week'}</span>
-                            </td>
-                        </tr>
+            #             <tr>
+            #                 <td>Past Week</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_week'} </span>
+            #                     &nbsp;
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_week'}</span>
+            #                 </td>
+            #             </tr>
 
-                        <tr>
-                            <td>Past Month</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_month'} </span>
-                                &nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_month'}</span>
-                            </td>
-                        </tr>
+            #             <tr>
+            #                 <td>Past Month</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_month'} </span>
+            #                     &nbsp;
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_month'}</span>
+            #                 </td>
+            #             </tr>
 
-                        <tr>
-                            <td>Past Year</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_year'} </span>
-                                &nbsp;
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_year'}</span>
-                            </td>
-                        </tr>
+            #             <tr>
+            #                 <td>Past Year</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_year'} </span>
+            #                     &nbsp;
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_year'}</span>
+            #                 </td>
+            #             </tr>
 
-                        <tr>
-                            <td>Lists</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Total Lists: $stats->{'total_lists'}</span>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">Currently Active: $stats->{'total_active_lists'}</span>
-                            </td>
-                        </tr>                        
+            #             <tr>
+            #                 <td>Lists</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Total Lists: $stats->{'total_lists'}</span>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Currently Active: $stats->{'total_active_lists'}</span>
+            #                 </td>
+            #             </tr>                        
 
-                        <tr>
-                            <td>Misc</td>
-                            <td>
-                                <span class="badge bg-$config->{cfg_header_colour} me-2">First task created: $stats->{'stats_first_task_created'} </span>
-                                &nbsp;
-                                ($stats->{'stats_first_task_created_daysago'} days ago)
+            #             <tr>
+            #                 <td>Misc</td>
+            #                 <td>
+            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">First task created: $stats->{'stats_first_task_created'} </span>
+            #                     &nbsp;
+            #                     ($stats->{'stats_first_task_created_daysago'} days ago)
                                 
-                            </td>
-                        </tr>                        
+            #                 </td>
+            #             </tr>                        
+
+$html .= qq~
+
+<tr class="table-borderless">
+  <td class="fw-semibold">Tasks</td>
+  <td>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
+      <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
+      <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="fw-semibold pt-3">Today</td>
+  <td class="pt-3">
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge bg-success">Added: $stats->{'tasks_added_today'}</span>
+      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_today'}</span>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="fw-semibold pt-3">Past Week</td>
+  <td class="pt-3">
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge bg-success">Added: $stats->{'tasks_added_past_week'}</span>
+      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_week'}</span>
+    </div>
+  </td>
+</tr>
+
+<tr class="text-muted">
+  <td class="pt-2">Past Month</td>
+  <td class="pt-2">
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge bg-secondary">Added: $stats->{'tasks_added_past_month'}</span>
+      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_month'}</span>
+    </div>
+  </td>
+</tr>
+
+<tr class="text-muted">
+  <td>Past Year</td>
+  <td>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge bg-secondary">Added: $stats->{'tasks_added_past_year'}</span>
+      <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_year'}</span>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="fw-semibold pt-3">Lists</td>
+  <td class="pt-3">
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge bg-primary">Total Lists: $stats->{'total_lists'}</span>
+      <span class="badge bg-success">Currently Active: $stats->{'total_active_lists'}</span>
+    </div>
+  </td>
+</tr>
+
+<tr class="border-top">
+  <td colspan="2" class="pt-3 small text-muted">
+    First task created:
+    <strong class="text-body">$stats->{'stats_first_task_created'}</strong>
+    <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
+  </td>
+</tr>
+
+~;
 
 
                     </tbody>
