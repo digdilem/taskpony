@@ -349,6 +349,7 @@ my $app = sub {
                                             ~;
 
                                             # Precheck the box if IsRecurring is already 'on'
+print STDERR "HERE ($task->{'IsRecurring'})\n";                                            
                                             if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
                                             
                                             $html .= qq~
