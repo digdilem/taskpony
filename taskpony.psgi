@@ -804,7 +804,7 @@ my $app = sub {
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Max length of List name in Tasks list
-                                    <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-1000">
+                                    <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
                                         $fa_info_small
                                     </span>
                                 </span>
@@ -1893,7 +1893,7 @@ sub save_config {
     # First, check any numbers are sensible
     ensure_sensible_config_range('cfg_task_pagination_length', 3, 1000);        # Number of tasks to show per page 
     ensure_sensible_config_range('cfg_description_short_length', 3, 1000);      # Number of characters to show in task list before truncating description 
-    ensure_sensible_config_range('cfg_list_short_length', 1, 1000);             # Number of characters to show in task list before truncating list name
+    ensure_sensible_config_range('cfg_list_short_length', 1, 100);             # Number of characters to show in task list before truncating list name
     ensure_sensible_config_range('cfg_backup_number_to_keep', 1, 100);           # Number of database backups to keep
 
     # Loop through $config keys and save each of them to ConfigTb
