@@ -353,9 +353,7 @@ my $app = sub {
                                             <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
                                                 $fa_info_small
                                             </span>
-                                        
                                             </div>
-
                                         </div>
 
                                         <!-- Inner box 2 -->
@@ -364,6 +362,13 @@ my $app = sub {
                                         </div>
                                     </div>
                                 </div>
+
+
+
+
+
+
+
 
 
 
