@@ -2217,6 +2217,41 @@ sub run_daily_tasks {
     # Run daily tasks here, such as backing up the database, sending email summaries, etc.
     backup_database();  # Backup the database by one iteration
 
+    ###############################################
+    # Look for any recurring tasks that need to be reactivated today
+    my $recurring_sth = $dbh->prepare("
+        SELECT id, Title, Description, AddedDate, CompletedDate, ListId, RecurringIntervalDay
+        FROM TasksTb
+        WHERE IsRecurring = 'on' AND Status = 2 AND CompletedDate IS NOT NULL
+        ");
+    $recurring_sth->execute();
+
+    while (my $task = $recurring_sth->fetchrow_hashref()) {
+        my $completed_date = $task->{'CompletedDate'};
+        my $interval_days = $task->{'RecurringIntervalDay'} // 1;  # Default to 1 day if not set
+
+        # Calculate the next activation date
+        my $next_activation_date = single_db_value("
+            SELECT date(?, '+' || ? || ' days')
+            ", $completed_date, $interval_days);
+
+print STDERR "Recurring task ID $task->{id} ('$task->{Title}') completed on $completed_date with interval $interval_days days. Next activation date: $next_activation_date\n";            
+
+        # If the next activation date is today or earlier, reactivate the task
+        if ($next_activation_date le single_db_value("SELECT date('now')")) {
+            print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}')\n";
+
+            # Reactivate the task
+            $dbh->do("
+                UPDATE TasksTb
+                SET Status = 1,
+                    CompletedDate = NULL,
+                    AddedDate = date('now')
+                WHERE id = ?
+                ", undef, $task->{'id'}
+                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $dbh->errstr;
+            }
+        }
 
     ###############################################
 
