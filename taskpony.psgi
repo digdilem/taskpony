@@ -268,12 +268,14 @@ my $app = sub {
             my $title = sanitize($req->param('Title') // '');
             my $desc  = sanitize($req->param('Description') // '');
             my $list_id = $req->param('ListId') // 0;
+            my $is_recurring = sanitize($req->param('IsRecurring') // '');
+            my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
 
             if (length $title && $task_id > 0 && $list_id > 1) {
                 my $sth = $dbh->prepare(
-                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ? WHERE id = ?'
+                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
                     );
-                eval { $sth->execute($title, $desc, $list_id, $task_id); 1 } or print STDERR "Task update failed: $@";
+                eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
                 debug("Task $task_id updated");
                 }
 
@@ -356,7 +358,6 @@ my $app = sub {
                                             </div>
                                         </div>
 
-
                                         <div class="border p-3 flex-fill ">
                                             
                                             <div class="d-flex align-items-center gap-2">
@@ -374,11 +375,6 @@ my $app = sub {
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
-
 
 
 
