@@ -337,7 +337,8 @@ my $app = sub {
 
 
                                 <div class="border p-3 mb-3">
-                                    <div class="d-flex gap-3"> 
+                                    <div class="d-flex gap-3">
+                                        <!-- Inner box 1 -->
                                         <div class="border p-3 flex-fill ">
                                             
                                             <div class="form-check form-switch m-0">
@@ -355,7 +356,8 @@ my $app = sub {
 
                                         </div>
 
-                                         <div class="border p-3 flex-fill text-center">
+                                        <!-- Inner box 2 -->
+                                        <div class="border p-3 flex-fill text-center">
                                             Inner Box 2
                                         </div>
                                     </div>
