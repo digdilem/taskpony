@@ -557,17 +557,22 @@ my $app = sub {
                 </div>
                 ~;
 
-        # Build the list of available lists for moving tasks (exclude the current list)
+        # Build the list of available lists for moving tasks as JSON
         my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
         $move_lists_sth->execute();
         my @move_lists;
         while (my $ml = $move_lists_sth->fetchrow_hashref()) {
             push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
         }
-        my $move_lists_json = '';
-        foreach my $ml (@move_lists) {
-            $move_lists_json .= qq~<option value="$ml->{'id'}">$ml->{'title'}</option>~;
+        
+        # Convert to JSON for JavaScript use
+        my $move_lists_json = '[';
+        foreach my $i (0 .. $#move_lists) {
+            my $ml = $move_lists[$i];
+            $move_lists_json .= qq~{"id":"$ml->{'id'}","title":"$ml->{'title'}"}~;
+            $move_lists_json .= ',' if $i < $#move_lists;
         }
+        $move_lists_json .= ']';
 
         # Add delete list modal
         $html .= qq~
@@ -605,7 +610,6 @@ my $app = sub {
                     <div id="moveListContainer" class="mt-2" style="display:none;">
                       <label for="targetListId" class="form-label">Move tasks to:</label>
                       <select class="form-select bg-dark text-white border-secondary" id="targetListId" name="target_list_id">
-                        $move_lists_json
                       </select>
                     </div>
                   </div>
@@ -620,8 +624,10 @@ my $app = sub {
         </div>
 
         <script>
+        var allLists = $move_lists_json;
+        
         document.addEventListener('DOMContentLoaded', function() {
-          // Handle modal opening - populate with list details
+          // Handle modal opening - populate with list details and options
           var deleteListModal = document.getElementById('deleteListModal');
           deleteListModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
@@ -631,6 +637,18 @@ my $app = sub {
             
             document.getElementById('modalListId').value = listId;
             document.getElementById('modalListTitle').textContent = listTitle + ' (' + activeTasksCount + ' active tasks)';
+            
+            // Populate target list dropdown, excluding the list being deleted
+            var selectElement = document.getElementById('targetListId');
+            selectElement.innerHTML = '';
+            allLists.forEach(function(list) {
+              if (list.id !== listId) {
+                var option = document.createElement('option');
+                option.value = list.id;
+                option.textContent = list.title;
+                selectElement.appendChild(option);
+              }
+            });
           });
 
           // Handle radio button changes for move option visibility
