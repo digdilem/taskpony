@@ -354,7 +354,7 @@ my $app = sub {
 
 
                                 <div class="border p-3 mb-3">
-                                    <div class="d-flex gap-3">
+                                    <div class="d-flex flex-column flex-md-row gap-3">
                                          
                                         <div class="border p-3 flex-fill ">
                                             
@@ -385,9 +385,8 @@ my $app = sub {
                                                     </span>
                                                     <span data-bs-toggle="tooltip" title="How many days after completion should this task re-activate? Range 1-365">
                                                         $fa_info_small
-                                                    </span>                                        
+                                                    </span>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -1052,7 +1051,7 @@ my $app = sub {
                             <!-- NUMBER ROW cfg_backup_number_to_keep -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
-                                    Number of daily database backups to keep
+                                    Number of daily backups to keep
                                     <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
                                         $fa_info_small
                                     </span>
