@@ -2239,7 +2239,7 @@ sub run_daily_tasks {
 
         # If the next activation date is today or earlier, reactivate the task
         if ($next_activation_date le single_db_value("SELECT date('now')")) {
-            print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}')\n";
+            print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}') after $interval_days days\n";
 
             # Reactivate the task
             $dbh->do("
