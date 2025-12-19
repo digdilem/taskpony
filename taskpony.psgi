@@ -275,15 +275,15 @@ my $app = sub {
             # Validate recurring interval
             if ($recurring_interval !~ /^\d+$/) { 
                 print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
-                $config->{$config_key} = 1;
+                $recurring_interval = 1;
                 }
             if ($recurring_interval < 1) {
                 print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
-                $config->{$config_key} = 1;
+                $recurring_interval = 1;
                 }
             if ($recurring_interval > 365) {
                 print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
-                $config->{$config_key} = 365;
+                $recurring_interval = 365;
                 }
 
             if (length $title && $task_id > 0 && $list_id > 1) {
