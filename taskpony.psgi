@@ -356,21 +356,26 @@ my $app = sub {
                                 </div>
 
  
-                                <div class="col-6">
-                                    <span class="config-label">                                    
-                                        Repeat every 
-                                        <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-365">
+                   
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="config-label">
+                                        Repeat every
+                                        <span data-bs-toggle="tooltip"
+                                            title="How many days after completion should this task re-activate? Range 1-365">
                                             $fa_info_small
+                                            </span>
                                         </span>
                                     </span>
 
-                                    <input type="number" class="form-control" 
-                                        value="$task->{RecurringIntervalDay}" 
+                                    <input type="number"
+                                        class="form-control form-control-sm"
+                                        style="width: 80px;"
+                                        value="$task->{RecurringIntervalDay}"
                                         name="RecurringIntervalDay">
 
-                                     days.
+                                    <span>days</span>
                                 </div>
-
           
 
 
