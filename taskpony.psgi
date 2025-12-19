@@ -1892,7 +1892,7 @@ sub show_tasks {
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" 
-                    title="$description Added ~ . human_friendly_date($a->{'AddedDate'}) . qq~"
+                    title="$description"
                     >                   
                     $title
                     </a>
