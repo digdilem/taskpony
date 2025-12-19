@@ -337,9 +337,8 @@ my $app = sub {
 
 
                                 <div class="border p-3 mb-3">
-                                    <div class="d-flex gap-3">
-                                        <!-- Inner box 1 -->
-                                        <div class="border p-3 flex-fill text-center">
+                                    <div class="d-flex gap-3"> 
+                                        <div class="border p-3 flex-fill ">
                                             
                                             <div class="form-check form-switch m-0">
                                             Repeat this task after completion
@@ -350,16 +349,13 @@ my $app = sub {
                                             if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
                                             
                                             $html .= qq~
-                                            <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
-                                                $fa_info_small
-                                            </span>
+
                                         
                                             </div>
 
                                         </div>
 
-                                        <!-- Inner box 2 -->
-                                        <div class="border p-3 flex-fill text-center">
+                                         <div class="border p-3 flex-fill text-center">
                                             Inner Box 2
                                         </div>
                                     </div>
@@ -368,7 +364,9 @@ my $app = sub {
 
 
                                 <div class="col-6">
-                                    
+                                                                                <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
+                                                $fa_info_small
+                                            </span>
                                         Repeat this task after completion
                                         <div class="form-check form-switch m-0">
                                             <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
