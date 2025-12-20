@@ -7,9 +7,9 @@
 
 Taskpony is intended to be small, easy to install and operate with a clean and intuitive interface. It wants to do one thing well - add, display and complete tasks. 
 
-Taskpony supports unlimited Tasks organised within unlimited Lists, and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
+Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
 
-No phone app required. The interface is responsive and scales well to phones. There are no trackers and does not require access to the internet to function; all required files are contained.
+No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included.
 
 See some more [Screenshots](#screenshots)
 
@@ -321,9 +321,15 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 
 ![List Management Page](docs/lists.jpg)
 
+![Editing a Task](docs/edittask.jpg)
+
 ![Settings Page](docs/settings.jpg)
 
 ![Lists Pulldown](docs/lists_pulldown.jpg)
+
+![Deleting a List](docs/delete_list.jpg)
+
+![Statistics](docs/stats.jpg)
 
 # Schema
 
@@ -455,21 +461,21 @@ Some things for the future that may, or may not, be added.
 
 - (Probably) Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
 - (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
-- (Maybe) Add an icon to each List from Fontawesome for cosmetic identification.
 - (Maybe) Add default sorting option, rather than just newest-first.
 - (Maybe) Add colour to tasks lists. (Possibly based on priority, possibly a per-task setting)
-- (Maybe) Keep tasks, lists and config entirely in memory betwene pageloads and only write on change. Taskpony relies heavily on OS level disk caching to reduce sqlite overhead, but keeping very large lists in memory may be memory intensive. Also, most page loads involve a change, so benefit may not be significant. Needs consideration, possibly a problem that doesn't need solving.
-- (Maybe) Automated database backups.
 - (Maybe) New release notification. 
 - (Maybe) Multi-language support.
 - (Maybe) A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
 - (Maybe) Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
+- (Maybe) Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
 
 # Version History
 
 ## 0.01 Initial release, 15th December 2025
 
-## 0.02
+## 0.2
+
+"Improved orphan handing. Added repeating tasks, stats and database backups. Multiple bugfixes and UI improvements."
 
 - Bugfix: Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
 - UX: Renamed "All Lists" to "All Tasks" @halcyonloon https://github.com/digdilem/taskpony/issues/1
@@ -485,10 +491,6 @@ Some things for the future that may, or may not, be added.
 - Feature: Daily backups of the database are now created. Number of them is configurable in /settings
 - Feature: Recurring tasks added.
 - Change: Daily functions call added. 
-
-
-- Feature: Orphaned task handling. !! See workflow in obsidian
-- Config option - Show stats
 
 
 # Licence
