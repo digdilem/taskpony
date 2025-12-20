@@ -925,10 +925,10 @@ my $app = sub {
 
         ###############################################
         # Show configuration page
-        my $retstr .= header();
+        my $html .= header();
 
-        $retstr .= start_card("Settings", $fa_gear);
-        $retstr .= qq~
+        $html .= start_card("Settings", $fa_gear);
+        $html .= qq~
                          <form method="post" action="/config" style="display:inline;">
 
                             <input type="hidden" name="save_config" value="true">
@@ -947,9 +947,9 @@ my $app = sub {
                                     id="autoUpdateToggle"
                                     ~;
                                     # Precheck this if set
-                                    if ($config->{'cfg_show_dates_lists'} eq 'on') { $retstr .= " checked "; }
+                                    if ($config->{'cfg_show_dates_lists'} eq 'on') { $html .= " checked "; }
 
-                                    $retstr .= qq~
+                                    $html .= qq~
                                     >
                                 </div>
                                 </div>
@@ -969,9 +969,9 @@ my $app = sub {
                                     id="autoUpdateToggle"
                                     ~;
                                     # Precheck this if set
-                                    if ($config->{'cfg_include_datatable_search'} eq 'on') { $retstr .= " checked "; }
+                                    if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
 
-                                    $retstr .= qq~
+                                    $html .= qq~
                                     >
                                 </div>
                                 </div>
@@ -992,9 +992,9 @@ my $app = sub {
                                     ~;
 
                                     # Precheck this if set
-                                    if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $retstr .= " checked "; }
+                                    if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $html .= " checked "; }
 
-                                    $retstr .= qq~
+                                    $html .= qq~
                                     >
                                 </div>
                                 </div>
@@ -1015,9 +1015,9 @@ my $app = sub {
                                     ~;
 
                                     # Precheck this if set
-                                    if ($config->{'cfg_export_all_cols'} eq 'on') { $retstr .= " checked "; }
+                                    if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
 
-                                    $retstr .= qq~
+                                    $html .= qq~
                                     >
                                 </div>
                                 </div>
@@ -1117,8 +1117,8 @@ my $app = sub {
         </div>                    
         ~;
 
-        $retstr .= footer();
-        $res->body($retstr);
+        $html .= footer();
+        $res->body($html);
         return $res->finalize;
         } # End /config
 
@@ -1525,7 +1525,7 @@ sub check_database_upgrade  {
 ###############################################
 # Return HTML header for all pages
 sub header { 
-    my $retstr = qq~
+    my $html = qq~
     <!doctype html>
     <html lang="en" class="dark">
     <head>
@@ -1568,9 +1568,9 @@ sub header {
                 ~;
     
     # Add the list selection pulldown
-    $retstr .= list_pulldown($list_id);  
+    $html .= list_pulldown($list_id);  
 
-    $retstr .= qq~
+    $html .= qq~
             </div>
 
             <div class="d-flex gap-2">
@@ -1599,15 +1599,15 @@ sub header {
     </div>
     ~;
 
-    return $retstr;
+    return $html;
     } # End header()
 
 ###############################################
 # Return standard HTML footer for all pages
 sub footer { 
-    my $retstr = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
+    my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
-    $retstr .= qq~
+    $html .= qq~
         <br>
         </main>
         <footer class="text-center text-white-50 py-2">
@@ -1624,41 +1624,41 @@ sub footer {
 
             # Show search if configured
             if ($config->{'cfg_include_datatable_search'} eq 'on') {
-                $retstr .= qq~
+                $html .= qq~
                 "searching": true,
                 ~;
                 } else {
-                $retstr .= qq~
+                $html .= qq~
                 "searching": false,
                 ~;
                 }
 
             # Continue
-            $retstr .= qq~
+            $html .= qq~
                 "pageLength": $config->{cfg_task_pagination_length},
                 ~;
 
             # Show buttons if configured, otherwise show default dom
             if ($config->{'cfg_include_datatable_buttons'} eq 'on') {
-                $retstr .= "dom: 'ftiBp',";
+                $html .= "dom: 'ftiBp',";
                 } else {
-                $retstr .= "dom: 'ftip',";
+                $html .= "dom: 'ftip',";
                 }
 
-            $retstr .= qq~
+            $html .= qq~
                 buttons: [
                 ~;
 
             # Set buttons configuration, including whether to export all columns or just the first
             if ($config->{'cfg_export_all_cols'} eq 'on') {
-                    $retstr .= qq~
+                    $html .= qq~
                     { extend: 'copy', className: 'btn btn-dark btn-sm' },
                     { extend: 'csv', className: 'btn btn-dark btn-sm' },
                     { extend: 'pdf', className: 'btn btn-dark btn-sm'},
                     { extend: 'print', className: 'btn btn-dark btn-sm' }
                     ~;
                     } else {
-                    $retstr .= qq~
+                    $html .= qq~
                     { extend: 'copy', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
                     { extend: 'csv', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
                     { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]} },
@@ -1666,7 +1666,7 @@ sub footer {
                     ~;
                     }
 
-            $retstr .= qq~
+            $html .= qq~
                 ],
                 "language": {
                     "emptyTable": "All tasks completed! 🎉",
@@ -1697,7 +1697,7 @@ sub footer {
         </html>
         ~;
 
-    return $retstr;
+    return $html;
     } # End footer()
 
 ###############################################
@@ -1823,7 +1823,7 @@ sub show_tasks {
     my $sth = $dbh->prepare($sql);
     $sth->execute($status);
 
-    my $retstr = qq~
+    my $html = qq~
         <table id="tasks" class="display hover table-striped" style="width:90%">
             <thead>
                 <tr>
@@ -1835,18 +1835,18 @@ sub show_tasks {
         if ($config->{'cfg_show_dates_lists'} eq 'on') {
 
             if ($status == 1) {  # Active tasks. Show added date
-                $retstr .= "            <th>Added</th>\n";
+                $html .= "            <th>Added</th>\n";
                 } else { # Completed tasks. Show completed date
-                $retstr .= "<th>Completed</th>\n";
+                $html .= "<th>Completed</th>\n";
                 }
 
-            $retstr .= qq~
+            $html .= qq~
                     <th>List</th>
                     ~;
             } 
         
         # Close row
-        $retstr .= qq~
+        $html .= qq~
                 </tr>
             </thead>
             <tbody>
@@ -1936,7 +1936,7 @@ sub show_tasks {
             }
         
         # Output the table row
-        $retstr .= qq~
+        $html .= qq~
             <tr>
                 <td>$checkbox</td>
                 <td>$title_link</td>
@@ -1944,15 +1944,15 @@ sub show_tasks {
 
         # Show or hide date and list column header based on config var cfg_show_dates_lists
         if ($config->{'cfg_show_dates_lists'} eq 'on') {
-            $retstr .= qq~
+            $html .= qq~
                 $friendly_date
                 <td>
                 ~;
 
             if ($list_deleted != 0) { # List is deleted, no link
-                $retstr .= "$list_title</td>\n";
+                $html .= "$list_title</td>\n";
                 } else {
-                $retstr .= qq~
+                $html .= qq~
                     <a 
                     href="/?lid=$a->{'ListId'}"
                     class="text-white text-decoration-none" 
@@ -1966,13 +1966,13 @@ sub show_tasks {
             }
 
         # Close the row
-        $retstr .= qq~
+        $html .= qq~
         </tr>
         ~;
     } # End tasks loop
 
     # Close table
-    $retstr .= qq~
+    $html .= qq~
             </tbody>
         </table>
         <br><hr><br>
@@ -1980,16 +1980,16 @@ sub show_tasks {
 
     # Display a link to toggle between showing completed/active tasks
     if ($show_completed == 0) {
-        $retstr .= qq~
+        $html .= qq~
             <a href="/?sc=1" class="btn btn-secondary btn">Show completed tasks in '$list_name'</a>
             ~;
         } else {
-        $retstr .= qq~
+        $html .= qq~
             <a href="/" class="btn btn-secondary btn">Show active tasks in '$list_name'</a>
             ~;
         }
 
-    return $retstr;
+    return $html;
     } # End show_tasks()
 
 ###############################################
@@ -2094,7 +2094,7 @@ sub config_load {
 sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
-    my $retstr = qq~
+    my $html = qq~
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -2104,16 +2104,16 @@ sub start_card {
                                 $card_title
                                 ~;
     if ($card_icon ne '') {
-        $retstr .= qq~
+        $html .= qq~
                                 <div class="float-end">$card_icon</div>
                                 ~;
         }
-    $retstr .= qq~
+    $html .= qq~
                             </h2>
                         </div>
 
                         <div class="card-body bg-dark text-white">        ~;
-    return $retstr;
+    return $html;
     } # End start_card()
 
 ###############################################
@@ -2121,7 +2121,7 @@ sub start_card {
 sub start_mini_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
-    my $retstr = qq~
+    my $html = qq~
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -2131,29 +2131,29 @@ sub start_mini_card {
                                 $card_title
                                 ~;
     if ($card_icon ne '') {
-        $retstr .= qq~
+        $html .= qq~
                                 <div class="float-end">$card_icon</div>
                                 ~;
         }
-    $retstr .= qq~
+    $html .= qq~
                             </h2>
                         </div>
 
                         <div class="card-body bg-dark text-white">        ~;
-    return $retstr;
+    return $html;
     } # End start_mini_card()
 
 ###############################################
 # Close the card
 sub end_card {
-    my $retstr = qq~
+    my $html = qq~
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         ~;
-    return $retstr;
+    return $html;
     } # End end_card()
 
 ###############################################
