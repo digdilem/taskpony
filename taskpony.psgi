@@ -1146,7 +1146,7 @@ $html .= qq~
                             <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
                             <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
                             <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
-                            <span class="badge bg-secondary">Repeating: $stats->{'repeating_tasks'}</span>
+                            <span class="badge bg-info">Repeating: $stats->{'repeating_tasks'}</span>
                             </div>
                         </td>
                         </tr>
