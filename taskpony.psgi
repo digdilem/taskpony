@@ -60,7 +60,8 @@ my $stats = {                           # Hashref to hold various stats for dash
     stats_last_calculated => 0,
     stats_first_task_created => 0,
     stats_first_task_created_daysago => 0,
-    tasks_added_today => 0,    
+    tasks_added_today => 0,
+    repeating_tasks => 0,
     };
 
 # Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons
@@ -1137,73 +1138,6 @@ my $app = sub {
                     <tbody>
             ~;
 
-            # Tasks
-            # $html .= qq~
-            #             <tr>
-            #                 <td>Tasks</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Total: $stats->{'total_tasks'} </span>
-            #                     &nbsp;
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Active: $stats->{'active_tasks'} </span>
-            #                     &nbsp;
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'completed_tasks'}</span>
-            #                 </td>
-            #             </tr>                
-
-            #             <tr>
-            #                 <td>Today</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_today'} </span>
-            #                     &nbsp;
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_today'}</span>
-            #                 </td>
-            #             </tr>
-
-            #             <tr>
-            #                 <td>Past Week</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_week'} </span>
-            #                     &nbsp;
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_week'}</span>
-            #                 </td>
-            #             </tr>
-
-            #             <tr>
-            #                 <td>Past Month</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_month'} </span>
-            #                     &nbsp;
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_month'}</span>
-            #                 </td>
-            #             </tr>
-
-            #             <tr>
-            #                 <td>Past Year</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Added: $stats->{'tasks_added_past_year'} </span>
-            #                     &nbsp;
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Completed: $stats->{'tasks_completed_past_year'}</span>
-            #                 </td>
-            #             </tr>
-
-            #             <tr>
-            #                 <td>Lists</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Total Lists: $stats->{'total_lists'}</span>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">Currently Active: $stats->{'total_active_lists'}</span>
-            #                 </td>
-            #             </tr>                        
-
-            #             <tr>
-            #                 <td>Misc</td>
-            #                 <td>
-            #                     <span class="badge bg-$config->{cfg_header_colour} me-2">First task created: $stats->{'stats_first_task_created'} </span>
-            #                     &nbsp;
-            #                     ($stats->{'stats_first_task_created_daysago'} days ago)
-                                
-            #                 </td>
-            #             </tr>                        
-
 $html .= qq~
                         <tr class="table-borderless">
                         <td class="fw-semibold">Tasks</td>
@@ -1212,6 +1146,7 @@ $html .= qq~
                             <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
                             <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
                             <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
+                            <span class="badge bg-secondary">Repeating: $stats->{'repeating_tasks'}</span>
                             </div>
                         </td>
                         </tr>
@@ -2193,6 +2128,8 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
     $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT MIN(AddedDate) FROM TasksTb');
     $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array('SELECT CAST((julianday(\'now\') - julianday(MIN(AddedDate))) AS INTEGER) FROM TasksTb');
+    $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = 1');
+
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()    
