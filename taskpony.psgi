@@ -1212,8 +1212,8 @@ $html .= qq~
 
                         <tr class="border-top">
                             <td colspan="2" class="pt-3 small text-white-50">
-                                Database schema version: 
-                                <strong class="text-white">$config->{'database_schema_version'}</strong>
+                                Database schema version (Actual / Required): 
+                                <strong class="text-white">$config->{'database_schema_version'} / $database_schema_version</strong>
                             </td>
                         </tr>
 
