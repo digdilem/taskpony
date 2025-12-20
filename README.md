@@ -471,6 +471,7 @@ Some things for the future that may, or may not, be added.
 - (Maybe) A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
 - (Maybe) Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
 - (Maybe) Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
+- (Maybe) Ability to undelete Lists
 
 # Version History
 
