@@ -17,7 +17,7 @@ use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;
 
 ###############################################
-# Default configuration, overriden by ConfigTb values, change them via settings page. `database_schema_version` should reflect current.
+# Default configuration, overriden by ConfigTb values, change them via settings page. 
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page 
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
@@ -29,6 +29,7 @@ our $config = {
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
+    database_schema_version => 1,               # Don't change this.
     };
 
 ###############################################
@@ -2015,9 +2016,9 @@ sub human_friendly_date {
 
 ###############################################
 # config_load()
-# Load cfg_ configuration values from ConfigTb
+# Load all key/value pairs from ConfigTb into $config hashref
 sub config_load {
-    print STDERR "Loading configuration\n";
+    print STDERR "Loading configuration from $db_path in ConfigTb\n";
 
     # List through $config keys and lead each of them from ConfigTb
     for my $key (keys %$config) {
@@ -2030,6 +2031,27 @@ sub config_load {
             }
         }
     } # End config_load()
+
+
+# ###############################################
+# # load_config($dbh, $config)
+# # Load all key/value pairs from ConfigTb into $config hashref
+# sub load_config {
+#     print STDERR "Loading configuration from ConfigTb\n";
+
+#     my $sth = $dbh->prepare(
+#         'SELECT key, value FROM ConfigTb'
+#         ) or die $dbh->errstr;
+
+#     $sth->execute or die $sth->errstr;
+
+#     while (my ($key, $value) = $sth->fetchrow_array) {
+#         $config->{$key} = $value;
+#         }
+
+#     return;
+#     } # End load_config()
+
 
 ###############################################
 # Open a consistent bootstrap 5 card for most pages
@@ -2261,25 +2283,6 @@ sub save_config {
             ) or warn "Failed to save config key ($key): " . $dbh->errstr;
         }
     } # End save_config()
-
-###############################################
-# load_config($dbh, $config)
-# Load all key/value pairs from ConfigTb into $config hashref
-sub load_config {
-    print STDERR "Loading configuration from ConfigTb\n";
-
-    my $sth = $dbh->prepare(
-        'SELECT key, value FROM ConfigTb'
-        ) or die $dbh->errstr;
-
-    $sth->execute or die $sth->errstr;
-
-    while (my ($key, $value) = $sth->fetchrow_array) {
-        $config->{$key} = $value;
-        }
-
-    return;
-    } # End load_config()
 
 ###############################################
 # ensure_sensible_config_range($value, $min, $max)
