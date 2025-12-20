@@ -32,7 +32,7 @@ our $config = {
     };
 
 ###############################################
-# Global variables that are used throughout - do not change these. They will not persist during app updates.
+# Global variables that are used throughout - do not change these. They will not persist during app updates
 my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.2.0';               # Version of app
 my $database_schema_version = 1;        # Current database schema version. Do not change this, it will be modified during updates.
