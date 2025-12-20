@@ -229,8 +229,8 @@ my $app = sub {
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "WARN: Task insert into list $list_id failed: $@";
                 }
 
-            add_alert("Task '$title' added.");
             $stats->{tasks_added_today} += 1; 
+            add_alert("Task '$title' added.  That's $stats->{tasks_added_today} new tasks today!");
             $res->redirect('/');
             return $res->finalize;
             } # End /add form submission handling

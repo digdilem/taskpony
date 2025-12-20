@@ -337,7 +337,7 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint. The 
 
 / TasksDb
 
-    / TasksTb
+    / TasksTb    
         id
         Status (1 Active, 2 Completed)
         Title
@@ -346,6 +346,9 @@ Database schema: Taskpony uses Sqlite for simplicity and a small footprint. The 
         CompletedDate = When set as done. Is reset if task unset
         StartDate =  Tasks can be deferred    
         ListId = List this task belongs to
+    Schema 2+:
+        IsRecurring = on|off  Whether a task is set to repeat  
+        RecurringIntervalDay = Number of days after a task is completed before it is set active
     
     / ListsTb  (List of Lists)
         id
@@ -484,13 +487,13 @@ Some things for the future that may, or may not, be added.
 - UX: List Management - when deleting a list, user is now presented with several options so they can decide what happens to any tasks within that list.
 - UX: Clicking the task's List in the "All tasks" List now jumps to that List.
 - UX: Top-right buttons: "Lists" changed to icon. Stats button added. All benefit from description popups. Slight change to div to wrap them onto second line for small devices as they were flowing off screen.
-- UX: "N tasks completed today!" added to task completed banned
+- UX: "N tasks completed today!" added to task completed banner
 - Feature: Local stats calculated. Rate limited to 1/hr to avoid performance hit.
 - Feature: /stats page added with some basic statistics.
 - Change: Config save rewritten to make it easier to expand in the future.
 - Feature: Daily backups of the database are now created. Number of them is configurable in /settings
 - Feature: Recurring tasks added.
-- Change: Daily functions call added. 
+- Change: Daily functions call added for backups and repeating task management.
 
 
 # Licence
