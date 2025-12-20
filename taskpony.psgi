@@ -17,7 +17,7 @@ use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;
 
 ###############################################
-# Default configuration, overriden by ConfigTb values, change them via settings page
+# Default configuration, overriden by ConfigTb values, change them via settings page. `database_schema_version` should reflect current.
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page 
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
@@ -1202,11 +1202,18 @@ $html .= qq~
                         </tr>
 
                         <tr class="border-top">
-                        <td colspan="2" class="pt-3 small text-white-50">
-                            First task created: 
-                            <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
-                            <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
-                        </td>
+                            <td colspan="2" class="pt-3 small text-white-50">
+                                First task created: 
+                                <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
+                                <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
+                            </td>
+                        </tr>
+
+                        <tr class="border-top">
+                            <td colspan="2" class="pt-3 small text-white-50">
+                                Database schema version: 
+                                <strong class="text-white">$config->{'database_schema_version'}</strong>
+                            </td>
                         </tr>
 
 
