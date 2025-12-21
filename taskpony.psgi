@@ -153,6 +153,14 @@ my $app = sub {
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
         }
 
+    ###############################################
+    # favicon handling before header()
+    if ($req->path eq "/favicon.ico") {
+        # Redirect to ./static/favicon.ico
+        $res->redirect('./static/favicon.ico');
+        return $res->finalize;
+        } # End /favicon.ico
+
     # Start building page
     my $html = header();
 
@@ -217,13 +225,7 @@ my $app = sub {
         return $res->finalize;
         } # End /set_default_list
 
-    ###############################################
-    # favicon handling
-    if ($req->path eq "/favicon.ico") {
-        # Redirect to ./static/favicon.ico
-        $res->redirect('./static/favicon.ico');
-        return $res->finalize;
-        } # End /favicon.ico
+
 
 
 
