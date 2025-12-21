@@ -17,7 +17,11 @@ use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;
 
 ###############################################
-# Default configuration. Don't change them here, use /config page.
+# Database Path. If you install Taskpony as a SystemD service elsewhere than /opt/taskpony - you'll need to change this.
+my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
+
+###############################################
+# Default configuration. Don't change them here, use /config page to change them.
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page 
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
@@ -33,11 +37,10 @@ our $config = {
     };
 
 ###############################################
-# Global variables that are used throughout - do not change these. They will not persist during app updates
+# Global variables that are used throughout - do not change these.
 my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.2.0a';             # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
-my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
 
 my $dbh;                        # Global database handle 
 my $list_id = 1;                # Current list id
@@ -430,6 +433,14 @@ my $app = sub {
                                 $html .= qq~
                                     <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
                                 </div>
+
+                                This task was created on $task->{AddedDate}
+                                ~;
+                                if ($task->{CompletedDate}) {
+                                    $html .= qq~and last completed on $task->{CompletedDate}~;
+                                    }
+                                $html .= qq~
+
                                 </div>
 
                             </form>

@@ -26,7 +26,7 @@ See some more [Screenshots](#screenshots)
   - [Linux service](#linux-service)
 - [Troubleshooting](#troubleshooting)a
 - [FAQ](#faq)
-- [Version History / Releases](docs/version-history.md)
+- [Version History / Releases](docs/release-notes.md)
 - [Upgrading](#upgrading)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
@@ -198,9 +198,17 @@ Not presently. SQLite was chosen to keep things small and simple. I think it sho
 
 Upgrading Taskpony should be quite simple - overwrite the files and ensure taskpony.db survives. 
 
-## Linux 
+## Linux Systemd Service
 
-Follow the installation steps above and copy the new files over the existing ones. It's recommended that you back up the database first, but taskpony should automatically upgrade that if its needed. 
+1. Read the [Release Notes](docs/release-notes.md) for any breaking changes
+2. Make a copy of the old `/opt/taskpony` directory, especially the `db/taskpony.db` database as a backup.
+3. Stop Taskpony: `systemctl stop taskpony`
+4. Download the latest files from https://github.com/digdilem/taskpony/ (Code -> Download ZIP)
+5. Unzip its contents into /opt/taskpony, overwriting the existing Taskpony files.
+6. Restart Taskpony: `systemctl start taskpony`
+
+If the upgrade includes any database changes, Taskpony should automatically upgrade that when it's first started, see logs. `journalctl -u taskpony`
+
 
 ## Docker
 
@@ -357,6 +365,7 @@ Some features for the future that may, or may not, be added.
   - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
   - Ability to undelete Lists
   - A self reloading ability when another client changes the displayed list. May require a fairly bit switch to api style working
+  - A history table for tasks and actions. Extra detail for tasks for recurring tasks, when lists were created, changed etc.
 
 - Unlikely:
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.
