@@ -1309,12 +1309,6 @@ $html .= qq~
 
     $html .= end_card();
 
-    # Add js to reload the page periodically if set in config
-    if ($config->{cfg_reload_page} eq 'on') {
-        $html .= $js_reload;
-        }
-
-
     $html .= footer();
     $res->body($html);
     return $res->finalize;
@@ -1677,6 +1671,11 @@ sub footer {
         </html>
         ~;
 
+    # Add js to reload the page periodically if set in config
+    if ($config->{cfg_reload_page} eq 'on') {
+        $html .= $js_reload;
+        }
+        
     return $html;
     } # End footer()
 
