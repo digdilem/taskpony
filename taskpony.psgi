@@ -1288,12 +1288,21 @@ $html .= qq~
     return $res->finalize;
     };   # End main loop, pages and paths handling
 
-builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
+builder {
     enable 'Plack::Middleware::Static', 
-        path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
-        root => $static_dir;
+        path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
+        root => $static_dir . "/static";
     $app;
-    };
+};
+
+
+# Gemini
+# builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
+#     enable 'Plack::Middleware::Static', 
+#         path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
+#         root => $static_dir;
+#     $app;
+#     };
 
 
 # builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
