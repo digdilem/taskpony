@@ -1218,6 +1218,26 @@ $html .= qq~
                             </td>
                         </tr>
 
+                        <tr class="border-top">
+                            <td colspan="2" class="pt-3 small text-white-50">~;
+                            if ($running_in_docker == 1) {
+                                $html .= qq~Running inside Docker ~;
+                                } else {
+                                $html .= qq~Running on host as a native service ~;
+                                }
+                            $html .= qq~ 
+                            </td>
+                        </tr>
+
+
+
+                        if (-f '/.dockerenv') {
+    print "Running inside Docker\n";
+} else {
+    print "Running on host / native service\n";
+}
+
+
 
 
                     </tbody>
