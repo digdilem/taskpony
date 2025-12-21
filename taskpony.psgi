@@ -1498,7 +1498,7 @@ sub header {
     <script src="/static/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        body { background-color: #4DB25C; }
+        body { background-color: #1A2122; }
         .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
         .muted { color: rgba(255,255,255,0.65); }
     </style>
