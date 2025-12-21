@@ -436,10 +436,10 @@ my $app = sub {
 
                                 <br/>
                                 <p class="text-secondary">
-                                    This task was created at $task->{AddedDate}
+                                    This task was created $task->{AddedDate}
                                     ~;
                                     if ($task->{CompletedDate}) {
-                                        $html .= qq~and completed at $task->{CompletedDate}~;
+                                        $html .= qq~and completed $task->{CompletedDate}~;
                                         }
                                     $html .= qq~
                                 </p>
