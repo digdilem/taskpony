@@ -1286,6 +1286,15 @@ $html .= qq~
     $html .= footer();
     $res->body($html);
     return $res->finalize;
+
+    builder {
+        enable 'Plack::Middleware::Static', 
+            path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
+            root => $static_dir;
+            
+        $app;
+    };
+
     };   # End main loop, pages and paths handling
 
   
@@ -1296,13 +1305,13 @@ $html .= qq~
 #     $app;
 #     };
 
-builder {
-    enable 'Plack::Middleware::Static', 
-        path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
-        root => $static_dir;
+# builder {
+#     enable 'Plack::Middleware::Static', 
+#         path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
+#         root => $static_dir;
         
-    $app;
-};
+#     $app;
+# };
 
 
 # Gemini
