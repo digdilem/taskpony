@@ -29,7 +29,6 @@ our $config = {
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
-    cfg_reload_page => 'on',                    # Whether to periodically reload the main tasks page to help sync between idle clients
     database_schema_version => 1,               # Don't change this.
     };
 
@@ -101,11 +100,6 @@ my $fa_info_small = $fa_header_small . q~
                     </svg>~;
 my $fa_repeat_small = $fa_header_small . q~
                     <path fill="currentColor"  d="M534.6 182.6C547.1 170.1 547.1 149.8 534.6 137.3L470.6 73.3C461.4 64.1 447.7 61.4 435.7 66.4C423.7 71.4 416 83.1 416 96L416 128L256 128C150 128 64 214 64 320C64 337.7 78.3 352 96 352C113.7 352 128 337.7 128 320C128 249.3 185.3 192 256 192L416 192L416 224C416 236.9 423.8 248.6 435.8 253.6C447.8 258.6 461.5 255.8 470.7 246.7L534.7 182.7zM105.4 457.4C92.9 469.9 92.9 490.2 105.4 502.7L169.4 566.7C178.6 575.9 192.3 578.6 204.3 573.6C216.3 568.6 224 556.9 224 544L224 512L384 512C490 512 576 426 576 320C576 302.3 561.7 288 544 288C526.3 288 512 302.3 512 320C512 390.7 454.7 448 384 448L224 448L224 416C224 403.1 216.2 391.4 204.2 386.4C192.2 381.4 178.5 384.2 169.3 393.3L105.3 457.3z"/></svg>~;
-
-# Some optional javascript. 
-# If cfg_reload_page is set, reload the page periodically to improve visual sync between clients (Initially 10 minutes)
-my $js_reload = q~<script>let t;const r=()=>{clearTimeout(t);t=setTimeout(()=>location.reload(),6e5)};["mousemove","keydown","click","scroll"].forEach(e=>addEventListener(e,r));r();</script>~;
-
 
 
 # Preflight checks
@@ -911,7 +905,7 @@ my $app = sub {
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_reload_page') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -1025,29 +1019,6 @@ my $app = sub {
 
                                     # Precheck this if set
                                     if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
-                            </div>
-
-                            <!-- TOGGLE ROW cfg_reload_page -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    Reload page occasionally
-                                    <span data-bs-toggle="tooltip" title="If checked, every ten minutes when idle, the page will reload. This helps when another client has changed a list that's being displayed elsewhere.">
-                                        $fa_info_small
-                                    </span>
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_reload_page" 
-                                    id="autoUpdateToggle"
-                                    ~;
-
-                                    # Precheck this if set
-                                    if ($config->{'cfg_reload_page'} eq 'on') { $html .= " checked "; }
 
                                     $html .= qq~
                                     >
@@ -1671,11 +1642,6 @@ sub footer {
         </html>
         ~;
 
-    # Add js to reload the page periodically if set in config
-    if ($config->{cfg_reload_page} eq 'on') {
-        $html .= $js_reload;
-        }
-        
     return $html;
     } # End footer()
 

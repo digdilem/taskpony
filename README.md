@@ -24,7 +24,7 @@ See some more [Screenshots](#screenshots)
   - [Docker](#docker)
   - [Docker Compose](#docker-compose)
   - [Linux service](#linux-service)
-- [Troubleshooting](#troubleshooting)
+- [Troubleshooting](#troubleshooting)a
 - [FAQ](#faq)
 - [Version History / Releases](docs/version-history.md)
 - [Upgrading](#upgrading)
@@ -360,7 +360,8 @@ Some features for the future that may, or may not, be added.
   - A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
   - Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
   - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
-  - Ability to undelete Lists  
+  - Ability to undelete Lists
+  - A self reloading ability when another client changes the displayed list. May require a fairly bit switch to api style working
 
 - Unlikely:
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.

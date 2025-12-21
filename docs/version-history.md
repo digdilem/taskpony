@@ -22,4 +22,3 @@
 - Change: Daily functions call added for backups and repeating task management.
 - Documentation: Moved various blocks of documentation into their own file for neatness and future upgrade ability.
 
-
