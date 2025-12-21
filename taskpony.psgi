@@ -36,7 +36,7 @@ our $config = {
 # Global variables that are used throughout - do not change these. They will not persist during app updates
 my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.2.0';               # Version of app
-my $database_schema_version = 1;        # Current database schema version. Do not change this, it will be modified during updates.
+my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
 
 my $dbh;                        # Global database handle 
