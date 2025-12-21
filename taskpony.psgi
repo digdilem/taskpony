@@ -122,6 +122,8 @@ $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list
 
 my $static_dir = catdir($FindBin::Bin);
 
+print STDERR "statid dir = ($static_dir)\n";
+
 my $app = sub {
     my $env = shift; 
     my $req = Plack::Request->new($env);
