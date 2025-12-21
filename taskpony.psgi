@@ -29,7 +29,7 @@ our $config = {
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
-    database_schema_version => 1,               # Don't change this.
+    database_schema_version => 2,               # Don't change this.
     };
 
 ###############################################

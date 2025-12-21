@@ -86,41 +86,21 @@ The default version mounts a persistant volume in `./data` where the Sqlite data
 
 ## Linux Service
 
-Taskpony expects to be installed in `/opt/taskpony`. If you want it to exist elsewhere, you'll need to:
-
-1. Edit `taskpony.psgi` and change `my $db_path = '/opt/taskpony/db/taskpony.db';` to point to the intended location of the database file that Taskpony will create.
-
-2. Amend `taskpony.service` and change these lines to match your new path:
-
-```
-ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
-WorkingDirectory=/opt/taskpony
-```
 
 ## Installing the program
 
-1. Make the directory and pull the files in from Github
-
-EITHER: using git clone:
+1. Change to `/opt` and pull the files in from Github
 
 ```
 cd /opt
-apt-get install -y git
 git clone https://github.com/digdilem/taskpony.git
-```
-
-OR, Download the zip from https://github.com/digdilem/taskpony and unpack into /opt/taskpony
-```
-cd /opt/
-wget https://codeload.github.com/digdilem/taskpony/zip/refs/heads/main
-unzip -a main
-mv taskpony-main taskpony
 ```
 
 2. Install the perl modules that taskpony requires
 
-```
 Debian 13
+
+```
 apt-get install libdbi-perl libdbd-sqlite3-perl libplack-perl perl
 ```
 
@@ -145,9 +125,24 @@ systemctl enable --now taskpony
 
 Or if it's on a machine with, say, an IP of 10.0.0.16, then `http://10.0.0.16:5000`
 
+### Notes:
+
 If you want to use another port instead of 5000, edit `taskpony.service` and change the plackup line. Eg: `ExecStart=/usr/bin/plackup -r -p 5001 /opt/taskpony/taskpony.psgi`
 
 If you wish to run Taskpony in a directory other than `/opt/taskpony`, then change `$db_path` in `taskpony.psgi` and `WorkingDirectory` in `taskpony.service`
+
+Taskpony expects to be installed in `/opt/taskpony`. If you want it to exist elsewhere, you'll need to:
+
+1. Edit `taskpony.psgi` and change `my $db_path = '/opt/taskpony/db/taskpony.db';` to point to the intended location of the database file that Taskpony will create.
+
+2. Amend `taskpony.service` and change these lines to match your new path:
+
+```
+ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
+WorkingDirectory=/opt/taskpony
+```
+
+
 
 # Troubleshooting
 
