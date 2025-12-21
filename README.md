@@ -202,13 +202,12 @@ Upgrading Taskpony should be quite simple - overwrite the files and ensure taskp
 
 1. Read the [Release Notes](docs/release-notes.md) for any breaking changes
 2. Make a copy of the old `/opt/taskpony` directory, especially the `db/taskpony.db` database as a backup.
-3. Stop Taskpony: `systemctl stop taskpony`
-4. Download the latest files from https://github.com/digdilem/taskpony/ (Code -> Download ZIP)
-5. Unzip its contents into /opt/taskpony, overwriting the existing Taskpony files.
-6. Restart Taskpony: `systemctl start taskpony`
+3. Download the latest files from https://github.com/digdilem/taskpony/ (Code -> Download ZIP)
+4. Unzip its contents into /opt/taskpony, overwriting the existing Taskpony files.
 
-If the upgrade includes any database changes, Taskpony should automatically upgrade that when it's first started, see logs. `journalctl -u taskpony`
+Taskpony should restart itself automatically when its own file changes, this will be shown in its log with `-- /opt/taskpony/taskpony.psgi updated`. If there are any issues, restarting Taskpony with `systemctl restart taskpony` is advised.
 
+If the upgrade includes any database changes, Taskpony should automatically detect and apply any updates when it's first started, see logs. `journalctl -u taskpony`
 
 ## Docker
 
