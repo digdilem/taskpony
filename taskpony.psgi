@@ -1497,7 +1497,11 @@ sub header {
 
     <script src="/static/js/bootstrap.bundle.min.js"></script>
 
- 
+    <style>
+        body { background-color: #4DB25C; }
+        .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
+        .muted { color: rgba(255,255,255,0.65); }
+    </style>
 
     </head>
     <body class="text-white d-flex flex-column min-vh-100">
@@ -1533,7 +1537,7 @@ sub header {
                         data-bs-toggle="tooltip" title="Settings" >
                         $fa_gear
                     </a>
-
+                    
                 </div>
             </h3>
         </div>
