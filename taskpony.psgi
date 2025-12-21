@@ -434,7 +434,8 @@ my $app = sub {
                                     <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
                                 </div>
 
-                                <p class="text-muted">
+                                <br/>
+                                <p class="text-secondary">
                                     This task was created on $task->{AddedDate}
                                     ~;
                                     if ($task->{CompletedDate}) {
