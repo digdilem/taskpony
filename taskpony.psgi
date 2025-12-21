@@ -1288,11 +1288,11 @@ $html .= qq~
     return $res->finalize;
     };   # End main loop, pages and paths handling
 
- 
+  
 builder {
     enable 'Plack::Middleware::Static',
         path => ['/favicon.ico', qr{^/static/}],
-        root => $static_dir;
+        root => $static_dir . '/static/;
     $app;
 };
 
