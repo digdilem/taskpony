@@ -13,12 +13,6 @@ services:
       # We need a persistent directory mounted in order to save our tasks database. 
       - ./data:/opt/taskpony/db
     restart: unless-stopped
-    networks:
-      - taskpony_net
-
-networks:
-  taskpony_net:
-    name: taskpony_network
 
 # End of file
 
