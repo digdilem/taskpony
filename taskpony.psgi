@@ -1518,7 +1518,7 @@ sub header {
 
     $html .= qq~
             </div>
-
+</h3>
                 <div class="btn-group" role="group">
 
                     <a href="/lists"
@@ -1540,7 +1540,7 @@ sub header {
                     </a>
                     
                 </div>
-            </h3>
+            
         </div>
     </div>
     ~;
