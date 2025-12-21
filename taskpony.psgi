@@ -1518,6 +1518,7 @@ sub header {
 
     $html .= qq~
             </div>
+            </h3>
 
                 <div class="btn-group" role="group">
 
@@ -1539,7 +1540,7 @@ sub header {
                         $fa_gear
                     </a>
                     
-                </div>            
+                </div>
         </div>
     </div>
     ~;
