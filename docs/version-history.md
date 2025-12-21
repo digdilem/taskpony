@@ -12,13 +12,13 @@
 - UX: Orphaned tasks in "All Tasks" list now have a new in-line icon before the task title, and their List name changed to "[--No List--]" (if List and dates enabled)
 - UX: List Management - when deleting a list, user is now presented with several options so they can decide what happens to any tasks within that list.
 - UX: Clicking the task's List in the "All tasks" List now jumps to that List.
-- UX: Top-right buttons: "Lists" changed to icon. Stats button added. All benefit from description popups. Slight change to div to wrap them onto second line for small devices as they were flowing off screen.
+- UX: Top-right buttons: "Lists" changed to icon. Stats button added. All benefit from description popups. Slight change to div to wrap them onto second line for small devices as they were flowing off screen. Slight tweak to background colour to match icon.
 - UX: "N tasks completed today!" added to task completed banner
 - Feature: Local stats calculated. Rate limited to 1/hr to avoid performance hit.
 - Feature: /stats page added with some basic statistics.
 - Change: Config save rewritten to make it easier to expand in the future.
 - Feature: Daily backups of the database are now created. Number of them is configurable in /settings
-- Feature: Recurring tasks added.
+- Feature: Recurring tasks added. @DorkyP https://github.com/digdilem/taskpony/issues/2
 - Change: Daily functions call added for backups and repeating task management.
 - Documentation: Moved various blocks of documentation into their own file for neatness and future upgrade ability.
 
