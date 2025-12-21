@@ -1207,7 +1207,6 @@ $html .= qq~
                     </tbody>
                 </table>
 
-                <hr>
                 <ul>
                     <li>
                         <span class="pt-3 small text-white-50">
