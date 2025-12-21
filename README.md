@@ -460,18 +460,27 @@ Taskpony is built with the help of this great FOSS software:
 
 # Roadmap
 
-Some things for the future that may, or may not, be added. 
+Some features for the future that may, or may not, be added. 
 
-- (Probably) Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
-- (Maybe) A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
-- (Maybe) Add default sorting option, rather than just newest-first.
-- (Maybe) Add colour to tasks lists. (Possibly based on priority, possibly a per-task setting)
-- (Maybe) New release notification. 
-- (Maybe) Multi-language support.
-- (Maybe) A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
-- (Maybe) Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
-- (Maybe) Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
-- (Maybe) Ability to undelete Lists
+- Probably:
+  - Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks. (Beware repeatable tasks, will need check so that period can't be less than those and vice versa or a repeating task could get deleted before it has a chance to re-activate.)
+
+- Maybe:
+  - A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
+  - Add default sorting option, rather than just newest-first.
+  - Add colour to tasks lists. (Possibly based on priority, possibly a per-task setting)
+  - New release available alert. 
+  - Multi-language support.
+  - A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
+  - Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
+  - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
+  - Ability to undelete Lists  
+
+- Unlikely:
+  - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.
+  - Groups / teams / shared and embeddded tasks. 
+  - Authentication, https. 
+  - Plugin.
 
 # Version History
 
