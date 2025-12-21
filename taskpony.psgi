@@ -1292,7 +1292,7 @@ $html .= qq~
 builder {
     enable 'Plack::Middleware::Static',
         path => ['/favicon.ico', qr{^/static/}],
-        root => $static_dir . '/static/;
+        root => $static_dir . '/static/';
     $app;
 };
 
