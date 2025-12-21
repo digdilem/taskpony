@@ -1288,10 +1288,19 @@ $html .= qq~
 
 builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
     enable 'Plack::Middleware::Static', 
-        path => qr{^/static/},
+        path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
         root => $static_dir;
     $app;
     };
+
+
+# builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
+#     enable 'Plack::Middleware::Static', 
+#         path => qr{^/static/},
+#         path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
+#         root => $static_dir;
+#     $app;
+#     };
 
 ###############################################
 # Functions
@@ -1558,7 +1567,7 @@ sub footer {
         <br>
         </main>
         <footer class="text-center text-white-50 py-2">
-            <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>. </p>
+            <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a></p>
         </footer>
 
         <script>
