@@ -2146,18 +2146,18 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     my $sql = q{
         SELECT
             COUNT(*)                                                    AS total_tasks,
-            SUM(CompletedDate IS NULL)                                 AS active_tasks,
+            IFNULL(SUM(CompletedDate IS NULL), 0)                                 AS active_tasks,
 
-            SUM(date(AddedDate) = date('now','localtime'))             AS tasks_added_today,
-            SUM(AddedDate >= date('now','-7 days','localtime'))        AS tasks_added_past_week,
-            SUM(AddedDate >= date('now','-1 month','localtime'))       AS tasks_added_past_month,
-            SUM(AddedDate >= date('now','-1 year','localtime'))        AS tasks_added_past_year,
+            IFNULL(SUM(date(AddedDate) = date('now','localtime')), 0)             AS tasks_added_today,
+            IFNULL(SUM(AddedDate >= date('now','-7 days','localtime')), 0)        AS tasks_added_past_week,
+            IFNULL(SUM(AddedDate >= date('now','-1 month','localtime')), 0)       AS tasks_added_past_month,
+            IFNULL(SUM(AddedDate >= date('now','-1 year','localtime')), 0)        AS tasks_added_past_year,
 
-            SUM(CompletedDate IS NOT NULL)                              AS completed_tasks,
-            SUM(date(CompletedDate) = date('now','localtime'))         AS tasks_completed_today,
-            SUM(CompletedDate >= date('now','-7 days','localtime'))    AS tasks_completed_past_week,
-            SUM(CompletedDate >= date('now','-1 month','localtime'))   AS tasks_completed_past_month,
-            SUM(CompletedDate >= date('now','-1 year','localtime'))    AS tasks_completed_past_year
+            IFNULL(SUM(CompletedDate IS NOT NULL), 0)                              AS completed_tasks,
+            IFNULL(SUM(date(CompletedDate) = date('now','localtime')), 0)         AS tasks_completed_today,
+            IFNULL(SUM(CompletedDate >= date('now','-7 days','localtime')), 0)    AS tasks_completed_past_week,
+            IFNULL(SUM(CompletedDate >= date('now','-1 month','localtime')), 0)   AS tasks_completed_past_month,
+            IFNULL(SUM(CompletedDate >= date('now','-1 year','localtime')), 0)    AS tasks_completed_past_year
         FROM TasksTb
         };
 
@@ -2168,8 +2168,8 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
 
     $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
     $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
-    $stats->{stats_first_task_created} = $dbh->selectrow_array('SELECT MIN(AddedDate) FROM TasksTb');
-    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array('SELECT CAST((julianday(\'now\') - julianday(MIN(AddedDate))) AS INTEGER) FROM TasksTb');
+    $stats->{stats_first_task_created} = $dbh->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
+    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
     $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
 
 
