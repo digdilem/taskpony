@@ -1248,11 +1248,12 @@ $html .= qq~
         }
 
     # Set default titlebar to be the quick add form for the selected list
-    my $titlebar = qq~                    
+    my $titlebar = qq~</h2>
                         <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
                             <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
+                        <h2>
                     ~;
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($list_id == 1) {
@@ -1518,28 +1519,28 @@ sub header {
 
     $html .= qq~
             </div>
-</h3>
-                <div class="btn-group" role="group">
+        </h3>
+            <div class="btn-group" role="group">
 
-                    <a href="/lists"
-                        class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                        data-bs-toggle="tooltip" title="Manage Lists" >
-                        $fa_list
-                    </a>
+                <a href="/lists"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    data-bs-toggle="tooltip" title="Manage Lists" >
+                    $fa_list
+                </a>
 
-                    <a href="/stats"
-                        class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                        data-bs-toggle="tooltip" title="Statistics" >
-                        $fa_chart
-                    </a>
+                <a href="/stats"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    data-bs-toggle="tooltip" title="Statistics" >
+                    $fa_chart
+                </a>
 
-                    <a href="/config"
-                        class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                        data-bs-toggle="tooltip" title="Settings" >
-                        $fa_gear
-                    </a>
-                    
-                </div>
+                <a href="/config"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    data-bs-toggle="tooltip" title="Settings" >
+                    $fa_gear
+                </a>
+                
+            </div>
             
         </div>
     </div>
