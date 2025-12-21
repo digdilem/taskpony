@@ -29,14 +29,14 @@ our $config = {
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
-    database_schema_version => 2,               # Don't change this.
+    database_schema_version => 1,               # Don't change this.
     };
 
 ###############################################
 # Global variables that are used throughout - do not change these. They will not persist during app updates
 my $app_title = 'Taskpony';             # Name of app.
-my $app_version = '0.2.0';               # Version of app
-my $database_schema_version = 1;        # Current database schema version. Do not change this, it will be modified during updates.
+my $app_version = '0.2.0a';             # Version of app
+my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
 
 my $dbh;                        # Global database handle 
