@@ -1537,11 +1537,8 @@ sub header {
                         data-bs-toggle="tooltip" title="Settings" >
                         $fa_gear
                     </a>
-<button class="btn btn-link btn-sm p-0">Remove</button>
-
+                    
                 </div>
-                
-
             </h3>
         </div>
     </div>
