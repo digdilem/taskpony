@@ -592,7 +592,7 @@ my $app = sub {
         
         $html .= qq~
                                 <tr>
-                                    <td><strong><a href="/?lid=1" class="text-white text-decoration-none">All Tasks</a></strong></td>
+                                    <td><strong><a href="/?lid=1"> <span class="badge bg-secondary text-white">All Tasks</span></a></strong></td>
                                     <td>View tasks from all lists</td>
                                     <td><a href="/tasks-by-status?status=1" class="text-white text-decoration-none">$all_active</a></td>
                                     <td><a href="/tasks-by-status?status=2" class="text-white text-decoration-none">$all_completed</a></td>
@@ -1248,11 +1248,12 @@ $html .= qq~
         }
 
     # Set default titlebar to be the quick add form for the selected list
-    my $titlebar = qq~                    
+    my $titlebar = qq~</h2>
                         <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
                             <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
+                        <h2>
                     ~;
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($list_id == 1) {
@@ -1506,10 +1507,11 @@ sub header {
     </head>
     <body class="text-white d-flex flex-column min-vh-100">
     <main class="flex-grow-1 container py-4">
+    
     <div class="container py-1">        
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">        
             <div>
-                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a> / 
+                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a>
                 ~;
     
     # Add the list selection pulldown
@@ -1517,29 +1519,29 @@ sub header {
 
     $html .= qq~
             </div>
+        </h3>
+            <div class="btn-group" role="group">
 
-                <div class="btn-group" role="group">
+                <a href="/lists"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    data-bs-toggle="tooltip" title="Manage Lists" >
+                    $fa_list
+                </a>
 
-                    <a href="/lists"
-                        class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                        data-bs-toggle="tooltip" title="Manage Lists" >
-                        $fa_list
-                    </a>
+                <a href="/stats"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    data-bs-toggle="tooltip" title="Statistics" >
+                    $fa_chart
+                </a>
 
-                    <a href="/stats"
-                        class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                        data-bs-toggle="tooltip" title="Statistics" >
-                        $fa_chart
-                    </a>
-
-                    <a href="/config"
-                        class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                        data-bs-toggle="tooltip" title="Settings" >
-                        $fa_gear
-                    </a>
-                    
-                </div>
-            </h3>
+                <a href="/config"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    data-bs-toggle="tooltip" title="Settings" >
+                    $fa_gear
+                </a>
+                
+            </div>
+            
         </div>
     </div>
     ~;
