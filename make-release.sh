@@ -42,7 +42,7 @@ read -r -p "Next steps will update public github and Docker Hub repositories.  D
 # Update github public repo
 
 echo "Pushing to github..."
-git push github main
+git push github main --force
 
 echo "Press any key to continue, or Ctrl+C to abort..."
 read -r -n 1 -s
@@ -50,7 +50,9 @@ read -r -n 1 -s
 # 6. Push new images to Docker Hub
 
 echo "Pushing Docker image to Docker Hub for versions $ver and latest..."
-docker push digdilem/taskpony:{"$ver",latest}
+docker push digdilem/taskpony:$ver
+docker push digdilem/taskpony:latest
+
 
 echo "To confirm upload, check it at:  https://hub.docker.com/repositories/digdilem"
 
