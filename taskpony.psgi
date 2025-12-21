@@ -2114,7 +2114,7 @@ sub start_card {
                     <div class="card shadow-sm">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
-                                $card_title
+                                $card_title BA
                                 ~;
     if ($card_icon ne '') {
         $html .= qq~
@@ -2125,7 +2125,7 @@ sub start_card {
                             </h2>
                         </div>
 
-                        <div class="card-body bg-dark text-white p-0">        ~;
+                        <div class="card-body bg-dark text-white">~;
     return $html;
     } # End start_card()
 
@@ -2152,7 +2152,7 @@ sub start_mini_card {
                             </h2>
                         </div>
 
-                        <div class="card-body bg-dark text-white p-0">~;
+                        <div class="card-body bg-dark text-white">~;
     return $html;
     } # End start_mini_card()
 
