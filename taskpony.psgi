@@ -1204,35 +1204,36 @@ $html .= qq~
                             </div>
                         </td>
                         </tr>
+                    </tbody>
+                </table>
 
-                        <tr class="border-top">
-                            <td colspan="2" class="pt-3 small text-white-50">
-                                First task created: 
+                <hr>
+                <ul>
+                    <li>
+                        <span class="pt-3 small text-white-50">
+                            First task created: 
                                 <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
                                 <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
-                            </td>
-                        </tr>
-
-                        <tr class="border-top">
-                            <td colspan="2" class="pt-3 small text-white-50">
-                                Database schema version (Actual / Required): 
+                        </span>
+                    </li>
+                    <li>
+                        <span class="pt-3 small text-white-50">
+                            Database schema version (Actual / Required): 
                                 <strong class="text-white">$config->{'database_schema_version'} / $database_schema_version</strong>
-                            </td>
-                        </tr>
-
-                        <tr class="border-top">
-                            <td colspan="2" class="pt-3 small text-white-50">~;
+                        </span>
+                    </li>
+                    <li>
+                        <span class="pt-3 small text-white-50">~;
                             if ($running_in_docker == 1) {
                                 $html .= qq~Running inside Docker ~;
                                 } else {
                                 $html .= qq~Running on host as a native service ~;
                                 }
                             $html .= qq~ 
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
+                        </span>
+                    </li>
+                </ul>
+            </div>
             ~;
 
             $html .= end_card();
