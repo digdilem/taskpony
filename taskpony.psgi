@@ -1326,7 +1326,7 @@ $html .= qq~
 # Orig
 builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
     enable 'Plack::Middleware::Static', 
-        path => qr{^/static/},
+#        path => qr{^/static/},
         path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
         root => $static_dir;
     $app;
