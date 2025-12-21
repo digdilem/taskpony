@@ -434,13 +434,14 @@ my $app = sub {
                                     <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
                                 </div>
 
-                                This task was created on $task->{AddedDate}
-                                ~;
-                                if ($task->{CompletedDate}) {
-                                    $html .= qq~and last completed on $task->{CompletedDate}~;
-                                    }
-                                $html .= qq~
-
+                                <p class="text-muted">
+                                    This task was created on $task->{AddedDate}
+                                    ~;
+                                    if ($task->{CompletedDate}) {
+                                        $html .= qq~and last completed on $task->{CompletedDate}~;
+                                        }
+                                    $html .= qq~
+                                </p>
                                 </div>
 
                             </form>
