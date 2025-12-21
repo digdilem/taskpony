@@ -225,10 +225,6 @@ my $app = sub {
         return $res->finalize;
         } # End /set_default_list
 
-
-
-
-
     ###############################################
     # Create a new task
     if ($req->path eq "/add") {
