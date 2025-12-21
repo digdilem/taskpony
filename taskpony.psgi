@@ -29,7 +29,7 @@ our $config = {
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
-    cfg_reload_page -> 'on',                       # Whether to periodically reload the main tasks page to help sync between idle clients
+    cfg_reload_page => 'on',                    # Whether to periodically reload the main tasks page to help sync between idle clients
     database_schema_version => 1,               # Don't change this.
     };
 
