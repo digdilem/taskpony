@@ -153,13 +153,13 @@ my $app = sub {
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
         }
 
-    ###############################################
-    # favicon handling before header()
-    if ($req->path eq "/favicon.ico") {
-        # Redirect to ./static/favicon.ico
-        $res->redirect('./static/favicon.ico');
-        return $res->finalize;
-        } # End /favicon.ico
+    # ###############################################
+    # # favicon handling before header()
+    # if ($req->path eq "/favicon.ico") {
+    #     # Redirect to ./static/favicon.ico
+    #     $res->redirect('./static/favicon.ico');
+    #     return $res->finalize;
+    #     } # End /favicon.ico
 
     # Start building page
     my $html = header();
@@ -1303,13 +1303,13 @@ $html .= qq~
 
     };   # End main loop, pages and paths handling
 
-# builder {
-#     enable 'Plack::Middleware::Static', 
-#         path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
-#         root => $static_dir;
+builder {
+    enable 'Plack::Middleware::Static', 
+        path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
+        root => $static_dir;
         
-#     $app;
-#     };
+    $app;
+    };
   
 # builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
 #     enable 'Plack::Middleware::Static', 
@@ -1336,13 +1336,13 @@ $html .= qq~
 #     };
 
 # Orig
-builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
-    enable 'Plack::Middleware::Static', 
-#        path => qr{^/static/},
-        path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
-        root => $static_dir;
-    $app;
-    };
+# builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
+#     enable 'Plack::Middleware::Static', 
+# #        path => qr{^/static/},
+#         path => sub { s!^/favicon\.ico$!/static/favicon.ico! or m!^/static/! },
+#         root => $static_dir;
+#     $app;
+#     };
 
 ###############################################
 # Functions
