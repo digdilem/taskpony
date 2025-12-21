@@ -1518,27 +1518,29 @@ sub header {
     $html .= qq~
             </div>
 
-<div class="btn-group" role="group">
+                <div class="btn-group" role="group">
 
-                <a href="/lists"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" title="Manage Lists" >
-                    $fa_list
-                </a>
+                    <a href="/lists"
+                        class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                        data-bs-toggle="tooltip" title="Manage Lists" >
+                        $fa_list
+                    </a>
 
-                <a href="/stats"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                    data-bs-toggle="tooltip" title="Statistics" >
-                    $fa_chart
-                </a>
+                    <a href="/stats"
+                        class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                        data-bs-toggle="tooltip" title="Statistics" >
+                        $fa_chart
+                    </a>
 
-                <a href="/config"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                    data-bs-toggle="tooltip" title="Settings" >
-                    $fa_gear
-                </a>
+                    <a href="/config"
+                        class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                        data-bs-toggle="tooltip" title="Settings" >
+                        $fa_gear
+                    </a>
 
-            </div>
+                </div>
+<button class="btn btn-link btn-sm p-0">Remove</button>
+
 
             </h3>
         </div>
