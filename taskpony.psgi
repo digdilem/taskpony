@@ -1506,10 +1506,11 @@ sub header {
     </head>
     <body class="text-white d-flex flex-column min-vh-100">
     <main class="flex-grow-1 container py-4">
+
     <div class="container py-1">        
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">        
             <div>
-                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a>
+                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a></h3>
                 ~;
     
     # Add the list selection pulldown
@@ -1538,8 +1539,7 @@ sub header {
                         $fa_gear
                     </a>
                     
-                </div>
-            </h3>
+                </div>            
         </div>
     </div>
     ~;
