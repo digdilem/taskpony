@@ -1509,7 +1509,7 @@ sub header {
     <div class="container py-1">        
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">        
             <div>
-                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a> / 
+                <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a>
                 ~;
     
     # Add the list selection pulldown
