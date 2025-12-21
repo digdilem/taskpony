@@ -121,6 +121,8 @@ $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list
 # Start main loop
 
 my $static_dir = catdir($FindBin::Bin);
+my $running_in_docker = 0;  # 1 if in docker, 0 if not
+if (-f '/.dockerenv') { $running_in_docker = 1;}  # Test for this magical file that docker created.
 
 my $app = sub {
     my $env = shift; 
@@ -1228,18 +1230,6 @@ $html .= qq~
                             $html .= qq~ 
                             </td>
                         </tr>
-
-
-
-                        if (-f '/.dockerenv') {
-    print "Running inside Docker\n";
-} else {
-    print "Running on host / native service\n";
-}
-
-
-
-
                     </tbody>
                 </table>
                 </div>
