@@ -2125,7 +2125,7 @@ sub start_card {
                             </h2>
                         </div>
 
-                        <div class="card-body bg-dark text-white">        ~;
+                        <div class="card-body bg-dark text-white p-0">        ~;
     return $html;
     } # End start_card()
 
@@ -2152,7 +2152,7 @@ sub start_mini_card {
                             </h2>
                         </div>
 
-                        <div class="card-body bg-dark text-white">        ~;
+                        <div class="card-body bg-dark text-white p-0">~;
     return $html;
     } # End start_mini_card()
 
