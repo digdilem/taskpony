@@ -1518,7 +1518,8 @@ sub header {
     $html .= qq~
             </div>
 
-            <div class="d-flex gap-2">
+<div class="btn-group" role="group">
+
                 <a href="/lists"
                     class="btn btn-sm btn-secondary d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" title="Manage Lists" >
