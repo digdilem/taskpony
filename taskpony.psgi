@@ -218,6 +218,16 @@ my $app = sub {
         } # End /set_default_list
 
     ###############################################
+    # favicon handling
+    if ($req->path eq "/favicon.ico") {
+        # Redirect to ./static/favicon.ico
+        $res->redirect('./static/favicon.ico');
+        return $res->finalize;
+        } # End /favicon.ico
+
+
+
+    ###############################################
     # Create a new task
     if ($req->path eq "/add") {
 
