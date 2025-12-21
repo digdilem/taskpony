@@ -1305,7 +1305,7 @@ $html .= qq~
 
 builder {
     enable 'Plack::Middleware::Static', 
-        path => [qr{^/static/}, '/favicon.ico'],  # allow /static/* and /favicon.ico
+        path => [qr{^/static/}, 'favicon.ico'],  # allow /static/* and /favicon.ico
         root => $static_dir;
         
     $app;
