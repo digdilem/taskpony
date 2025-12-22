@@ -35,7 +35,7 @@ our $config = {
 ###############################################
 # Global variables that are used throughout - do not change these. They will not persist during app updates
 my $app_title = 'Taskpony';             # Name of app.
-my $app_version = '0.2c';               # Version of app
+my $app_version = '0.2d';               # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
 
@@ -152,6 +152,14 @@ my $app = sub {
             ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
         }
+
+    ###############################################
+    # favicon handling before header()
+    if ($req->path eq "/favicon.ico") {
+        # Redirect to ./static/favicon.ico
+        $res->redirect('./static/favicon.ico');
+        return $res->finalize;
+        } # End /favicon.ico
 
     # Start building page
     my $html = header();
@@ -2089,7 +2097,7 @@ sub start_card {
                             </h2>
                         </div>
 
-                        <div class="card-body bg-dark text-white">        ~;
+                        <div class="card-body bg-dark text-white rounded-bottom">        ~;
     return $html;
     } # End start_card()
 
@@ -2116,7 +2124,7 @@ sub start_mini_card {
                             </h2>
                         </div>
 
-                        <div class="card-body bg-dark text-white">        ~;
+                        <div class="card-body bg-dark text-white rounded-bottom">        ~;
     return $html;
     } # End start_mini_card()
 

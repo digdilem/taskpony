@@ -1,7 +1,12 @@
 # Taskpony Version History
 
 
-## 0.2  Released Christmas, 2025
+## 0.2d  Released Christmas, 2025
+
+- Fix a couple of regressions. favicon displaying, and rounded bottoms.
+
+
+## 0.2c  Released Christmas, 2025
 
 "Improved orphan handing. Added repeating tasks, stats and database backups. Multiple bugfixes and UI improvements."
 
