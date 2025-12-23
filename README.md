@@ -1,11 +1,17 @@
-# Taskpony
+# TASKPONY
+
+- **T**ransparent — Open source and openly described. Even the database schema is documented.
+- **A**ir-gapped — Entirely self-contained. Runs without internet access, external services, or tracking.
+- **S**imple — Easy to install, easy to understand, and easy to operate.
+- **K**eep everything — Unlimited tasks and unlimited lists — no artificial limits.
+- **P**rivate — Your data stays with you. No cloud, no telemetry, no external dependencies.
+- **O**pen formats — Export tasks to CSV, PDF, clipboard, or print.
+- **N**o clutter — A focused interface that shows only what you actually need.
+- **Y**ours — Free to use and always will be — no commercial edition, no hosted version.
+
 > "A small and simple self-hosted personal tasks organiser"
 
 ![Main Task List](docs/tasks_short.jpg)
-
-# Features
-
-Taskpony is intended to be small, easy to install and operate with a clean and intuitive interface. It wants to do one thing well - add, display and complete tasks. 
 
 Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
 
