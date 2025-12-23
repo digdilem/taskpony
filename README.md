@@ -1,6 +1,6 @@
-# TASKPONY
-
 > "A small and simple self-hosted personal tasks organiser"
+
+# TASKPONY
 
 - **T** ransparent — Open source and openly described. Even the database schema is documented.
 - **A** ir-gapped — Entirely self-contained. Runs without internet access, external services, or tracking.
