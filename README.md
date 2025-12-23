@@ -13,8 +13,8 @@
 
 | Desktop View                                                | Mobile View                                      |
 |-------------------------------------------------------------|--------------------------------------------------|
-| ![Main Task List](docs/tasks_short.jpg)                     | ![Mobile View](docs/taskpony_mobile.jpg)         |
-|
+| ![Main Task List](docs/tasklist.jpg)                     | ![Mobile View](docs/taskpony_mobile.jpg)         |
+
 
 
 Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
