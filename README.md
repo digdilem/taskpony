@@ -11,7 +11,11 @@
 - **N** o clutter — A focused interface that shows only what you actually need.
 - **Y** ours — Free to use and always will be — no commercial edition, no hosted version.
 
-![Main Task List](docs/tasks_short.jpg)
+| Desktop View                                                | Mobile View                                      |
+|-------------------------------------------------------------|--------------------------------------------------|
+| ![Main Task List](docs/tasks_short.jpg)                     | ![Mobile View](docs/taskpony_mobile.jpg)         |
+|
+
 
 Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
 
@@ -30,7 +34,7 @@ See some more [Screenshots](#screenshots)
   - [Docker](#docker)
   - [Docker Compose](#docker-compose)
   - [Linux service](#linux-service)
-- [Troubleshooting](#troubleshooting)a
+- [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
 - [Version History / Releases](docs/release-notes.md)
 - [Upgrading](#upgrading)
@@ -48,25 +52,21 @@ Part of Taskpony's design choice is that there are no authentication systems bui
 
 # Installation
 
-Taskpony is intended to be easy to install and maintain. We document two ways to install it, using Docker or as a standalone Linux systemd service. 
+Taskpony is intended to be easy to install and maintain. We document two ways to install it, using [Docker Compose](#docker-compose), [Docker](#docker) or as a standalone Linux [systemd service](#linux-service)
 
-# Requirements
+## Docker Compose [Recommended]
 
-Taskpony needs very little to run. 
-* Disk space: The first release docker image is around 500Mb, but installing as systemd will need a lot less, around 200kb including the initial database. Obviously, more tasks = more disk space used by the database, but even so, it's KBs, not MBs unless you really have a lot to do!
-* Memory: Around 30MB (systemd or docker)
-* CPU: Almost any CPU will be fast enough.
-* Clients: Browsers will typically use around 2-3MB of memory to load and display Taskpony.
+There is an example `docker-compose.yml` file in the repository which should work for most situations.
 
-## Limits
+Copy this to your chosen directory, inspect and adjust as desired, and run: `docker compose up -d`
 
-Taskpony has no artificial limits beyond those of the technologies, mostly SQLite. These are theoretically;
+On completion, Taskpony should be available on http://localhost:5000 
 
-- Tasks and Lists - a maximum of 9.22 quintillian of each. 
-- Text for each task or list's title or description can be up to a billion characters each. (Truncated in tables, but not everywhere. It's hoped users will be sane.)
-- A total database size of 281 terabytes. (Subject to file system limits)
+The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.
 
-In reality, disk i/o performance is likely to be the limiting factor long before the above is reached.
+### Troubleshooting Docker Compose
+
+1. View output logs with `docker compose logs` from the directory the `docker-compose.yml` file is in.
 
 ## Docker
 
@@ -80,22 +80,16 @@ Within a few seconds, Taskpony should be available to your web browser on port 5
 
 If you want it to run on a different port, change the *first* 5000 to something else.
 
-## Docker Compose
+### Troubleshoooting Docker
 
-There is an example `docker-compose.yml` file in the repository which should work for most situations.
-
-Copy this to your chosen directory, inspect and adjust as desired, and run: `docker compose up -d`
-
-On completion, Taskpony should be available on http://localhost:5000 
-
-The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.
+1. Find the container id with `docker ps` (the random string left of `digdilem/taskpony:latest `)
+2. View output logs with `docker logs STRING`  - replacing STRING with the above.
 
 ## Linux Service
 
+### Installing the program
 
-## Installing the program
-
-1. Change to `/opt` and pull the files in from Github
+1. Change to `/opt` and install `git` if it isn't already. Then pull the files in from Github
 
 ```
 cd /opt
@@ -110,7 +104,13 @@ Debian 13
 apt-get install libdbi-perl libdbd-sqlite3-perl libplack-perl perl
 ```
 
-*For other distros, you'll need your distro packages for the following perl modules, or use cpanm/cpan to install them*
+RHEL, Rocky, Alma (EL distros)
+
+```
+dnf install perl-Plack perl-DBI perl-DBD-SQLite
+```
+
+For other distros, then cpan or cpanm could be used to install these:
 
 ```
 Plack::Request
@@ -148,19 +148,10 @@ ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
 WorkingDirectory=/opt/taskpony
 ```
 
-
-
-# Troubleshooting
-
-If Taskpony doesn't work as expected, then:
-
-## Docker
-
-See output logs with `docker compose logs`
-
-## Systemd
+### Troubleshooting
 
 See output logs with `journalctl -u taskpony` or the current status with `systemctl status taskpony`
+
 
 # FAQ
 
@@ -371,6 +362,7 @@ Some features for the future that may, or may not, be added.
   - Ability to undelete Lists
   - A self reloading ability when another client changes the displayed list. May require a fairly bit switch to api style working
   - A history table for tasks and actions. Extra detail for tasks for recurring tasks, when lists were created, changed etc.
+  - A user configurable background picture.
 
 - Unlikely:
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.
