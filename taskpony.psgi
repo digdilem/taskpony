@@ -1959,13 +1959,15 @@ sub show_tasks {
 
     # Display a link to toggle between showing completed/active tasks
     if ($show_completed == 0) {
-        my $cnt_comppleted_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
+        my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
         $html .= qq~
-            <a href="/?sc=1" class="btn btn-secondary btn">Show $cnt_comppleted_tasks completed tasks in '$list_name'</a>
+            <a href="/?sc=1" class="btn btn-secondary btn">Show $cnt_completed_tasks completed tasks in '$list_name'</a>
             ~;
         } else {
+        my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
+
         $html .= qq~
-            <a href="/" class="btn btn-secondary btn">Show active tasks in '$list_name'</a>
+            <a href="/" class="btn btn-secondary btn">Show $cnt_active_tasks active tasks in '$list_name'</a>
             ~;
         }
 
