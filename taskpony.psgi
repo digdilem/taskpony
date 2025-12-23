@@ -1854,7 +1854,7 @@ sub show_tasks {
         my $checkbox = '';  # Default empty
         my $title_link;
         my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
-        my $title = html_escape($a->{'Title'});                
+        my $title = html_escape($a->{'Title'});
         my $list_title = substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length});
 
         ###############################################
@@ -1890,6 +1890,11 @@ sub show_tasks {
                     title="$description"
                     >                   
                     $title
+                    ~;
+            if ($description) {
+                $title_link .= $fa_info_small;
+                }
+                    qq~                    
                     </a>
                      ~;
             } 

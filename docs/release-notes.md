@@ -1,6 +1,10 @@
 # Taskpony Version History
 
 
+## 0.3  
+
+- UX: "Show completed/active tasks" button now includes the number of tasks that will be shown.
+
 ## 0.2d  Released Christmas, 2025
 
 - Fix a couple of regressions. favicon displaying, and rounded bottoms.
