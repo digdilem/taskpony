@@ -1,5 +1,7 @@
 # TASKPONY
 
+> "A small and simple self-hosted personal tasks organiser"
+
 - **T** ransparent — Open source and openly described. Even the database schema is documented.
 - **A** ir-gapped — Entirely self-contained. Runs without internet access, external services, or tracking.
 - **S** imple — Easy to install, easy to understand, and easy to operate.
@@ -8,8 +10,6 @@
 - **O** pen formats — Export tasks to CSV, PDF, clipboard, or print.
 - **N** o clutter — A focused interface that shows only what you actually need.
 - **Y** ours — Free to use and always will be — no commercial edition, no hosted version.
-
-> "A small and simple self-hosted personal tasks organiser"
 
 ![Main Task List](docs/tasks_short.jpg)
 
