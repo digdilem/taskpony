@@ -2085,6 +2085,8 @@ sub config_load {
             debug("WARN: no value found in ConfigTb for ($key), using config default");  # Value already declared at head, no need to change
             }
         }
+
+    check_latest_release();
     } # End config_load()
 
 ###############################################
@@ -2192,7 +2194,6 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     $stats->{stats_first_task_created} = $dbh->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
     $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
     $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
-
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()    
