@@ -1169,10 +1169,6 @@ my $app = sub {
                                     min="1" max="100">
                             </div>
 
-                            <div class="col-12">
-                                <button class="btn btn-primary">Save Settings</button>
-                            </div>
-
                             <!-- TOGGLE ROW cfg_background_image -->
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -1195,6 +1191,11 @@ my $app = sub {
                                 </div>
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary">Save Settings</button>
+                            </div>
+
 
                         </form>
 
