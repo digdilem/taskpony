@@ -1631,6 +1631,8 @@ sub footer {
 
     # Show label for a new version if it exists
     if ( ($config->{cfg_version_check} eq 'on') && ($github_latest_version > $app_version) ) {
+print STDERR "!! NEW VERSION ALERT THIS ($app_version) github ($github_latest_version)\n";
+
         $html .= qq~
             <span class="badge rounded-pill  bg-$config->{cfg_header_colour} text-white">
                 <a href="$app_releases_page">
