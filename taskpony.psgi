@@ -1305,10 +1305,10 @@ $html .= qq~
         my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
 
         if ($upload->size > 5 * 1024 * 1024) {
-            print STDERR "Uploaded background is too large\n"; }
+            print STDERR "Uploaded background is too large\n";
             add_alert("Uploaded image was too large. Size limited to 5MB");
             return [302, [ Location => '/config' ], []];
-            }
+        }
 
         my $type = $upload->content_type;
         my $ext =
