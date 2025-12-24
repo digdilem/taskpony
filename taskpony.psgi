@@ -2353,6 +2353,7 @@ sub check_latest_release {
         # Parse the tag_name from the JSON response
         my $data = decode_json($res->{content});
         $github_latest_version = $data->{tag_name};
+        $github_latest_version =~ s/\D//g;   # Just return the digits for numeric comparison
         print STDERR "Latest version check returned ($github_latest_version)\n";
         } else {
         print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
