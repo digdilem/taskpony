@@ -45,6 +45,7 @@ my $app_version = '0.3';               # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
 my $github_latest_version = '';         # Latest version available on github.
+my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
 
 
 my $dbh;                        # Global database handle 
@@ -1625,7 +1626,23 @@ sub footer {
         <br>
         </main>
         <footer class="text-center text-white-50 py-2">
-            <p><a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a></p>
+            <p>
+            ~;
+
+    # Show label for a new version if it exists
+    if ( ($config->{cfg_version_check} eq 'on') && ($github_latest_version > $app_version) ) {
+        $html .= qq~
+            <span class="badge rounded-pill  bg-$config->{cfg_header_colour}">
+                <a href="$app_releases_page">
+                    New version available
+                </a>
+            </span>
+        ~;
+        }
+
+    $html .= qq~
+            <a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
+            </p>
         </footer>
 
         <script>
