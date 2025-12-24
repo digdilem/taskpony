@@ -10,6 +10,8 @@ use Plack::Request;         # Perl PSGI web framework
 use Plack::Response;        # Ditto
 use DBI;                    # Database interface for SQLite
 use Time::Local;            # For human friendly date function
+use HTTP::Tiny;             # To fetch latest version from github
+use JSON::PP;               # Part github json response
 
 use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
@@ -40,6 +42,9 @@ our $config = {
 my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.3';               # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
+my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
+my $github_latest_version = '';         # Latest version available on github.
+
 
 my $dbh;                        # Global database handle 
 my $list_id = 1;                # Current list id
@@ -1286,7 +1291,7 @@ $html .= qq~
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
                         <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
-                            <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add new task to '$list_name' " />
+                            <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$list_name' " />
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
                         <h2>
@@ -2082,27 +2087,6 @@ sub config_load {
         }
     } # End config_load()
 
-
-# ###############################################
-# # load_config($dbh, $config)
-# # Load all key/value pairs from ConfigTb into $config hashref
-# sub load_config {
-#     print STDERR "Loading configuration from ConfigTb\n";
-
-#     my $sth = $dbh->prepare(
-#         'SELECT key, value FROM ConfigTb'
-#         ) or die $dbh->errstr;
-
-#     $sth->execute or die $sth->errstr;
-
-#     while (my ($key, $value) = $sth->fetchrow_array) {
-#         $config->{$key} = $value;
-#         }
-
-#     return;
-#     } # End load_config()
-
-
 ###############################################
 # Open a consistent bootstrap 5 card for most pages
 sub start_card {
@@ -2354,6 +2338,26 @@ sub ensure_sensible_config_range {
         $config->{$config_key} = $max;
         }
     }
+
+###############################################
+# check_latest_release()
+# Get latest release from github
+sub check_latest_release {
+    my $http = HTTP::Tiny->new(
+        agent => 'taskpony-version-check/1.0',
+        timeout => 10,
+    );
+    my $res = $http->get($url);
+    if ($res->{success}) {
+        # Parse the tag_name from the JSON response
+        $github_latest_version = $data->{tag_name};
+        print STDERR "Latest version check returned ($github_latest_version)\n";
+        } else {
+        print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
+        $github_version = '0';  
+        }
+    }  # End check_latest_release()
+
 
 ##############################################
 # End Functions
