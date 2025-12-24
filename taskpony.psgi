@@ -41,7 +41,7 @@ our $config = {
 ###############################################
 # Global variables that are used throughout - do not change these.  
 my $app_title = 'Taskpony';             # Name of app.
-my $app_version = '0.1';               # Version of app
+my $app_version = '0.3';               # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
