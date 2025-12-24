@@ -1172,8 +1172,6 @@ my $app = sub {
                             <div class="col-12">
                                 <button class="btn btn-primary">Save Settings</button>
                             </div>
-                        </form>
-
 
                             <!-- TOGGLE ROW cfg_background_image -->
                             <div class="mb-3">
@@ -1197,6 +1195,8 @@ my $app = sub {
                                 </div>
                                 </div>
                             </div>
+
+                        </form>
 
 
                         <form method="post" action="/background_set" enctype="multipart/form-data">
@@ -1660,7 +1660,13 @@ sub header {
     </head>
     <body 
         class="text-white d-flex flex-column min-vh-100"
-        style="background: url('/static/background.jpg?ts=<?=time()?>') center / cover no-repeat;"
+        ~;
+
+    if ($config->{'cfg_background_image'} eq 'on') {   # Show a background if enabled.
+        $html .= qq~  style="background: url('/static/background.jpg?ts=<?=time()?>') center / cover no-repeat;"  ~;
+        }
+
+    $html .= qq~
         >
     <main class="flex-grow-1 container py-4">
     
