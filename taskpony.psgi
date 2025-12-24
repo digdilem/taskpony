@@ -1634,7 +1634,7 @@ sub header {
     </head>
     <body 
         class="text-white d-flex flex-column min-vh-100"
-        style="background: url('/static/background.jpg') center / cover no-repeat;"
+        style="background: url('/static/background.jpg?ts=<?=time()?>') center / cover no-repeat;"
         >
     <main class="flex-grow-1 container py-4">
     
