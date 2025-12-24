@@ -939,8 +939,8 @@ my $app = sub {
                         debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
-                        # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check') {
+                        # Special handling for checkboxes which will return void if not set
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check|cfg_include_datatable_search|cfg_background_image') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -1083,6 +1083,8 @@ my $app = sub {
                                 </div>
                                 </div>
                             </div>
+
+
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
@@ -1173,10 +1175,34 @@ my $app = sub {
                         </form>
 
 
+                            <!-- TOGGLE ROW cfg_background_image -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                <span class="config-label">                                    
+                                    Enable background image
+                                    <span data-bs-toggle="tooltip" title="If enabled, an JPG can be uploaded through this form below and will be used as a background">
+                                        $fa_info_small
+                                    </span>
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_background_image" 
+                                    id="autoUpdateToggle"
+                                    ~;
+
+                                    # Precheck this if set
+                                    if ($config->{'cfg_background_image'} eq 'on') { $html .= " checked "; }
+
+                                    $html .= qq~
+                                    >
+                                </div>
+                                </div>
+                            </div>
+
+
                         <form method="post" action="/background_set" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="background" class="form-label">
-                            Background image
+                            Change the background image
                             </label>
                             <input
                             class="form-control"
