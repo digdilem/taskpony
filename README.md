@@ -7,7 +7,7 @@
 - **S** imple — Easy to install, easy to understand, and easy to operate.
 - **K** eep everything — Unlimited tasks and unlimited lists — no artificial limits.
 - **P** rivate — Your data stays with you. No cloud, no telemetry, no external dependencies.
-- **O** pen formats — Export tasks to CSV, PDF, clipboard, or print.
+- **O** pen — Export tasks to CSV, PDF, clipboard, or print cleanly.
 - **N** o clutter — A focused interface that shows only what you actually need.
 - **Y** ours — Free to use and always will be — no commercial edition, no hosted version.
 
@@ -45,9 +45,6 @@ See some more [Screenshots](#screenshots)
 - [Credits](#credits)
 - [Licence](#licence)
 
-# Security 
-
-Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare Tunnels](https://www.cloudflare.com) protected by an Access policy.
 
 # Installation
 
@@ -151,6 +148,9 @@ WorkingDirectory=/opt/taskpony
 
 See output logs with `journalctl -u taskpony` or the current status with `systemctl status taskpony`
 
+# Security 
+
+Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare Tunnels](https://www.cloudflare.com) protected by an Access policy.
 
 # FAQ
 
