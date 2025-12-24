@@ -1308,12 +1308,11 @@ $html .= qq~
             print STDERR "Uploaded background is too large\n";
             add_alert("Uploaded image was too large. Size limited to 5MB");
             return [302, [ Location => '/config' ], []];
-        }
+            }
 
         my $type = $upload->content_type;
         my $ext =
-            $type eq 'image/jpeg' ? 'jpg' :
-            $type eq 'image/png'  ? 'png' :
+            $type eq 'image/jpeg' ? 'jpg' 
             return [400, [], ['Unsupported type']];
 
         $upload->copy_to("/opt/taskpony/static/background.jpg")  or return [500, [], ['Save failed']];
