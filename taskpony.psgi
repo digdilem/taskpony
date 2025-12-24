@@ -2367,7 +2367,7 @@ sub ensure_sensible_config_range {
 # check_latest_release()
 # Get latest release from github
 sub check_latest_release {    
-    if ($config->{'cfg_version_check'} ne 'on')} {           # If disabled, return early
+    if ($config->{'cfg_version_check'} ne 'on') {           # If disabled, return early
         return;
         }
 
