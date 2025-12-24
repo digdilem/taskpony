@@ -2348,7 +2348,7 @@ sub check_latest_release {
         agent => 'taskpony-version-check/1.0',
         timeout => 10,
     );
-    my $res = $http->get($url);
+    my $res = $http->get($github_version_url);
     if ($res->{success}) {
         # Parse the tag_name from the JSON response
         $github_latest_version = $data->{tag_name};
