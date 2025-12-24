@@ -1164,7 +1164,30 @@ my $app = sub {
                                     value="$config->{cfg_list_short_length}" 
                                     name="cfg_list_short_length"
                                     min="1" max="100">
-                            </div>                            
+                            </div>
+
+<form method="post" action="/background_set" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="background" class="form-label">
+      Background image
+    </label>
+    <input
+      class="form-control"
+      type="file"
+      id="background"
+      name="background"
+      accept="image/jpeg"
+      required
+    >
+    <div class="form-text">
+      Upload a JPG to  replace the current background image.
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">
+    Upload background
+  </button>
+</form>                            
 
                             <div class="col-12">
                                 <button class="btn btn-primary">Save Settings</button>
