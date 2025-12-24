@@ -8,7 +8,6 @@ use warnings;
 
 use Plack::Request;         # Perl PSGI web framework
 use Plack::Response;        # Ditto
-use Plack::Request::Upload; # For uploading a background image
 use DBI;                    # Database interface for SQLite
 use Time::Local;            # For human friendly date function
 use HTTP::Tiny;             # To fetch latest version from github
@@ -21,6 +20,7 @@ use FindBin;
 
 # Database Path. If you install Taskpony as a SystemD service elsewhere than /opt/taskpony - you'll need to change this.
 my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
+my $bg_path = '/opt/taskpony/static/background.jpg';   # Path to the background picture, if used.
 
 ###############################################
 # Default configuration. Don't change them here, use /config page.
@@ -1173,28 +1173,28 @@ my $app = sub {
                         </form>
 
 
-        <form method="post" action="/background_set" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="background" class="form-label">
-            Background image
-            </label>
-            <input
-            class="form-control"
-            type="file"
-            id="background"
-            name="background"
-            accept="image/jpeg"
-            required
-            >
-            <div class="form-text">
-            Upload a JPG to  replace the current background image.
-            </div>
-        </div>
+                        <form method="post" action="/background_set" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="background" class="form-label">
+                            Background image
+                            </label>
+                            <input
+                            class="form-control"
+                            type="file"
+                            id="background"
+                            name="background"
+                            accept="image/jpeg"
+                            required
+                            >
+                            <div class="form-text">
+                            Upload a JPG to  replace the current background image.
+                            </div>
+                        </div>
 
-        <button type="submit" class="btn btn-primary">
-            Upload background
-        </button>
-        </form>
+                        <button type="submit" class="btn btn-primary">
+                            Upload background
+                        </button>
+                        </form>
 
                     </div>
                 </div>
@@ -1341,7 +1341,21 @@ $html .= qq~
             $type eq 'image/jpeg' ? 'jpg' :
             return [400, [], ['Unsupported type']];
 
-        $upload->copy_to("/opt/taskpony/static/background.jpg")  or return [500, [], ['Save failed']];
+#        $upload->copy_to("/opt/taskpony/static/background.jpg")  or return [500, [], ['Save failed']];
+
+ # Source temp file provided by Plack
+    my $src = $upload->path
+        or return [500, [], ['Upload has no temp path']];
+
+    # Atomic write
+    my $tmp = "$bg_path.tmp";
+
+    copy($src, $tmp)
+        or return [500, [], ["Copy failed: $!"]];
+
+    rename $tmp, $bg_path
+        or return [500, [], ["Rename failed: $!"]];
+
 
         add_alert("Background image updated");
         return [302, [ Location => '/config' ], []];
