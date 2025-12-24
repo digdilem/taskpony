@@ -8,6 +8,7 @@ use warnings;
 
 use Plack::Request;         # Perl PSGI web framework
 use Plack::Response;        # Ditto
+use Plack::Request::Upload; # For uploading a background image
 use DBI;                    # Database interface for SQLite
 use Time::Local;            # For human friendly date function
 use HTTP::Tiny;             # To fetch latest version from github
@@ -1172,28 +1173,28 @@ my $app = sub {
                         </form>
 
 
-<form method="post" action="/background_set" enctype="multipart/form-data">
-  <div class="mb-3">
-    <label for="background" class="form-label">
-      Background image
-    </label>
-    <input
-      class="form-control"
-      type="file"
-      id="background"
-      name="background"
-      accept="image/jpeg"
-      required
-    >
-    <div class="form-text">
-      Upload a JPG to  replace the current background image.
-    </div>
-  </div>
+        <form method="post" action="/background_set" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="background" class="form-label">
+            Background image
+            </label>
+            <input
+            class="form-control"
+            type="file"
+            id="background"
+            name="background"
+            accept="image/jpeg"
+            required
+            >
+            <div class="form-text">
+            Upload a JPG to  replace the current background image.
+            </div>
+        </div>
 
-  <button type="submit" class="btn btn-primary">
-    Upload background
-  </button>
-</form>                            
+        <button type="submit" class="btn btn-primary">
+            Upload background
+        </button>
+        </form>
 
                     </div>
                 </div>
