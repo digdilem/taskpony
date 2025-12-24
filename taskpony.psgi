@@ -1541,7 +1541,10 @@ sub header {
     </style>
 
     </head>
-    <body class="text-white d-flex flex-column min-vh-100">
+    <body 
+        class="text-white d-flex flex-column min-vh-100"
+        style="background: url('/static/background.jpg') center / cover no-repeat;"
+        >
     <main class="flex-grow-1 container py-4">
     
     <div class="container py-1">        
