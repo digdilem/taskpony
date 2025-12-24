@@ -1895,7 +1895,7 @@ sub show_tasks {
                     $title
                     ~;
             if ($description) {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}"$fa_comment_small</span> ~;
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">$fa_comment_small</span> ~;
                 }
                     qq~                    
                     </a>
