@@ -1299,6 +1299,30 @@ $html .= qq~
     # End named paths
 
     ###############################################
+    # /background_set  = Receive new background upload
+    if ($req->method eq 'POST' && $req->path eq '/background_set') {
+
+        my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
+
+        if ($upload->size > 5 * 1024 * 1024) {
+            print STDERR "Uploaded background is too large\n"; }
+            add_alert("Uploaded image was too large. Size limited to 5MB");
+            return [302, [ Location => '/config' ], []];
+            }
+
+        my $type = $upload->content_type;
+        my $ext =
+            $type eq 'image/jpeg' ? 'jpg' :
+            $type eq 'image/png'  ? 'png' :
+            return [400, [], ['Unsupported type']];
+
+        $upload->copy_to("/opt/taskpony/static/background.jpg")  or return [500, [], ['Save failed']];
+
+        add_alert("Background image updated");
+        return [302, [ Location => '/config' ], []];
+    } # End /background_set
+
+    ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
     # /?delete_task=nn - Delete task nn 
