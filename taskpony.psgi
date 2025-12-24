@@ -1638,7 +1638,7 @@ sub footer {
             </span> 
             &nbsp;
         ~;
-        }class="text-white text-decoration-none"
+        }
 
     $html .= qq~
             <a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
