@@ -1632,7 +1632,7 @@ sub footer {
     if ( ($config->{cfg_version_check} eq 'on') && ($new_version_available == 1 ) ) {
         $html .= qq~
             <span class="badge rounded-pill  bg-$config->{cfg_header_colour}">
-                <a href="$app_releases_page" class="text-white text-decoration-none">
+                <a href="$app_releases_page" class="text-white text-decoration-none" target="_blank">
                     New version available
                 </a>
             </span> 
