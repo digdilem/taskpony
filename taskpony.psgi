@@ -2351,6 +2351,7 @@ sub check_latest_release {
     my $res = $http->get($github_version_url);
     if ($res->{success}) {
         # Parse the tag_name from the JSON response
+        my $data = decode_json($res->{content});
         $github_latest_version = $data->{tag_name};
         print STDERR "Latest version check returned ($github_latest_version)\n";
         } else {
