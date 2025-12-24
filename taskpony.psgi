@@ -2385,7 +2385,7 @@ sub ensure_sensible_config_range {
 # Get latest release from github
 sub check_latest_release {    
     if ($config->{'cfg_version_check'} ne 'on') { return; }             # If disabled, return early
-    if ($normalised_app_version == 1) { return; }                       # No point checking again if we know there is a new version waiting
+    if ($new_version_available == 1) { return; }                       # No point checking again if we know there is a new version waiting
 
     my $github_latest_version;
 
