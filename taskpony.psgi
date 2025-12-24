@@ -1631,14 +1631,14 @@ sub footer {
     # Show label for a new version if it exists
     if ( ($config->{cfg_version_check} eq 'on') && ($new_version_available == 1 ) ) {
         $html .= qq~
-            <span class="badge rounded-pill  bg-$config->{cfg_header_colour} text-white text-decoration-none">
-                <a href="$app_releases_page">
+            <span class="badge rounded-pill  bg-$config->{cfg_header_colour}">
+                <a href="$app_releases_page" class="text-white text-decoration-none">
                     New version available
                 </a>
             </span> 
             &nbsp;
         ~;
-        }
+        }class="text-white text-decoration-none"
 
     $html .= qq~
             <a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
