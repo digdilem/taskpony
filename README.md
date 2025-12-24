@@ -16,13 +16,17 @@
 |-------------------------------------------------------------|--------------------------------------------------|
 | <img src="docs/tasklist.jpg" height="600" align="center"> | <img src="docs/taskpony_mobile.jpg" height="600" align="center"> |
 
-Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
 
-No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included.
+# Features
+
+Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed. 
+
+No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included. 
 
 See some more [Screenshots](#screenshots)
 
 **Quick start** - Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
+
 
 ## Table of contents 
 

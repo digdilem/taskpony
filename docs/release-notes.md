@@ -4,6 +4,7 @@
 ## 0.3  
 
 Task List:
+- You can now upload a JPG for a page background. There is a toggle in /config and a new upload form. 
 - "Show completed/active tasks" button now includes the number of tasks that will be shown.
 - Tasks that have a description now show an info icon to indicate that they can be hovered to see it.
 
