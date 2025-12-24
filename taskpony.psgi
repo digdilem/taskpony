@@ -1312,7 +1312,7 @@ $html .= qq~
 
         my $type = $upload->content_type;
         my $ext =
-            $type eq 'image/jpeg' ? 'jpg' 
+            $type eq 'image/jpeg' ? 'jpg' :
             return [400, [], ['Unsupported type']];
 
         $upload->copy_to("/opt/taskpony/static/background.jpg")  or return [500, [], ['Save failed']];
