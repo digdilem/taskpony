@@ -44,9 +44,8 @@ my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.3';               # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
-my $github_latest_version = '';         # Latest version available on github.
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
-
+my $new_version_available = 0;
 
 my $dbh;                        # Global database handle 
 my $list_id = 1;                # Current list id
@@ -1630,15 +1629,14 @@ sub footer {
             ~;
 
     # Show label for a new version if it exists
-    if ( ($config->{cfg_version_check} eq 'on') && ($github_latest_version > $app_version) ) {
-print STDERR "!! NEW VERSION ALERT THIS ($app_version) github ($github_latest_version)\n";
-
+    if ( ($config->{cfg_version_check} eq 'on') && ($new_version_available == 1 ) ) {
         $html .= qq~
             <span class="badge rounded-pill  bg-$config->{cfg_header_colour} text-white">
                 <a href="$app_releases_page">
                     New version available
                 </a>
-            </span>
+            </span> 
+            &nbsp;
         ~;
         }
 
@@ -2386,29 +2384,35 @@ sub ensure_sensible_config_range {
 # check_latest_release()
 # Get latest release from github
 sub check_latest_release {    
-    if ($config->{'cfg_version_check'} ne 'on') {           # If disabled, return early
-        return;
-        }
+    if ($config->{'cfg_version_check'} ne 'on') { return; }             # If disabled, return early
+    if ($normalised_app_version == 1) { return; }                       # No point checking again if we know there is a new version waiting
+
+    my $github_latest_version;
 
     my $http = HTTP::Tiny->new(
-        agent => 'taskpony-version-check/1.0',
+        agent => 'taskpony-version-check/$app_version',
         timeout => 10
         );
 
     my $res = $http->get($github_version_url);
     if ($res->{success}) {
-        # Parse the tag_name from the JSON response
         my $data = decode_json($res->{content});
         $github_latest_version = $data->{tag_name};
-        $github_latest_version =~ s/[^0-9.]//g;
-#        $github_latest_version =~ s/\D//g;   # Just return the digits for numeric comparison
-        print STDERR "Latest version check returned ($github_latest_version)\n";
+        $github_latest_version =~ s/\D//g;   # Just return the digits for numeric comparison
         } else {
         print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
-        $github_latest_version = '0';  
+        return;        
         }
-    }  # End check_latest_release()
+    
+    my $normalised_app_version = $app_version;
+    $normalised_app_version =~ s/\D//g;
 
+    if ($github_latest_version > $normalised_app_version) {
+        print STDERR "New version of $app_title is available\n";
+        $new_version_available = 1;
+        }
+    return;
+    }  # End check_latest_release()
 
 ##############################################
 # End Functions
