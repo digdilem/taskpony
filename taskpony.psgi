@@ -1166,6 +1166,12 @@ my $app = sub {
                                     min="1" max="100">
                             </div>
 
+                            <div class="col-12">
+                                <button class="btn btn-primary">Save Settings</button>
+                            </div>
+                        </form>
+
+
 <form method="post" action="/background_set" enctype="multipart/form-data">
   <div class="mb-3">
     <label for="background" class="form-label">
@@ -1189,10 +1195,6 @@ my $app = sub {
   </button>
 </form>                            
 
-                            <div class="col-12">
-                                <button class="btn btn-primary">Save Settings</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
