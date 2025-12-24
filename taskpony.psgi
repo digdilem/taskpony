@@ -34,6 +34,7 @@ our $config = {
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
+    cfg_version_check =? 'on',                  # Whether to occasionally check for new releases
     database_schema_version => 1,               # Don't change this.
     };
 
@@ -938,7 +939,7 @@ my $app = sub {
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -1059,6 +1060,28 @@ my $app = sub {
                                 </div>
                             </div>
 
+                            <!-- TOGGLE ROW cfg_version_check -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                <span class="config-label">                                    
+                                    Check for new versions
+                                    <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of its and show a small badge in the footer if one is available">
+                                        $fa_info_small
+                                    </span>
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_version_check" 
+                                    id="autoUpdateToggle"
+                                    ~;
+
+                                    # Precheck this if set
+                                    if ($config->{'cfg_export_allcfg_version_check_cols'} eq 'on') { $html .= " checked "; }
+
+                                    $html .= qq~
+                                    >
+                                </div>
+                                </div>
+                            </div>
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
@@ -2343,11 +2366,16 @@ sub ensure_sensible_config_range {
 ###############################################
 # check_latest_release()
 # Get latest release from github
-sub check_latest_release {
+sub check_latest_release {    
+    if ($cfg->{'cfg_version_check'} ne 'on')} {           # If disabled, return early
+        return;
+        }
+
     my $http = HTTP::Tiny->new(
         agent => 'taskpony-version-check/1.0',
-        timeout => 10,
-    );
+        timeout => 10
+        );
+
     my $res = $http->get($github_version_url);
     if ($res->{success}) {
         # Parse the tag_name from the JSON response
