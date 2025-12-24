@@ -2356,7 +2356,7 @@ sub check_latest_release {
         print STDERR "Latest version check returned ($github_latest_version)\n";
         } else {
         print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
-        $github_version = '0';  
+        $github_latest_version = '0';  
         }
     }  # End check_latest_release()
 
