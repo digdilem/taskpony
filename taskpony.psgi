@@ -36,6 +36,7 @@ our $config = {
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
+    cfg_background_image => 'on',
     database_schema_version => 1,               # Don't change this.
     };
 
@@ -1084,6 +1085,29 @@ my $app = sub {
                                 </div>
                             </div>
 
+                            <!-- TOGGLE ROW cfg_background_image -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                <span class="config-label">                                    
+                                    Enable background image
+                                    <span data-bs-toggle="tooltip" title="If enabled, an JPG can be uploaded through this form below and will be used as a background">
+                                        $fa_info_small
+                                    </span>
+                                </span>
+                                <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_background_image" 
+                                    id="autoUpdateToggle"
+                                    ~;
+
+                                    # Precheck this if set
+                                    if ($config->{'cfg_background_image'} eq 'on') { $html .= " checked "; }
+
+                                    $html .= qq~
+                                    >
+                                </div>
+                                </div>
+                            </div>
+
 
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3">
@@ -1167,29 +1191,6 @@ my $app = sub {
                                     value="$config->{cfg_list_short_length}" 
                                     name="cfg_list_short_length"
                                     min="1" max="100">
-                            </div>
-
-                            <!-- TOGGLE ROW cfg_background_image -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    Enable background image
-                                    <span data-bs-toggle="tooltip" title="If enabled, an JPG can be uploaded through this form below and will be used as a background">
-                                        $fa_info_small
-                                    </span>
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_background_image" 
-                                    id="autoUpdateToggle"
-                                    ~;
-
-                                    # Precheck this if set
-                                    if ($config->{'cfg_background_image'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
                             </div>
 
                             <div class="col-12">
