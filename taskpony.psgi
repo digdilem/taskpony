@@ -1075,7 +1075,7 @@ my $app = sub {
                                     ~;
 
                                     # Precheck this if set
-                                    if ($config->{'cfg_export_allcfg_version_check_cols'} eq 'on') { $html .= " checked "; }
+                                    if ($config->{'cfg_version_check'} eq 'on') { $html .= " checked "; }
 
                                     $html .= qq~
                                     >
