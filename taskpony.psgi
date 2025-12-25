@@ -1223,8 +1223,8 @@ $html .= qq~
 <br/> 
 
 <form method="post" action="/background_set" enctype="multipart/form-data">
-    <div class="mb-10">
-        <label for="background" class="form-label">
+  <div class="col-12 col-md">
+          <label for="background" class="form-label">
         Background image
         </label>
         <input 
