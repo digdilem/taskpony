@@ -962,121 +962,231 @@ my $app = sub {
             return $res->finalize;
             } # End /config form submission handling
 
-        ###############################################
-        # Show configuration page
-#        my $html .= header();
 
-###############################################
-$html .= header();
+        ###############################################
+        my $html .= header();
 
 $html .= start_card("Settings", $fa_gear, 0);
-
 $html .= qq~
-<form method="post" action="/config" style="display:inline;">
-    <input type="hidden" name="save_config" value="true">
-~;
+<form method="post" action="/config">
+<input type="hidden" name="save_config" value="true">
 
-# ---------------- TOGGLE ROWS ----------------
-my @toggles = (
-    ['cfg_show_dates_lists', 'Show Dates and Lists in Tasks Table', 'Show the Dates and Lists columns in the Tasks table, showing just Task names'],
-    ['cfg_include_datatable_search', 'Display Search Box', 'Display the search box at the top right of the tasks table'],
-    ['cfg_include_datatable_buttons', 'Display export buttons', 'Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc'],
-    ['cfg_export_all_cols', 'Export date and list', 'Include the date and list when exporting tasks'],
-    ['cfg_version_check', 'Check for new versions', 'Occasionally check for new Taskpony versions and show a badge if available'],
-    ['cfg_background_image', 'Enable background image', 'Allow uploading a JPG to use as background'],
-);
+<!-- ===== Display ===== -->
+<h6 class="text-muted mb-2">Display</h6>
 
-for my $t (@toggles) {
-    my ($name,$label,$tooltip) = @$t;
-    $html .= qq~
-    <div class="mb-3">
-        <div class="d-flex justify-content-between align-items-center">
-            <span class="config-label">
-                $label
-                <span data-bs-toggle="tooltip" title="$tooltip">$fa_info_small</span>
-            </span>
-            <div class="form-check form-switch m-0">
-                <input class="form-check-input" type="checkbox" name="$name"
-                    id="$name"~;
-    if ($config->{$name} eq 'on') { $html .= " checked "; }
-    $html .= qq~
-                >
-            </div>
-        </div>
-    </div>
-    ~;
-}
-
-# ---------------- PICKLIST ----------------
-$html .= qq~
-<div class="mb-3">
-    <span class="config-label">
-        Title Background Colour
-        <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">$fa_info_small</span>
-        <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <span class="config-label">
+    Show Dates and Lists in Tasks Table
+    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names">
+      $fa_info_small
     </span>
-    <div>
-        <select class="form-select" id="themeColor" name="cfg_header_colour">
-            <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
-            <option value="primary" class="bg-primary text-white">Primary</option>
-            <option value="secondary" class="bg-secondary text-white">Secondary</option>
-            <option value="success" class="bg-success text-white">Success</option>
-            <option value="danger" class="bg-danger text-white">Danger</option>
-            <option value="warning" class="bg-warning text-dark">Warning</option>
-            <option value="info" class="bg-info text-dark">Info</option>
-            <option value="light" class="bg-light text-dark">Light</option>
-            <option value="dark" class="bg-dark text-white">Dark</option>
-        </select>
-    </div>
+  </span>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists"
+      ~;
+      if ($config->{'cfg_show_dates_lists'} eq 'on') { $html .= " checked "; }
+      $html .= qq~>
+  </div>
 </div>
-~;
 
-# ---------------- NUMBER INPUTS ----------------
-my @numbers = (
-    ['cfg_backup_number_to_keep', 'Number of daily backups to keep', 'Each day Taskpony makes a backup. Controls how many days to keep. Range 1-100', 1, 100],
-    ['cfg_task_pagination_length', 'Number of Tasks to show on each page', 'How many tasks to show per page before paginating. Range 3-1000', 3, 1000],
-    ['cfg_description_short_length', 'Max length of popup task description', 'Max characters to display in popup task description. Range 3-1000', 3, 1000],
-    ['cfg_list_short_length', 'Max length of List name in Tasks list', 'Max characters for List title before truncating. Range 1-100', 1, 100],
-);
-
-for my $n (@numbers) {
-    my ($name,$label,$tooltip,$min,$max) = @$n;
-    $html .= qq~
-    <div class="mb-3">
-        <span class="config-label">
-            $label
-            <span data-bs-toggle="tooltip" title="$tooltip">$fa_info_small</span>
-        </span>
-        <input type="number" class="form-control"
-            value="$config->{$name}"
-            name="$name"
-            min="$min" max="$max">
-    </div>
-    ~;
-}
-
-$html .= qq~
-<div class="col-12">
-    <button class="btn btn-primary">Save Settings</button>
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <span class="config-label">
+    Display Search Box
+    <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
+      $fa_info_small
+    </span>
+  </span>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search"
+      ~;
+      if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
+      $html .= qq~>
+  </div>
 </div>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <span class="config-label">
+    Display export buttons
+    <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list">
+      $fa_info_small
+    </span>
+  </span>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" name="cfg_include_datatable_buttons"
+      ~;
+      if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $html .= " checked "; }
+      $html .= qq~>
+  </div>
+</div>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <span class="config-label">
+    Export date and list
+    <span data-bs-toggle="tooltip" title="Include date and list when exporting tasks">
+      $fa_info_small
+    </span>
+  </span>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" name="cfg_export_all_cols"
+      ~;
+      if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
+      $html .= qq~>
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== System ===== -->
+<h6 class="text-muted mb-2">System</h6>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <span class="config-label">
+    Check for new versions
+    <span data-bs-toggle="tooltip" title="Check periodically for new versions of Taskpony">
+      $fa_info_small
+    </span>
+  </span>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" name="cfg_version_check"
+      ~;
+      if ($config->{'cfg_version_check'} eq 'on') { $html .= " checked "; }
+      $html .= qq~>
+  </div>
+</div>
+
+<div class="mb-3 d-flex justify-content-between align-items-center">
+  <span class="config-label">
+    Enable background image
+    <span data-bs-toggle="tooltip" title="Enable uploaded background image">
+      $fa_info_small
+    </span>
+  </span>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" name="cfg_background_image"
+      ~;
+      if ($config->{'cfg_background_image'} eq 'on') { $html .= " checked "; }
+      $html .= qq~>
+  </div>
+</div>
+
+<hr>
+
+<!-- ===== Appearance ===== -->
+<h6 class="text-muted mb-2">Appearance</h6>
+
+<div class="mb-3">
+  <label class="form-label">
+    Title Background Colour
+    <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
+      $fa_info_small
+    </span>
+    <span class="badge bg-$config->{cfg_header_colour}">
+      $config->{cfg_header_colour}
+    </span>
+  </label>
+  <select class="form-select" name="cfg_header_colour">
+    <option value="$config->{cfg_header_colour}">Current</option>
+    <option value="primary">Primary</option>
+    <option value="secondary">Secondary</option>
+    <option value="success">Success</option>
+    <option value="danger">Danger</option>
+    <option value="warning">Warning</option>
+    <option value="info">Info</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+
+<hr>
+
+<!-- ===== Limits ===== -->
+<h6 class="text-muted mb-2">Limits</h6>
+
+<div class="mb-3">
+  <label class="form-label">
+    Number of daily backups to keep
+    <span data-bs-toggle="tooltip" title="Range 1–100">
+      $fa_info_small
+    </span>
+  </label>
+  <input type="number" class="form-control"
+    value="$config->{cfg_backup_number_to_keep}"
+    name="cfg_backup_number_to_keep"
+    min="1" max="100">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">
+    Tasks per page
+    <span data-bs-toggle="tooltip" title="Range 3–1000">
+      $fa_info_small
+    </span>
+  </label>
+  <input type="number" class="form-control"
+    value="$config->{cfg_task_pagination_length}"
+    name="cfg_task_pagination_length"
+    min="3" max="1000">
+</div>
+
+<div class="mb-3">
+  <label class="form-label">
+    Popup description length
+    <span data-bs-toggle="tooltip" title="Range 3–1000">
+      $fa_info_small
+    </span>
+  </label>
+  <input type="number" class="form-control"
+    value="$config->{cfg_description_short_length}"
+    name="cfg_description_short_length"
+    min="3" max="1000">
+</div>
+
+<div class="mb-4">
+  <label class="form-label">
+    List name length
+    <span data-bs-toggle="tooltip" title="Range 1–100">
+      $fa_info_small
+    </span>
+  </label>
+  <input type="number" class="form-control"
+    value="$config->{cfg_list_short_length}"
+    name="cfg_list_short_length"
+    min="1" max="100">
+</div>
+
+<div class="d-flex justify-content-end">
+  <button class="btn btn-primary">Save Settings</button>
+</div>
+
 </form>
 
 <hr class="my-4">
 
-<!-- BACKGROUND IMAGE UPLOAD -->
+<!-- ===== Background upload (separate form) ===== -->
 <form method="post" action="/background_set" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="background" class="form-label">Change the background image</label>
-        <input class="form-control" type="file" id="background" name="background" accept="image/jpeg" required>
-        <div class="form-text">Upload a JPG to replace the current background image.</div>
-    </div>
-    <button type="submit" class="btn btn-primary">Upload background</button>
+  <h6 class="text-muted mb-2">Background image</h6>
+
+  <div class="mb-3">
+    <label for="background" class="form-label">Change the background image</label>
+    <input class="form-control" type="file" id="background" name="background" accept="image/jpeg" required>
+    <div class="form-text">Upload a JPG to replace the current background image.</div>
+  </div>
+
+  <button type="submit" class="btn btn-outline-primary">Upload background</button>
 </form>
+
 ~;
 
+$html .= footer();
+$res->body($html);
+return $res->finalize;
+} # End /config
 
-###############################################
 
+
+        ###############################################
+        # Show configuration page
+        # my $html .= header();
 
         # $html .= start_card("Settings", $fa_gear, 0);
         # $html .= qq~
@@ -1342,10 +1452,10 @@ $html .= qq~
         # </div>                    
         # ~;
 
-        $html .= footer();
-        $res->body($html);
-        return $res->finalize;
-        } # End /config
+        # $html .= footer();
+        # $res->body($html);
+        # return $res->finalize;
+        # } # End /config
 
         ###############################################
         # Stats page - show calculated statistics
