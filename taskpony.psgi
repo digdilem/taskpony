@@ -1717,7 +1717,6 @@ sub header {
                         
                     </div>
                 </div>
-
             ~;
 
     return $html;
@@ -2245,9 +2244,6 @@ sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
     my $html = qq~
-        <div class="container py-2">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
                     <div class="card shadow-sm">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
