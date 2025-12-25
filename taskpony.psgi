@@ -1681,41 +1681,44 @@ sub header {
             $html .= qq~
             <div class="container py-1">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
-                    <div>
-                        <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a>
+                    <div class="d-flex align-items-center gap-2">
+                        <img src="/static/taskpony-logo.png" width="42" height="42">
+                        <h3 class="mb-0">
+                            <a href="/" class="text-white text-decoration-none">
+                                $app_title
+                            </a>
+                        </h3>
                         ~;
     
     # Add the list selection pulldown
     $html .= list_pulldown($list_id);  
 
     $html .= qq~
-            </div>
-        </h3>
-            <div class="btn-group" role="group">
+                    </div>
+                    <div class="btn-group" role="group">
 
-                <a href="/lists"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" title="Manage Lists" >
-                    $fa_list
-                </a>
+                        <a href="/lists"
+                            class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                            data-bs-toggle="tooltip" title="Manage Lists" >
+                            $fa_list
+                        </a>
 
-                <a href="/stats"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                    data-bs-toggle="tooltip" title="Statistics" >
-                    $fa_chart
-                </a>
+                        <a href="/stats"
+                            class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" title="Statistics" >
+                            $fa_chart
+                        </a>
 
-                <a href="/config"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                    data-bs-toggle="tooltip" title="Settings" >
-                    $fa_gear
-                </a>
-                
-            </div>
-            
-        </div>
-    </div>
-    ~;
+                        <a href="/config"
+                            class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" title="Settings" >
+                            $fa_gear
+                        </a>
+                        
+                    </div>
+                    
+
+            ~;
 
     return $html;
     } # End header()
