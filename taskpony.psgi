@@ -1657,6 +1657,7 @@ sub header {
         body { background-color: #1A2122; }
         .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
         .muted { color: rgba(255,255,255,0.65); }
+        .dt-hidden { visibility: hidden; }
     </style>
 
     </head>
@@ -1748,6 +1749,7 @@ sub footer {
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
+                initComplete: function () { $('#users').removeClass('dt-hidden'); }
                 ~;
 
             # Show search if configured
@@ -1951,7 +1953,7 @@ sub show_tasks {
     $sth->execute($status);
 
     my $html = qq~
-        <table id="tasks" class="display hover table-striped" style="width:90%">
+        <table id="tasks" class="display hover table-striped dt-hidden" style="width:90%">
             <thead>
                 <tr>
                     <th>&nbsp;</th>

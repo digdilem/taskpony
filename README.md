@@ -345,6 +345,7 @@ Taskpony is built with the help of this great FOSS software:
 - [JQuery](https://jquery.com/) (Bundled)
 - [Datatables](https://datatables.net/) (Bundled)
 - [Fontawesome](https://fontawesome.com/) (Embedded SVGs)
+- [Tyna_Janoch](https://pixabay.com/photos/forest-nature-trees-beech-autumn-7573541/) for the example background image
 
 # Roadmap
 
