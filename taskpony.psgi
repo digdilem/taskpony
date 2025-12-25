@@ -2235,7 +2235,7 @@ sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
     my $html = qq~
-        <div class="container py-5">
+        <div class="container py-2">
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="card shadow-sm">
