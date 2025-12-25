@@ -1659,6 +1659,7 @@ sub header {
         .muted { color: rgba(255,255,255,0.65); }
         .dt-hidden { visibility: hidden; }
         .header-bar { min-height: 72px; }
+        .card { min-height: 75vh; }
     </style>
 
     </head>
@@ -2244,9 +2245,7 @@ sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
     my $html = qq~
-    <div class="row justify-content-center h-100">
-  <div class="col-md-10 d-flex flex-column">
-    <div class="card shadow-sm flex-grow-1">
+                    <div class="card shadow-sm">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
@@ -2297,8 +2296,6 @@ sub end_card {
     my $html = qq~
                 </div>
             </div>
-        </div>
-        </div>
         </div>
         ~;
     return $html;
