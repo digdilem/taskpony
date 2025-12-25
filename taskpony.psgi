@@ -613,8 +613,7 @@ my $app = sub {
                             <table class="table table-dark table-striped">
                                 <thead>
                                     <tr>
-                                        <th>List</th>
-                                        <th>Go</th>
+                                        <th>List</th> 
                                         <th>Description</th>
                                         <th>Active Tasks</th>
                                         <th>Completed Tasks</th>
@@ -686,13 +685,9 @@ my $app = sub {
                                         </strong>
                                     </td>
                                     <td>
-                                                                            
-                                            <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
-                                                $fa_goto
-                                            </a>
-</td>
-                                    <td>
-
+                                        <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
+                                          $fa_goto &nbsp;
+                                        </a>
                                         $desc
                                     </td>
                                     <td>$active_count</td>
