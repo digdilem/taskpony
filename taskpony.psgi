@@ -973,8 +973,12 @@ $html .= qq~
             <form method="post" action="/config" style="display:inline;">
             <input type="hidden" name="save_config" value="true">
 
+            <div class="container bg-dark text-white">
+                <div class="row">
+                    <div class="col">
+
             <div class="row g-4">
-                <div class="card bg-dark text-white">
+                <div class="card ">
                         <h5 class="card-title">Display Settings</h5>
 
                         <!-- TOGGLE ROW cfg_show_dates_lists -->
