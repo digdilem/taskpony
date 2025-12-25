@@ -970,35 +970,38 @@ my $html .= header();
 
 $html .= start_card("Settings", $fa_gear, 0);
 $html .= qq~
-<form method="post" action="/config" style="display:inline;">
-<input type="hidden" name="save_config" value="true">
+            <form method="post" action="/config" style="display:inline;">
+            <input type="hidden" name="save_config" value="true">
 
-<div class="row g-4">
+            <div class="row g-4">
 
+                <div class="col-12 col-md-6">
 
-<div class="col-12 col-md-6">
-  <div class="border rounded p-3">
+                    <div class="border rounded p-3">
 
-    <!-- TOGGLE ROW cfg_show_dates_lists -->
-        <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-            <span class="config-label">
-                <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
-                Show Dates and Lists in Tasks Table
-                </span> 
-            </span>
-            <div class="form-check form-switch m-0">
-            <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists" 
-                id="autoUpdateToggle"
-                ~;
-                # Precheck this if set
-                if ($config->{'cfg_show_dates_lists'} eq 'on') { $html .= " checked "; }
+                        <!-- TOGGLE ROW cfg_show_dates_lists -->
+                        <div class="mb-3">
+                            <p>HELLO</p>
 
-                $html .= qq~
-                >
-            </div>
-            </div>
-        </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="config-label">
+                                    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
+                                    Show Dates and Lists in Tasks Table
+                                    </span> 
+                                </span>
+
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists" 
+                                    id="autoUpdateToggle"
+                                    ~;
+                                    # Precheck this if set
+                                    if ($config->{'cfg_show_dates_lists'} eq 'on') { $html .= " checked "; }
+
+                                    $html .= qq~
+                                    >
+                            </div>
+                        </div>
+                    </div>
 
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3">
