@@ -2719,7 +2719,7 @@ sub config_show_option {
 
     if ($type eq 'colour') { # Colour picker
         $retstr .= qq~
-            <select class="form-select" id="themeColor" name="$key">                                        
+            <select class="form-select w-25" id="themeColor" name="$key">                                        
                 <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
                 <option value="primary" class="bg-primary text-white">Primary</option>
                 <option value="secondary" class="bg-secondary text-white">Secondary</option>
