@@ -977,11 +977,11 @@ $html .= qq~
 
                 <div class="col-12 col-md-6">
 
-                    <div class="border rounded p-3">
+                    <div class="card" style="width: 18rem;">
+                        <h5 class="card-title">Display Settings</h5>
 
                         <!-- TOGGLE ROW cfg_show_dates_lists -->
                         <div class="mb-3">
-                            <h5>Display Settings</h5>
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">
