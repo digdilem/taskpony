@@ -265,7 +265,7 @@ my $app = sub {
         # If page, show the add-task form
         my $html = header();
         $html .= qq~
-            <div class="container py-4">
+            <div class="container py-2">
                 <h3 class="mb-3">Add Task</h3>
                 <form method="post" action="/add" class="row g-3">
                 <div class="col-12">
