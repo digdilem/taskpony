@@ -992,7 +992,7 @@ $html .= qq~
                     ~;
 
                     # output values 
-                     $html .= config_show_option('cfg_include_datatable_search','Display the search box at the top right of the tasks table',1,0,0);
+                     $html .= config_show_option('cfg_include_datatable_search','Display Search Box','Show the search box at the top right of the Tasks table','check',0,0);
 
 
             $html .= qq~
