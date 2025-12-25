@@ -2905,8 +2905,7 @@ sub config_show_option {
         <div class="d-flex align-items-center justify-content-between p-3 bg-dark text-white rounded" style="max-width: 500px;">
             <label class="form-check-label" for="$key" data-bs-toggle="tooltip" title="$description" >
             $title
-            </label>
-        ~;
+            </label> ~;
 
     if ($type eq 'check') {  # Checkbox 
         $retstr .= qq~
@@ -2915,14 +2914,18 @@ sub config_show_option {
                 
             if ($config->{$key} eq 'on') { $retstr .= " checked "; }
 
-
             $retstr .= qq~>
             </div>
             ~;
         } 
     
     if ($type eq 'number') { # Numerical entry
-
+        $retstr .= qq~
+            <input type="number" class="form-control" 
+                value="$config->{$key}" 
+                name="$key"
+                min="$num_range_lower" max="$num_range_upper">
+            ~;
         }
 
     if ($type eq 'colour') { # Colour picker
@@ -2934,6 +2937,20 @@ sub config_show_option {
         <!-- End Display config option for $key -->
         ~;
 
+
+#                             <!-- NUMBER ROW cfg_description_short_length -->
+#                             <div class="mb-3">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
+#                                         Max length of List name in Tasks list
+#                                     </span>
+#                                 </span>
+
+#                                 <input type="number" class="form-control" 
+#                                     value="$config->{cfg_list_short_length}" 
+#                                     name="cfg_list_short_length"
+#                                     min="1" max="100">
+#                             </div>
 
 #     <div class="d-flex align-items-center justify-content-between">
 #     <div class="form-check">
