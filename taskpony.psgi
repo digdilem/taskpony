@@ -1067,7 +1067,7 @@ my $app = sub {
                                 <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
                                     Check for new versions
-                                    <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of its and show a small badge in the footer if one is available">
+                                    <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available">
                                         $fa_info_small
                                     </span>
                                 </span>
@@ -1759,7 +1759,10 @@ sub footer {
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
-                initComplete: function () { \$('#tasks').removeClass('dt-hidden'); },
+                initComplete: function () { 
+                    \$('#tasks').removeClass('dt-hidden'); 
+                    \$('#exportBtn').removeClass('d-none'); 
+                    },
                 ~;
 
             # Show search if configured
@@ -2126,7 +2129,7 @@ sub show_tasks {
     if ($show_completed == 0) {
         my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
         $html .= qq~
-            <a href="/?sc=1" class="btn btn-secondary btn">Show $cnt_completed_tasks completed tasks in '$list_name'</a>
+            <a href="/?sc=1" class="btn btn-secondary btn d-none" id="exportBtn">Show $cnt_completed_tasks completed tasks in '$list_name'</a>
             ~;
         } else {
         my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
