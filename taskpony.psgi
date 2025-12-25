@@ -1673,6 +1673,8 @@ sub header {
     $html .= qq~
         >
     <main class="flex-grow-1 container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">    
     <div class="container py-1">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 header-bar">        
             <div>
@@ -1721,6 +1723,8 @@ sub footer {
 
     $html .= qq~
         <br>
+        </div>
+        </div>
         </main>
         <footer class="text-center text-white-50 py-2">
             <p>
