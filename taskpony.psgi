@@ -2901,6 +2901,7 @@ sub config_show_option {
     my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
 
     my $retstr= qq~
+        <!-- Display config option for $key -->
         <div class="p-3 bg-dark text-white rounded" style="max-width: 500px;">
             <label class="form-check-label ms-2" for="$key" data-bs-toggle="tooltip" title="$description" >
             $title
@@ -2928,7 +2929,10 @@ sub config_show_option {
 
         }
 
-    $retstr .- "</div>";
+    $retstr .= q~
+        </div>
+        <!-- End Display config option for $key -->
+        ~;
 
 
 #     <div class="d-flex align-items-center justify-content-between">
