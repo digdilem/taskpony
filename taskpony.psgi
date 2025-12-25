@@ -2902,7 +2902,7 @@ sub config_show_option {
 
     my $retstr= qq~
         <!-- Display config option for $key -->
-        <div class="p-3 bg-dark text-white rounded d-flex align-items-center justify-content-between" style="max-width: 500px;">
+        <div class="p-3 bg-dark text-white rounded d-flex  justify-content-between" style="max-width: 500px;">
             <label class="form-check-label ms-2" for="$key" data-bs-toggle="tooltip" title="$description" >
             $title
             </label>
