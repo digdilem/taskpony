@@ -1223,8 +1223,10 @@ $html .= qq~
 <br/> 
 
 <form method="post" action="/background_set" enctype="multipart/form-data">
-  <label for="background" class="form-label">
-    Change the background image
+  <label for="background" class="form-label"  
+    data-bs-toggle="tooltip"
+    title="If enabled above, Taskpony can show a background image on the page">
+        Change the background image
   </label>
   
   <div class="row g-2 align-items-center">
