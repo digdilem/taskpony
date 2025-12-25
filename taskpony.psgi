@@ -967,7 +967,6 @@ my $app = sub {
 #        my $html .= header();
 
 ###############################################
-
 $html .= header();
 
 $html .= start_card("Settings", $fa_gear, 0);
@@ -1035,8 +1034,45 @@ $html .= qq~
 # ---------------- NUMBER INPUTS ----------------
 my @numbers = (
     ['cfg_backup_number_to_keep', 'Number of daily backups to keep', 'Each day Taskpony makes a backup. Controls how many days to keep. Range 1-100', 1, 100],
-    ['cfg_task_pagination_length', 'Number of Tasks to show on each page', 'How many tasks to show per page before paginating. Range 3-1000', 3,_]()
+    ['cfg_task_pagination_length', 'Number of Tasks to show on each page', 'How many tasks to show per page before paginating. Range 3-1000', 3, 1000],
+    ['cfg_description_short_length', 'Max length of popup task description', 'Max characters to display in popup task description. Range 3-1000', 3, 1000],
+    ['cfg_list_short_length', 'Max length of List name in Tasks list', 'Max characters for List title before truncating. Range 1-100', 1, 100],
+);
 
+for my $n (@numbers) {
+    my ($name,$label,$tooltip,$min,$max) = @$n;
+    $html .= qq~
+    <div class="mb-3">
+        <span class="config-label">
+            $label
+            <span data-bs-toggle="tooltip" title="$tooltip">$fa_info_small</span>
+        </span>
+        <input type="number" class="form-control"
+            value="$config->{$name}"
+            name="$name"
+            min="$min" max="$max">
+    </div>
+    ~;
+}
+
+$html .= qq~
+<div class="col-12">
+    <button class="btn btn-primary">Save Settings</button>
+</div>
+</form>
+
+<hr class="my-4">
+
+<!-- BACKGROUND IMAGE UPLOAD -->
+<form method="post" action="/background_set" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="background" class="form-label">Change the background image</label>
+        <input class="form-control" type="file" id="background" name="background" accept="image/jpeg" required>
+        <div class="form-text">Upload a JPG to replace the current background image.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload background</button>
+</form>
+~;
 
 
 ###############################################
