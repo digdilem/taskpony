@@ -996,6 +996,7 @@ $html .= qq~
                                 # Precheck this if set
                                 if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
                                 $html .= qq~
+                                >
                             </div>
                         </div>
 
