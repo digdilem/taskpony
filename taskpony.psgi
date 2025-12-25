@@ -974,8 +974,7 @@ $html .= qq~
             <input type="hidden" name="save_config" value="true">
 
             <div class="row g-4">
-
-                    <div class="card" style="width: 18rem;">
+                <div class="card bg-dark text-white">
                         <h5 class="card-title">Display Settings</h5>
 
                         <!-- TOGGLE ROW cfg_show_dates_lists -->
