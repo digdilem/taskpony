@@ -975,8 +975,6 @@ $html .= qq~
 
             <div class="row g-4">
 
-                <div class="col-12 col-md-6">
-
                     <div class="card" style="width: 18rem;">
                         <h5 class="card-title">Display Settings</h5>
 
