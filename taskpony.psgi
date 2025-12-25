@@ -1207,9 +1207,6 @@ $html .= qq~
                                     min="1" max="100">
                             </div>
 
-                            <div class="col-12">
-                                <button class="btn btn-primary">Save Settings</button>
-                            </div>
 
   </div>
 </div>
@@ -1223,30 +1220,37 @@ $html .= qq~
 
 </form>
 
- 
+<br/> 
 
-                        <form method="post" action="/background_set" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="background" class="form-label">
-                            Change the background image
-                            </label>
-                            <input
-                            class="form-control"
-                            type="file"
-                            id="background"
-                            name="background"
-                            accept="image/jpeg"
-                            required
-                            >
-                            <div class="form-text">
-                            Upload a JPG to  replace the current background image.
-                            </div>
-                        </div>
+<form method="post"
+      action="/background_set"
+      enctype="multipart/form-data"
+      class="row g-3 align-items-end">
 
-                        <button type="submit" class="btn btn-primary">
-                            Upload background
-                        </button>
-                        </form>
+  <div class="col-12 col-md">
+    <label for="background" class="form-label">
+      Change the background image
+    </label>
+    <input
+      class="form-control"
+      type="file"
+      id="background"
+      name="background"
+      accept="image/jpeg"
+      required
+    >
+    <div class="form-text">
+      Upload a JPG to replace the current background image.
+    </div>
+  </div>
+
+  <div class="col-12 col-md-auto">
+    <button type="submit" class="btn btn-primary w-100 w-md-auto">
+      Upload background
+    </button>
+  </div>
+
+</form>
 
 
 
