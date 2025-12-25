@@ -983,8 +983,29 @@ $html .= qq~
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                         </div>
                   <div class="card-body">
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="form-check">
+      <input class="form-check-input bg-success border-success" type="checkbox" checked id="check2">
+      <label class="form-check-label ms-2" for="check2">
+        Display Search Box
+      </label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" checked>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="form-check">
+      <input class="form-check-input bg-success border-success" type="checkbox" checked id="check3">
+      <label class="form-check-label ms-2" for="check3">
+        Display Export Buttons
+      </label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" checked>
+    </div>
+  </div>
                 </div>
             </div>
 
