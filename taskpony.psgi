@@ -1749,7 +1749,7 @@ sub footer {
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
-                initComplete: function () { $('#users').removeClass('dt-hidden'); }
+                initComplete: function () { \$('#tasks').removeClass('dt-hidden'); }
                 ~;
 
             # Show search if configured
