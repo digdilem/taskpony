@@ -1659,7 +1659,6 @@ sub header {
         .muted { color: rgba(255,255,255,0.65); }
         .dt-hidden { visibility: hidden; }
         .header-bar { min-height: 72px; }
-        .card { min-height: 75vh; }
     </style>
 
     </head>
