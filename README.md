@@ -291,6 +291,8 @@ If a Default List is deleted, Taskpony will automatically select the oldest acti
 
 When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected. 
 
+Lists are Alpha-sorted and are case sensitive, so 'A-Z' then 'a-z'
+
 ## Database Backups
 
 Each day, Taskpony will automatically make a backup of its database by copying `taskpony.db` to `taskpony.db.0`, and rename any previous backups incrementally (.1 to .2, .0 to .1 etc) You can configure how many backups to keep in Settings -> `Number of daily database backups to keep`. 
@@ -320,6 +322,8 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 
 ![Main Task List](docs/tasklist.jpg)
 
+![Main Task List with Backround Picture enabled](docs/tasklist_background.jpg)
+
 ![Main Tasks List with dates and lists hidden](docs/tasklist_justtasks.jpg)
 
 ![List Management Page](docs/lists.jpg)
@@ -333,6 +337,8 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 ![Deleting a List](docs/delete_list.jpg)
 
 ![Statistics](docs/stats.jpg)
+
+![Subtle Alerts appear below the fold](docs/taskpony_alert.jpg)
 
 # Credits
 
@@ -366,7 +372,7 @@ Some features for the future that may, or may not, be added.
   - Ability to undelete Lists
   - A self reloading ability when another client changes the displayed list. May require a fairly bit switch to api style working
   - A history table for tasks and actions. Extra detail for tasks for recurring tasks, when lists were created, changed etc.
-  - A user configurable background picture.
+  
 
 - Unlikely:
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.
