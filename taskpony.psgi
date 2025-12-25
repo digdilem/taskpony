@@ -682,8 +682,9 @@ my $app = sub {
                                     <td>$completed_count</td>
                                     <td>$is_default_str</td>
                                     <td>
-                                        <a href-"/?lid=$list->{'id'}" class="btn-sm"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to list $title">                                    
+                                        <a href-"/?lid=$list->{'id'}" class="btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to list $title">
+                                            $fa_goto;
+                                        </a>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">Delete</button>
                                     </td>
                                 </tr>
