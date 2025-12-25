@@ -614,6 +614,7 @@ my $app = sub {
                                 <thead>
                                     <tr>
                                         <th>List</th>
+                                        <th>Go</th>
                                         <th>Description</th>
                                         <th>Active Tasks</th>
                                         <th>Completed Tasks</th>
