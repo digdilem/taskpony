@@ -966,106 +966,80 @@ my $app = sub {
         # Show configuration page
 #        my $html .= header();
 
-my $html .= header();
+###############################################
+
+$html .= header();
 
 $html .= start_card("Settings", $fa_gear, 0);
 
 $html .= qq~
-<form method="post" action="/config">
-
+<form method="post" action="/config" style="display:inline;">
     <input type="hidden" name="save_config" value="true">
-
-    <div class="row g-4">
-
-        <!-- TOGGLE SWITCHES -->
-        @{[
-            my @toggles = (
-                ['cfg_show_dates_lists', 'Show Dates and Lists in Tasks Table', 'Show the Dates and Lists columns in the Tasks table, showing just Task names'],
-                ['cfg_include_datatable_search', 'Display Search Box', 'Display the search box at the top right of the tasks table'],
-                ['cfg_include_datatable_buttons', 'Display export buttons', 'Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc'],
-                ['cfg_export_all_cols', 'Export date and list', 'Include the date and list when exporting tasks'],
-                ['cfg_version_check', 'Check for new versions', 'Occasionally check for new Taskpony versions and show a badge if available'],
-                ['cfg_background_image', 'Enable background image', 'Allow uploading a JPG to use as background'],
-            );
-            join '', map {
-                my ($name,$label,$tooltip) = @$_;
-                qq~
-                <div class="col-12 col-md-6">
-                    <div class="form-check form-switch d-flex justify-content-between align-items-center">
-                        <label class="form-check-label" for="$name">
-                            $label
-                            <span data-bs-toggle="tooltip" title="$tooltip">$fa_info_small</span>
-                        </label>
-                        <input class="form-check-input" type="checkbox" name="$name" id="$name"
-                            @{[ $config->{$name} eq 'on' ? 'checked' : '' ]}>
-                    </div>
-                </div>
-                ~
-            } @toggles
-        ]}
-
-        <!-- PICKLIST -->
-        <div class="col-12 col-md-6">
-            <label class="form-label" for="themeColor">
-                Title Background Colour
-                <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">$fa_info_small</span>
-            </label>
-            <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
-            <select class="form-select mt-2" id="themeColor" name="cfg_header_colour">
-                <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
-                <option value="primary" class="bg-primary text-white">Primary</option>
-                <option value="secondary" class="bg-secondary text-white">Secondary</option>
-                <option value="success" class="bg-success text-white">Success</option>
-                <option value="danger" class="bg-danger text-white">Danger</option>
-                <option value="warning" class="bg-warning text-dark">Warning</option>
-                <option value="info" class="bg-info text-dark">Info</option>
-                <option value="light" class="bg-light text-dark">Light</option>
-                <option value="dark" class="bg-dark text-white">Dark</option>
-            </select>
-        </div>
-
-        <!-- NUMBER INPUTS -->
-        @{[
-            my @numbers = (
-                ['cfg_backup_number_to_keep', 'Number of daily backups to keep', 'Each day Taskpony makes a backup. Controls how many days to keep. Range 1-100', 1, 100],
-                ['cfg_task_pagination_length', 'Number of Tasks to show on each page', 'How many tasks to show per page before paginating. Range 3-1000', 3, 1000],
-                ['cfg_description_short_length', 'Max length of popup task description', 'Max characters to display in popup task description. Range 3-1000', 3, 1000],
-                ['cfg_list_short_length', 'Max length of List name in Tasks list', 'Max characters for List title before truncating. Range 1-100', 1, 100],
-            );
-            join '', map {
-                my ($name,$label,$tooltip,$min,$max) = @$_;
-                qq~
-                <div class="col-12 col-md-6">
-                    <label class="form-label" for="$name">
-                        $label
-                        <span data-bs-toggle="tooltip" title="$tooltip">$fa_info_small</span>
-                    </label>
-                    <input type="number" class="form-control" name="$name" id="$name" value="$config->{$name}" min="$min" max="$max">
-                </div>
-                ~
-            } @numbers
-        ]}
-
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Save Settings</button>
-        </div>
-
-    </div>
-</form>
-
-<hr class="my-4">
-
-<!-- BACKGROUND IMAGE UPLOAD -->
-<form method="post" action="/background_set" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label for="background" class="form-label">Change the background image</label>
-        <input class="form-control" type="file" id="background" name="background" accept="image/jpeg" required>
-        <div class="form-text">Upload a JPG to replace the current background image.</div>
-    </div>
-    <button type="submit" class="btn btn-primary">Upload background</button>
-</form>
 ~;
 
+# ---------------- TOGGLE ROWS ----------------
+my @toggles = (
+    ['cfg_show_dates_lists', 'Show Dates and Lists in Tasks Table', 'Show the Dates and Lists columns in the Tasks table, showing just Task names'],
+    ['cfg_include_datatable_search', 'Display Search Box', 'Display the search box at the top right of the tasks table'],
+    ['cfg_include_datatable_buttons', 'Display export buttons', 'Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc'],
+    ['cfg_export_all_cols', 'Export date and list', 'Include the date and list when exporting tasks'],
+    ['cfg_version_check', 'Check for new versions', 'Occasionally check for new Taskpony versions and show a badge if available'],
+    ['cfg_background_image', 'Enable background image', 'Allow uploading a JPG to use as background'],
+);
+
+for my $t (@toggles) {
+    my ($name,$label,$tooltip) = @$t;
+    $html .= qq~
+    <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="config-label">
+                $label
+                <span data-bs-toggle="tooltip" title="$tooltip">$fa_info_small</span>
+            </span>
+            <div class="form-check form-switch m-0">
+                <input class="form-check-input" type="checkbox" name="$name"
+                    id="$name"~;
+    if ($config->{$name} eq 'on') { $html .= " checked "; }
+    $html .= qq~
+                >
+            </div>
+        </div>
+    </div>
+    ~;
+}
+
+# ---------------- PICKLIST ----------------
+$html .= qq~
+<div class="mb-3">
+    <span class="config-label">
+        Title Background Colour
+        <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">$fa_info_small</span>
+        <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
+    </span>
+    <div>
+        <select class="form-select" id="themeColor" name="cfg_header_colour">
+            <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
+            <option value="primary" class="bg-primary text-white">Primary</option>
+            <option value="secondary" class="bg-secondary text-white">Secondary</option>
+            <option value="success" class="bg-success text-white">Success</option>
+            <option value="danger" class="bg-danger text-white">Danger</option>
+            <option value="warning" class="bg-warning text-dark">Warning</option>
+            <option value="info" class="bg-info text-dark">Info</option>
+            <option value="light" class="bg-light text-dark">Light</option>
+            <option value="dark" class="bg-dark text-white">Dark</option>
+        </select>
+    </div>
+</div>
+~;
+
+# ---------------- NUMBER INPUTS ----------------
+my @numbers = (
+    ['cfg_backup_number_to_keep', 'Number of daily backups to keep', 'Each day Taskpony makes a backup. Controls how many days to keep. Range 1-100', 1, 100],
+    ['cfg_task_pagination_length', 'Number of Tasks to show on each page', 'How many tasks to show per page before paginating. Range 3-1000', 3,_]()
+
+
+
+###############################################
 
 
         # $html .= start_card("Settings", $fa_gear, 0);
