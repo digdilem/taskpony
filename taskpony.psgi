@@ -983,18 +983,20 @@ $html .= qq~
                     <!-- COLUMN ONE ############################################### -->                    
                     <div class="col">
                         <div class="card bg-dark text-white" style="width: 18rem;">
-                            <h5 class="card-title">Visual Settings</h5>
+                            <h5 class="card-title">Task List Settings</h5>
                         </div>
 
                     <div class="card-body">
                     ~;
 
                     # Draw Row 1 - Visual Settings
-                     $html .= config_show_option('cfg_include_datatable_search','Display Search Box','Show the search box at the top right of the Tasks table','check',0,0);
-                     $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
-                     $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
-                     $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
-                     $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
+                    $html .= config_show_option('cfg_include_datatable_search','Display Search Box','Show the search box at the top right of the Tasks table','check',0,0);
+                    $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0);
+ 
+                    $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
+                    $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
+                    $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
+                    $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
 
             $html .= qq~
                 </div>
@@ -1003,12 +1005,24 @@ $html .= qq~
 
             # Row Two
             $html .= qq~
+                <div class="col">
+                    <div class="card bg-dark text-white" style="width: 18rem;">
+                        <h5 class="card-title">Other Settings</h5>
+                    </div>
 
-            <div class="col">
-            2 of 2
+                <div class="card-body">
+                ~;
+               
+                $html .= config_show_option('cfg_export_all_cols','Export date and list','When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task','check',0,0);
+
+
+            $html .= qq~
             </div>
 
             ~;
+
+
+
 
 #             # Row Three
 #             $html .= qq~
@@ -1089,51 +1103,8 @@ $html .= qq~
 #                     </div>
 
 
-#                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
-#                             <div class="mb-3">
-#                                 <div class="d-flex justify-content-between align-items-center">
-#                                 <span class="config-label">                                                                        
-#                                     <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
-#                                         Display export buttons
-#                                     </span>
-#                                 </span>
-#                                 <div class="form-check form-switch m-0">
-#                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_buttons" 
-#                                     id="autoUpdateToggle"
-#                                     ~;
-
-#                                     # Precheck this if set
-#                                     if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $html .= " checked "; }
-
-#                                     $html .= qq~
-#                                     >
-#                                 </div>
-#                                 </div>
-#                             </div>
 
 
-
-#                             <!-- TOGGLE ROW cfg_export_all_cols -->
-#                             <div class="mb-3">
-#                                 <div class="d-flex justify-content-between align-items-center">
-#                                 <span class="config-label">                                     
-#                                     <span data-bs-toggle="tooltip" title="When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task">
-#                                         Export date and list
-#                                     </span>
-#                                 </span>
-#                                 <div class="form-check form-switch m-0">
-#                                 <input class="form-check-input" type="checkbox" name="cfg_export_all_cols" 
-#                                     id="autoUpdateToggle"
-#                                     ~;
-
-#                                     # Precheck this if set
-#                                     if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
-
-#                                     $html .= qq~
-#                                     >
-#                                 </div>
-#                                 </div>
-#                             </div>
 
 #                             <!-- TOGGLE ROW cfg_version_check -->
 #                             <div class="mb-3">
