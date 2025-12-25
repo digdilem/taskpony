@@ -2252,7 +2252,7 @@ sub start_card {
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none" id="moretaskBtn" >~; }  # If a table, hide the whole card until loaded
 
-    $html = qq~
+    $html .= qq~
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
@@ -2301,9 +2301,9 @@ sub start_mini_card {
 # Close the card
 sub end_card {
     my $html = qq~
-                </div>
-            </div>
-        </div>
+                            </div>
+                        </div>
+                    </div>
         ~;
     return $html;
     } # End end_card()
