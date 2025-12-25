@@ -677,14 +677,17 @@ my $app = sub {
             $html .= qq~
                                 <tr>
                                     <td><strong><span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">$title</a></span></strong></td>
-                                    <td>$desc</td>
+                                    <td>
+                                        <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
+                                            $fa_goto
+                                        </a>
+                                        $desc
+                                    </td>
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
                                     <td>$is_default_str</td>
                                     <td>
-                                        <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to list $title">
-                                            $fa_goto
-                                        </a>
+
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">Delete</button>
                                     </td>
                                 </tr>
