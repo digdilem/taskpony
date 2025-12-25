@@ -1,4 +1,4 @@
-#!/usr/bin/env/perl
+/config#!/usr/bin/env/perl
 # Taskpony - a simple perl PSGI web app for various daily tasks
 # Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
 # MIT Licence
@@ -984,51 +984,36 @@ $html .= qq~
 
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <label class="form-check-label ms-2" for="cfg_include_datatable_search"
-                                data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">                                 
-                                Display Search Box
-                            </label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
-                                    id="autoUpdateToggle"
-                                    ~;
-                                # Precheck this if set
-                                if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
-                                $html .= qq~
-                                >
-                            </div>
                         </div>
+                    ~;
 
+                    # output values 
 
+            $html .= config_show_option('cfg_include_datatable_search','Display the search box at the top right of the tasks table',1,0,0);
 
-
-
-
-
-
-
-
-
-                    </div>
-                </div>
-
-
-                    <div class="col">
-                    2 of 2
-                    </div>
-                </div>
-
-                </div>
-
-
-
+$html .= qq~
+</div>
+</div>
+</div>
 </form>
-</div>
-</div>
-</div>
 ~;
 
+
+
+
+                            # <label class="form-check-label ms-2" for="cfg_include_datatable_search"
+                            #     data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">                                 
+                            #     Display Search Box
+                            # </label>
+                            # </div>
+                            # <div class="form-check form-switch">
+                            #     <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
+                            #         id="autoUpdateToggle"
+                            #         ~;
+                            #     # Precheck this if set
+                            #     if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
+                            #     $html .= qq~
+                            #     >
 
 
 #                         <div class="card bg-dark text-white">
@@ -2869,6 +2854,46 @@ sub check_latest_release {
         }
     return;
     }  # End check_latest_release()
+
+###############################################
+# config_show_option($key, $description, $isCheckbox, $num_range_lower, $numrange_upper);
+# Output a line of a setting  for /config forms
+sub config_show_option { 
+    my ($key, $description, $isCheckbox, $num_range_lower, $num_range_upper) = @_;
+
+    my $retstr= qq~
+    <div class="d-flex align-items-center justify-content-between">
+    <div class="form-check">
+      <input class="form-check-input bg-success border-success" type="checkbox" checked id="check3">
+      <label class="form-check-label ms-2" for="check3">
+        Display Export Buttons
+      </label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" checked>
+    </div>
+  </div>
+    ~;
+
+
+                            # <label class="form-check-label ms-2" for="cfg_include_datatable_search"
+                            #     data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">                                 
+                            #     Display Search Box
+                            # </label>
+                            # </div>
+                            # <div class="form-check form-switch">
+                            #     <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
+                            #         id="autoUpdateToggle"
+                            #         ~;
+                            #     # Precheck this if set
+                            #     if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
+                            #     $html .= qq~
+                            #     >
+                            # </div>
+
+    return $retstr;
+    } # end config_show_option()
+
 
 ##############################################
 # End Functions
