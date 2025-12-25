@@ -2122,7 +2122,7 @@ sub show_tasks {
     $html .= qq~
             </tbody>
         </table>
-        <br><hr><br>
+        <br><br>
         ~;
 
     # Display a link to toggle between showing completed/active tasks
@@ -2135,7 +2135,7 @@ sub show_tasks {
         my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
 
         $html .= qq~
-            <a href="/" class="btn btn-secondary btn">Show $cnt_active_tasks active tasks in '$list_name'</a>
+            <a href="/" class="btn btn-secondary btn d-none" id="exportBtn">Show $cnt_active_tasks active tasks in '$list_name'</a>
             ~;
         }
 
