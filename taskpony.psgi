@@ -1013,15 +1013,16 @@ $html .= qq~
                 <div class="card-body">
                 ~;
                
-                $html .= config_show_option('cfg_export_all_cols','Export date and list','When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task','check',0,0);
+                $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
+                $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
+                $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
+                $html .= config_show_option('cfg_header_colour','Highlight Colour','Select colour for panel header backgrounds and highlights','colour',0,0);
 
 
             $html .= qq~
             </div>
 
             ~;
-
-
 
 
 #             # Row Three
@@ -1106,27 +1107,6 @@ $html .= qq~
 
 
 
-#                             <!-- TOGGLE ROW cfg_version_check -->
-#                             <div class="mb-3">
-#                                 <div class="d-flex justify-content-between align-items-center">
-#                                 <span class="config-label">                                    
-#                                     <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available">
-#                                         Check for new versions
-#                                     </span>
-#                                 </span>
-#                                 <div class="form-check form-switch m-0">
-#                                 <input class="form-check-input" type="checkbox" name="cfg_version_check" 
-#                                     id="autoUpdateToggle"
-#                                     ~;
-
-#                                     # Precheck this if set
-#                                     if ($config->{'cfg_version_check'} eq 'on') { $html .= " checked "; }
-
-#                                     $html .= qq~
-#                                     >
-#                                 </div>
-#                                 </div>
-#                             </div>
 
 #                             <!-- TOGGLE ROW cfg_background_image -->
 #                             <div class="mb-3">
@@ -1178,20 +1158,6 @@ $html .= qq~
 #                                         <option value="dark" class="bg-dark text-white">Dark</option>
 #                                     </select>
 #                                 </div>
-#                             </div>
-
-#                             <!-- NUMBER ROW cfg_backup_number_to_keep -->
-#                             <div class="mb-3">
-#                                 <span class="config-label">                                    
-#                                     <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
-#                                         Number of daily backups to keep
-#                                     </span>
-#                                 </span>
-
-#                                 <input type="number" class="form-control" 
-#                                     value="$config->{cfg_backup_number_to_keep}" 
-#                                     name="cfg_backup_number_to_keep"
-#                                     min="1" max="100">
 #                             </div>
 
 #                             <!-- NUMBER ROW cfg_task_pagination_length -->
@@ -2875,7 +2841,19 @@ sub config_show_option {
         }
 
     if ($type eq 'colour') { # Colour picker
-
+        $retstr .= qq~
+            <select class="form-select" id="themeColor" name="$key">                                        
+                <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
+                <option value="primary" class="bg-primary text-white">Primary</option>
+                <option value="secondary" class="bg-secondary text-white">Secondary</option>
+                <option value="success" class="bg-success text-white">Success</option>
+                <option value="danger" class="bg-danger text-white">Danger</option>
+                <option value="warning" class="bg-warning text-dark">Warning</option>
+                <option value="info" class="bg-info text-dark">Info</option>
+                <option value="light" class="bg-light text-dark">Light</option>
+                <option value="dark" class="bg-dark text-white">Dark</option>
+            </select>
+            ~;
         }
 
     $retstr .= qq~
@@ -2888,7 +2866,7 @@ sub config_show_option {
     return $retstr;
     } # end config_show_option()
 
-
+  
 ##############################################
 # End Functions
 
