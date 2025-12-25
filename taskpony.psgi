@@ -973,7 +973,11 @@ $html .= qq~
             <form method="post" action="/config" style="display:inline;">
             <input type="hidden" name="save_config" value="true">
 
-            <div class="container">
+            <div class="container">~;
+
+            # Row One
+
+            $html .= qq~
                 <div class="row">
 
                     <!-- COLUMN ONE ############################################### -->                    
@@ -989,7 +993,32 @@ $html .= qq~
 
                     # output values 
 
-            $html .= config_show_option('cfg_include_datatable_search','Display the search box at the top right of the tasks table',1,0,0);
+                     $html .= config_show_option('cfg_include_datatable_search','Display the search box at the top right of the tasks table',1,0,0);
+
+            $html .= qq~
+                </div>
+            </div>
+            ~;
+
+            # Row Two
+            $html .= qq~
+
+            <div class="col">
+            2 of 2
+            </div>
+
+            ~;
+
+            # Row Three
+            $html .= qq~
+
+            <div class="col">
+            3 of 3
+            </div>
+
+            ~;
+
+       
 
 $html .= qq~
 </div>
