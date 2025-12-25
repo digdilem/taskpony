@@ -1013,24 +1013,24 @@ $html .= qq~
 
             ~;
 
-            # Row Three
-            $html .= qq~
+#             # Row Three
+#             $html .= qq~
 
-            <div class="col">
-            3 of 3
-            </div>
+#             <div class="col">
+#             3 of 3
+#             </div>
 
-            ~;
+#             ~;
 
 
-            # Row Four
-            $html .= qq~
+#             # Row Four
+#             $html .= qq~
 
-            <div class="col">
-4 of 4
-            </div>
+#             <div class="col">
+# 4 of 4
+#             </div>
 
-            ~;
+#             ~;
 
        
 
