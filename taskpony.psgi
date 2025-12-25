@@ -1834,8 +1834,9 @@ sub header {
         class="text-white d-flex flex-column min-vh-100"
         ~;
 
-    if ($config->{'cfg_background_image'} eq 'on') {   # Show a background if enabled.
-        $html .= qq~  style="background: url('/static/background.jpg?ts=<?=time()?>') center / cover no-repeat;"  ~;
+    if ($config->{'cfg_background_image'} eq 'on') {   # Show a background if enabled. Use the mtime of the file to trigger a cache reload by the client
+        my $bg_mtime = (stat("./static/background.jpg"))[9] || time();  # 
+        $html .= qq~ style="background: url('/static/background.jpg?v=$mtime') center / cover no-repeat;" ~;
         }
 
     $html .= qq~
