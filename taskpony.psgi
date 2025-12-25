@@ -1238,8 +1238,8 @@ $html .= qq~
         <div class="form-text">
             Upload a JPG to  replace the current background image.
         </div>
-    </div>
-    <div class="mb-2">
+    </div>    
+      <div class="col-12 col-md-auto">
         <button type="submit" class="btn btn-primary">
             Upload
         </button>
