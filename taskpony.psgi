@@ -1195,9 +1195,8 @@ $html .= qq~
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
-                                    Max length of List name in Tasks list
                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
-                                        $fa_info_small
+                                        Max length of List name in Tasks list
                                     </span>
                                 </span>
 
