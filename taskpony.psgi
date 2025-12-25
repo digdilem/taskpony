@@ -992,8 +992,8 @@ $html .= qq~
                     ~;
 
                     # output values 
-
                      $html .= config_show_option('cfg_include_datatable_search','Display the search box at the top right of the tasks table',1,0,0);
+
 
             $html .= qq~
                 </div>
@@ -1014,6 +1014,16 @@ $html .= qq~
 
             <div class="col">
             3 of 3
+            </div>
+
+            ~;
+
+
+            # Row Four
+            $html .= qq~
+
+            <div class="col">
+4 of 4
             </div>
 
             ~;
@@ -2885,24 +2895,54 @@ sub check_latest_release {
     }  # End check_latest_release()
 
 ###############################################
-# config_show_option($key, $description, $isCheckbox, $num_range_lower, $numrange_upper);
+# config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper);
 # Output a line of a setting  for /config forms
 sub config_show_option { 
-    my ($key, $description, $isCheckbox, $num_range_lower, $num_range_upper) = @_;
+    my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
 
     my $retstr= qq~
-    <div class="d-flex align-items-center justify-content-between">
-    <div class="form-check">
-      <input class="form-check-input bg-success border-success" type="checkbox" checked id="check3">
-      <label class="form-check-label ms-2" for="check3">
-        Display Export Buttons
-      </label>
-    </div>
-    <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" checked>
-    </div>
-  </div>
-    ~;
+        <div class="p-3 bg-dark text-white rounded" style="max-width: 500px;">
+            <label class="form-check-label ms-2" for="$key" data-bs-toggle="tooltip" title="$description" >
+            $title
+            </label>
+        ~;
+
+    if ($type eq 'check') {  # Checkbox 
+        $retstr .= qq~
+            <div class="form-check form-switch mb-0">
+                <input class="form-check-input " type="checkbox" role="switch" id="autoUpdateToggle" name="$key" ~;
+                
+            if ($config->{$key} eq 'on') { $retstr .= " checked "; }
+
+
+            $retstr .= qq~>
+            </div>
+            ~;
+        } 
+    
+    if ($type eq 'number') { # Numerical entry
+
+        }
+
+    if ($type eq 'colour') { # Colour picker
+
+        }
+
+    $retstr .- "</div>";
+
+
+#     <div class="d-flex align-items-center justify-content-between">
+#     <div class="form-check">
+#       <input class="form-check-input bg-success border-success" type="checkbox" checked id="check3">
+#       <label class="form-check-label ms-2" for="check3">
+#         Display Export Buttons
+#       </label>
+#     </div>
+#     <div class="form-check form-switch">
+#       <input class="form-check-input" type="checkbox" role="switch" checked>
+#     </div>
+#   </div>
+#     ~;
 
 
                             # <label class="form-check-label ms-2" for="cfg_include_datatable_search"
