@@ -981,7 +981,7 @@ $html .= qq~
 
                         <!-- TOGGLE ROW cfg_show_dates_lists -->
                         <div class="mb-3">
-                            <h4>Display Settings</h4>
+                            <h5>Display Settings</h5>
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">
