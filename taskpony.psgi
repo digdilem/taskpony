@@ -979,35 +979,38 @@ $html .= qq~
                     <!-- COLUMN ONE ############################################### -->                    
                     <div class="col">
                         <div class="card bg-dark text-white" style="width: 18rem;">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <h5 class="card-title">Visual Settings</h5>
                         </div>
-                  <div class="card-body">
-<div class="d-flex align-items-center justify-content-between mb-3">
-    <div class="form-check">
-      <input class="form-check-input bg-success border-success" type="checkbox" checked id="check2">
-      <label class="form-check-label ms-2" for="check2">
-        Display Search Box
-      </label>
-    </div>
-    <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" checked>
-    </div>
-  </div>
 
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="form-check">
-      <input class="form-check-input bg-success border-success" type="checkbox" checked id="check3">
-      <label class="form-check-label ms-2" for="check3">
-        Display Export Buttons
-      </label>
-    </div>
-    <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" checked>
-    </div>
-  </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <label class="form-check-label ms-2" for="cfg_include_datatable_search"
+                                data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">                                 
+                                Display Search Box
+                            </label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
+                                    id="autoUpdateToggle"
+                                    ~;
+                                # Precheck this if set
+                                if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
+                                $html .= qq~
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
                 </div>
-            </div>
 
 
                     <div class="col">
@@ -1059,26 +1062,6 @@ $html .= qq~
 #                         </div>
 #                     </div>
 
-#                             <!-- TOGGLE ROW cfg_include_datatable_search -->
-#                             <div class="mb-3">
-#                                 <div class="d-flex justify-content-between align-items-center">
-#                                 <span class="config-label">                                    
-#                                     <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table"> 
-#                                         Display Search Box
-#                                     </span> 
-#                                 </span>
-#                                 <div class="form-check form-switch m-0">
-#                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
-#                                     id="autoUpdateToggle"
-#                                     ~;
-#                                     # Precheck this if set
-#                                     if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
-
-#                                     $html .= qq~
-#                                     >
-#                                 </div>
-#                                 </div>
-#                             </div>
 
 #                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
 #                             <div class="mb-3">
