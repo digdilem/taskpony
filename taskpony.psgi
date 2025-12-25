@@ -1636,9 +1636,9 @@ sub header {
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-     <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
 
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/jquery.dataTables.min.js"></script>
