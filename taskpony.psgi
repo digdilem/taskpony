@@ -973,277 +973,306 @@ $html .= qq~
             <form method="post" action="/config" style="display:inline;">
             <input type="hidden" name="save_config" value="true">
 
-            <div class="container bg-dark text-white">
+            <div class="container">
                 <div class="row">
                     <div class="col">
-
-            <div class="row g-4">
-                <div class="card ">
-                        <h5 class="card-title">Display Settings</h5>
-
-                        <!-- TOGGLE ROW cfg_show_dates_lists -->
-                        <div class="mb-3">
-
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">
-                                    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
-                                    Show Dates and Lists in Tasks Table
-                                    </span> 
-                                </span>
-
-                            <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists" 
-                                    id="autoUpdateToggle"
-                                    ~;
-                                    # Precheck this if set
-                                    if ($config->{'cfg_show_dates_lists'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                            </div>
-                        </div>
-                    </div>
-
-                            <!-- TOGGLE ROW cfg_include_datatable_search -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table"> 
-                                        Display Search Box
-                                    </span> 
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
-                                    id="autoUpdateToggle"
-                                    ~;
-                                    # Precheck this if set
-                                    if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
-                            </div>
-
-                            <!-- TOGGLE ROW cfg_include_datatable_buttons -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                                                        
-                                    <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
-                                        Display export buttons
-                                    </span>
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_include_datatable_buttons" 
-                                    id="autoUpdateToggle"
-                                    ~;
-
-                                    # Precheck this if set
-                                    if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
-                            </div>
-
-
-
-                            <!-- TOGGLE ROW cfg_export_all_cols -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                     
-                                    <span data-bs-toggle="tooltip" title="When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task">
-                                        Export date and list
-                                    </span>
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_export_all_cols" 
-                                    id="autoUpdateToggle"
-                                    ~;
-
-                                    # Precheck this if set
-                                    if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
-                            </div>
-
-                            <!-- TOGGLE ROW cfg_version_check -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available">
-                                        Check for new versions
-                                    </span>
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_version_check" 
-                                    id="autoUpdateToggle"
-                                    ~;
-
-                                    # Precheck this if set
-                                    if ($config->{'cfg_version_check'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
-                            </div>
-
-                            <!-- TOGGLE ROW cfg_background_image -->
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="If enabled, an JPG can be uploaded through this form below and will be used as a background">
-                                        Enable background image
-                                    </span>
-                                </span>
-                                <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" name="cfg_background_image" 
-                                    id="autoUpdateToggle"
-                                    ~;
-
-                                    # Precheck this if set
-                                    if ($config->{'cfg_background_image'} eq 'on') { $html .= " checked "; }
-
-                                    $html .= qq~
-                                    >
-                                </div>
-                                </div>
-                            </div>
-
+                              1 of 2
+    </div>
+    <div class="col">
+      2 of 2
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      1 of 3
+    </div>
+    <div class="col">
+      2 of 3
+    </div>
+    <div class="col">
+      3 of 3
+    </div>
   </div>
 </div>
 
-<div class="col-12 col-md-6">
-  <div class="border rounded p-3">
 
-                            <!-- PICKLIST row cfg_header_colour -->
-                            <div class="mb-3">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
-                                        Title Background Colour
-                                    </span>
-                                <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
-                                </span>
+
+
+
+
+
+#                         <div class="card bg-dark text-white">
+                        
+
+
+
+#             <div class="row g-4">
+#                 <div class="card bg-dark text-white">
+#                         <h5 class="card-title">Display Settings</h5>
+
+#                         <!-- TOGGLE ROW cfg_show_dates_lists -->
+#                         <div class="mb-3">
+
+#                             <div class="d-flex justify-content-between align-items-center">
+#                                 <span class="config-label">
+#                                     <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
+#                                     Show Dates and Lists in Tasks Table
+#                                     </span> 
+#                                 </span>
+
+#                             <div class="form-check form-switch m-0">
+#                                 <input class="form-check-input" type="checkbox" name="cfg_show_dates_lists" 
+#                                     id="autoUpdateToggle"
+#                                     ~;
+#                                     # Precheck this if set
+#                                     if ($config->{'cfg_show_dates_lists'} eq 'on') { $html .= " checked "; }
+
+#                                     $html .= qq~
+#                                     >
+#                             </div>
+#                         </div>
+#                     </div>
+
+#                             <!-- TOGGLE ROW cfg_include_datatable_search -->
+#                             <div class="mb-3">
+#                                 <div class="d-flex justify-content-between align-items-center">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table"> 
+#                                         Display Search Box
+#                                     </span> 
+#                                 </span>
+#                                 <div class="form-check form-switch m-0">
+#                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
+#                                     id="autoUpdateToggle"
+#                                     ~;
+#                                     # Precheck this if set
+#                                     if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
+
+#                                     $html .= qq~
+#                                     >
+#                                 </div>
+#                                 </div>
+#                             </div>
+
+#                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
+#                             <div class="mb-3">
+#                                 <div class="d-flex justify-content-between align-items-center">
+#                                 <span class="config-label">                                                                        
+#                                     <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
+#                                         Display export buttons
+#                                     </span>
+#                                 </span>
+#                                 <div class="form-check form-switch m-0">
+#                                 <input class="form-check-input" type="checkbox" name="cfg_include_datatable_buttons" 
+#                                     id="autoUpdateToggle"
+#                                     ~;
+
+#                                     # Precheck this if set
+#                                     if ($config->{'cfg_include_datatable_buttons'} eq 'on') { $html .= " checked "; }
+
+#                                     $html .= qq~
+#                                     >
+#                                 </div>
+#                                 </div>
+#                             </div>
+
+
+
+#                             <!-- TOGGLE ROW cfg_export_all_cols -->
+#                             <div class="mb-3">
+#                                 <div class="d-flex justify-content-between align-items-center">
+#                                 <span class="config-label">                                     
+#                                     <span data-bs-toggle="tooltip" title="When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task">
+#                                         Export date and list
+#                                     </span>
+#                                 </span>
+#                                 <div class="form-check form-switch m-0">
+#                                 <input class="form-check-input" type="checkbox" name="cfg_export_all_cols" 
+#                                     id="autoUpdateToggle"
+#                                     ~;
+
+#                                     # Precheck this if set
+#                                     if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
+
+#                                     $html .= qq~
+#                                     >
+#                                 </div>
+#                                 </div>
+#                             </div>
+
+#                             <!-- TOGGLE ROW cfg_version_check -->
+#                             <div class="mb-3">
+#                                 <div class="d-flex justify-content-between align-items-center">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available">
+#                                         Check for new versions
+#                                     </span>
+#                                 </span>
+#                                 <div class="form-check form-switch m-0">
+#                                 <input class="form-check-input" type="checkbox" name="cfg_version_check" 
+#                                     id="autoUpdateToggle"
+#                                     ~;
+
+#                                     # Precheck this if set
+#                                     if ($config->{'cfg_version_check'} eq 'on') { $html .= " checked "; }
+
+#                                     $html .= qq~
+#                                     >
+#                                 </div>
+#                                 </div>
+#                             </div>
+
+#                             <!-- TOGGLE ROW cfg_background_image -->
+#                             <div class="mb-3">
+#                                 <div class="d-flex justify-content-between align-items-center">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="If enabled, an JPG can be uploaded through this form below and will be used as a background">
+#                                         Enable background image
+#                                     </span>
+#                                 </span>
+#                                 <div class="form-check form-switch m-0">
+#                                 <input class="form-check-input" type="checkbox" name="cfg_background_image" 
+#                                     id="autoUpdateToggle"
+#                                     ~;
+
+#                                     # Precheck this if set
+#                                     if ($config->{'cfg_background_image'} eq 'on') { $html .= " checked "; }
+
+#                                     $html .= qq~
+#                                     >
+#                                 </div>
+#                                 </div>
+#                             </div>
+
+#   </div>
+# </div>
+
+# <div class="col-12 col-md-6">
+#   <div class="border rounded p-3">
+
+#                             <!-- PICKLIST row cfg_header_colour -->
+#                             <div class="mb-3">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
+#                                         Title Background Colour
+#                                     </span>
+#                                 <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
+#                                 </span>
                                 
-                                <div>
-                                    <select class="form-select" id="themeColor" name="cfg_header_colour">                                        
-                                        <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
-                                        <option value="primary" class="bg-primary text-white">Primary</option>
-                                        <option value="secondary" class="bg-secondary text-white">Secondary</option>
-                                        <option value="success" class="bg-success text-white">Success</option>
-                                        <option value="danger" class="bg-danger text-white">Danger</option>
-                                        <option value="warning" class="bg-warning text-dark">Warning</option>
-                                        <option value="info" class="bg-info text-dark">Info</option>
-                                        <option value="light" class="bg-light text-dark">Light</option>
-                                        <option value="dark" class="bg-dark text-white">Dark</option>
-                                    </select>
-                                </div>
-                            </div>
+#                                 <div>
+#                                     <select class="form-select" id="themeColor" name="cfg_header_colour">                                        
+#                                         <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
+#                                         <option value="primary" class="bg-primary text-white">Primary</option>
+#                                         <option value="secondary" class="bg-secondary text-white">Secondary</option>
+#                                         <option value="success" class="bg-success text-white">Success</option>
+#                                         <option value="danger" class="bg-danger text-white">Danger</option>
+#                                         <option value="warning" class="bg-warning text-dark">Warning</option>
+#                                         <option value="info" class="bg-info text-dark">Info</option>
+#                                         <option value="light" class="bg-light text-dark">Light</option>
+#                                         <option value="dark" class="bg-dark text-white">Dark</option>
+#                                     </select>
+#                                 </div>
+#                             </div>
 
-                            <!-- NUMBER ROW cfg_backup_number_to_keep -->
-                            <div class="mb-3">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
-                                        Number of daily backups to keep
-                                    </span>
-                                </span>
+#                             <!-- NUMBER ROW cfg_backup_number_to_keep -->
+#                             <div class="mb-3">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
+#                                         Number of daily backups to keep
+#                                     </span>
+#                                 </span>
 
-                                <input type="number" class="form-control" 
-                                    value="$config->{cfg_backup_number_to_keep}" 
-                                    name="cfg_backup_number_to_keep"
-                                    min="1" max="100">
-                            </div>
+#                                 <input type="number" class="form-control" 
+#                                     value="$config->{cfg_backup_number_to_keep}" 
+#                                     name="cfg_backup_number_to_keep"
+#                                     min="1" max="100">
+#                             </div>
 
-                            <!-- NUMBER ROW cfg_task_pagination_length -->
-                            <div class="mb-3">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating. Range 3-1000">
-                                    Number of Tasks to show on each page
-                                    </span>
-                                </span>
+#                             <!-- NUMBER ROW cfg_task_pagination_length -->
+#                             <div class="mb-3">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating. Range 3-1000">
+#                                     Number of Tasks to show on each page
+#                                     </span>
+#                                 </span>
 
-                                <input type="number" class="form-control" 
-                                    value="$config->{cfg_task_pagination_length}" 
-                                    name="cfg_task_pagination_length"
-                                    min="3" max="1000">
-                            </div>
+#                                 <input type="number" class="form-control" 
+#                                     value="$config->{cfg_task_pagination_length}" 
+#                                     name="cfg_task_pagination_length"
+#                                     min="3" max="1000">
+#                             </div>
 
-                            <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000">
-                                        Max length of popup task description
-                                    </span>
-                                </span>
-                                <input type="number" class="form-control" 
-                                    value="$config->{cfg_description_short_length}" 
-                                    name="cfg_description_short_length"
-                                    min="3" max="1000">
-                            </div>
+#                             <!-- NUMBER ROW cfg_description_short_length -->
+#                             <div class="mb-3">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000">
+#                                         Max length of popup task description
+#                                     </span>
+#                                 </span>
+#                                 <input type="number" class="form-control" 
+#                                     value="$config->{cfg_description_short_length}" 
+#                                     name="cfg_description_short_length"
+#                                     min="3" max="1000">
+#                             </div>
 
-                            <!-- NUMBER ROW cfg_description_short_length -->
-                            <div class="mb-3">
-                                <span class="config-label">                                    
-                                    <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
-                                        Max length of List name in Tasks list
-                                    </span>
-                                </span>
+#                             <!-- NUMBER ROW cfg_description_short_length -->
+#                             <div class="mb-3">
+#                                 <span class="config-label">                                    
+#                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
+#                                         Max length of List name in Tasks list
+#                                     </span>
+#                                 </span>
 
-                                <input type="number" class="form-control" 
-                                    value="$config->{cfg_list_short_length}" 
-                                    name="cfg_list_short_length"
-                                    min="1" max="100">
-                            </div>
-
-
-  </div>
-</div>
+#                                 <input type="number" class="form-control" 
+#                                     value="$config->{cfg_list_short_length}" 
+#                                     name="cfg_list_short_length"
+#                                     min="1" max="100">
+#                             </div>
 
 
-</div>
+#   </div>
+# </div>
 
-<div class="col-12 mt-3">
-  <button class="btn btn-primary">Save Settings</button>
-</div>
 
-</form>
+# </div>
 
-<br/> 
+# <div class="col-12 mt-3">
+#   <button class="btn btn-primary">Save Settings</button>
+# </div>
 
-<form method="post" action="/background_set" enctype="multipart/form-data">
-  <label for="background" class="form-label"  
-    data-bs-toggle="tooltip"
-    title="If enabled above, Taskpony can show a background image on the page">
-        Change the background image
-  </label>
+# </form>
+
+# <br/> 
+
+# <form method="post" action="/background_set" enctype="multipart/form-data">
+#   <label for="background" class="form-label"  
+#     data-bs-toggle="tooltip"
+#     title="If enabled above, Taskpony can show a background image on the page">
+#         Change the background image
+#   </label>
   
-  <div class="row g-2 align-items-center">
-    <div class="col-12 col-md">
-      <input
-        class="form-control"
-        type="file"
-        id="background"
-        name="background"
-        accept="image/jpeg"
-        required
-      >
-    </div>
-    <div class="col-12 col-md-auto">
-      <button type="submit" class="btn btn-primary w-100 w-md-auto">
-        Upload background
-      </button>
-    </div>
-  </div>
+#   <div class="row g-2 align-items-center">
+#     <div class="col-12 col-md">
+#       <input
+#         class="form-control"
+#         type="file"
+#         id="background"
+#         name="background"
+#         accept="image/jpeg"
+#         required
+#       >
+#     </div>
+#     <div class="col-12 col-md-auto">
+#       <button type="submit" class="btn btn-primary w-100 w-md-auto">
+#         Upload background
+#       </button>
+#     </div>
+#   </div>
 
-  <div class="form-text mt-1">
-    Upload a JPG to replace the current background image.
-  </div>
-</form>
+#   <div class="form-text mt-1">
+#     Upload a JPG to replace the current background image.
+#   </div>
+# </form>
 
 
 
@@ -1256,10 +1285,10 @@ $html .= qq~
 
 
 
-                    </div>
-                </div>
-            </div>
-        </div>                    
+#                     </div>
+#                 </div>
+#             </div>
+#         </div>                    
         ~;
 
         $html .= footer();
