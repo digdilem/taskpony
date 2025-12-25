@@ -676,11 +676,21 @@ my $app = sub {
 
             $html .= qq~
                                 <tr>
-                                    <td><strong><span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">$title</a></span></strong></td>
                                     <td>
-                                        <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
-                                            $fa_goto
-                                        </a>
+                                        <strong>
+                                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">
+                                                $title
+                                            </a>
+                                            </span>
+                                        </strong>
+                                        <div class="text-end">
+                                            <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
+                                                $fa_goto
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+
                                         $desc
                                     </td>
                                     <td>$active_count</td>
