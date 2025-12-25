@@ -1054,7 +1054,7 @@ $html .= qq~
                 <div class="d-flex align-items-center gap-2">
                     <input
                         class="form-control"
-                        style="width: 250px;" 
+                        style="width: 200px;" 
                         type="file"
                         id="background"
                         name="background"
@@ -1062,7 +1062,7 @@ $html .= qq~
                         required
                     >
                     <button type="submit" class="btn btn-primary text-nowrap">
-                        Upload background
+                        Go
                     </button>
                 </div>
             </div>
