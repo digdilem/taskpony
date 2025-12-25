@@ -1223,27 +1223,31 @@ $html .= qq~
 <br/> 
 
 <form method="post" action="/background_set" enctype="multipart/form-data">
-  <div class="col-12 col-md">
-          <label for="background" class="form-label">
-        Background image
-        </label>
-        <input 
-            class="form-control"
-            type="file"
-            id="background"
-            name="background"
-            accept="image/jpeg"
-            required
-            >
-        <div class="form-text">
-            Upload a JPG to  replace the current background image.
-        </div>
-    </div>    
-      <div class="col-12 col-md-auto">
-        <button type="submit" class="btn btn-primary">
-            Upload
-        </button>
+  <label for="background" class="form-label">
+    Change the background image
+  </label>
+  
+  <div class="row g-2 align-items-center">
+    <div class="col-12 col-md">
+      <input
+        class="form-control"
+        type="file"
+        id="background"
+        name="background"
+        accept="image/jpeg"
+        required
+      >
     </div>
+    <div class="col-12 col-md-auto">
+      <button type="submit" class="btn btn-primary w-100 w-md-auto">
+        Upload background
+      </button>
+    </div>
+  </div>
+
+  <div class="form-text mt-1">
+    Upload a JPG to replace the current background image.
+  </div>
 </form>
 
 
