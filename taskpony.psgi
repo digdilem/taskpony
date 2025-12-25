@@ -1682,7 +1682,7 @@ sub header {
             <div class="container py-1">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="/static/taskpony-logo.png" width="42" height="42">
+                        <img src="/static/taskpony-logo.png" width="82" height="82">
                         <h3 class="mb-0">
                             <a href="/" class="text-white text-decoration-none">
                                 $app_title
