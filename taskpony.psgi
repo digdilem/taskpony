@@ -988,7 +988,6 @@ $html .= qq~
 
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                        </div>
                     ~;
 
                     # output values 
@@ -996,6 +995,7 @@ $html .= qq~
 
 
             $html .= qq~
+                        </div>
                 </div>
             </div>
             ~;
