@@ -994,7 +994,7 @@ $html .= qq~
                      $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
                      $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
                      $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
-                     $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100',1,100);
+                     $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
 
             $html .= qq~
                 </div>
