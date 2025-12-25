@@ -1,4 +1,4 @@
-/config#!/usr/bin/env/perl
+#!/usr/bin/env/perl
 # Taskpony - a simple perl PSGI web app for various daily tasks
 # Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
 # MIT Licence
