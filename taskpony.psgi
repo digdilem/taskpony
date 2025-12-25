@@ -352,7 +352,7 @@ my $app = sub {
                 my $task_status = 'Completed';
                 if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
-                $html .= start_card("Edit Task #$task_id - $task_status", $fa_edit);
+                $html .= start_card("Edit Task #$task_id - $task_status", $fa_edit, 1);
 
                 $html .= qq~
                             <form method="post" action="/edittask?id=$task_id" class="row g-3">
@@ -605,7 +605,7 @@ my $app = sub {
             } # End /lists form submission handling
 
         # Page - Display List of Lists
-        $html .= start_card('Lists Management', $fa_list);
+        $html .= start_card('Lists Management', $fa_list, 0);
         $html .= qq~  
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
@@ -892,7 +892,7 @@ my $app = sub {
 
             if ($list) {
                 my $html = header();
-                $html .= start_card("Edit List", $fa_list);
+                $html .= start_card("Edit List", $fa_list, 0);
                 $html .= qq~
                         <form method="post" action="/editlist?id=$list_id" class="row g-3">
                             <div class="col-12">
@@ -966,7 +966,7 @@ my $app = sub {
         # Show configuration page
         my $html .= header();
 
-        $html .= start_card("Settings", $fa_gear);
+        $html .= start_card("Settings", $fa_gear, 0);
         $html .= qq~
                          <form method="post" action="/config" style="display:inline;">
 
@@ -1239,7 +1239,7 @@ my $app = sub {
         # Stats page - show calculated statistics
         if ($req->path eq "/stats") {
             my $html = header();
-            $html .= start_card('Statistics', $fa_chart);
+            $html .= start_card('Statistics', $fa_chart, 0);
 
             $html .= qq~
                 <div class="table-responsive">
@@ -1419,7 +1419,7 @@ $html .= qq~
             }
         }
 
-    $html .= start_card($titlebar);
+    $html .= start_card($titlebar,'',1);
 
     ####################################
     # Show main list of tasks
@@ -2248,13 +2248,11 @@ sub start_card {
     my $card_icon = shift || '';
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
-    if ($table_card == 1) {
-        $html .= qq~ <div class="card shadow-sm d-none" id="moretaskBtn" > #;
-        } else {
-        $html .= qq~ <div class="card shadow-sm"> 
-        }
+    my $html = qq~ <div class="card shadow-sm"> 
 
-    my $html = qq~
+    if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none" id="moretaskBtn" > }  # If a table, hide the whole card until loaded
+
+    $html = qq~
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
