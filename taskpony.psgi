@@ -1042,33 +1042,33 @@ $html .= qq~
 
 
             <form method="post" action="/background_set" enctype="multipart/form-data">
-<div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
-    
-    <label for="background" class="form-label mb-0 flex-grow-1"  
-        data-bs-toggle="tooltip"
-        title="If enabled above, Taskpony can show a background image on the page">
-        Change the background image
-    </label>
-    
-    <div class="d-flex align-items-center gap-2">
-        <input
-            class="form-control"
-            style="width: 250px;" 
-            type="file"
-            id="background"
-            name="background"
-            accept="image/jpeg"
-            required
-        >
-        <button type="submit" class="btn btn-primary text-nowrap">
-            Upload background
-        </button>
-    </div>
-</div>
+            <label for="background" class="form-label"  
+                data-bs-toggle="tooltip"
+                title="If enabled above, Taskpony can show a background image on the page">
+                    Change the background image
+            </label>
+            
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-md">
+                <input
+                    class="form-control"
+                    type="file"
+                    id="background"
+                    name="background"
+                    accept="image/jpeg"
+                    required
+                >
+                </div>
+                <div class="col-12 col-md-auto">
+                <button type="submit" class="btn btn-primary w-100 w-md-auto">
+                    Upload background
+                </button>
+                </div>
+            </div>
 
-<div class="form-text mt-1">
-    Upload a JPG to replace the current background image.
-</div>
+            <div class="form-text mt-1">
+                Upload a JPG to replace the current background image.
+            </div>
             </form>
             ~;
 
