@@ -352,7 +352,7 @@ my $app = sub {
                 my $task_status = 'Completed';
                 if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
-                $html .= start_card("Edit Task #$task_id - $task_status", $fa_edit, 1);
+                $html .= start_card("Edit Task #$task_id - $task_status", $fa_edit, 0);
 
                 $html .= qq~
                             <form method="post" action="/edittask?id=$task_id" class="row g-3">
@@ -1040,7 +1040,6 @@ $html .= qq~
 
             $html .= qq~
             <hr>
-
 
             <form method="post" action="/background_set" enctype="multipart/form-data">
             <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
