@@ -993,6 +993,10 @@ $html .= qq~
                      $html .= config_show_option('cfg_include_datatable_search','Display Search Box','Show the search box at the top right of the Tasks table','check',0,0);
                      $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
                      $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);
+                     $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
+
+
+
 
 
             $html .= qq~
@@ -1236,18 +1240,6 @@ $html .= qq~
 #                                     min="3" max="1000">
 #                             </div>
 
-#                             <!-- NUMBER ROW cfg_description_short_length -->
-#                             <div class="mb-3">
-#                                 <span class="config-label">                                    
-#                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000">
-#                                         Max length of popup task description
-#                                     </span>
-#                                 </span>
-#                                 <input type="number" class="form-control" 
-#                                     value="$config->{cfg_description_short_length}" 
-#                                     name="cfg_description_short_length"
-#                                     min="3" max="1000">
-#                             </div>
 
 #                             <!-- NUMBER ROW cfg_description_short_length -->
 #                             <div class="mb-3">
@@ -2921,7 +2913,7 @@ sub config_show_option {
     
     if ($type eq 'number') { # Numerical entry
         $retstr .= qq~
-            <input type="number" class="form-control w-35" 
+            <input type="number" class="form-control w-25" 
                 value="$config->{$key}" 
                 name="$key"
                 min="$num_range_lower" max="$num_range_upper">
@@ -2938,48 +2930,6 @@ sub config_show_option {
         ~;
 
 
-#                             <!-- NUMBER ROW cfg_description_short_length -->
-#                             <div class="mb-3">
-#                                 <span class="config-label">                                    
-#                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100">
-#                                         Max length of List name in Tasks list
-#                                     </span>
-#                                 </span>
-
-#                                 <input type="number" class="form-control" 
-#                                     value="$config->{cfg_list_short_length}" 
-#                                     name="cfg_list_short_length"
-#                                     min="1" max="100">
-#                             </div>
-
-#     <div class="d-flex align-items-center justify-content-between">
-#     <div class="form-check">
-#       <input class="form-check-input bg-success border-success" type="checkbox" checked id="check3">
-#       <label class="form-check-label ms-2" for="check3">
-#         Display Export Buttons
-#       </label>
-#     </div>
-#     <div class="form-check form-switch">
-#       <input class="form-check-input" type="checkbox" role="switch" checked>
-#     </div>
-#   </div>
-#     ~;
-
-
-                            # <label class="form-check-label ms-2" for="cfg_include_datatable_search"
-                            #     data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">                                 
-                            #     Display Search Box
-                            # </label>
-                            # </div>
-                            # <div class="form-check form-switch">
-                            #     <input class="form-check-input" type="checkbox" name="cfg_include_datatable_search" 
-                            #         id="autoUpdateToggle"
-                            #         ~;
-                            #     # Precheck this if set
-                            #     if ($config->{'cfg_include_datatable_search'} eq 'on') { $html .= " checked "; }
-                            #     $html .= qq~
-                            #     >
-                            # </div>
 
     return $retstr;
     } # end config_show_option()
