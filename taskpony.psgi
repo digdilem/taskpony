@@ -2921,7 +2921,7 @@ sub config_show_option {
     
     if ($type eq 'number') { # Numerical entry
         $retstr .= qq~
-            <input type="number" class="form-control w-25" 
+            <input type="number" class="form-control w-35" 
                 value="$config->{$key}" 
                 name="$key"
                 min="$num_range_lower" max="$num_range_upper">
