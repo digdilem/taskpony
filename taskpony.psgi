@@ -1658,6 +1658,7 @@ sub header {
         .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
         .muted { color: rgba(255,255,255,0.65); }
         .dt-hidden { visibility: hidden; }
+        .header-bar { min-height: 72px; }
     </style>
 
     </head>
@@ -1674,7 +1675,7 @@ sub header {
     <main class="flex-grow-1 container py-4">
     
     <div class="container py-1">        
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">        
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 header-bar">        
             <div>
                 <h3 class="mb-0"><a href="/" class="text-white text-decoration-none"><img src="/static/taskpony-logo.png" width="85"> $app_title</a>
                 ~;
