@@ -992,7 +992,7 @@ $html .= qq~
                     # output values 
                      $html .= config_show_option('cfg_include_datatable_search','Display Search Box','Show the search box at the top right of the Tasks table','check',0,0);
                      $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
-                     $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000',3,1000);
+                     $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);
 
 
             $html .= qq~
