@@ -1017,6 +1017,7 @@ $html .= qq~
                 $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
                 $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
                 $html .= config_show_option('cfg_header_colour','Highlight Colour','Select colour for panel header backgrounds and highlights','colour',0,0);
+                $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
 
 
             $html .= qq~
@@ -1042,33 +1043,33 @@ $html .= qq~
 
 
             <form method="post" action="/background_set" enctype="multipart/form-data">
-<div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
-    
-    <label for="background" class="form-label mb-0 flex-grow-1"  
-        data-bs-toggle="tooltip"
-        title="If enabled above, Taskpony can show a background image on the page">
-        Change the background image
-    </label>
-    
-    <div class="d-flex align-items-center gap-2">
-        <input
-            class="form-control"
-            style="width: 250px;" 
-            type="file"
-            id="background"
-            name="background"
-            accept="image/jpeg"
-            required
-        >
-        <button type="submit" class="btn btn-primary text-nowrap">
-            Upload background
-        </button>
-    </div>
-</div>
+            <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
+                
+                <label for="background" class="form-label mb-0 flex-grow-1"  
+                    data-bs-toggle="tooltip"
+                    title="If enabled above, Taskpony can show a background image on the page">
+                    Change the background image
+                </label>
+                
+                <div class="d-flex align-items-center gap-2">
+                    <input
+                        class="form-control"
+                        style="width: 250px;" 
+                        type="file"
+                        id="background"
+                        name="background"
+                        accept="image/jpeg"
+                        required
+                    >
+                    <button type="submit" class="btn btn-primary text-nowrap">
+                        Upload background
+                    </button>
+                </div>
+            </div>
 
-<div class="form-text mt-1">
-    Upload a JPG to replace the current background image.
-</div>
+            <div class="form-text mt-1">
+                Upload a JPG to replace the current background image.
+            </div>
             </form>
             ~;
 
