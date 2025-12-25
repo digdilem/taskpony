@@ -983,9 +983,8 @@ $html .= qq~
         <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center">
             <span class="config-label">
-                Show Dates and Lists in Tasks Table
                 <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names"> 
-                    $fa_info_small
+                Show Dates and Lists in Tasks Table
                 </span> 
             </span>
             <div class="form-check form-switch m-0">
@@ -1004,10 +1003,9 @@ $html .= qq~
                             <!-- TOGGLE ROW cfg_include_datatable_search -->
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">
-                                    Display Search Box
+                                <span class="config-label">                                    
                                     <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table"> 
-                                        $fa_info_small
+                                        Display Search Box
                                     </span> 
                                 </span>
                                 <div class="form-check form-switch m-0">
@@ -1026,10 +1024,9 @@ $html .= qq~
                             <!-- TOGGLE ROW cfg_include_datatable_buttons -->
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    Display export buttons
+                                <span class="config-label">                                                                        
                                     <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc">
-                                        $fa_info_small
+                                        Display export buttons
                                     </span>
                                 </span>
                                 <div class="form-check form-switch m-0">
@@ -1051,10 +1048,9 @@ $html .= qq~
                             <!-- TOGGLE ROW cfg_export_all_cols -->
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                <span class="config-label">                                    
-                                    Export date and list
+                                <span class="config-label">                                     
                                     <span data-bs-toggle="tooltip" title="When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task">
-                                        $fa_info_small
+                                        Export date and list
                                     </span>
                                 </span>
                                 <div class="form-check form-switch m-0">
@@ -1075,9 +1071,8 @@ $html .= qq~
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
-                                    Check for new versions
                                     <span data-bs-toggle="tooltip" title="If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available">
-                                        $fa_info_small
+                                        Check for new versions
                                     </span>
                                 </span>
                                 <div class="form-check form-switch m-0">
@@ -1098,9 +1093,8 @@ $html .= qq~
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                 <span class="config-label">                                    
-                                    Enable background image
                                     <span data-bs-toggle="tooltip" title="If enabled, an JPG can be uploaded through this form below and will be used as a background">
-                                        $fa_info_small
+                                        Enable background image
                                     </span>
                                 </span>
                                 <div class="form-check form-switch m-0">
@@ -1126,9 +1120,8 @@ $html .= qq~
                             <!-- PICKLIST row cfg_header_colour -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
-                                    Title Background Colour
                                     <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
-                                        $fa_info_small
+                                        Title Background Colour
                                     </span>
                                 <span class="badge bg-$config->{cfg_header_colour}">Currently '$config->{cfg_header_colour}'</span>
                                 </span>
@@ -1151,9 +1144,8 @@ $html .= qq~
                             <!-- NUMBER ROW cfg_backup_number_to_keep -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
-                                    Number of daily backups to keep
                                     <span data-bs-toggle="tooltip" title="Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100">
-                                        $fa_info_small
+                                        Number of daily backups to keep
                                     </span>
                                 </span>
 
@@ -1166,9 +1158,8 @@ $html .= qq~
                             <!-- NUMBER ROW cfg_task_pagination_length -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
-                                    Number of Tasks to show on each page
                                     <span data-bs-toggle="tooltip" title="How many tasks to show on each page before paginating. Range 3-1000">
-                                        $fa_info_small
+                                    Number of Tasks to show on each page
                                     </span>
                                 </span>
 
@@ -1181,9 +1172,8 @@ $html .= qq~
                             <!-- NUMBER ROW cfg_description_short_length -->
                             <div class="mb-3">
                                 <span class="config-label">                                    
-                                    Max length of popup task description
                                     <span data-bs-toggle="tooltip" title="Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000">
-                                        $fa_info_small
+                                        Max length of popup task description
                                     </span>
                                 </span>
                                 <input type="number" class="form-control" 
