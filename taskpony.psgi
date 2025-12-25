@@ -971,13 +971,17 @@ $html .= qq~
 <form method="post" action="/config">
 <input type="hidden" name="save_config" value="true">
 
-<!-- ===== Display ===== -->
-<h6 class="text-muted mb-2">Display</h6>
+<div class="row g-4">
+
+<!-- ================= LEFT COLUMN: TOGGLES ================= -->
+<div class="col-12 col-md-6">
+
+<h6 class="text-muted mb-3">Display & system</h6>
 
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <span class="config-label">
-    Show Dates and Lists in Tasks Table
-    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table, showing just Task names">
+    Show Dates and Lists
+    <span data-bs-toggle="tooltip" title="Show the Dates and Lists columns in the Tasks table">
       $fa_info_small
     </span>
   </span>
@@ -991,8 +995,8 @@ $html .= qq~
 
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <span class="config-label">
-    Display Search Box
-    <span data-bs-toggle="tooltip" title="Display the search box at the top right of the tasks table">
+    Display search box
+    <span data-bs-toggle="tooltip" title="Display the search box in the tasks table">
       $fa_info_small
     </span>
   </span>
@@ -1006,8 +1010,8 @@ $html .= qq~
 
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <span class="config-label">
-    Display export buttons
-    <span data-bs-toggle="tooltip" title="Display the export buttons at the end of the Tasks list">
+    Export buttons
+    <span data-bs-toggle="tooltip" title="Enable export buttons">
       $fa_info_small
     </span>
   </span>
@@ -1021,8 +1025,8 @@ $html .= qq~
 
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <span class="config-label">
-    Export date and list
-    <span data-bs-toggle="tooltip" title="Include date and list when exporting tasks">
+    Export date & list
+    <span data-bs-toggle="tooltip" title="Include date and list when exporting">
       $fa_info_small
     </span>
   </span>
@@ -1034,15 +1038,10 @@ $html .= qq~
   </div>
 </div>
 
-<hr>
-
-<!-- ===== System ===== -->
-<h6 class="text-muted mb-2">System</h6>
-
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <span class="config-label">
-    Check for new versions
-    <span data-bs-toggle="tooltip" title="Check periodically for new versions of Taskpony">
+    Version checks
+    <span data-bs-toggle="tooltip" title="Check for new Taskpony versions">
       $fa_info_small
     </span>
   </span>
@@ -1056,7 +1055,7 @@ $html .= qq~
 
 <div class="mb-3 d-flex justify-content-between align-items-center">
   <span class="config-label">
-    Enable background image
+    Background image
     <span data-bs-toggle="tooltip" title="Enable uploaded background image">
       $fa_info_small
     </span>
@@ -1069,23 +1068,22 @@ $html .= qq~
   </div>
 </div>
 
-<hr>
+</div>
 
-<!-- ===== Appearance ===== -->
-<h6 class="text-muted mb-2">Appearance</h6>
+<!-- ================= RIGHT COLUMN: VALUES ================= -->
+<div class="col-12 col-md-6">
+
+<h6 class="text-muted mb-3">Appearance & limits</h6>
 
 <div class="mb-3">
   <label class="form-label">
-    Title Background Colour
-    <span data-bs-toggle="tooltip" title="Select colour for panel header backgrounds">
+    Title background colour
+    <span data-bs-toggle="tooltip" title="Panel header background colour">
       $fa_info_small
-    </span>
-    <span class="badge bg-$config->{cfg_header_colour}">
-      $config->{cfg_header_colour}
     </span>
   </label>
   <select class="form-select" name="cfg_header_colour">
-    <option value="$config->{cfg_header_colour}">Current</option>
+    <option value="$config->{cfg_header_colour}">Current ($config->{cfg_header_colour})</option>
     <option value="primary">Primary</option>
     <option value="secondary">Secondary</option>
     <option value="success">Success</option>
@@ -1097,14 +1095,9 @@ $html .= qq~
   </select>
 </div>
 
-<hr>
-
-<!-- ===== Limits ===== -->
-<h6 class="text-muted mb-2">Limits</h6>
-
 <div class="mb-3">
   <label class="form-label">
-    Number of daily backups to keep
+    Backups to keep
     <span data-bs-toggle="tooltip" title="Range 1–100">
       $fa_info_small
     </span>
@@ -1141,7 +1134,7 @@ $html .= qq~
     min="3" max="1000">
 </div>
 
-<div class="mb-4">
+<div class="mb-3">
   <label class="form-label">
     List name length
     <span data-bs-toggle="tooltip" title="Range 1–100">
@@ -1154,15 +1147,18 @@ $html .= qq~
     min="1" max="100">
 </div>
 
-<div class="d-flex justify-content-end">
-  <button class="btn btn-primary">Save Settings</button>
+</div>
+</div>
+
+<div class="d-flex justify-content-end mt-3">
+  <button class="btn btn-primary">Save settings</button>
 </div>
 
 </form>
 
 <hr class="my-4">
 
-<!-- ===== Background upload (separate form) ===== -->
+<!-- ===== Background upload ===== -->
 <form method="post" action="/background_set" enctype="multipart/form-data">
   <h6 class="text-muted mb-2">Background image</h6>
 
