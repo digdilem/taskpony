@@ -683,11 +683,11 @@ my $app = sub {
                                             </a>
                                             </span>
                                         </strong>
-                                        <div class="text-end">
+                                        
                                             <a href-"/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
                                                 $fa_goto
                                             </a>
-                                        </div>
+                                        
                                     </td>
                                     <td>
 
