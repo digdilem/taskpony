@@ -966,10 +966,10 @@ my $app = sub {
         ###############################################
 
 
-my $html .= header();
+        my $html .= header();
 
-$html .= start_card("Settings", $fa_gear, 0);
-$html .= qq~
+        $html .= start_card("Settings", $fa_gear, 0);
+        $html .= qq~
             <form method="post" action="/config" style="display:inline;">
             <input type="hidden" name="save_config" value="true">
 
@@ -1058,6 +1058,7 @@ $html .= qq~
                         id="background"
                         name="background"
                         accept="image/jpeg"
+                        placeholder="Choose"
                         required
                     >
                     <button type="submit" class="btn btn-primary text-nowrap">
