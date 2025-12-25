@@ -976,14 +976,16 @@ $html .= qq~
 
 <!-- ================= LEFT COLUMN ================= -->
 <div class="col-12 col-md-6">
-  <div class="card card-body h-100">
+  <div class="border rounded p-3 h-100">
 
     <h6 class="text-white mb-3">Display & system</h6>
 
     <div class="mb-3 d-flex justify-content-between align-items-center">
       <div>
         <div class="text-white">Show dates and lists</div>
-        <small class="text-muted" title="Show the Dates and Lists columns in the Tasks table">
+        <small class="text-muted"
+              data-bs-toggle="tooltip"
+              title="Show the Dates and Lists columns in the Tasks table">
           Display extra columns in the task list
         </small>
       </div>
@@ -998,7 +1000,9 @@ $html .= qq~
     <div class="mb-3 d-flex justify-content-between align-items-center">
       <div>
         <div class="text-white">Search box</div>
-        <small class="text-muted" title="Display the search box at the top right of the tasks table">
+        <small class="text-muted"
+              data-bs-toggle="tooltip"
+              title="Display the search box at the top right of the tasks table">
           Enable table searching
         </small>
       </div>
@@ -1013,7 +1017,9 @@ $html .= qq~
     <div class="mb-3 d-flex justify-content-between align-items-center">
       <div>
         <div class="text-white">Export buttons</div>
-        <small class="text-muted" title="Enable Copy, CSV, PDF and other export buttons">
+        <small class="text-muted"
+              data-bs-toggle="tooltip"
+              title="Enable Copy, CSV, PDF and other export buttons">
           Allow exporting tasks
         </small>
       </div>
@@ -1027,38 +1033,10 @@ $html .= qq~
 
     <div class="mb-3 d-flex justify-content-between align-items-center">
       <div>
-        <div class="text-white">Export date & list</div>
-        <small class="text-muted" title="Include date and list columns when exporting">
-          Add extra fields to exports
-        </small>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" name="cfg_export_all_cols"
-          ~;
-          if ($config->{'cfg_export_all_cols'} eq 'on') { $html .= " checked "; }
-          $html .= qq~>
-      </div>
-    </div>
-
-    <div class="mb-3 d-flex justify-content-between align-items-center">
-      <div>
-        <div class="text-white">Version checks</div>
-        <small class="text-muted" title="Periodically check for new Taskpony versions">
-          Notify when updates are available
-        </small>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" name="cfg_version_check"
-          ~;
-          if ($config->{'cfg_version_check'} eq 'on') { $html .= " checked "; }
-          $html .= qq~>
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
         <div class="text-white">Background image</div>
-        <small class="text-muted" title="Enable the uploaded JPG background image">
+        <small class="text-muted"
+              data-bs-toggle="tooltip"
+              title="Enable the uploaded JPG background image">
           Use a custom background
         </small>
       </div>
@@ -1075,14 +1053,16 @@ $html .= qq~
 
 <!-- ================= RIGHT COLUMN ================= -->
 <div class="col-12 col-md-6">
-  <div class="card card-body h-100">
+  <div class="border rounded p-3 h-100">
 
     <h6 class="text-white mb-3">Appearance & limits</h6>
 
     <div class="mb-3">
       <label class="form-label text-white">Title background colour</label>
-      <select class="form-select" name="cfg_header_colour"
-        title="Colour used for panel header backgrounds">
+      <select class="form-select"
+              name="cfg_header_colour"
+              data-bs-toggle="tooltip"
+              title="Colour used for panel header backgrounds">
         <option value="$config->{cfg_header_colour}">
           Current ($config->{cfg_header_colour})
         </option>
@@ -1100,6 +1080,7 @@ $html .= qq~
     <div class="mb-3">
       <label class="form-label text-white">Backups to keep</label>
       <input type="number" class="form-control"
+        data-bs-toggle="tooltip"
         title="How many days of backups to retain (1–100)"
         value="$config->{cfg_backup_number_to_keep}"
         name="cfg_backup_number_to_keep"
@@ -1109,28 +1090,11 @@ $html .= qq~
     <div class="mb-3">
       <label class="form-label text-white">Tasks per page</label>
       <input type="number" class="form-control"
+        data-bs-toggle="tooltip"
         title="Number of tasks before pagination (3–1000)"
         value="$config->{cfg_task_pagination_length}"
         name="cfg_task_pagination_length"
         min="3" max="1000">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label text-white">Popup description length</label>
-      <input type="number" class="form-control"
-        title="Maximum characters shown in task popups"
-        value="$config->{cfg_description_short_length}"
-        name="cfg_description_short_length"
-        min="3" max="1000">
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label text-white">List name length</label>
-      <input type="number" class="form-control"
-        title="Maximum list name length in task table"
-        value="$config->{cfg_list_short_length}"
-        name="cfg_list_short_length"
-        min="1" max="100">
     </div>
 
   </div>
@@ -1143,29 +1107,6 @@ $html .= qq~
 </div>
 
 </form>
-
-<hr class="my-4">
-
-<form method="post" action="/background_set" enctype="multipart/form-data">
-  <h6 class="text-white mb-2">Background image</h6>
-
-  <div class="mb-3">
-    <label for="background" class="form-label text-white">
-      Change the background image
-    </label>
-    <input class="form-control" type="file"
-      id="background" name="background"
-      accept="image/jpeg" required>
-    <div class="form-text">
-      Upload a JPG to replace the current background image.
-    </div>
-  </div>
-
-  <button type="submit" class="btn btn-outline-primary">
-    Upload background
-  </button>
-</form>
-
 ~;
 
 $html .= footer();
