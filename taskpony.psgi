@@ -2246,8 +2246,15 @@ sub config_load {
 sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
+    my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
+
+    if ($table_card == 1) {
+        $html .= qq~ <div class="card shadow-sm d-none" id="moretaskBtn" > #;
+        } else {
+        $html .= qq~ <div class="card shadow-sm"> 
+        }
+
     my $html = qq~
-                    <div class="card shadow-sm d-none" id="moretaskBtn" >
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
