@@ -2244,7 +2244,9 @@ sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
     my $html = qq~
-                    <div class="card shadow-sm">
+    <div class="row justify-content-center h-100">
+  <div class="col-md-10 d-flex flex-column">
+    <div class="card shadow-sm flex-grow-1">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
@@ -2295,6 +2297,8 @@ sub end_card {
     my $html = qq~
                 </div>
             </div>
+        </div>
+        </div>
         </div>
         ~;
     return $html;
