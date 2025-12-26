@@ -2158,7 +2158,7 @@ sub show_tasks {
     $sth->execute($status);
 
     my $html = qq~
-        <table id="tasks" class="display hover table-striped dt-hidden" style="width:90%">
+        <table id="tasks" class="display hover table-striped dt-hidden mb-3" style="width:90%">
             <thead>
                 <tr>
                     <th>&nbsp;</th>
