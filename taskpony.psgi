@@ -1919,9 +1919,7 @@ sub footer {
     my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $html .= qq~
-        <br>
-        </div>
-        </div>
+        <br/>
         </main>
         <footer class="text-center text-white-50 py-2">
             <p>
@@ -2244,7 +2242,7 @@ sub show_tasks {
                     data-bs-toggle="tooltip" 
                     title="$description"
                     >                   
-                    $title
+                        $title
                     ~;
             if ($description) {
                 $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $fa_comment_small</span> ~;
@@ -2263,7 +2261,7 @@ sub show_tasks {
                     data-bs-toggle="tooltip" 
                     title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
                     >
-                    $title
+                        $title
                     </a>
                      ~;
 
@@ -2306,7 +2304,7 @@ sub show_tasks {
 
         # Close the row
         $html .= qq~
-        </tr>
+            </tr>
         ~;
     } # End tasks loop
 

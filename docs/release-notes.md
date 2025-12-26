@@ -9,6 +9,8 @@ Task List:
 - Tasks that have a description now show an info icon in the list to indicate that they can be hovered to see it.
 - Lots of work has gone into reducing page flicker on load. Task table now hides until Datatables is ready. You could see a flicker sometimes on page load with larger lists where it was re-rendered, and that's now gone. There's a few other places where this the UI has been improved.
 - Settings page has been reworked for better clarity and future maintenance.
+- A demo instance has been set up with Koyeb [here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/)
+- The example `docker-compose.yml` now includes a simple health-check which checks for a http response once a minute. 
 
 ## 0.2d  Released Christmas, 2025
 

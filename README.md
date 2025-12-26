@@ -368,14 +368,12 @@ Some features for the future that may, or may not, be added.
 - Maybe:
   - A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
   - Add default sorting option, rather than just newest-first.
-  - Add colour to tasks lists. (Possibly based on priority, possibly a per-task setting)
-  - New release available alert. 
+  - Add colour to tasks. (Possibly based on priority, possibly a per-task setting. Beware making things too messy)
   - Multi-language support.
-  - A demo instance that resets every NN minutes?  (Perhaps a hardened docker that just deletes the database)  Free hosting required.
   - Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
   - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
   - Ability to undelete Lists
-  - A self reloading ability when another client changes the displayed list. May require a fairly bit switch to api style working
+  - A self refreshing ability when another client changes the database, so it's displaying the latest info.
   - A history table for tasks and actions. Extra detail for tasks for recurring tasks, when lists were created, changed etc.
   
 
@@ -383,7 +381,7 @@ Some features for the future that may, or may not, be added.
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.
   - Groups / teams / shared and embeddded tasks. 
   - Authentication, https. 
-  - Plugin.
+  - Plugins.
 
 
 
