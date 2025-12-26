@@ -1039,8 +1039,9 @@ my $app = sub {
 
 
             $html .= qq~
-
-            <button class="btn btn-primary float-right">Save Settings</button>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary>Save Settings</button>
+            </div>
 
             </div>
 
