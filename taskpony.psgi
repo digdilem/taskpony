@@ -1009,7 +1009,7 @@ my $app = sub {
                     $html .= config_show_option('cfg_include_datatable_search','Display Search Box','Show the search box at the top right of the Tasks table','check',0,0);
                     $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0); 
                     $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
-                    $html .= config_show_option('cfg_show_completed_tasks_btn','Show completed tasks button','Below the Tasks list, this defines whether to show or hide the "Show NN Completed|Active Tasks" button','check',0,0);
+                    $html .= config_show_option('cfg_show_completed_tasks_btn','Show completed tasks button','Below the Tasks list, this defines whether to show or hide the -Show NN Completed|Active Tasks- button','check',0,0);
 
 
                     $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
