@@ -5,15 +5,14 @@
 
 Task List:
 - You can now upload a JPG for a page background. There is a toggle in /config and a new upload form. 
-- "Show completed/active tasks" button now includes the number of tasks that will be shown.
-- Tasks that have a description now show an info icon to indicate that they can be hovered to see it.
-- Lots of work gone into reducing page flicker on load. Task table now hides until Datatables is ready. You could see a flicker sometimes on page load with larger lists where it was re-rendered, and that's now gone. There's a few other places where this the UI has been improved.
+- "Show completed/active tasks" button now includes the number of tasks that will be shown. It can also be hidden entirely in Settings now for a cleaner look.
+- Tasks that have a description now show an info icon in the list to indicate that they can be hovered to see it.
+- Lots of work has gone into reducing page flicker on load. Task table now hides until Datatables is ready. You could see a flicker sometimes on page load with larger lists where it was re-rendered, and that's now gone. There's a few other places where this the UI has been improved.
 - Settings page has been reworked for better clarity and future maintenance.
 
 ## 0.2d  Released Christmas, 2025
 
-- Fix a couple of regressions. favicon displaying, and rounded bottoms.
-
+- Fix a couple of regressions: favicon displaying, and rounded page bottoms.
 
 ## 0.2c  Released Christmas, 2025
 

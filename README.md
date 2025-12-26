@@ -25,8 +25,13 @@ No phone app required. The interface is responsive and scales well to all device
 
 See some more [Screenshots](#screenshots)
 
-**Quick start** - Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
+# Demo
 
+We have a demo instance [available here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/) so you can see and use Taskpony in action!
+
+(This instance resets frequently, losing all its data - do not use for real!)
+
+# Quick start - Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
 
 ## Table of contents 
 
