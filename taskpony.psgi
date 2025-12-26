@@ -1039,7 +1039,7 @@ my $app = sub {
 
 
             $html .= qq~
-            <div class="d-flex justify-content-end">
+            <div class="text-end">
                 <button class="btn btn-primary>Save Settings</button>
             </div>
 
