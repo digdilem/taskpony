@@ -1040,7 +1040,11 @@ my $app = sub {
 
             $html .= qq~
 
-<div class="text-end">            <button class="btn btn-primary">Save Settings</button>  </div>
+            <br/
+            >
+            <div class="text-end">
+                <button class="btn btn-primary">Save Settings</button>  
+            </div>
 
             </div>
 
