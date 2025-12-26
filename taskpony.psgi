@@ -1945,6 +1945,7 @@ sub footer {
                 initComplete: function () { 
                     \$('#tasks').removeClass('dt-hidden'); 
                     \$('#hideUntilShow').removeClass('d-none'); 
+                    \$('#hideUntilShow2').removeClass('d-none'); 
                     },
                 ~;
 
@@ -2312,13 +2313,13 @@ sub show_tasks {
     if ($show_completed == 0) {
         my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
         $html .= qq~
-            <a href="/?sc=1" class="btn btn-secondary btn d-none" id="hideUntilShow">Show $cnt_completed_tasks completed tasks in '$list_name'</a>
+            <a href="/?sc=1" class="btn btn-secondary btn d-none" id="hideUntilShow2">Show $cnt_completed_tasks completed tasks in '$list_name'</a>
             ~;
         } else {
         my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
 
         $html .= qq~
-            <a href="/" class="btn btn-secondary btn d-none" id="hideUntilShow">Show $cnt_active_tasks active tasks in '$list_name'</a>
+            <a href="/" class="btn btn-secondary btn d-none" id="hideUntilShow2">Show $cnt_active_tasks active tasks in '$list_name'</a>
             ~;
         }
 
