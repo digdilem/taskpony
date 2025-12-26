@@ -1078,7 +1078,7 @@ my $app = sub {
                         accept="image/jpeg"
                         required
                     >
-                    <button type="submit" class="btn btn-primary text-nowrap">
+                    <button type="submit" class="btn btn-success text-nowrap">
                         Go
                     </button>
                 </div>
