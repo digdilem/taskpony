@@ -1620,11 +1620,11 @@ sub footer {
         <script>
             \$(document).ready(function() {
             \$('#tasks').DataTable({
-                "paging":   true,
-                "ordering": true,
-                "info":     true,
-                "autoWidth": false,
-                "columnDefs": [{ width: '10%', targets: 0 }],
+                paging:   true,
+                ordering: true,
+                info:     true,
+                autoWidth: false,
+                columnDefs: [{ width: '10%', targets: 0 }],
                 initComplete: function () { 
                     \$('#tasks').removeClass('dt-hidden'); 
                     \$('#hideUntilShow').removeClass('d-none'); 
