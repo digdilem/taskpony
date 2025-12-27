@@ -2282,7 +2282,7 @@ sub show_tasks {
         # Output the table row
         $html .= qq~
             <tr>
-                <td>$checkbox</td>
+                <td width="5">$checkbox</td>
                 <td>$title_link</td>
                 ~;
 
