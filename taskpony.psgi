@@ -1623,7 +1623,8 @@ sub footer {
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
-                columnDefs: [{ width: '5%', targets: 0 }],
+                "autoWidth": false,
+                "columnDefs": [{ width: '10%', targets: 0 }],
                 initComplete: function () { 
                     \$('#tasks').removeClass('dt-hidden'); 
                     \$('#hideUntilShow').removeClass('d-none'); 
