@@ -1623,12 +1623,12 @@ sub footer {
                 "paging":   true,
                 "ordering": true,
                 "info":     true,
+                columnDefs: [{ width: '5%', targets: 0 }],
                 initComplete: function () { 
                     \$('#tasks').removeClass('dt-hidden'); 
                     \$('#hideUntilShow').removeClass('d-none'); 
                     \$('#hideUntilShow2').removeClass('d-none'); 
                     },
-                columnDefs: [{ width: '5%', targets: 0 }]
                 ~;
 
             # Show search if configured
