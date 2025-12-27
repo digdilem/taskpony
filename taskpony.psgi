@@ -1877,8 +1877,8 @@ sub header {
                             <img src="/static/taskpony-logo.png" width="82" height="82">
                             <h3 class="mb-0">
                                 $app_title
-                            </a>
-                        </h3>
+                            </h3>
+                        </a>
                         ~;
     
     # Add the list selection pulldown
@@ -2002,7 +2002,7 @@ sub footer {
             $html .= qq~
                 ],
                 "language": {
-                    "emptyTable": "All tasks completed! 🎉",
+                    "emptyTable": "No tasks found! 🎉",
                     "search": "Filter tasks:",
                     "info": "Displaying _START_ to _END_ of _TOTAL_ tasks  &nbsp; &nbsp; &nbsp;"
                 }
@@ -2218,12 +2218,17 @@ sub show_tasks {
             $list_title = '[--No List--]';
 
             # Prefix task title with an orphaned marker, coloured red
-            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">$fa_link_slash</span> ~;
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">
+                $fa_link_slash
+            </span>
+            ~;
             }
 
         # Add a repeat icon if the task is recurring
         if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
-            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">$fa_repeat_small</span> ~;
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">
+                $fa_repeat_small
+            </span> ~;
             }            
         
         # Active tasks. Show checkbox to mark complete
@@ -2245,7 +2250,9 @@ sub show_tasks {
                         $title
                     ~;
             if ($description) {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $fa_comment_small</span> ~;
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $fa_comment_small
+                </span> 
+                ~;
                 }
             $title_link .= qq~
                     </a>
@@ -2297,7 +2304,7 @@ sub show_tasks {
                     title="Jump to $a->{'ListTitle'}"
                     >
                     $list_title
-                </td>
+            </td>
                 ~;
                 }
             }
