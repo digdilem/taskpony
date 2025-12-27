@@ -2159,7 +2159,7 @@ sub show_tasks {
         <table id="tasks" class="display hover table-striped dt-hidden mb-3" style="width:90%">
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
+                    <th width="5%">&nbsp;</th>
                     <th>Title</th>
         ~;
 
@@ -2282,7 +2282,7 @@ sub show_tasks {
         # Output the table row
         $html .= qq~
             <tr>
-                <td width="5">$checkbox</td>
+                <td>$checkbox</td>
                 <td>$title_link</td>
                 ~;
 
