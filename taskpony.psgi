@@ -1575,7 +1575,7 @@ sub header {
 
                         <a href="/config"
                             class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                            data-bs-toggle="tooltip" title="Settings" >
+                            data-bs-toggle="tooltip" title="Settings" aria-label="Settings">
                             $fa_gear
                         </a>
                         
