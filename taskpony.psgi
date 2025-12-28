@@ -1585,7 +1585,7 @@ sub header {
                         $html .= qq~
                         <a href="/"
                             class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                            data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
+                            data-bs-toggle="tooltip" title="Show $cnt_active_tasks <b>active tasks</b> in '$list_name'" >
                             $fa_rotate_right
                         </a>
                         ~;
