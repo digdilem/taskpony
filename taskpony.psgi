@@ -1529,6 +1529,9 @@ sub header {
     # Show completed/active button
     if ($show_completed == 0) {  # We're on the active tasks page, so show button for completeds
                 my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
+                if ($list_id == 1) {
+                    $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2");
+                    }                
                 $html .= qq~
                 <a href="/?sc=1"
                     class="btn btn-sm btn-secondary d-inline-flex align-items-center"
@@ -1538,6 +1541,9 @@ sub header {
                 ~;
                 } else { # We're showing completed tasks, so show button for the active list
                 my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
+                if ($list_id == 1) {
+                    $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1");
+                    }
                 $html .= qq~
                 <a href="/"
                     class="btn btn-sm btn-secondary d-inline-flex align-items-center"
