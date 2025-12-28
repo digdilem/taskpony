@@ -1568,7 +1568,7 @@ sub header {
             ~;
 
             # Show completed/active button
-            if (($show_completed == 0) {  # We're on the active tasks page, so show button for completeds
+            if ($show_completed == 0) {  # We're on the active tasks page, so show button for completeds
                         my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
                         $html .= qq~
                         <a href="/?sc=1"
@@ -1586,8 +1586,6 @@ sub header {
                             $fa_rotate_right
                         </a>
                         ~;
-
-
                         } # End active/completed button
 
                         <a href="/lists"
