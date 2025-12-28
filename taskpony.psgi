@@ -1534,7 +1534,7 @@ sub header {
                     }                
                 $html .= qq~
                 <a href="/?sc=1"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
                     $fa_rotate_left
                 </a>
@@ -1546,7 +1546,7 @@ sub header {
                     }
                 $html .= qq~
                 <a href="/"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
                     $fa_rotate_right
                 </a>
@@ -1555,19 +1555,19 @@ sub header {
 
                 $html .= qq~
                 <a href="/lists"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" title="Manage Lists" >
                     $fa_list
                 </a>
 
                 <a href="/stats"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
                     data-bs-toggle="tooltip" title="Statistics" >
                     $fa_chart
                 </a>
 
                 <a href="/config"
-                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
                     data-bs-toggle="tooltip" title="Settings" aria-label="Settings">
                     $fa_gear
                 </a>

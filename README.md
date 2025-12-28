@@ -350,8 +350,6 @@ It's not necessary to pay to use Taskpony but  but if you wish to show appreciat
     height="30">
 </a>
 
-
-
 # Screenshots
 
 ![Main Task List](docs/tasklist.jpg)
