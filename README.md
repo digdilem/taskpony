@@ -312,14 +312,26 @@ Any issues during this process are likely to be file or permission related, and 
 
 Because Taskpony's database is a simple sqlite3 file, it would be possible to automate this process allowing some interesting thoughts about resetting a demo instance or swapping datasets around for some purpose.
 
-## Concepts
-- Taskpony is a web based task system with a small footprint that is easy to install and uses very few resources. It should be usable on desktop and mobile devices without a dedicated app.
-- It should be easy to self host and maintain. 
-- Taskpony aspires  to follow the linux design tenet of "Do one thing well"
-- Remain focused on a single user need and not spread into teamware. There are plenty of good foss alternatives that do offer team support, Kanbans, integration with other softare and so on. There are fewew good, single-user options like this. I couldn't find any that suited my own needs which led to me writing Taskpony.
-  
+## Goals
+
+- Be easy for any user to pick up and use. Features should be self explaining as much as possible.
+- Be a small, fast and responsive web based app that is usable on all devices by a standard browser. 
+- Remain focused on providing single user Tasks and Lists. 
+- Be free and open in all senses of the word. No telemetry, no lock-in, no registration, no freemium models.
+- Be linux native or docker for easy self-hosting.
+- Remain simple to install and update, with automated database upgrades.
+
+## Non-goals
+- Not become over featured.
+- Not spread into Teamware or become group-based.
+- Not add complex systems like Gantt Charts, Kanbans etc. 
+
 ## The Name? 
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
+
+ ## Support
+
+ <a href="https://www.buymeacoffee.com/digdilem" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 # Screenshots
 
