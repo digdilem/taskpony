@@ -212,7 +212,7 @@ Upgrading Taskpony should be quite simple - overwrite the files and ensure taskp
 
 Taskpony should restart itself automatically when its own file changes, this will be shown in its log with `-- /opt/taskpony/taskpony.psgi updated`. If there are any issues, restarting Taskpony with `systemctl restart taskpony` is advised.
 
-If the upgrade includes any database changes, Taskpony should automatically detect and apply any updates when it's first started, see logs. `journalctl -u taskpony`
+If the upgrade includes any database schema changes, Taskpony should automatically detect and apply any updates when it's first started, see logs. `journalctl -u taskpony`
 
 ## Docker
 
@@ -222,7 +222,7 @@ Stop the existing container and repeat the installation instructions to pull the
 
 Change to the directory you put your `docker-compose.yml`
 
-Check the compose file with that of the new version and overwrite it if it's changed, then:
+Cmpare the compose file with that of the new version to see if there are any changes required.
 
 ```
 docker compose down
@@ -261,7 +261,7 @@ If `Display export buttons` is selected in Settings, then extra "Export" buttons
 - `PDF` = Generates a PDF of the tasks and downloads it.
 - `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
 
-Below that is a final button to show completed tasks. This changes the view to show *completed* tasks instead of *active* ones. This allows you to "oops" and mark any completed tasks back as active. 
+To change the view from active to completed tasks, use the curled arrow button above the list. Completed Tasks can be reverted to Active with the curled undo arrow next to them in the list.
 
 ### Repeating Tasks
 
@@ -373,6 +373,7 @@ Some features for the future that may, or may not, be added.
   - Ability to undelete Lists
   - A self refreshing ability when another client changes the database, so it's displaying the latest info.
   - A history table for tasks and actions. Extra detail for tasks for recurring tasks, when lists were created, changed etc.
+  - Move Export buttons toggle from Settings to a button on the top group, but cautious of making that too cluttered.
   
 
 - Unlikely:

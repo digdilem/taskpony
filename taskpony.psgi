@@ -1889,7 +1889,7 @@ sub show_tasks {
             <tbody>
             ~;
 
-    # Loop through each task and output a row for each. Add data-order sso that Datatables can sort by actual date value instead of human friendly string
+    # Loop through each task and output a row for each. Add data-order so that Datatables can sort by actual date value instead of human friendly string
     while (my $a = $sth->fetchrow_hashref()) {
         my $friendly_date = qq~
             <td data-order="$a->{'AddedDate'}">
@@ -1909,7 +1909,7 @@ sub show_tasks {
             ~;
             }
 
-        my $checkbox = '';  # Default empty
+        my $checkbox = '';
         my $title_link;
         my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
         my $title = html_escape($a->{'Title'});
@@ -1964,7 +1964,7 @@ sub show_tasks {
                      ~;
             } 
 
-        # Completed tasks. Show strikethrough title and button to mark uncompleted
+        # Completed tasks. Show undo button to mark uncompleted
         if ($status == 2) { # Completed tasks
             $title_link .= qq~
                     <a 
@@ -1973,7 +1973,7 @@ sub show_tasks {
                     data-bs-toggle="tooltip" 
                     title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
                     >
-                        $title
+                        <s>$title</s>
                     </a>
                      ~;
 

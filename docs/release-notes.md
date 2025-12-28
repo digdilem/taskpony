@@ -1,6 +1,6 @@
 # Taskpony Version History
 
-## 0.3  
+# 0.3  
 
 Task List:
 - You can now upload a JPG for a page background. There is a toggle in /config and a new upload form. 
@@ -12,17 +12,15 @@ Task List:
 - The example `docker-compose.yml` now includes a simple health-check which checks for a http response once a minute. 
 - "Show active tasks" and "Show completed tasks" button that used to live at the bottom of the list now moved to the top button group.
 
-## 0.2d  Released Christmas, 2025
+# 0.2d  Released Christmas, 2025
 
 - Fix a couple of regressions: favicon displaying, and rounded page bottoms.
 
-## 0.2c  Released Christmas, 2025
+# 0.2c  Released Christmas, 2025
 
 "Improved orphan handing. Added repeating tasks, stats and database backups. Multiple bugfixes and UI improvements."
 
 ### To upgrade v.0.01 to v.0.2, follow the [Upgrade Instructions](../README.md#upgrading)
-
-### Changes
 
 - Bugfix: Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
 
