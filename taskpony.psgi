@@ -1973,7 +1973,7 @@ sub show_tasks {
                     data-bs-toggle="tooltip" 
                     title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
                     >
-                        <p class="text-decoration-line-through">$title</p>
+                        <p class="text-decoration-line-through opacity-50">$title</p>
                     </a>
                      ~;
 
