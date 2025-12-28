@@ -331,7 +331,9 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 
  ## Support
 
- <a href="https://www.buymeacoffee.com/digdilem" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+ It's not necessary to support my work, but if you wish to, thank you!
+
+ <a href="https://www.buymeacoffee.com/digdilem" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 30px !important;width: 108px !important;" ></a>
 
 # Screenshots
 
