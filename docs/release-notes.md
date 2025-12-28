@@ -11,6 +11,7 @@ Task List:
 - Settings page has been reworked for better clarity and future maintenance.
 - A demo instance has been set up with Koyeb [here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/)
 - The example `docker-compose.yml` now includes a simple health-check which checks for a http response once a minute. 
+- "Show active tasks" and "Show completed tasks" button that used to live at the bottom of the list now moved to the top button group.
 
 ## 0.2d  Released Christmas, 2025
 

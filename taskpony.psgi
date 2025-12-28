@@ -37,7 +37,6 @@ our $config = {
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
-    cfg_show_completed_tasks_btn => 'on',       # Show or hide the "Show NN Completed/Active tasks" button below the list
     database_schema_version => 1,               # Don't change this.
     };
 
@@ -963,7 +962,7 @@ my $app = sub {
                         } else { # No parameter passed for key, store existing
                         debug("No parameter passed for ($key), using existing [$config->{$key}]");
                         # Special handling for checkboxes which will return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_completed_tasks_btn') {
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check|cfg_include_datatable_search|cfg_background_image') {
                             $new_val = 'off';
                             debug("Belay that, this is a checkbox, set it to off");
                             } else {
@@ -1015,8 +1014,6 @@ my $app = sub {
                     $html .= config_show_option('cfg_include_datatable_search','Display Filter Box','Show the filter box at the top right of the Tasks table','check',0,0);
                     $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0); 
                     $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
-                    $html .= config_show_option('cfg_show_completed_tasks_btn','Show completed tasks button','Below the Tasks list, this defines whether to show or hide the -Show NN Completed|Active Tasks- button','check',0,0);
-
 
                     $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
                     $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
@@ -1585,7 +1582,7 @@ sub header {
                         $html .= qq~
                         <a href="/"
                             class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                            data-bs-toggle="tooltip" title="Show $cnt_active_tasks <b>active tasks</b> in '$list_name'" >
+                            data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
                             $fa_rotate_right
                         </a>
                         ~;
@@ -2030,21 +2027,6 @@ sub show_tasks {
         <br><br>
         ~;
 
-    # Display a link to toggle between showing completed/active tasks if defined in config
-    if ($config->{'cfg_show_completed_tasks_btn'} eq 'on') {
-        if ($show_completed == 0) {
-            my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
-            $html .= qq~
-                <a href="/?sc=1" class="btn btn-secondary btn d-none" id="hideUntilShow2">Show $cnt_completed_tasks completed tasks in '$list_name'</a>
-                ~;
-            } else {
-            my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
-
-            $html .= qq~
-                <a href="/" class="btn btn-secondary btn d-none" id="hideUntilShow2">Show $cnt_active_tasks active tasks in '$list_name'</a>
-                ~;
-            }
-        }
     return $html;
     } # End show_tasks()
 
