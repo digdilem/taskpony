@@ -1,6 +1,6 @@
 #!/usr/bin/env/perl
-# Taskpony - a simple perl PSGI web app for various daily tasks
-# Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
+# Taskpony - a simple perl PSGI web app for various daily tasks - https://github.com/digdilem/taskpony
+# Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org 
 # MIT Licence
 
 use strict;
@@ -16,11 +16,11 @@ use JSON::PP;               # Part github json response
 use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
 use File::Copy qw(copy move);   # For database backup copy function
-use FindBin;
+use FindBin;                # To find ./static directory
 
-# Database Path. If you install Taskpony as a SystemD service elsewhere than /opt/taskpony - you'll need to change this.
-my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file internal to docker. If not present, it will be auto created. 
-my $bg_path = '/opt/taskpony/static/background.jpg';   # Path to the background picture, if used.
+# Database Path. If you install Taskpony as a Systemd service elsewhere than /opt/taskpony - you'll need to change this.
+my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created. 
+my $bg_path = '/opt/taskpony/static/background.jpg';   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads.
 
 ###############################################
 # Default configuration. Don't change them here, use /config page.
@@ -94,8 +94,7 @@ my $fa_star_on = build_icon(20,'M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 
 my $fa_goto = build_icon(20,'M409 337C418.4 327.6 418.4 312.4 409 303.1L265 159C258.1 152.1 247.8 150.1 238.8 153.8C229.8 157.5 224 166.3 224 176L224 256L112 256C85.5 256 64 277.5 64 304L64 336C64 362.5 85.5 384 112 384L224 384L224 464C224 473.7 229.8 482.5 238.8 486.2C247.8 489.9 258.1 487.9 265 481L409 337zM416 480C398.3 480 384 494.3 384 512C384 529.7 398.3 544 416 544L480 544C533 544 576 501 576 448L576 192C576 139 533 96 480 96L416 96C398.3 96 384 110.3 384 128C384 145.7 398.3 160 416 160L480 160C497.7 160 512 174.3 512 192L512 448C512 465.7 497.7 480 480 480L416 480z');
 
 # Very small FA icons, 
-my $fa_rotate_left_small = build_icon(14,'M88 256L232 256C241.7 256 250.5 250.2 254.2 241.2C257.9 232.2 255.9 221.9 249 215L202.3 168.3C277.6 109.7 386.6 115 455.8 184.2C530.8 259.2 530.8 380.7 455.8 455.7C380.8 530.7 259.3 530.7 184.3 455.7C174.1 445.5 165.3 434.4 157.9 422.7C148.4 407.8 128.6 403.4 113.7 412.9C98.8 422.4 94.4 442.2 103.9 457.1C113.7 472.7 125.4 487.5 139 501C239 601 401 601 501 501C601 401 601 239 501 139C406.8 44.7 257.3 39.3 156.7 122.8L105 71C98.1 64.2 87.8 62.1 78.8 65.8C69.8 69.5 64 78.3 64 88L64 232C64 245.3 74.7 256 88 256z');
-
+my $fa_rotate_left_small = build_icon(16,'M88 256L232 256C241.7 256 250.5 250.2 254.2 241.2C257.9 232.2 255.9 221.9 249 215L202.3 168.3C277.6 109.7 386.6 115 455.8 184.2C530.8 259.2 530.8 380.7 455.8 455.7C380.8 530.7 259.3 530.7 184.3 455.7C174.1 445.5 165.3 434.4 157.9 422.7C148.4 407.8 128.6 403.4 113.7 412.9C98.8 422.4 94.4 442.2 103.9 457.1C113.7 472.7 125.4 487.5 139 501C239 601 401 601 501 501C601 401 601 239 501 139C406.8 44.7 257.3 39.3 156.7 122.8L105 71C98.1 64.2 87.8 62.1 78.8 65.8C69.8 69.5 64 78.3 64 88L64 232C64 245.3 74.7 256 88 256z');
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
@@ -150,8 +149,7 @@ my $app = sub {
 
     ###############################################
     # favicon handling before header()
-    if ($req->path eq "/favicon.ico") {
-        # Redirect to ./static/favicon.ico
+    if ($req->path eq "/favicon.ico") {     # Redirect to ./static/favicon.ico
         $res->redirect('./static/favicon.ico');
         return $res->finalize;
         } # End /favicon.ico
@@ -855,109 +853,108 @@ my $app = sub {
         return $res->finalize;
         } # End /lists
 
-    ###############################################
-    # Handle editing a list
-    if ($req->path eq "/editlist") {
-        my $list_id = $req->param('id') // 0;
+        ###############################################
+        # Handle editing a list
+        if ($req->path eq "/editlist") {
+            my $list_id = $req->param('id') // 0;
 
-        # If POST, update the list in DB and redirect
-        if ($req->method && uc($req->method) eq 'POST') {
-            my $title = sanitize($req->param('Title') // '');
-            my $desc = sanitize($req->param('Description') // '');
+            # If POST, update the list in DB and redirect
+            if ($req->method && uc($req->method) eq 'POST') {
+                my $title = sanitize($req->param('Title') // '');
+                my $desc = sanitize($req->param('Description') // '');
 
-            if (length $title && $list_id > 1) {
-                my $sth = $dbh->prepare(
-                    'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
-                );
-                eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
-                add_alert("List '$title' updated.");
-            }
-
-            $res->redirect('/lists');
-            return $res->finalize;
-            } # End /editlist form submission handling
-
-        # If GET, show the edit-list form
-        if ($list_id > 1) {
-            my $sth = $dbh->prepare('SELECT id, Title, Description FROM ListsTb WHERE id = ?');
-            $sth->execute($list_id);
-            my $list= $sth->fetchrow_hashref();
-
-            if ($list) {
-                my $html = header();
-                $html .= start_card("Edit List", $fa_list, 0);
-                $html .= qq~
-                        <form method="post" action="/editlist?id=$list_id" class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label">Title</label>
-                                <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Description</label>
-                                <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit">Save List</button>
-                                <a class="btn btn-secondary" href="/lists">Cancel</a>
-                            </div>
-                        </form>
-                    </div>
-                ~;
-                $html .= end_card();
-                $html .= footer();
-                $res->body($html);
-                return $res->finalize;
+                if (length $title && $list_id > 1) {
+                    my $sth = $dbh->prepare(
+                        'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
+                    );
+                    eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
+                    add_alert("List '$title' updated.");
                 }
-            }
 
-        $res->status(404);
-        $res->body("List not found");
-        return $res->finalize;
-        } # End /editlist
+                $res->redirect('/lists');
+                return $res->finalize;
+                } # End /editlist form submission handling
 
-    ###############################################
-    # Handle config changes
-    if ($req->path eq "/config") {
-        # If POST, update the config in DB and redirect to root
-        if ($req->method && uc($req->method) eq 'POST') {
+            # If GET, show the edit-list form
+            if ($list_id > 1) {
+                my $sth = $dbh->prepare('SELECT id, Title, Description FROM ListsTb WHERE id = ?');
+                $sth->execute($list_id);
+                my $list= $sth->fetchrow_hashref();
 
-            if ($req->param('save_config') eq 'true') { 
-                print STDERR "Config form received\n";
+                if ($list) {
+                    my $html = header();
+                    $html .= start_card("Edit List", $fa_list, 0);
+                    $html .= qq~
+                            <form method="post" action="/editlist?id=$list_id" class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Title</label>
+                                    <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary" type="submit">Save List</button>
+                                    <a class="btn btn-secondary" href="/lists">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    ~;
+                    $html .= end_card();
+                    $html .= footer();
+                    $res->body($html);
+                    return $res->finalize;
+                    }
+                }
 
-                # Loop through config keys and try to get them from param
-                for my $key (keys %$config) {
-                    my $new_val;
-                    $new_val = $req->param($key); # || $config->{$key};
-
-                    if ($new_val) {
-                        debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
-                        } else { # No parameter passed for key, store existing
-                        debug("No parameter passed for ($key), using existing [$config->{$key}]");
-                        # Special handling for checkboxes which will return void if not set
-                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check|cfg_include_datatable_search|cfg_background_image') {
-                            $new_val = 'off';
-                            debug("Belay that, this is a checkbox, set it to off");
-                            } else {
-                            $new_val = $config->{$key}; # No value supplied, use existing
-                            }
-                        }
-
-                    # Set current local config value
-                    $config->{$key} = $new_val;
-
-                    } # End keys lookup
-                # Save config to db
-                save_config();
-                } 
-            
-            add_alert("Configuration saved");
-            $res->redirect('/');
+            $res->status(404);
+            $res->body("List not found");
             return $res->finalize;
-            } # End /config form submission handling
-
+            } # End /editlist
 
         ###############################################
+        # Handle config changes
+        if ($req->path eq "/config") {
+            # If POST, update the config in DB and redirect to root
+            if ($req->method && uc($req->method) eq 'POST') {
 
+                if ($req->param('save_config') eq 'true') { 
+                    print STDERR "Config form received\n";
+
+                    # Loop through config keys and try to get them from param
+                    for my $key (keys %$config) {
+                        my $new_val;
+                        $new_val = $req->param($key); # || $config->{$key};
+
+                        if ($new_val) {
+                            debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
+                            } else { # No parameter passed for key, store existing
+                            debug("No parameter passed for ($key), using existing [$config->{$key}]");
+                            # Special handling for checkboxes which will return void if not set
+                            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check|cfg_include_datatable_search|cfg_background_image') {
+                                $new_val = 'off';
+                                debug("Belay that, this is a checkbox, set it to off");
+                                } else {
+                                $new_val = $config->{$key}; # No value supplied, use existing
+                                }
+                            }
+
+                        # Set current local config value
+                        $config->{$key} = $new_val;
+
+                        } # End keys lookup
+                    # Save config to db
+                    save_config();
+                    } 
+                
+                add_alert("Configuration saved");
+                $res->redirect('/');
+                return $res->finalize;
+                } # End /config form submission handling
+
+        ###############################################
+        # Show the Settings page
 
         my $html .= header();
 
@@ -969,7 +966,6 @@ my $app = sub {
             <div class="container">~;
 
             # Row One
-
             $html .= qq~
                 <div class="row">
 
@@ -1033,39 +1029,36 @@ my $app = sub {
             </form>
             ~;
 
-            # Start second form for the background image upload
-
+            # Start a second form for the background image upload
             $html .= qq~
             <hr>
 
             <form method="post" action="/background_set" enctype="multipart/form-data">
-            <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
-                
-                <label for="background" class="form-label mb-0 flex-grow-1"  
-                    data-bs-toggle="tooltip"
-                    title="If enabled above, Taskpony can show a background image on the page">
-                    Change the background image
-                </label>
-                
-                <div class="d-flex align-items-center gap-2">
-                    <input
-                        class="form-control"
-                        style="width: 200px;" 
-                        type="file"
-                        id="background"
-                        name="background"
-                        accept="image/jpeg"
-                        required
-                    >
-                    <button type="submit" class="btn btn-success text-nowrap">
-                        Go
-                    </button>
+                <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
+                    <label for="background" class="form-label mb-0 flex-grow-1"  
+                        data-bs-toggle="tooltip"
+                        title="If enabled above, Taskpony can show a background image on the page">
+                        Change the background image
+                    </label>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            class="form-control"
+                            style="width: 200px;" 
+                            type="file"
+                            id="background"
+                            name="background"
+                            accept="image/jpeg"
+                            required>
+                        <button type="submit" class="btn btn-success text-nowrap">
+                            Go
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-text mt-1">
-                Upload a JPG to replace the current background image.
-            </div>
+                <div class="form-text mt-1">
+                    Upload a JPG to replace the current background image.
+                </div>
             </form>
             ~;
 
@@ -1089,7 +1082,7 @@ my $app = sub {
                     <tbody>
             ~;
 
-$html .= qq~
+            $html .= qq~
                         <tr class="table-borderless">
                         <td class="fw-semibold">Tasks</td>
                         <td>
@@ -1186,13 +1179,13 @@ $html .= qq~
             $html .= footer();
             $res->body($html);
             return $res->finalize;
-        }
+            } # End /stats
 
     ###############################################
     # End named paths
 
     ###############################################
-    # /background_set  = Receive new background upload
+    # /background_set  = Receive new background image upload
     if ($req->method eq 'POST' && $req->path eq '/background_set') {
 
         my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
@@ -1208,30 +1201,20 @@ $html .= qq~
             $type eq 'image/jpeg' ? 'jpg' :
             return [400, [], ['Unsupported type']];
 
-#        $upload->copy_to("/opt/taskpony/static/background.jpg")  or return [500, [], ['Save failed']];
+        my $src = $upload->path or return [500, [], ['Upload has no temp path']];
 
- # Source temp file provided by Plack
-    my $src = $upload->path
-        or return [500, [], ['Upload has no temp path']];
+        my $tmp = "$bg_path.tmp";  # Write out a temporary file as bg pic may be slow to upload
 
-    # Atomic write
-    my $tmp = "$bg_path.tmp";
+        copy($src, $tmp) or return [500, [], ["Copy failed: $!"]];
 
-    copy($src, $tmp)
-        or return [500, [], ["Copy failed: $!"]];
-
-    rename $tmp, $bg_path
-        or return [500, [], ["Rename failed: $!"]];
-
+        rename $tmp, $bg_path or return [500, [], ["Rename failed: $!"]];
 
         add_alert("Background image updated");
         return [302, [ Location => '/config' ], []];
-    } # End /background_set
+        } # End /background_set
 
     ###############################################
-    # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
-
-    # /?delete_task=nn - Delete task nn 
+    # /?delete_task=nn - Delete task nn (Actually delete, not just set as completed)
     my $delete_task = $req->param('delete_task') // 0;        
     if ($delete_task > 0) {
         my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
@@ -1239,7 +1222,10 @@ $html .= qq~
         add_alert("Task #$delete_task deleted.");
         $res->redirect('/'); # Redirect back to default page
         return $res->finalize;
-        }
+        } # End /?delete_task=nn
+
+    ###############################################
+    # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
@@ -1249,6 +1235,7 @@ $html .= qq~
                         </form>
                         <h2>
                     ~;
+
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($list_id == 1) {
         if ($show_completed == 1) {
@@ -1256,7 +1243,7 @@ $html .= qq~
             } else {
             $titlebar = "Showing active tasks from all lists";
             }
-        }
+        } # End if ($list_id == 1)
 
     $html .= start_card($titlebar,'',1);
 
@@ -1434,7 +1421,7 @@ sub check_database_upgrade  {
 
             # List of queries required to upgrade from v.1 to v.2
             my @db_upgrade_steps_1_to_2 = (
-                "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists';",        # Change name of 'All Lists' to 'All Tasks'
+                "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists';",                # Change name of 'All Lists' to 'All Tasks'
                 "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';",       # Update version number in ConfigTb
                 "ALTER TABLE TasksTb ADD COLUMN IsRecurring TEXT DEFAULT 'off';",                   # New column to indicate whether task is recurring
                 "ALTER TABLE TasksTb ADD COLUMN RecurringIntervalDay INTEGER DEFAULT 1;",           # New column to indicate recurring interval in days
@@ -1507,7 +1494,7 @@ sub header {
         ~;
 
     if ($config->{'cfg_background_image'} eq 'on') {   # Show a background if enabled. Use the mtime of the file to trigger a cache reload by the client
-        my $bg_mtime = (stat("./static/background.jpg"))[9] || time();  # 
+        my $bg_mtime = (stat("./static/background.jpg"))[9] || time();  
         $html .= qq~ style="background: url('/static/background.jpg?v=$bg_mtime') center / cover no-repeat;" ~;
         }
 
@@ -1519,17 +1506,17 @@ sub header {
             ~;
 
     # Header bar
-            $html .= qq~
-            <div class="container py-1">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
-                    <div class="d-flex align-items-center gap-2">
-                        <a href="/" class="text-white text-decoration-none">
-                            <img src="/static/taskpony-logo.png" width="82" height="82">
-                            <h3 class="mb-0">
-                                $app_title
-                            </h3>
-                        </a>
-                        ~;
+    $html .= qq~
+    <div class="container py-1">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <a href="/" class="text-white text-decoration-none">
+                    <img src="/static/taskpony-logo.png" width="82" height="82">
+                    <h3 class="mb-0">
+                        $app_title
+                    </h3>
+                </a>
+                ~;
     
     # Add the list selection pulldown
     $html .= list_pulldown($list_id);  
@@ -1539,49 +1526,49 @@ sub header {
                     <div class="btn-group" role="group">
             ~;
 
-            # Show completed/active button
-            if ($show_completed == 0) {  # We're on the active tasks page, so show button for completeds
-                        my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
-                        $html .= qq~
-                        <a href="/?sc=1"
-                            class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                            data-bs-toggle="tooltip" title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
-                            $fa_rotate_left
-                        </a>
-                        ~;
-                        } else { # We're showing completed tasks, so show button for the active list
-                        my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
-                        $html .= qq~
-                        <a href="/"
-                            class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                            data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
-                            $fa_rotate_right
-                        </a>
-                        ~;
-                        } # End active/completed button
+    # Show completed/active button
+    if ($show_completed == 0) {  # We're on the active tasks page, so show button for completeds
+                my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
+                $html .= qq~
+                <a href="/?sc=1"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    data-bs-toggle="tooltip" title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
+                    $fa_rotate_left
+                </a>
+                ~;
+                } else { # We're showing completed tasks, so show button for the active list
+                my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
+                $html .= qq~
+                <a href="/"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
+                    $fa_rotate_right
+                </a>
+                ~;
+                } # End active/completed button
 
-                        $html .= qq~
-                        <a href="/lists"
-                            class="btn btn-sm btn-secondary d-inline-flex align-items-center"
-                            data-bs-toggle="tooltip" title="Manage Lists" >
-                            $fa_list
-                        </a>
+                $html .= qq~
+                <a href="/lists"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                    data-bs-toggle="tooltip" title="Manage Lists" >
+                    $fa_list
+                </a>
 
-                        <a href="/stats"
-                            class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                            data-bs-toggle="tooltip" title="Statistics" >
-                            $fa_chart
-                        </a>
+                <a href="/stats"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    data-bs-toggle="tooltip" title="Statistics" >
+                    $fa_chart
+                </a>
 
-                        <a href="/config"
-                            class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
-                            data-bs-toggle="tooltip" title="Settings" aria-label="Settings">
-                            $fa_gear
-                        </a>
-                        
-                    </div>
-                </div>
-            ~;
+                <a href="/config"
+                    class="btn btn-sm btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
+                    data-bs-toggle="tooltip" title="Settings" aria-label="Settings">
+                    $fa_gear
+                </a>
+                
+            </div>
+        </div>
+    ~;
 
     return $html;
     } # End header()
@@ -1781,7 +1768,6 @@ sub html_escape {
     return $s;
     } # End html_escape()
 
-
 ###############################################
 # single_db_value($sql, @params)
 # Execute a SQL query that returns a single value
@@ -1801,7 +1787,7 @@ sub debug {
     if ($debug == 1) {
         print STDERR "DEBUG: $msg\n";
         }
-    }
+    } # End debug()
 
 ###############################################
 # show_tasks($status, $list_id)
@@ -2267,9 +2253,7 @@ sub run_daily_tasks {
         }
 
     ###############################################
-
-
-    # We ran today, so let's update the last run time and return
+    # We ran run_daily_tasks() today, so let's update the last run time and return
     $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
     return;
     } # End run_daily_tasks()
@@ -2334,6 +2318,7 @@ sub save_config {
 ###############################################
 # ensure_sensible_config_range($value, $min, $max)
 # Ensure a numeric value is within a sensible range, otherwise return the nearest bound
+# This may now be redundant with bootstrap range values sanitising on input, but it's good to have server-side checks too
 sub ensure_sensible_config_range {
     my ($config_key, $min, $max) = @_;
     my $value = $config->{$config_key};
@@ -2350,7 +2335,7 @@ sub ensure_sensible_config_range {
         print STDERR "WARN: Config value for $config_key ($value) is above maximum ($max). Resetting to $max.\n";
         $config->{$config_key} = $max;
         }
-    }
+    } # End ensure_sensible_config_range()
 
 ###############################################
 # check_latest_release()
