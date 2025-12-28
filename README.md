@@ -31,29 +31,36 @@ We have a demo instance [available here](https://qualified-eleanore-digital-dile
 
 (This instance resets frequently, losing all its data - do not use for real!)
 
-# Quick start - Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
+# Quick start
+
+Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
 
 ## Table of contents 
 
 - [Features](#features)
-- [Security](#security)
+- [Demo](#demo)
+- [Quick Start](#quick-start)
+- [Table of Contents](#table-of-contents)
 - [Installation](#installation)
-  - [Requirements](#requirements)
-  - [Docker](#docker)
   - [Docker Compose](#docker-compose)
+  - [Docker](#docker)
   - [Linux service](#linux-service)
-- [Troubleshooting](#troubleshooting)
+- [Security](#security)
 - [FAQ](#faq)
-- [Version History / Releases](docs/release-notes.md)
 - [Upgrading](#upgrading)
+  - [Version History / Releases](docs/release-notes.md)
 - [Documentation](#documentation)
-- [Roadmap](#roadmap)
+  - [About Tasks](#about-tasks)
+  - [About Lists](#about-lists)
+  - [Schema](docs/database-schema-docs.md)
+  - [Web paths](docs/web-endpoints.md)
+- [Backups](#backups)
+- [Goals](#goals)
+  - [Supporting Taskpony](#support)
+  - [Roadmap](docs/roadmap.md)
 - [Screenshots](#screenshots)
-- [Schema](docs/database-schema-docs.md)
-- [Web paths](docs/web-endpoints.md)
 - [Credits](#credits)
 - [Licence](#licence)
-
 
 # Installation
 
@@ -296,7 +303,7 @@ When a List is chosen from the picklist, it will be automatically chosen on subs
 
 Lists are Alpha-sorted and are case sensitive, so 'A-Z' then 'a-z'
 
-## Database Backups
+## Backups
 
 Each day, Taskpony will automatically make a backup of its database by copying `taskpony.db` to `taskpony.db.0`, and rename any previous backups incrementally (.1 to .2, .0 to .1 etc) You can configure how many backups to keep in Settings -> `Number of daily database backups to keep`. 
 
@@ -331,15 +338,18 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 
  ## Support
 
- It's not necessary to support my work, but if you wish to, thank you!
+In terms of helping the project, then filing Bug Reports and Suggestions for improvement via the [Issues](http://gitea.digdilem.org/flash/taskpony/issues) system is very helpful. 
 
-<a href="https://www.buymeacoffee.com/digdilem" target="_blank">
+It's not necessary to pay to use Taskpony but  but if you wish to show appreciation, then thank you!
+
+<a href="https://www.buymeacoffee.com/digdilem">
   <img
     src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
     alt="Buy Me A Coffee"
-    style="transform: scale(0.6); transform-origin: left center;"
-  >
+    width="108"
+    height="30">
 </a>
+
 
 
 # Screenshots
@@ -376,33 +386,6 @@ Taskpony is built with the help of this great FOSS software:
 - [Datatables](https://datatables.net/) (Bundled)
 - [Fontawesome](https://fontawesome.com/) (Embedded SVGs)
 - [Tyna_Janoch](https://pixabay.com/photos/forest-nature-trees-beech-autumn-7573541/) for the example background image
-
-# Roadmap
-
-Some features for the future that may, or may not, be added. 
-
-- Probably:
-  - Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks. (Beware repeatable tasks, will need check so that period can't be less than those and vice versa or a repeating task could get deleted before it has a chance to re-activate.)
-
-- Maybe:
-  - A priority system. Poss 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
-  - Add default sorting option, rather than just newest-first.
-  - Add colour to tasks. (Possibly based on priority, possibly a per-task setting. Beware making things too messy)
-  - Multi-language support.
-  - Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
-  - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
-  - Ability to undelete Lists
-  - A self refreshing ability when another client changes the database, so it's displaying the latest info.
-  - A history table for tasks and actions. Extra detail for tasks for recurring tasks, when lists were created, changed etc.
-  - Move Export buttons toggle from Settings to a button on the top group, but cautious of making that too cluttered.
-  
-
-- Unlikely:
-  - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however.
-  - Groups / teams / shared and embeddded tasks. 
-  - Authentication, https. 
-  - Plugins.
-
 
 
 # Licence
