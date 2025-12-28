@@ -282,11 +282,9 @@ To stop a task for repeating, you can either
 
 ## About Lists
 
-![Lists button](docs/lists-button.jpg)
-
 The header shows a Lists button at the top right which takes you to `/lists` where you can manage Taskpony's Lists.
 
-Here you can see all the Lists along with how many tasks, active or completed, within them.
+Here you can see all the Lists along with how many tasks, active or completed, within each.
 
 You can edit any List by clicking on its title.
 

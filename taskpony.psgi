@@ -1566,6 +1566,12 @@ sub header {
                         <a href="/lists"
                             class="btn btn-sm btn-secondary d-inline-flex align-items-center"
                             data-bs-toggle="tooltip" title="Manage Lists" >
+                            $fa_rotate_left
+                        </a>
+
+                        <a href="/lists"
+                            class="btn btn-sm btn-secondary d-inline-flex align-items-center"
+                            data-bs-toggle="tooltip" title="Manage Lists" >
                             $fa_list
                         </a>
 
