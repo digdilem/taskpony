@@ -2450,7 +2450,7 @@ sub config_show_option {
 sub build_icon {
     my ($size, $svg) = @_;
 
-    return qq~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 512 512" width="$size" height="$size"><path fill="currentColor" d="$svg" ></svg>~;
+    return qq~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid meet" width="$size" height="$size"><path fill="currentColor" d="$svg" ></svg>~;
     } # end build_icon
 
 ##############################################
