@@ -1580,7 +1580,7 @@ sub header {
                         } else { # We're showing completed tasks, so show button for the active list
                         my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
                         $html .= qq~
-                        <a href="/?sc=1"
+                        <a href="/"
                             class="btn btn-sm btn-secondary d-inline-flex align-items-center"
                             data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
                             $fa_rotate_right
@@ -1588,6 +1588,7 @@ sub header {
                         ~;
                         } # End active/completed button
 
+                        $html .= qq~
                         <a href="/lists"
                             class="btn btn-sm btn-secondary d-inline-flex align-items-center"
                             data-bs-toggle="tooltip" title="Manage Lists" >
