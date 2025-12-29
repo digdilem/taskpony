@@ -58,5 +58,11 @@ echo "To confirm upload, check it at:  https://hub.docker.com/repositories/digdi
 
 echo "Completed."
 
+echo "Will wait for 3 minutes and then restart the demo instance..."
+
+sleep 180
+
+ /root/koyeb services redeploy qualified-eleanore/taskpony
+
 
 # End of file

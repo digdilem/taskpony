@@ -42,7 +42,7 @@ Deploy using [Docker Compose](#docker-compose) and visit port 5000.
 - [Quick Start](#quick-start)
 - [Table of Contents](#table-of-contents)
 - [Installation](#installation)
-  - [Docker Compose](#docker-compose)
+  - [Docker Compose](#docker-compose-recommended)
   - [Docker](#docker)
   - [Linux service](#linux-service)
 - [Security](#security)
