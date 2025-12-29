@@ -33,7 +33,7 @@ We have a demo instance [available here](https://qualified-eleanore-digital-dile
 
 # Quick start
 
-Deploy using [Docker Compose](#docker-compose) and visit port 5000. 
+Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000. 
 
 ## Table of contents 
 
