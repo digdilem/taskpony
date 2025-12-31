@@ -5,7 +5,7 @@
 - **T** ransparent - Open source and openly described. Even the database schema is documented.
 - **A** ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
 - **S** imple - Easy to install, easy to understand, and easy to operate.
-- **K** eep everything — Unlimited tasks and unlimited lists — no artificial limits.
+- **K** eep everything - Unlimited tasks and unlimited lists — no artificial limits.
 - **P** rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. We can't sell your data if we don't have your data.
 - **O** pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
 - **N** o clutter - A focused interface that shows only what you actually need.
