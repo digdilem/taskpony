@@ -9,7 +9,7 @@
 - **P** rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. We can't sell your data if we don't have your data.
 - **O** pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
 - **N** o clutter - A focused interface that shows only what you actually need.
-- **Y** ours - Free to use and always will be. No commercial edition, no hosted version
+- **Y** ours - Free to use and always will be. No commercial edition, no hosted version.
 
 
 | Desktop View                                                | Mobile View                                      |
@@ -33,7 +33,7 @@ We have a demo instance [available here](https://qualified-eleanore-digital-dile
 
 # Quick start
 
-Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000. 
+Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
 
 ## Table of contents 
 
