@@ -2,6 +2,8 @@
 
 # TASKPONY
 
+- ![T](https://img.shields.io/badge/-T-blue)
+
 - **T** ransparent - Open source and openly described. Even the database schema is documented.
 - **A** ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
 - **S** imple - Easy to install, easy to understand, and easy to operate.
