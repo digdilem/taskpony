@@ -43,7 +43,7 @@ Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
 - [Table of Contents](#table-of-contents)
 - [Installation](#installation)
   - [![Docker Compose](https://img.shields.io/badge/docker-compose-brightgreen)](#docker-compose-recommended)
-  - [![Docker Run](https://img.shields.io/badge/docker-runbrightgreen)](#docker)
+  - [![Docker Run](https://img.shields.io/badge/docker-run-brightgreen)](#docker)
   - [![Linux Systemd Service](https://img.shields.io/badge/linux-systemd_service-blue)](#linux-service)
 - [Security](#security)
 - [FAQ](#faq)
