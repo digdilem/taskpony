@@ -27,14 +27,9 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-![Try the Demo](https://img.shields.io/badge/try_the-demo-brightgreen)
+[![Try the Demo!](https://img.shields.io/badge/Try_The-Demo-brightgreen)](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/app)
 
-[![Try the Demo](https://img.shields.io/badge/Try_The-Demo-brightgreen)](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/app)
-
-
-We have a demo instance [available here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/) so you can see and use Taskpony in action!
-
-*(This instance resets frequently, losing all its data - do not use for real!)*
+*(This instance resets frequently, losing all its data!)*
 
 # Quick start
 
@@ -49,7 +44,7 @@ Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
 - [Installation](#installation)
   - [![Docker Compose (Recommended)](https://img.shields.io/badge/docker-compose-brightgreen)](#docker-compose-recommended)
   - [![Docker Run](https://img.shields.io/badge/docker-brightgreen)](#docker)
-  - [![Linux Systemd service](https://img.shields.io/badge/linux-systemd-service-blue)](#linux-service)
+  - [![Linux-Systemd_Service](https://img.shields.io/badge/linux-systemd-service-blue)](#linux-service)
 - [Security](#security)
 - [FAQ](#faq)
 - [Upgrading](#upgrading)
