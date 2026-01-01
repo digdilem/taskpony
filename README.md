@@ -29,7 +29,7 @@ See some more [Screenshots](#screenshots)
 
 ![Try the Demo](https://img.shields.io/badge/try_the-demo-brightgreen)
 
-[![Try the Demo](https://img.shields.io/badge/try the-demo-brightgreen)](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/app)
+[![Try the Demo](https://img.shields.io/badge/Try_The-Demo-brightgreen)](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/app)
 
 
 We have a demo instance [available here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/) so you can see and use Taskpony in action!
