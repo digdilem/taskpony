@@ -4,14 +4,14 @@
 
 
 
-- ![T](https://img.shields.io/badge/-T-blue)ransparent - Open source and openly described. Even the database schema is documented.
-- ![A](https://img.shields.io/badge/-A-blue)ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
-- **S** imple - Easy to install, easy to understand, and easy to operate.
-- **K** eep everything - Unlimited tasks and unlimited lists — no artificial limits.
-- **P** rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. 
-- **O** pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
-- **N** o clutter - A focused interface that shows only what you actually need.
-- **Y** ours - Free to use and always will be. No commercial edition, no hosted version.
+- ![T](https://img.shields.io/badge/-T-blue) ransparent - Open source and openly described. Even the database schema is documented.
+- ![A](https://img.shields.io/badge/-A-blue) ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
+- ![S](https://img.shields.io/badge/-S-blue) imple - Easy to install, easy to understand, and easy to operate.
+- ![K](https://img.shields.io/badge/-K-blue) eep everything - Unlimited tasks and unlimited lists — no artificial limits.
+- ![P](https://img.shields.io/badge/-P-blue) rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. 
+- ![O](https://img.shields.io/badge/-O-blue) pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
+- ![N](https://img.shields.io/badge/-N-blue) o clutter - A focused interface that shows only what you actually need.
+- ![Y](https://img.shields.io/badge/-Y-blue) ours - Free to use and always will be. No commercial edition, no hosted version.
 
 
 | Desktop View                                                | Mobile View                                      |
