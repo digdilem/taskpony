@@ -27,7 +27,7 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-[Try the Demo](https://img.shields.io/badge/try-the-demo-brightgreen)
+![Try the Demo](https://img.shields.io/badge/try-the-demo-brightgreen)
 
 [![Try the Demo](https://img.shields.io/badge/try-the-demo-brightgreen)](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/app)
 
