@@ -1,6 +1,6 @@
 > "A small and simple self-hosted personal tasks organiser"
 
-![Foss](https://img.shields.io/badge/-FOSS-brightgreen) ![Selfhosted](https://img.shields.io/badge/-Self--Hosted-purple) ![Docker](https://img.shields.io/badge/-Docker-blue) 
+![Foss](https://img.shields.io/badge/-FOSS-brightgreen) ![Selfhosted](https://img.shields.io/badge/-Self--Hosted-purple) ![Docker](https://img.shields.io/badge/-Docker-blue) ![Productivity](https://img.shields.io/badge/-Productivity-orange) 
 
 # TASKPONY
 
