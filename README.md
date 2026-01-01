@@ -6,7 +6,7 @@
 - **A** ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
 - **S** imple - Easy to install, easy to understand, and easy to operate.
 - **K** eep everything - Unlimited tasks and unlimited lists — no artificial limits.
-- **P** rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. We can't sell your data if we don't have your data.
+- **P** rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. 
 - **O** pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
 - **N** o clutter - A focused interface that shows only what you actually need.
 - **Y** ours - Free to use and always will be. No commercial edition, no hosted version
@@ -42,7 +42,7 @@ Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000.
 - [Quick Start](#quick-start)
 - [Table of Contents](#table-of-contents)
 - [Installation](#installation)
-  - [Docker Compose](#docker-compose-recommended)
+  - [![Docker Compose](https://img.shields.io/badge/docker-compose-brightgreen)](#docker-compose-recommended)
   - [Docker](#docker)
   - [Linux service](#linux-service)
 - [Security](#security)
@@ -180,7 +180,7 @@ All tasks, lists and settings are kept within the single file, `taskpony.db` sto
 
 > Is there an Android or IOS app?
 
-Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop the Taskpony so it instantly opens in a browser)   If anyone wants to create an app for Taskpony, that's great, and if it's good then let me know and I'll reference it here.
+Sorry, no. Taskpony was designed to be a responsive web app and works well on both desktop and smaller devices, so an app is not considered necessary. (If you use a phone for your tasks as I do, create a shortcut on the desktop to Taskpony so it instantly opens in a browser)   If anyone wants to create an app for Taskpony, that's great, and if it's good then let me know and I'll reference it here.
 
 > When will support for multiple users, groups or teams be added?
 
