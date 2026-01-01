@@ -2,10 +2,10 @@
 
 # TASKPONY
 
-- ![T](https://img.shields.io/badge/-T-blue)
 
-- **T** ransparent - Open source and openly described. Even the database schema is documented.
-- **A** ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
+
+- ![T](https://img.shields.io/badge/-T-blue)ransparent - Open source and openly described. Even the database schema is documented.
+- ![A](https://img.shields.io/badge/-A-blue)ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
 - **S** imple - Easy to install, easy to understand, and easy to operate.
 - **K** eep everything - Unlimited tasks and unlimited lists — no artificial limits.
 - **P** rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. 
