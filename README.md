@@ -1,8 +1,8 @@
 > "A small and simple self-hosted personal tasks organiser"
 
+![Foss](https://img.shields.io/badge/-FOSS-green) ![Selfhosted](https://img.shields.io/badge/-Self--Hosted-green) ![Docker](https://img.shields.io/badge/-Docker-green) 
+
 # TASKPONY
-
-
 
 - ![T](https://img.shields.io/badge/-T-blue) ransparent - Open source and openly described. Even the database schema is documented.
 - ![A](https://img.shields.io/badge/-A-blue) ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
@@ -13,11 +13,9 @@
 - ![N](https://img.shields.io/badge/-N-blue) o clutter - A focused interface that shows only what you actually need.
 - ![Y](https://img.shields.io/badge/-Y-blue) ours - Free to use and always will be. No commercial edition, no hosted version.
 
-
 | Desktop View                                                | Mobile View                                      |
 |-------------------------------------------------------------|--------------------------------------------------|
 | <img src="docs/tasklist.jpg" height="600" align="center"> | <img src="docs/taskpony_mobile.jpg" height="600" align="center"> |
-
 
 # Features
 
