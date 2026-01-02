@@ -930,8 +930,8 @@ my $app = sub {
                                         $deleted_date
                                     </td>
                                     <td>
-                                        <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-warning">Permanently Delete</a> 
                                         <a href="/list_undelete?id=$a->{'id'}" class="btn btn-sm btn-success">Undelete</a>
+                                        <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-danger">Permanently Delete</a> 
 
                                     </td>
                                 </tr>
