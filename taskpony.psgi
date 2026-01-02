@@ -716,9 +716,10 @@ my $app = sub {
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
                                     <td>$is_default_str</td>
-                                    <td>
-
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">Delete</button>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                 ~;
