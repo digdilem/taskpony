@@ -863,9 +863,11 @@ my $app = sub {
                                 ~;
 
         $html .= end_card();
+        $html .= "<br/>";
+
 
         # Deleted Lists Card and Table
-        $html .= start_card('Deleted Lists', $fa_trash, 0);
+        $html .= start_card('Deleted Lists', $fa_trash, 1);
 
         $html .= qq~  
                             <div class="table-responsive">
