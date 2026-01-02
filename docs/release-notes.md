@@ -4,7 +4,7 @@
 - Reflow App/title onto one line to reduce some vertical height
 - Taskpony will now automatically reload the page if the database has changed since the page was first loaded. This would normally happen if a task was changed from another client. Check interval set to 60s initially. 
 - Switched from Fontawesome to Tabler icons for a greater range.
-- Tidied tooltip placement
+- Changed tooltip placement to be auto instead of always top.
 
 # 0.3  
 

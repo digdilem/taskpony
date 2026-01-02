@@ -77,7 +77,7 @@ my $stats = {                           # Hashref to hold various stats for dash
     repeating_tasks => 0,
     };
 
-# Some inline SVG fontawesome icons to prevent including the entire svg map just for a few icons. 30px
+# Some inline SVG tabler icons to prevent including the entire svg map just for a few icons. 30px
 # Copy SVG from Tabler and remove everything up to the first "<path" and also the closing "</svg>" tag.
 my $icon_gear = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />');
 my $icon_list = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3.5 5.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 11.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 17.5l1.5 1.5l2.5 -2.5" /><path d="M11 6l9 0" /><path d="M11 12l9 0" /><path d="M11 18l9 0" />');
@@ -2568,13 +2568,6 @@ sub config_show_option {
 
 ###############################################
 # build_icon($size,$svg);
-# Taskpony uses several Fontawesome icons via SVG. To allow resizing and reduce deplication, we can build them.
-sub build_icon {
-    my ($size, $svg) = @_;
-
-    return qq~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid meet" width="$size" height="$size"><path fill="currentColor" d="$svg" ></svg>~;
-    } # end build_icon
-
 sub build_tabler_icon {
     my ($size, $svg) = @_;
 
@@ -2582,8 +2575,6 @@ sub build_tabler_icon {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
         </span>~;
     } # end build_tabler_icon
-
-
 
 ###############################################
 # Update the global $db_mtime variable with the current database file modification time
