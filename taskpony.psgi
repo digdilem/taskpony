@@ -1715,7 +1715,7 @@ sub footer {
 
         async function checkDbStats() {
             try {
-            const response = await fetch("/api/dbstats", {
+            const response = await fetch("/api/dbstate", {
                 cache: "no-store"
             });
 
@@ -1723,6 +1723,7 @@ sub footer {
 
             const text = await response.text();
             const currentValue = parseInt(text.trim(), 10);
+
 console.log("seed:", lastValue, "current:", currentValue, typeof lastValue, typeof currentValue);
 
             if (!Number.isFinite(currentValue)) return;
