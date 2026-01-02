@@ -863,7 +863,8 @@ my $app = sub {
                                 ~;
 
         $html .= end_card();
-        $html .= "<br/>";
+        $html .= "<br>";
+        $html .= "<br>";
 
 
         # Deleted Lists Card and Table
