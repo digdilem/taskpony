@@ -2202,7 +2202,7 @@ sub start_card {
 
     $html .= qq~
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                            <h2 class="mb-4">
+                            <h2 class="mb-2">
                                 $card_title
                                 ~;
                             if ($card_icon ne '') {
@@ -2227,7 +2227,7 @@ sub start_mini_card {
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm mb-4">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
                                 $card_title
