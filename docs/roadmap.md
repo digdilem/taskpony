@@ -18,6 +18,6 @@ Some features for the future that may, or may not, be added.
 
 - Unlikely:
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however, and may not be possible within the [Goals](../README.md#goals)
-  - Groups / teams / shared and embeddded tasks = Taskpony is a single user Tasks app. There are several good FOSS groupware/multi-user systems around. 
+  - Groups / teams / multiple users / shared and embeddded tasks = Taskpony is a single user Tasks app. There are several good FOSS groupware/multi-user systems around. 
   - Authentication, https = See [security](../README.md#security) for an explanation.
   - Plugins = It's just a Tasks manager, right? If features are needed, they can be baked in. 

@@ -1,5 +1,8 @@
 # Taskpony Version History
 
+# 0.4
+- Reflow App/title onto one line to reduce some vertical height
+
 # 0.3  
 
 Task List:
