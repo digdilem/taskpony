@@ -37,8 +37,7 @@ our $config = {
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
-    database_schema_version => 1,               # Don't change this.
-    refresh_interval_seconds => 30,             # Auto refresh interval check in seconds. 0 = disabled
+    database_schema_version => 1,               # Don't change this. True version will be read from the database on startup.
     };
 
 ###############################################
@@ -50,13 +49,14 @@ my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/release
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
 my $new_version_available = 0;
 
-my $dbh;                        # Global database handle 
-my $list_id = 1;                # Current list id
-my $list_name;                  # Current list name
-my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
-my $alert_text = '';            # If set, show this alert text on page load
-my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
-my $db_mtime = 0;               # Cached database file modification time for /api/dbstate
+my $dbh;                            # Global database handle 
+my $list_id = 1;                    # Current list id
+my $list_name;                      # Current list name
+my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
+my $alert_text = '';                # If set, show this alert text on page load
+my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
+my $db_mtime = 0;                   # Cached database file modification time for /api/dbstate
+my $db_interval_check_ms = 5000;    # How many milliseconds between checking /api/dbstate for changes
 
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
@@ -1706,6 +1706,36 @@ sub footer {
             setTimeout(() => alert.remove(), 150); // optional: remove once faded
             }
         }, 5000);
+        </script>
+
+        <!-- Reload page if DB stats mtime changes -->
+        <script>
+        (function () {
+        let lastValue = $db_mtime;
+
+        async function checkDbStats() {
+            try {
+            const response = await fetch("/api/dbstats", {
+                cache: "no-store"
+            });
+
+            if (!response.ok) return;
+
+            const text = await response.text();
+            const currentValue = parseInt(text, 10);
+
+            if (!Number.isFinite(currentValue)) return;
+
+            if (currentValue !== lastValue) {
+                window.location.reload();
+            }
+            } catch (e) {
+            // Fail silently
+            }
+        }
+        
+        setInterval(checkDbStats, $db_interval_check_ms);
+        })();
         </script>
 
         </body>
