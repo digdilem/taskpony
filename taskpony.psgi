@@ -1130,10 +1130,12 @@ my $app = sub {
             </form>
             ~;
 
+            $html .= end_card();
+
+            $html .= start_card('Background Image Upload', $icon_image, 0);
+
             # Start a second form for the background image upload
             $html .= qq~
-            <hr>
-
             <form method="post" action="/background_set" enctype="multipart/form-data">
                 <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
                     <label for="background" class="form-label mb-0 flex-grow-1"  
@@ -1160,8 +1162,10 @@ my $app = sub {
                 <div class="form-text mt-1">
                     Upload a JPG to replace the current background image.
                 </div>
-            </form>
+            </form>            
             ~;
+
+        $html .= end_card();
 
         $html .= footer();
         $res->body($html);
