@@ -5,6 +5,7 @@
 - Taskpony will now automatically reload the page if the database has changed since the page was first loaded. This would normally happen if a task was changed from another client. Check interval set to 60s initially. 
 - Switched from Fontawesome to Tabler icons for a greater range.
 - Changed tooltip placement to be auto instead of always top.
+- Lists page now shows a third table allowing you to undelete or permanently delete a List
 
 # 0.3  
 
