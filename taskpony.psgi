@@ -2259,7 +2259,7 @@ sub start_mini_card {
     my $html = qq~
         <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card shadow-sm mb-4">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 class="mb-0">
