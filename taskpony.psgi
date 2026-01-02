@@ -1711,7 +1711,7 @@ sub footer {
         <!-- Reload page if DB stats mtime changes -->
         <script>
         (function () {
-        let lastValue = $db_mtime;
+        let lastValue = Number($db_mtime);
 
         async function checkDbStats() {
             try {
@@ -1723,6 +1723,8 @@ sub footer {
 
             const text = await response.text();
             const currentValue = parseInt(text, 10);
+
+console.log("seed:", lastValue, "current:", currentValue, typeof lastValue, typeof currentValue);
 
             if (!Number.isFinite(currentValue)) return;
 
