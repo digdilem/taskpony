@@ -38,6 +38,7 @@ our $config = {
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
     database_schema_version => 1,               # Don't change this.
+    refresh_interval_seconds => 30,             # Auto refresh interval check in seconds. 0 = disabled
     };
 
 ###############################################
@@ -55,6 +56,7 @@ my $list_name;                  # Current list name
 my $debug = 0;                  # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';            # If set, show this alert text on page load
 my $show_completed = 0;         # If set to 1, show completed tasks instead of active ones
+my $db_mtime = 0;               # Cached database file modification time for /api/dbstate
 
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
@@ -128,8 +130,8 @@ my $app = sub {
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
-
-    calculate_stats();                    # Update stats hashref if needed
+    update_db_mtime();                          # Ensure we have the latest mtime cached
+    calculate_stats();                          # Update stats hashref if needed
 
     # If no list lid specified, get the active list from ConfigTb to provide consistency to user
     if ($list_id == 0) {
@@ -157,7 +159,7 @@ my $app = sub {
     ###############################################
     # /api/dbstate check - returns simple JSON with last mtime of the database
     if ($req->path eq "/api/dbstate") {
-        my $db_mtime = (stat($db_path))[9] // 0;
+        update_db_mtime();  # Ensure we have the latest mtime cached
         debug("API DB State requested, returning mtime: $db_mtime");
         $res->header('Content-Type' => 'text/plain');
         $res->header('Cache-Control' => 'no-cache, no-store');
@@ -2453,6 +2455,12 @@ sub build_icon {
 
     return qq~<svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid meet" width="$size" height="$size"><path fill="currentColor" d="$svg" ></svg>~;
     } # end build_icon
+
+###############################################
+# Update the global $db_mtime variable with the current database file modification time
+sub update_db_mtime {
+    $db_mtime = (stat($db_path))[9] // 0;    
+    }
 
 ##############################################
 # End Functions
