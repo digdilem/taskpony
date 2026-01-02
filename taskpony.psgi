@@ -1592,6 +1592,10 @@ sub header {
         .header-bar { min-height: 72px; }
         .dataTables_paginate .paginate_button.disabled { display: none !important; }
         .icon { width: 1em; height: 1em; vertical-align: middle; }
+        div {
+  outline: 1px solid rgba(255, 0, 0, 0.2);
+}
+
     </style>
 
     </head>
