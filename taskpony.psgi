@@ -221,6 +221,7 @@ my $app = sub {
         if ($req->method && uc($req->method) eq 'GET') {
             my $lid = $req->param('id');
             if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
+                print STDERR "Undeleting list id $lid\n";
                 my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List undelete failed: $@";
                 add_alert("List #$lid restored.");
@@ -236,6 +237,7 @@ my $app = sub {
         if ($req->method && uc($req->method) eq 'GET') {
             my $lid = $req->param('id');
             if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
+                print STDERR "Permanently deleting list id $lid\n";
                 my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List delete failed: $@";
                 add_alert("List #$lid deleted.");
