@@ -2198,7 +2198,7 @@ sub start_card {
 
     my $html = qq~ <div class="card shadow-sm"> ~;
 
-    if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none mb-4" id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
+    if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none mb-8" id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
 
     $html .= qq~
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
