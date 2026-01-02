@@ -931,7 +931,7 @@ my $app = sub {
                                     <td>
                                         $deleted_date
                                     </td>
-                                    <td>                                        
+                                    <td class="text-right">                                        
                                             <a href="/list_undelete?id=$a->{'id'}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="auto" title="Return this List to active status">Undelete</a>
                                             &nbsp;&nbsp;
                                             <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this list from the Database. Associated Tasks will be orphaned.">Permanently Delete</a> 
