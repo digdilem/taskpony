@@ -909,10 +909,9 @@ my $app = sub {
                             </tbody>
                         </table>
                             </div>
-                    </div>
-                </div>
                 ~;
 
+        $html .= end_card();
 
 
 

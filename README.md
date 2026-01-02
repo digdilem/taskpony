@@ -27,7 +27,7 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-[![Try the Demo!](https://img.shields.io/badge/Try_The-Demo-brightgreen)](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/app)
+[![Try the Demo!](https://img.shields.io/badge/Try_The-Demo-brightgreen)](https://equivalent-giralda-digital-dilemma2-169926c3.koyeb.app/)
 
 *(This instance resets frequently, losing all its data!)*
 
@@ -382,7 +382,7 @@ Taskpony is built with the help of this great FOSS software:
 - [Bootstrap 5](https://getbootstrap.com/) (Bundled)
 - [JQuery](https://jquery.com/) (Bundled)
 - [Datatables](https://datatables.net/) (Bundled)
-- [Fontawesome](https://fontawesome.com/) (Embedded SVGs)
+- [Tabler Icons](https://tabler.io/) (Embedded SVGs)
 - [Tyna_Janoch](https://pixabay.com/photos/forest-nature-trees-beech-autumn-7573541/) for the example background image
 
 
