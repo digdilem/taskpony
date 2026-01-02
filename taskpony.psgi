@@ -2241,7 +2241,7 @@ sub start_card {
 
     $html .= qq~
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
-                            <h2 class="mb-2">
+                            <h2 >
                                 $card_title
                                 ~;
                             if ($card_icon ne '') {
