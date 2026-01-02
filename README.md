@@ -27,7 +27,7 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-We have a demo instance [available here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/) so you can see and use Taskpony in action!
+We have a demo instance [available here](https://equivalent-giralda-digital-dilemma2-169926c3.koyeb.app/) so you can see and use Taskpony in action!
 
 (This instance resets frequently, losing all its data - do not use for real!)
 
