@@ -21,7 +21,7 @@
 
 Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed. 
 
-No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included. 
+No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included. The list will automatically reload if another browser has changed the database to ensure it's up to date.
 
 See some more [Screenshots](#screenshots)
 

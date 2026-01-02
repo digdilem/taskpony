@@ -56,7 +56,7 @@ my $debug = 0;                      # Set to 1 to enable debug messages to STDER
 my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
 my $db_mtime = 0;                   # Cached database file modification time for /api/dbstate
-my $db_interval_check_ms = 5000;    # How many milliseconds between checking /api/dbstate for changes
+my $db_interval_check_ms = 60000;   # How many milliseconds between checking /api/dbstate for changes
 
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
@@ -1708,38 +1708,6 @@ sub footer {
         }, 5000);
         </script>
 
-        <!-- Reload page if DB stats mtime changes -->
-        <script>
-        (function () {
-        let lastValue = Number($db_mtime);
-
-        async function checkDbStats() {
-            try {
-            const response = await fetch("/api/dbstate", {
-                cache: "no-store"
-            });
-
-            if (!response.ok) return;
-
-            const text = await response.text();
-            const currentValue = parseInt(text.trim(), 10);
-
-console.log("seed:", lastValue, "current:", currentValue, typeof lastValue, typeof currentValue);
-
-            if (!Number.isFinite(currentValue)) return;
-
-            if (currentValue !== lastValue) {
-                window.location.reload();
-            }
-            } catch (e) {
-            // Fail silently
-            }
-        }
-        
-        setInterval(checkDbStats, $db_interval_check_ms);
-        })();
-        </script>
-
         </body>
         </html>
         ~;
@@ -2028,11 +1996,42 @@ sub show_tasks {
         ~;
     } # End tasks loop
 
-    # Close table
+    # Close table and add JS script to reload page if DB stats mtime changes
     $html .= qq~
             </tbody>
         </table>
         <br><br>
+
+        <!-- Reload page if DB stats mtime changes -->
+        <script>
+        (function () {
+        let lastValue = Number($db_mtime);
+
+        async function checkDbStats() {
+            try {
+            const response = await fetch("/api/dbstate", {
+                cache: "no-store"
+            });
+
+            if (!response.ok) return;
+
+            const text = await response.text();
+            const currentValue = parseInt(text.trim(), 10);
+
+            if (!Number.isFinite(currentValue)) return;
+
+            if (currentValue !== lastValue) {
+                window.location.reload();
+            }
+            } catch (e) {
+            // Fail silently
+            }
+        }
+        
+        setInterval(checkDbStats, $db_interval_check_ms);
+        })();
+        </script> <!-- End DB stats check script -->
+
         ~;
 
     return $html;

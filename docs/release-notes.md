@@ -2,6 +2,7 @@
 
 # 0.4
 - Reflow App/title onto one line to reduce some vertical height
+- Taskpony will now automatically reload the page if the database has changed since the page was first loaded. This would normally happen if a task was changed from another client. Check interval set to 60s initially. 
 
 # 0.3  
 
