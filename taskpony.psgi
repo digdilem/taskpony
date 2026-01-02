@@ -863,7 +863,6 @@ my $app = sub {
                                 ~;
 
         $html .= end_card();
-        $html .= "<hr>\n";
 
 
         # Deleted Lists Card and Table
@@ -875,21 +874,20 @@ my $app = sub {
                                 <thead>
                                     <tr>
                                         <th>List</th> 
-                                        <th>Description</th>
                                         <th>Deleted Date</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             <tbody>
         ~;
         my $deleted_list_sth = $dbh->prepare(
-            'SELECT id, Title, Description, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
+            'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
             );  # Don't select ListsTb.id=1, "All" 
         $deleted_list_sth->execute();   
         # Step through deleted lists
-        while (my $list= $deleted_list_sth->fetchrow_hashref()) {
-            my $title = html_escape($list->{'Title'});
-            my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
-            my $deleted_date = $list->{'DeletedDate'};
+        while (my $a = $deleted_list_sth->fetchrow_hashref()) {
+            my $title = html_escape($a->{'Title'});
+            my $deleted_date = $a->{'DeletedDate'};            
             
             $html .= qq~
                                 <tr>
@@ -899,9 +897,15 @@ my $app = sub {
                                         </strong>
                                     </td>
                                     <td>
-                                        $desc
+                                        $deleted_date
                                     </td>
-                                    <td>$deleted_date</td>
+                                    <td>
+                                        <form method="post" action="/lists" style="display:inline;">
+                                            <input type="hidden" name="action" value="delete" />
+                                            <input type="hidden" name="list_id" value="$a->{'id'}" />
+                                            <button class="btn btn-sm btn-danger" type="submit">Permanently Delete</button>
+                                        </form>     
+                                    </td>
                                 </tr>
                 ~;
             } # End deleted lists loop
