@@ -14,7 +14,7 @@ use HTTP::Tiny;             # To fetch latest version from github
 use JSON::PP;               # Part github json response
 
 use Plack::Builder;         # Favicon
-use File::Spec::Functions qw(catdir);/
+use File::Spec::Functions qw(catdir);
 use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;                # To find ./static directory
 
