@@ -159,7 +159,7 @@ my $app = sub {
     if ($req->path eq "/api/dbstate") {
         my $db_mtime = (stat($db_path))[9] // 0;
         debug("API DB State requested, returning mtime: $db_mtime");
-        $res->header('Content-Type' => 'application/json');
+        $res->header('Content-Type' => 'application/text');
         $res->body($db_mtime);
         return $res->finalize;
         } # End /api/dbstate
