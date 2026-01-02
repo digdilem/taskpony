@@ -252,7 +252,6 @@ my $app = sub {
     if ($req->path eq "/set_default_list") {
         if ($req->method && uc($req->method) eq 'GET') {
             my $lid = $req->param('id');
-
             if ($lid > 1) { # Don't allow setting "All Tasks Lists" as default
                 print STDERR "Setting list $lid as default list.\n";
                 single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
@@ -898,7 +897,7 @@ my $app = sub {
 
 
         # Deleted Lists Card and Table
-        $html .= start_card('Deleted Lists', $fa_trash, 0);
+        $html .= start_mini_card('Deleted Lists', $fa_trash, 0);
 
         $html .= qq~  
                             <div class="table-responsive">
