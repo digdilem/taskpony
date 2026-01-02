@@ -639,7 +639,7 @@ my $app = sub {
                                         <th>Description</th>
                                         <th>Active Tasks</th>
                                         <th>Completed Tasks</th>
-                                        <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="The default list appears at the top of the list picklist">Default</span</th>
+                                        <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="The default list appears at the top of the list picklist">Default</span></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -930,9 +930,10 @@ my $app = sub {
                                     <td>
                                         $deleted_date
                                     </td>
-                                    <td>
-                                        <a href="/list_undelete?id=$a->{'id'}" class="btn btn-sm btn-success">Undelete</a>
-                                        <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-danger">Permanently Delete</a> 
+                                    <td>                                        
+                                            <a href="/list_undelete?id=$a->{'id'}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Return this List to active status">Undelete</a>                                        
+                                            <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Permanently delete this list from the Database. Associated Tasks will be orphaned.">Permanently Delete</a> 
+                                    
 
                                     </td>
                                 </tr>
