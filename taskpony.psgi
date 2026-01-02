@@ -157,7 +157,7 @@ my $app = sub {
     ###############################################
     # /api/dbstate check - returns simple JSON with last mtime of the database
     if ($req->path eq "/api/dbstate") {
-        my $db_mtime = (stat($db_file))[9] // 0;
+        my $db_mtime = (stat($db_path))[9] // 0;
         my $json_response = to_json( { db_mtime => $db_mtime } );
         $res->header('Content-Type' => 'application/json');
         $res->body($json_response);
