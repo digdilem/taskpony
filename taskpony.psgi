@@ -1722,8 +1722,7 @@ sub footer {
             if (!response.ok) return;
 
             const text = await response.text();
-            const currentValue = parseInt(text, 10);
-
+            const currentValue = parseInt(text.trim(), 10);
 console.log("seed:", lastValue, "current:", currentValue, typeof lastValue, typeof currentValue);
 
             if (!Number.isFinite(currentValue)) return;
