@@ -12,7 +12,6 @@ Some features for the future that may, or may not, be added.
   - Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
   - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
   - Ability to undelete Lists from the UI
-  - A self refreshing ability when another client changes the database, so it's displaying the latest info.
   - A history table for tasks and actions. Extra detail for recurring tasks, when lists were created, changed etc.
   - Add ability to switch between dark/light modes, or themes.
 
