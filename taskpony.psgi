@@ -2585,10 +2585,6 @@ sub build_tabler_icon {
     } # end build_tabler_icon
 
 
-<button class="btn btn-sm btn-danger">
-  <svg class="icon">...</svg>
-  Delete
-</button>
 
 ###############################################
 # Update the global $db_mtime variable with the current database file modification time
