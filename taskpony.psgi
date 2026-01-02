@@ -639,7 +639,7 @@ my $app = sub {
                                         <th>Description</th>
                                         <th>Active Tasks</th>
                                         <th>Completed Tasks</th>
-                                        <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="The default list appears at the top of the list picklist">Default</span></th>
+                                        <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="auto" title="The default list appears at the top of the list picklist">Default</span></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -683,7 +683,7 @@ my $app = sub {
             # Show toggles for default list
             my $is_default_str = qq~
                 <a href="/set_default_list?id=$list->{'id'}">
-                <span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="top" title="Make this the default list">                
+                <span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="auto" title="Make this the default list">                
                     $fa_star_off
                 </span>
                 </a>
@@ -691,7 +691,7 @@ my $app = sub {
 
             if ($list->{'IsDefault'} == 1) {
                 $is_default_str = qq~
-                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="top" title="This is the default list">
+                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is the default list">
                         $fa_star_on
                     </span>~;
                 }
@@ -700,14 +700,14 @@ my $app = sub {
                                 <tr>
                                     <td>
                                         <strong>
-                                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">
+                                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">
                                                 $title
                                             </a>
                                             </span>
                                         </strong>
                                     </td>
                                     <td>
-                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="top" title="Jump to $title">
+                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                                           $fa_goto &nbsp;
                                         </a>
                                         $desc
