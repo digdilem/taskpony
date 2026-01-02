@@ -221,7 +221,7 @@ my $app = sub {
         if ($req->method && uc($req->method) eq 'GET') {
             my $lid = $req->param('id');
             if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
-                my $sth = $dbh->prepare('UPDATE ListsTb SET IsDeleted = NULL WHERE id = ? LIMIT 1');
+                my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List undelete failed: $@";
                 add_alert("List #$lid restored.");
                 }
