@@ -420,7 +420,7 @@ my $app = sub {
                                             if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
                                             
                                             $html .= qq~>
-                                            <span data-bs-toggle="tooltip" title="When you complete this task, it will automatically become active again after the selected number of days.">
+                                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
                                                 $fa_info_small
                                             </span>
                                             </div>
@@ -435,7 +435,7 @@ my $app = sub {
                                                     <span>
                                                         days
                                                     </span>
-                                                    <span data-bs-toggle="tooltip" title="How many days after completion should this task re-activate? Range 1-365">
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
                                                         $fa_info_small
                                                     </span>
                                             </div>
@@ -717,7 +717,7 @@ my $app = sub {
                                     <td>$is_default_str</td>
                                     <td>
 
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">Delete</button>
                                     </td>
                                 </tr>
                 ~;
@@ -1137,7 +1137,7 @@ my $app = sub {
             <form method="post" action="/background_set" enctype="multipart/form-data">
                 <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
                     <label for="background" class="form-label mb-0 flex-grow-1"  
-                        data-bs-toggle="tooltip"
+                        data-bs-toggle="tooltip" data-bs-placement="auto"
                         title="If enabled above, Taskpony can show a background image on the page">
                         Change the background image
                     </label>
@@ -1634,7 +1634,7 @@ sub header {
                 $html .= qq~
                 <a href="/?sc=1"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto"title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
                     $fa_rotate_left
                 </a>
                 ~;
@@ -1646,7 +1646,7 @@ sub header {
                 $html .= qq~
                 <a href="/"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" title="Show $cnt_active_tasks active tasks in '$list_name'" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_active_tasks active tasks in '$list_name'" >
                     $fa_rotate_right
                 </a>
                 ~;
@@ -1655,19 +1655,19 @@ sub header {
                 $html .= qq~
                 <a href="/lists"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" title="Manage Lists" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Manage Lists" >
                     $fa_list
                 </a>
 
                 <a href="/stats"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
-                    data-bs-toggle="tooltip" title="Statistics" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Statistics" >
                     $fa_chart
                 </a>
 
                 <a href="/config"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
-                    data-bs-toggle="tooltip" title="Settings" aria-label="Settings">
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Settings" aria-label="Settings">
                     $fa_gear
                 </a>
                 
@@ -1956,7 +1956,7 @@ sub show_tasks {
     while (my $a = $sth->fetchrow_hashref()) {
         my $friendly_date = qq~
             <td data-order="$a->{'AddedDate'}">
-                <a href="#" class="text-reset text-decoration-none" data-bs-toggle="tooltip" title="Added at: $a->{'AddedDate'}">
+                <a href="#" class="text-reset text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Added at: $a->{'AddedDate'}">
                 ~
                 . human_friendly_date($a->{'AddedDate'}) . qq~</a> 
             </td>
@@ -1965,7 +1965,7 @@ sub show_tasks {
         if ($status != 1) { # Completed tasks, show CompletedDate instead
             $friendly_date = qq~
             <td data-order="$a->{'CompletedDate'}">
-                <a href="#" class="text-reset text-decoration-none" data-bs-toggle="tooltip" title="Completed at: $a->{'CompletedDate'}">
+                <a href="#" class="text-reset text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Completed at: $a->{'CompletedDate'}">
                 ~
                 . human_friendly_date($a->{'CompletedDate'}) . qq~</a>
             </td>
@@ -1986,7 +1986,7 @@ sub show_tasks {
             $list_title = '[--No List--]';
 
             # Prefix task title with an orphaned marker, coloured red
-            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This task belongs to a deleted list">
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This task belongs to a deleted list">
                 $fa_link_slash
             </span>
             ~;
@@ -1994,7 +1994,7 @@ sub show_tasks {
 
         # Add a repeat icon if the task is recurring
         if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
-            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">
                 $fa_repeat_small
             </span> ~;
             }            
@@ -2012,7 +2012,7 @@ sub show_tasks {
                     <a 
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
-                    data-bs-toggle="tooltip" 
+                    data-bs-toggle="tooltip" data-bs-placement="auto"
                     title="$description"
                     >                   
                         $title
@@ -2033,7 +2033,7 @@ sub show_tasks {
                     <a 
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
-                    data-bs-toggle="tooltip" 
+                    data-bs-toggle="tooltip" data-bs-placement="auto" 
                     title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
                     >
                         <span class="opacity-50">$title</span>
@@ -2068,7 +2068,7 @@ sub show_tasks {
                     <a 
                     href="/?lid=$a->{'ListId'}"
                     class="text-white text-decoration-none" 
-                    data-bs-toggle="tooltip" 
+                    data-bs-toggle="tooltip" data-bs-placement="auto"
                     title="Jump to $a->{'ListTitle'}"
                     >
                     $list_title
@@ -2516,7 +2516,7 @@ sub config_show_option {
     my $retstr= qq~
         <!-- Display config option for $key -->
         <div class="d-flex align-items-center justify-content-between p-3 bg-dark text-white rounded" style="max-width: 500px;">
-            <label class="form-check-label" for="$key" data-bs-toggle="tooltip" title="$description" >
+            <label class="form-check-label" for="$key" data-bs-toggle="tooltip" data-bs-placement="auto" title="$description" >
             $title
             </label> ~;
 
