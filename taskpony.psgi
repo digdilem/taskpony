@@ -14,7 +14,7 @@ use HTTP::Tiny;             # To fetch latest version from github
 use JSON::PP;               # Part github json response
 
 use Plack::Builder;         # Favicon
-use File::Spec::Functions qw(catdir);
+use File::Spec::Functions qw(catdir);/
 use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;                # To find ./static directory
 
@@ -214,6 +214,36 @@ my $app = sub {
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
         } # End /ust
+
+    ###############################################
+    # Set LIST nn as UnDeleted (Active)
+    if ($req->path eq "/list_undelete") {
+        if ($req->method && uc($req->method) eq 'GET') {
+            my $lid = $req->param('id');
+            if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
+                my $sth = $dbh->prepare('UPDATE ListsTb SET IsDeleted = NULL WHERE id = ? LIMIT 1');
+                eval { $sth->execute($lid); 1 } or print STDERR "WARN: List undelete failed: $@";
+                add_alert("List #$lid restored.");
+                }
+            }
+        $res->redirect('/lists'); # Redirect back to lists view
+        return $res->finalize;
+        } # End /list_undelete
+
+    ###############################################
+    # Set LIST nn as Deleted
+    if ($req->path eq "/list_delete") {
+        if ($req->method && uc($req->method) eq 'GET') {
+            my $lid = $req->param('id');
+            if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
+                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
+                eval { $sth->execute($lid); 1 } or print STDERR "WARN: List delete failed: $@";
+                add_alert("List #$lid deleted.");
+                }
+            }
+        $res->redirect('/lists'); # Redirect back to lists view
+        return $res->finalize;
+        } # End /list_delete
 
     ###############################################
     # Handle setting a list as default
@@ -900,11 +930,9 @@ my $app = sub {
                                         $deleted_date
                                     </td>
                                     <td>
-                                        <form method="post" action="/lists" style="display:inline;">
-                                            <input type="hidden" name="action" value="delete" />
-                                            <input type="hidden" name="list_id" value="$a->{'id'}" />
-                                            <button class="btn btn-sm btn-danger" type="submit">Permanently Delete</button>
-                                        </form>     
+                                        <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-warning">Permanently Delete</a> 
+                                        <a href="/list_undelete?id=$a->{'id'}" class="btn btn-sm btn-success">Undelete</a>
+
                                     </td>
                                 </tr>
                 ~;
