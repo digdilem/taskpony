@@ -1660,7 +1660,7 @@ sub header {
                 $html .= qq~
                 <a href="/?sc=1"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" data-bs-placement="auto"title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
                     $icon_rotate_left
                 </a>
                 ~;
