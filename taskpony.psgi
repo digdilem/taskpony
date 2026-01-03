@@ -1867,7 +1867,7 @@ sub list_pulldown {
 sub sanitize {
     my ($s) = @_;
     return '' unless defined $s;
-#    $s =~ s/\r?\n/ /g;            # collapse newlines
+    $s =~ s/\r?\n/ /g;            # collapse newlines
     $s =~ s/[^\t[:print:]]+//g;   # remove non-printables
     $s =~ s/^\s+|\s+$//g;         # trim
     return $s;
