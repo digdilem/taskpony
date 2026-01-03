@@ -18,9 +18,18 @@ use File::Spec::Functions qw(catdir);
 use File::Copy qw(copy move);   # For database backup copy function
 use FindBin;                # To find ./static directory
 
+###############################################
+# User configuration - change these as needed
+my $taskpony_path = '/opt/taskpony';   # (Native service only)  Path to Taskpony installation root. Change if not /opt/taskpony
+
+print STDERR "DEBUG $Dir\n";
+
+# End of user configuration
+
+###############################################
 # Database Path. If you install Taskpony as a Systemd service elsewhere than /opt/taskpony - you'll need to change this.
 my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created. 
-my $bg_path = '/opt/taskpony/static/background.jpg';   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads.
+my $bg_path = '/opt/taskpony/static/background.jpg';   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
 ###############################################
 # Default configuration. Don't change them here, use /config page.
@@ -32,7 +41,7 @@ our $config = {
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
     cfg_show_dates => 'on',                     # Show just tasks, hide Date and List columns in task list
-    cfg_show_lists => 'on',                     # Show the Lists column in task list
+    cfg_show_lists => 'off',                    # Show the Lists column in task list
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
