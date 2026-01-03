@@ -2066,6 +2066,9 @@ sub show_tasks {
 
         ###############################################
         # Show or hide date and list column header based on config var cfg_show_dates
+        $html .= qq~
+                <!-- Date column -->
+                ~;        
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
                 <td>
@@ -2076,6 +2079,10 @@ sub show_tasks {
 
         ###############################################
         # Show or hide date and list column header based on config var cfg_show_dates_lists
+        $html .= qq~
+                <!-- List column -->
+                ~;
+            
         if ($config->{'cfg_show_lists'} eq 'on') {  
             if ($list_deleted != 0) { # List is deleted, no link
                 $html .= qq~
