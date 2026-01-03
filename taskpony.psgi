@@ -1884,9 +1884,23 @@ sub html_escape {
     $s =~ s/>/&gt;/g;
     $s =~ s/"/&quot;/g;
     $s =~ s/'/&#39;/g;
-    $s =~ s/\n/<br>/g;  # Convert newlines to HTML breaks
     return $s;
     } # End html_escape()
+
+###############################################
+# html_escape_with_breaks($s)
+# Escape HTML special characters and convert newlines to <br> tags for display
+sub html_escape_with_breaks {
+    my ($s) = @_;
+    return '' unless defined $s;
+    $s =~ s/&/&amp;/g;
+    $s =~ s/</&lt;/g;
+    $s =~ s/>/&gt;/g;
+    $s =~ s/"/&quot;/g;
+    $s =~ s/'/&#39;/g;
+    $s =~ s/\n/<br>/g;  # Convert newlines to HTML breaks
+    return $s;
+    } # End html_escape_with_breaks()
 
 ###############################################
 # single_db_value($sql, @params)
@@ -1991,7 +2005,7 @@ sub show_tasks {
 
         my $checkbox = '';
         my $title_link;
-        my $description = html_escape(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
+        my $description = html_escape_with_breaks(substr($a->{'Description'},0,$config->{'cfg_description_short_length'}));
         my $title = html_escape($a->{'Title'});
         my $list_title = substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length});
 
