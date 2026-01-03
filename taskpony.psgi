@@ -2076,7 +2076,6 @@ sub show_tasks {
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
                     $friendly_date
-                </td>
                 ~;
             }
 
