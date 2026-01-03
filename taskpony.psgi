@@ -894,11 +894,11 @@ my $app = sub {
                             <input type="hidden" name="action" value="add" />
                             <div class="col-12">
                                 <label class="form-label">Title</label>
-                                <input name="Title" class="form-control" required maxlength="255" />
+                                <input name="Title" class="form-control" required maxlength="255" placeholder="Give your new list a useful name" />
                             </div>
                             <div class="col-12">
                                 <label class="form-label">Description</label>
-                                <textarea name="Description" class="form-control" rows="3" maxlength="2000"></textarea>
+                                <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
                             </div>
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Add List</button>
