@@ -12,6 +12,7 @@
 - Changed tooltip placement to be auto instead of always top. More fluid, especially on smaller devices.
 - Lists page now shows a third table allowing you to undelete or permanently delete a List.
 - Task List page now has config options to toggle Dates and Lists independently instead of both together. This does mean that any existing config setting for this will be lost during upgrade and will need to be reset.
+- Taskpony now identifies its installation directory on startup. This should avoid needing to manually set this if installed as a systemd service in a different directory.
 
 # 0.3  
 

@@ -101,6 +101,8 @@ If you want it to run on a different port, change the *first* 5000 to something 
 
 ### Installing the program
 
+*It's assumed that Taskpony will be installed to `/opt/taskpony` but it shouldn't matter. As of 0.4 it will detect its installation dir and as long as it has write privileges there it should be happy. Just remember to change the `ExecStart` and `WorkingDirectory` lines in `taskpony.service`
+
 1. Change to `/opt` and install `git` if it isn't already. Then pull the files in from Github
 
 ```
@@ -147,8 +149,6 @@ Or if it's on a machine with, say, an IP of 10.0.0.16, then `http://10.0.0.16:50
 
 If you want to use another port instead of 5000, edit `taskpony.service` and change the plackup line. Eg: `ExecStart=/usr/bin/plackup -r -p 5001 /opt/taskpony/taskpony.psgi`
 
-If you wish to run Taskpony in a directory other than `/opt/taskpony`, then change `$db_path` in `taskpony.psgi` and `WorkingDirectory` in `taskpony.service`
-
 Taskpony expects to be installed in `/opt/taskpony`. If you want it to exist elsewhere, you'll need to:
 
 1. Edit `taskpony.psgi` and change `my $db_path = '/opt/taskpony/db/taskpony.db';` to point to the intended location of the database file that Taskpony will create.
@@ -176,7 +176,7 @@ Please do! The best place is to use [Github issues](https://github.com/digdilem/
 
 > How do I back up my tasks?
 
-All tasks, lists and settings are kept within the single file, `taskpony.db` stored in `/opt/taskpony/db` (Local if systemd, within `./data` if docker). This can be copied somewhere safe to back it up. If you need to restore a backup, just stop Taskpony, copy that file to where Taskpony expects it and restart Taskpony.
+All tasks, lists and settings are kept within the single file, `taskpony.db` stored in `/opt/taskpony/db` (Local if systemd, within `./data` if docker). This can be copied somewhere safe to back it up. If you need to restore a backup, just stop Taskpony, copy that file to where Taskpony expects it and restart Taskpony. As of v0.3, Taskpony will make daily backups of this file, named taskpony.db.0 and incrementing by day age to the value defined in /config
 
 > Is there an Android or IOS app?
 
@@ -184,17 +184,17 @@ Sorry, no. Taskpony was designed to be a responsive web app and works well on bo
 
 > When will support for multiple users, groups or teams be added?
 
-Never, sorry. This is a hard design choice to keep Taskpony small and simple and to avoid bloat. There are a lot of alternative projects with groupware ability if it is important to you.
+Never, sorry. This is a hard design choice to keep Taskpony small and simple. There are a lot of alternative projects with groupware ability if that is important to you.
 
 > But I really want to run a copy for more than one person!
 
-One way around this is to run multiple instances using docker, each with their own port.
+One way around this is to run multiple instances, each with their own port.
 
 > How do I add HTTPS? 
 
 Use a reverse proxy - see [#security](#security)
 
-> How do I protect my Taskpony with a username and password?
+> How do I protect Taskpony with a username and password?
 
 Use a reverse proxy - see [#security](#security)
 
@@ -208,7 +208,7 @@ Not presently. SQLite was chosen to keep things small and simple. I think it sho
 
 # Upgrading
 
-Upgrading Taskpony should be quite simple - overwrite the files and ensure taskpony.db survives. 
+Upgrading Taskpony should be easy - overwrite all files but ensure taskpony.db survives. 
 
 ## Linux Systemd Service
 
@@ -219,7 +219,7 @@ Upgrading Taskpony should be quite simple - overwrite the files and ensure taskp
 
 Taskpony should restart itself automatically when its own file changes, this will be shown in its log with `-- /opt/taskpony/taskpony.psgi updated`. If there are any issues, restarting Taskpony with `systemctl restart taskpony` is advised.
 
-If the upgrade includes any database schema changes, Taskpony should automatically detect and apply any updates when it's first started, see logs. `journalctl -u taskpony`
+If the upgrade includes any database schema changes, Taskpony should automatically detect and apply any updates when it's first started, see logs; `journalctl -u taskpony`
 
 ## Docker
 
@@ -229,7 +229,9 @@ Stop the existing container and repeat the installation instructions to pull the
 
 Change to the directory you put your `docker-compose.yml`
 
-Cmpare the compose file with that of the new version to see if there are any changes required.
+Compare the compose file with that of the new version to see if there are any changes required.
+
+Then run from the compose directory:
 
 ```
 docker compose down
@@ -243,23 +245,29 @@ Follow the [install guides](#installation) above, and you should be able to acce
 
 ## About Tasks
 
-The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
+- Clicking on the Taskpony Logo and name will load the current Tasks Page.
 
-Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This form will be missing if "All lists" is selected. 
+- The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists. 
 
-Then the main tasks lists is shown. Tick the checkbox to mark a task as *completed* which removes it from the *active* tasks. 
+  - Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This quick form will be missing if "All lists" is selected. 
 
-To reduce clutter, the dates and list name for tasks can be hidden in the main tasks list be disabling  `Show Dates and Lists in Tasks Table` in Settings.
+  - Then the main tasks lists is shown. 
+  
+- Tick the checkbox to mark a task as *completed* which removes it from the *active* tasks. If you make a mistake, you can select the "Show completed Tasks" icon at the top and click the undo button to set it as active.
 
-A Filter or Search box is displayed top right if `Display Search Box` is selected in Settings that will only display matching strings.
+- To reduce clutter, the dates and list name for tasks can be hidden in the main tasks list be disabling  `Show Dates` and `Show Lists` in Settings.
 
-Hover over the task Title to see a popup of the task's description if one was set. Tasks can be edited, and descriptions added to them, by clicking the title and completing the resulting form.
+- A Filter or Search box is displayed top right if `Display Filter Box` is selected in Settings that will only display matching strings.
 
-The tasks list can be sorted by clicking the header values.
+- Hover over the task Title to see a popup of the task's description if one was set. Tasks can be edited, and descriptions added to them, by clicking the title and completing the resulting form.
 
-If there are enough tasks to trigger the `Number of Tasks to show on each page` value in Settings, then the list will automatically paginate and show the number of pages together with Next/Previous buttons below it.
+- Tasks can be set as Repeating by clicking the Task title to visit the Edit Task form.
 
-If `Display export buttons` is selected in Settings, then extra "Export" buttons appear under the list. These are:
+- The tasks list can be sorted by clicking the header values.
+
+- If there are enough tasks to trigger the `Number of Tasks to show on each page` value in Settings, then the list will automatically paginate and show the number of pages together with Next/Previous buttons below it.
+
+- If `Display export buttons` is selected in Settings, then extra "Export" buttons appear under the list. These are:
 
 ![The Export Buttons](docs/buttons.jpg)
 
@@ -268,7 +276,7 @@ If `Display export buttons` is selected in Settings, then extra "Export" buttons
 - `PDF` = Generates a PDF of the tasks and downloads it.
 - `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
 
-To change the view from active to completed tasks, use the curled arrow button above the list. Completed Tasks can be reverted to Active with the curled undo arrow next to them in the list.
+- To change the view from active to completed tasks, use the curled arrow button above the list. Completed Tasks can be reverted to Active with the curled undo arrow next to them in the list.
 
 ### Repeating Tasks
 
