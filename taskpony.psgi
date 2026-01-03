@@ -637,6 +637,7 @@ my $app = sub {
 
         ###############################################
         # Page - Display List of Lists
+        $html .= "<!-- Lists Management Page -->\n";
         $html .= start_card('Lists Management', $icon_list, 0);
         $html .= qq~  
                             <div class="table-responsive">
@@ -737,7 +738,9 @@ my $app = sub {
                             </table>
                 ~;
         $html .= end_card();
+        $html .= "<!-- End Lists Management Page -->\n";
         # End Lists Management card
+        ###############################################
 
         # Build the list of available lists for moving tasks as JSON
         my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
