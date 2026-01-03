@@ -735,8 +735,6 @@ my $app = sub {
         $html .= qq~
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
                 ~;
         $html .= end_card();
 
