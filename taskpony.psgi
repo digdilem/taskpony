@@ -1951,8 +1951,7 @@ sub show_tasks {
 
         # Show or hide list column based on config
         if ($config->{'cfg_show_lists'} eq 'on') {
-                    $html .= qq~
-                    <th>List</th>
+                    $html .= qq~<th>List</th>
                     ~;
             } 
 
@@ -2024,8 +2023,7 @@ sub show_tasks {
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" data-bs-placement="auto"
-                    title="$description"
-                    >                   
+                    title="$description">
                         $title
                     ~;
             if ($description) {
@@ -2045,8 +2043,7 @@ sub show_tasks {
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" data-bs-placement="auto" 
-                    title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~"
-                    >
+                    title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~">
                         <span class="opacity-50">$title</span>
                     </a>
                      ~;
@@ -2058,13 +2055,16 @@ sub show_tasks {
                 ~;
             }
         
+        ###############################################
         # Output the table row
+        ###############################################
         $html .= qq~
-            <tr>
+            <tr>                
                 <td>$checkbox</td>
                 <td>$title_link</td>
                 ~;
 
+        ###############################################
         # Show or hide date and list column header based on config var cfg_show_dates
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
@@ -2074,23 +2074,21 @@ sub show_tasks {
                 ~;
             }
 
+        ###############################################
         # Show or hide date and list column header based on config var cfg_show_dates_lists
         if ($config->{'cfg_show_lists'} eq 'on') {  
             if ($list_deleted != 0) { # List is deleted, no link
                 $html .= qq~
-                    <td>
                         $list_title
                     </td>
                     ~;
                 } else {
                 $html .= qq~
-                    <td>
                         <a 
                         href="/?lid=$a->{'ListId'}"
                         class="text-white text-decoration-none" 
                         data-bs-toggle="tooltip" data-bs-placement="auto"
-                        title="Jump to $a->{'ListTitle'}"
-                        >
+                        title="Jump to $a->{'ListTitle'}">
                         $list_title
                         </a>
                     </td>
