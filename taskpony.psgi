@@ -904,11 +904,13 @@ my $app = sub {
                                 <a class="btn btn-secondary" href="/">Cancel</a>
                             </div>
                         </form>
-                    
-                    ~;
+                    </div>
+                </div>
+                ~;
 
         $html .= end_card();
-        $html .= "<!-- End Add New List Card -->\n";
+
+        $html .= "\n<!-- End Add New List Card -->\n";
 
         ###############################################
         # Show deleted lists card
