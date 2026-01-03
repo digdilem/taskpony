@@ -29,7 +29,7 @@ See some more [Screenshots](#screenshots)
 
 [Try the Demo!](https://equivalent-giralda-digital-dilemma2-169926c3.koyeb.app/)
 
-*(This instance resets frequently, losing all its data!)*
+*(This instance is reset every few hours, losing all its data)*
 
 # Quick start
 
