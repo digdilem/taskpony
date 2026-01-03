@@ -2059,11 +2059,13 @@ sub show_tasks {
         # Output the table row
         ###############################################
         $html .= qq~
+            <!-- Task row -->
             <tr>                
                 <!-- Checkbox / Undo button -->
                 <td>$checkbox</td>
                 <!-- Title Link -->
-                <td>$title_link</td>
+                <td>$title_link
+                </td>
                 ~;
 
         ###############################################
@@ -2073,7 +2075,6 @@ sub show_tasks {
                 ~;        
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
-                <td>
                     $friendly_date
                 </td>
                 ~;
