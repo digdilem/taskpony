@@ -107,6 +107,7 @@ my $icon_rotate_left_small = build_tabler_icon(12,'<path d="M9 14l-4 -4l4 -4" />
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
+print STDERR "Locating paddock... $taskpony_path\n";
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
 
