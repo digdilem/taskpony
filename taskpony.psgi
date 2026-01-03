@@ -2130,7 +2130,7 @@ sub show_tasks {
                 $html .= qq~
                         <a 
                         href="/?lid=$a->{'ListId'}"
-                        class="text-white text-decoration-none" 
+                        class="text-$config->{'cfg_header_colour'} text-decoration-none" 
                         data-bs-toggle="tooltip" data-bs-placement="auto"
                         title="Jump to $a->{'ListTitle'}">
                         $list_title
