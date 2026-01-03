@@ -27,7 +27,7 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-[![Try the Demo!](https://img.shields.io/badge/Try_The-Demo-brightgreen)](https://equivalent-giralda-digital-dilemma2-169926c3.koyeb.app/)
+[Try the Demo!](https://equivalent-giralda-digital-dilemma2-169926c3.koyeb.app/)
 
 *(This instance resets frequently, losing all its data!)*
 
