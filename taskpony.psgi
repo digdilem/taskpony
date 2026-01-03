@@ -2324,7 +2324,7 @@ sub start_mini_card {
     my $card_icon = shift || '';
     my $html = qq~
             <div class="row justify-content-center">
-                <div class="col-md-11 mb-0">
+                <div class="col-md-11 mb-2">
                     <div class="card shadow-sm mb-0">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2>
