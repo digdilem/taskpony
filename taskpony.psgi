@@ -2060,7 +2060,9 @@ sub show_tasks {
         ###############################################
         $html .= qq~
             <tr>                
+                <!-- Checkbox / Undo button -->
                 <td>$checkbox</td>
+                <!-- Title Link -->
                 <td>$title_link</td>
                 ~;
 
