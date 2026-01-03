@@ -4,6 +4,7 @@
 
 ## Bugfixes
 - Repeating tasks were reset using 'date' instead of 'datetime' leading to YYYY-MM-DD dates displaying in Tasks List instead of a human friendly string.
+- Description line breaks are now preserved. This allows for better formatting in the Edit Task description field, and the hovering tooltip over a task in the Task List
 
 ## Features:
 - Reflow App/title onto one line to reduce some vertical height
