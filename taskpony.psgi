@@ -31,7 +31,8 @@ our $config = {
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
     cfg_export_all_cols => 'off',               # Export all columns in datatable exports, not just visible ones
-    cfg_show_dates_lists => 'on',               # Show just tasks, hide Date and List columns in task list
+    cfg_show_dates => 'on',                     # Show just tasks, hide Date and List columns in task list
+    cfg_show_lists => 'on',                     # Show the Lists column in task list
     cfg_header_colour => 'success',             # Bootstrap 5 colour of pane backgrounds and highlights
     cfg_last_daily_run => 0,                    # Date of last daily run
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
@@ -1036,7 +1037,7 @@ my $app = sub {
                             } else { # No parameter passed for key, store existing
                             debug("No parameter passed for ($key), using existing [$config->{$key}]");
                             # Special handling for checkboxes which will return void if not set
-                            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates_lists|cfg_version_check|cfg_include_datatable_search|cfg_background_image') {
+                            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
                                 $new_val = 'off';
                                 debug("Belay that, this is a checkbox, set it to off");
                                 } else {
@@ -1938,20 +1939,23 @@ sub show_tasks {
                     <th>Title</th>
         ~;
 
-        # Show or hide date and list columns based on config
-        if ($config->{'cfg_show_dates_lists'} eq 'on') {
+        # Show or hide date column based on config
+        if ($config->{'cfg_show_dates'} eq 'on') {
 
             if ($status == 1) {  # Active tasks. Show added date
                 $html .= "            <th>Added</th>\n";
                 } else { # Completed tasks. Show completed date
                 $html .= "<th>Completed</th>\n";
                 }
+            } 
 
-            $html .= qq~
+        # Show or hide list column based on config
+        if ($config->{'cfg_show_lists'} eq 'on') {
+                    $html .= qq~
                     <th>List</th>
                     ~;
             } 
-        
+
         # Close row
         $html .= qq~
                 </tr>
@@ -2061,26 +2065,36 @@ sub show_tasks {
                 <td>$title_link</td>
                 ~;
 
-        # Show or hide date and list column header based on config var cfg_show_dates_lists
-        if ($config->{'cfg_show_dates_lists'} eq 'on') {
+        # Show or hide date and list column header based on config var cfg_show_dates
+        if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
-                $friendly_date
                 <td>
+                    $friendly_date
+                </td>
                 ~;
+            }
 
+        # Show or hide date and list column header based on config var cfg_show_dates_lists
+        if ($config->{'cfg_show_lists'} eq 'on') {  
             if ($list_deleted != 0) { # List is deleted, no link
-                $html .= "$list_title</td>\n";
+                $html .= qq~
+                    <td>
+                        $list_title
+                    </td>
+                    ~;
                 } else {
                 $html .= qq~
-                    <a 
-                    href="/?lid=$a->{'ListId'}"
-                    class="text-white text-decoration-none" 
-                    data-bs-toggle="tooltip" data-bs-placement="auto"
-                    title="Jump to $a->{'ListTitle'}"
-                    >
-                    $list_title
-            </td>
-                ~;
+                    <td>
+                        <a 
+                        href="/?lid=$a->{'ListId'}"
+                        class="text-white text-decoration-none" 
+                        data-bs-toggle="tooltip" data-bs-placement="auto"
+                        title="Jump to $a->{'ListTitle'}"
+                        >
+                        $list_title
+                        </a>
+                    </td>
+                    ~;
                 }
             }
 

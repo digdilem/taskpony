@@ -6,6 +6,7 @@
 - Switched from Fontawesome to Tabler icons for a greater range.
 - Changed tooltip placement to be auto instead of always top.
 - Lists page now shows a third table allowing you to undelete or permanently delete a List
+- Task List page now has config options to toggle Dates and Lists independently. This does mean that any existing config setting for this will be reset during upgrade.
 
 # 0.3  
 
