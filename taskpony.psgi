@@ -2325,10 +2325,10 @@ sub start_mini_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
     my $html = qq~
-        <div class="container py-5 mb-0">
+        <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-md-11">
-                    <div class="card shadow-sm mb-2">
+                <div class="col-md-11 mb-0">
+                    <div class="card shadow-sm mb-0">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2>
                                 $card_title
