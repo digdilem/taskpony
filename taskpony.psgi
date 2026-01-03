@@ -635,6 +635,7 @@ my $app = sub {
             return $res->finalize;
             } # End /lists form submission handling
 
+        ###############################################
         # Page - Display List of Lists
         $html .= start_card('Lists Management', $icon_list, 0);
         $html .= qq~  
@@ -652,7 +653,6 @@ my $app = sub {
                                 </thead>
                             <tbody>
         ~;
-        $html .= end_card();
 
         # Add "All Tasks Lists" row
         my $all_active = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 1') // 0;
@@ -733,12 +733,13 @@ my $app = sub {
             } # End lists loop
 
         $html .= qq~
-                            </tbody>
-                        </table>
-                            </div>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 ~;
+        $html .= end_card();
 
         # Build the list of available lists for moving tasks as JSON
         my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
@@ -1702,7 +1703,6 @@ sub footer {
                 <!-- Footer -->
             </div>
         </div>
-        <br>
         </main>
         <footer class="text-center text-white-50 py-2">
             <p>
