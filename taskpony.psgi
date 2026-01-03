@@ -905,13 +905,13 @@ my $app = sub {
 
         $html .= end_card();
 
-
+        ###############################################
+        # Show deleted lists card
         $html .= "<!-- Start Deleted Lists Card -->\n";
         # Deleted Lists Card and Table
         $html .= start_mini_card('Deleted Lists', $icon_trash, 0);
 
         $html .= qq~  
-                    <!-- Deleted Lists Table -->
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
                                 <thead>
@@ -946,8 +946,6 @@ my $app = sub {
                                             <a href="/list_undelete?id=$a->{'id'}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="auto" title="Return this List to active status">Undelete</a>
                                             &nbsp;&nbsp;
                                             <a href="/list_delete?id=$a->{'id'}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this list from the Database. Associated Tasks will be orphaned.">Permanently Delete</a> 
-                                    
-
                                     </td>
                                 </tr>
                 ~;
@@ -956,11 +954,12 @@ my $app = sub {
                             </tbody>
                         </table>
                     </div>
-                    <!-- End Deleted Lists Table -->
+                    
                 ~;
 
         $html .= end_card();
-
+        $html .= "<!-- End Deleted Lists Card -->\n";
+        # End Deleted lists card
 
 
         $html .= footer();
