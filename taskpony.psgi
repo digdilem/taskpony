@@ -907,7 +907,7 @@ my $app = sub {
 
         ###############################################
         # Show deleted lists card
-        $html .= "<!-- Start Deleted Lists Card -->\n";
+        $html .= "\n\n<!-- Start Deleted Lists Card -->\n";
         # Deleted Lists Card and Table
         $html .= start_mini_card('Deleted Lists', $icon_trash, 0);
 
@@ -954,8 +954,9 @@ my $app = sub {
                             </tbody>
                         </table>
                     </div>
-                    
-                ~;
+                </div>
+            </div>
+            ~;
 
         $html .= end_card();
         $html .= "<!-- End Deleted Lists Card -->\n";
