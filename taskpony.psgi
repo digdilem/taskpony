@@ -16,20 +16,15 @@ use JSON::PP;               # Part github json response
 use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
 use File::Copy qw(copy move);   # For database backup copy function
-use FindBin qw($Dir);                # To find ./static directory
+use FindBin qw($Dir);                # To find Taskpony's Paddock (starting directory)
+
+
 
 ###############################################
-# User configuration - change these as needed
-my $taskpony_path = '/opt/taskpony';   # (Native service only)  Path to Taskpony installation root. Change if not /opt/taskpony
-
-print STDERR "DEBUG $Dir\n";
-
-# End of user configuration
-
-###############################################
-# Database Path. If you install Taskpony as a Systemd service elsewhere than /opt/taskpony - you'll need to change this.
-my $db_path = '/opt/taskpony/db/taskpony.db';    # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created. 
-my $bg_path = '/opt/taskpony/static/background.jpg';   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
+# Path to Taskpony installation root and associated dirs. 
+my $taskpony_path = $Dir;
+my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created. 
+my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
 ###############################################
 # Default configuration. Don't change them here, use /config page.
