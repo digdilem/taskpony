@@ -737,6 +737,7 @@ my $app = sub {
                             </table>
                 ~;
         $html .= end_card();
+        # End Lists Management card
 
         # Build the list of available lists for moving tasks as JSON
         my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
@@ -878,27 +879,29 @@ my $app = sub {
           });
         });
         </script>
-        ~;
+        ~; # End delete list modal
 
         # Add New List form
         $html .= start_mini_card('Add New List', $icon_list);
         $html .= qq~
-                                <form method="post" action="/lists" class="row g-3">
-                                    <input type="hidden" name="action" value="add" />
-                                    <div class="col-12">
-                                        <label class="form-label">Title</label>
-                                        <input name="Title" class="form-control" required maxlength="255" />
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label">Description</label>
-                                        <textarea name="Description" class="form-control" rows="3" maxlength="2000"></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <button class="btn btn-primary" type="submit">Add List</button>
-                                        <a class="btn btn-secondary" href="/">Cancel</a>
-                                    </div>
-                                </form>
-                                ~;
+                    <!-- Add List Form -->
+                        <form method="post" action="/lists" class="row g-3">
+                            <input type="hidden" name="action" value="add" />
+                            <div class="col-12">
+                                <label class="form-label">Title</label>
+                                <input name="Title" class="form-control" required maxlength="255" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Description</label>
+                                <textarea name="Description" class="form-control" rows="3" maxlength="2000"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Add List</button>
+                                <a class="btn btn-secondary" href="/">Cancel</a>
+                            </div>
+                        </form>
+                    <!-- End Add List Form -->
+                    ~;
 
         $html .= end_card();
 
