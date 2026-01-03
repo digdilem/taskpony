@@ -1867,8 +1867,8 @@ sub list_pulldown {
 sub sanitize {
     my ($s) = @_;
     return '' unless defined $s;
-    $s =~ s/\r?\n/ /g;            # collapse newlines
-    $s =~ s/[^\t[:print:]]+//g;   # remove non-printables
+    $s =~ s/\r\n/\n/g;            # normalize line endings
+    $s =~ s/[^\n\t[:print:]]+//g;   # remove non-printables (but keep newlines)
     $s =~ s/^\s+|\s+$//g;         # trim
     return $s;
     } # End sanitize()
@@ -1884,6 +1884,7 @@ sub html_escape {
     $s =~ s/>/&gt;/g;
     $s =~ s/"/&quot;/g;
     $s =~ s/'/&#39;/g;
+    $s =~ s/\n/<br>/g;  # Convert newlines to HTML breaks
     return $s;
     } # End html_escape()
 
