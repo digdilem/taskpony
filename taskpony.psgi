@@ -479,7 +479,7 @@ my $app = sub {
                                     <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
                                 </div>
 
-                               <br/>
+                               <br>
                                 <p class="text-secondary">
                                     This task was created $task->{AddedDate}
                                     ~;
@@ -652,6 +652,7 @@ my $app = sub {
                                 </thead>
                             <tbody>
         ~;
+        $html .= end_card();
 
         # Add "All Tasks Lists" row
         my $all_active = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 1') // 0;
@@ -1698,9 +1699,10 @@ sub footer {
     my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $html .= qq~
+                <!-- Footer -->
             </div>
         </div>
-        <br/>
+        <br>
         </main>
         <footer class="text-center text-white-50 py-2">
             <p>
@@ -1811,6 +1813,7 @@ sub footer {
 
         </body>
         </html>
+        <!-- End Footer() -->
         ~;
 
     return $html;
