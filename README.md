@@ -64,7 +64,7 @@ Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
 
 # Installation
 
-Taskpony is intended to be easy to install and maintain. We document two ways to install it, using [Docker Compose](#docker-compose), [Docker](#docker) or as a standalone Linux [systemd service](#linux-service)
+Taskpony is intended to be easy to install and maintain. [Docker Compose](#docker-compose), [Docker](#docker) or as a standalone Linux [systemd service](#linux-service)
 
 ## Docker Compose [Recommended]
 
