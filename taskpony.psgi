@@ -737,7 +737,6 @@ my $app = sub {
                             </table>
                         </div>
                     </div>
-                </div>
                 ~;
         $html .= end_card();
 
