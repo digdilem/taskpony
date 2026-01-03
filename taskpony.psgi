@@ -637,7 +637,7 @@ my $app = sub {
 
         ###############################################
         # Page - Display List of Lists
-        $html .= "<!-- Lists Management Page -->\n";
+        $html .= "<!-- Lists Management Card -->\n";
         $html .= start_card('Lists Management', $icon_list, 0);
         $html .= qq~  
                             <div class="table-responsive">
@@ -738,7 +738,7 @@ my $app = sub {
                             </table>
                 ~;
         $html .= end_card();
-        $html .= "<!-- End Lists Management Page -->\n";
+        $html .= "<!-- End Lists Management Card -->\n";
         # End Lists Management card
         ###############################################
 
@@ -883,11 +883,12 @@ my $app = sub {
         });
         </script>
         ~; # End delete list modal
+        ###############################################
 
         # Add New List form
+        $html .= "\n\n<!-- Start Add New List Card -->\n";
         $html .= start_mini_card('Add New List', $icon_list);
         $html .= qq~
-                    <!-- Add List Form -->
                         <form method="post" action="/lists" class="row g-3">
                             <input type="hidden" name="action" value="add" />
                             <div class="col-12">
@@ -903,10 +904,11 @@ my $app = sub {
                                 <a class="btn btn-secondary" href="/">Cancel</a>
                             </div>
                         </form>
-                    <!-- End Add List Form -->
+                    
                     ~;
 
         $html .= end_card();
+        $html .= "<!-- End Add New List Card -->\n";
 
         ###############################################
         # Show deleted lists card
