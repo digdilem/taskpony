@@ -2104,7 +2104,7 @@ sub show_tasks {
                 ~;
 
         ###############################################
-        # Show or hide date and list column header based on config var cfg_show_dates
+        # Show or hide date and list column header based on config var cfg_show_dates.
         $html .= qq~
                 <!-- Date column -->
                 ~;        
