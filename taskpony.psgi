@@ -2044,6 +2044,7 @@ sub show_tasks {
                     href="/edittask?id=$a->{'id'}"
                     class="text-white text-decoration-none" 
                     data-bs-toggle="tooltip" data-bs-placement="auto"
+                    data-bs-html="true"
                     title="$description">
                         $title
                     ~;
