@@ -2294,7 +2294,7 @@ sub start_card {
 
     my $html = qq~ 
             <!-- Start Card $card_title -->
-            <div class="card shadow-sm mb-2"> 
+            <div class="card shadow-sm mb-4"> 
             ~;
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
@@ -2324,8 +2324,8 @@ sub start_mini_card {
     my $card_icon = shift || '';
     my $html = qq~
             <div class="row justify-content-center">
-                <div class="col-md-11 mb-2">
-                    <div class="card shadow-sm mb-0">
+                <div class="col-md-11 mb-4">
+                    <div class="card shadow-sm">
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2>
                                 $card_title
