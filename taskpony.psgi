@@ -1086,7 +1086,8 @@ my $app = sub {
                     # Draw Row 1 - Visual Settings
                     $html .= config_show_option('cfg_include_datatable_search','Display Filter Box','Show the filter box at the top right of the Tasks table','check',0,0);
                     $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0); 
-                    $html .= config_show_option('cfg_show_dates_lists','Show Dates and Lists','Switch between showing just the Task Titles and also including the Dates and Lists columns','check',0,0);
+                    $html .= config_show_option('cfg_show_dates','Show Dates','Include the Date when a Task was added or completed in the Task List','check',0,0);
+                    $html .= config_show_option('cfg_show_lists','Show Lists','Include the List name a task belongs to in the Task List','check',0,0);
 
                     $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
                     $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
@@ -2101,8 +2102,8 @@ sub show_tasks {
                         title="Jump to $a->{'ListTitle'}">
                         $list_title
                         </a>
-                    </td>
-                    ~;
+                </td>
+                ~;
                 }
             }
 
