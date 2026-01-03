@@ -717,7 +717,7 @@ my $app = sub {
                                         </strong>
                                     </td>
                                     <td>
-                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-$config->{'cfg_header_colour'} text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                                           $icon_goto &nbsp;
                                         </a>
                                         $desc
