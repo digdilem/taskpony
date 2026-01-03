@@ -905,7 +905,6 @@ my $app = sub {
                             </div>
                         </form>
                     </div>
-                </div>
                 ~;
 
         $html .= end_card();
@@ -962,7 +961,6 @@ my $app = sub {
                         </table>
                     </div>
                 </div>
-            </div>
             ~;
 
         $html .= end_card();
