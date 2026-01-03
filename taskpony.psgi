@@ -2410,7 +2410,7 @@ sub run_daily_tasks {
                 UPDATE TasksTb
                 SET Status = 1,
                     CompletedDate = NULL,
-                    AddedDate = date('now')
+                    AddedDate = datetime('now')
                 WHERE id = ?
                 ", undef, $task->{'id'}
                 ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $dbh->errstr;
