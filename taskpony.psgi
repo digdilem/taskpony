@@ -2083,6 +2083,7 @@ sub show_tasks {
         # Show or hide date and list column header based on config var cfg_show_dates_lists
         $html .= qq~
                 <!-- List column -->
+                <td>
                 ~;
             
         if ($config->{'cfg_show_lists'} eq 'on') {  
