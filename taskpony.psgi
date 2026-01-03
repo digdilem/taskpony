@@ -2296,7 +2296,7 @@ sub start_card {
 
     my $html = qq~ 
             <!-- Start Card $card_title -->
-            <div class="card shadow-sm mb-4"> 
+            <div class="card shadow-sm mb-2"> 
             ~;
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
