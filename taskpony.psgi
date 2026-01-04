@@ -2186,6 +2186,7 @@ sub show_tasks {
             <tbody>
             ~;
 
+    ###############################################
     # Loop through each task and output a row for each. Add data-order so that Datatables can sort by actual date value instead of human friendly string
     while (my $a = $sth->fetchrow_hashref()) {
         my $friendly_date = qq~

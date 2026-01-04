@@ -335,16 +335,16 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 
 ## Goals
 
-- Be easy for any user to pick up and use. Features should be self explaining as much as possible.
-- Be a small, fast and responsive web based app that is usable on all devices by a standard browser.
-- Remain focused on providing single user Tasks and Lists.
-- Be free and open in all senses of the word. No telemetry, no lock-in, no registration, no freemium models.
-- Be linux native or docker for easy self-hosting.
-- Remain simple to install and update, with automated database upgrades.
+1. Remain focused on providing single user Tasks and Lists.
+2. Be a small, fast and responsive web based app that is usable on all devices by a standard browser.
+3. Be free and open in all senses of the word. No telemetry or tracking, no lock-in, no registration, no monetising.
+4. Be linux native or docker for easy self-hosting.
+5. Adhere to the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle) It should be easy for any user to pick up and use. Features should be self explaining as much as possible, with in-context help available through tooltips.
+6. Remain simple to install and update, with automated database upgrades.
 
 ## Non-goals
 - Not become over featured.
-- Not spread into Teamware or become group-based.
+- Not spread into Teamware, a Ticketing system or become group-based.
 - Not add complex systems like Gantt Charts, Kanbans etc.
 
 ## The Name?
