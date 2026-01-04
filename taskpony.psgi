@@ -1587,24 +1587,16 @@ sub header {
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
 
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/jquery.dataTables.min.js"></script>
-
-    <script src="/static/js/dataTables.buttons.min.js"></script>
-    <script src="/static/js/buttons.html5.min.js"></script>
-    <script src="/static/js/buttons.print.min.js"></script>
-
-    <script src="/static/js/jszip.min.js"></script>
-    <script src="/static/js/pdfmake.min.js"></script>
-    <script src="/static/js/vfs_fonts.js"></script>
-
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-
-
+    <style>
+        body { background-color: #1A2122; }
+        .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
+        .muted { color: rgba(255,255,255,0.65); }
+        .dt-hidden { visibility: hidden; }
+        .header-bar { min-height: 72px; }
+        .dataTables_paginate .paginate_button.disabled { display: none !important; }
+        .icon { width: 1em; height: 1em; vertical-align: middle; }
+    </style>
 
     </head>
     <body 
