@@ -991,6 +991,7 @@ my $app = sub {
                                     <tr>
                                         <th>List</th> 
                                         <th>Deleted Date</th>
+                                        <th>Tasks</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -1003,6 +1004,10 @@ my $app = sub {
         # Step through deleted lists
         while (my $a = $deleted_list_sth->fetchrow_hashref()) {
             my $title = html_escape($a->{'Title'});
+            my $tasks_in_list = single_db_value(
+                'SELECT COUNT(*) FROM TasksTb WHERE ListId = ?',
+                $a->{'id'}
+                ) // 0;
             
             $html .= qq~
                                 <tr>
@@ -1011,8 +1016,13 @@ my $app = sub {
                                             $title
                                         </strong>
                                     </td>
+                                    
                                     <td>
                                         $a->{'DeletedDate'}
+                                    </td>
+
+                                    <td>
+                                        $tasks_in_list
                                     </td>
 
                                    <!-- Actions column -->
