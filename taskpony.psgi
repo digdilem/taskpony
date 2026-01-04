@@ -1388,14 +1388,16 @@ my $app = sub {
     $html .= end_card();
 
     # Add some code to re-autofocus the input box, as datatables steals that
-    $html .= qq~
-        $(document).ready(function () {
-            $('#tasks').DataTable({
-            initComplete: function () {
-                $('#tasktitle').trigger('focus');
-                }
+    $html .= q~
+        <script>
+            $(document).ready(function () {
+                $('#tasks').DataTable({
+                initComplete: function () {
+                    $('#tasktitle').trigger('focus');
+                    }
+                });
             });
-        });
+        </script>
     ~;
 
     $html .= footer();
