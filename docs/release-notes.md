@@ -11,25 +11,26 @@
 ## Features:
 
 - Reflow App/title onto one line to reduce some vertical height
-- Taskpony will now automatically reload the page if the database has changed since the page was first loaded. This would normally happen if a task was changed from another client. Check interval set to 60s initially. 
+- Taskpony will now automatically reload the page if the database has changed since the page was first loaded. This would normally happen if a task was changed from another client. Check interval set to 60s initially.
 - Switched from Fontawesome to Tabler icons for a greater range.
 - Changed tooltip placement to be auto instead of always top. More fluid, especially on smaller devices.
-- Lists page now shows a third table allowing you to undelete or permanently delete a List.
+- Lists page now shows a third table allowing you to undelete or permanently delete a List. Reworked all tables to imrprove look. Also added ability to mass complete/uncomplete Tasks, and delete them and lists permanently from the Inactive Lists table.
 - Task List page now has config options to toggle Dates and Lists independently instead of both together. This does mean that any existing config setting for this will be lost during upgrade and will need to be reset.
 - Taskpony now identifies its installation directory on startup. This should avoid needing to manually set this if installed as a systemd service in a different directory.
 - Styled checkbox to improve visuals
 
-# 0.3  
+
+# 0.3
 
 ## Features:
 
-- You can now upload a JPG for a page background. There is a toggle in /config and a new upload form. 
+- You can now upload a JPG for a page background. There is a toggle in /config and a new upload form.
 - "Show completed/active tasks" button now includes the number of tasks that will be shown. It can also be hidden entirely in Settings now for a cleaner look.
 - Tasks that have a description now show an info icon in the list to indicate that they can be hovered to see it.
 - Lots of work has gone into reducing page flicker on load. Task table now hides until Datatables is ready. You could see a flicker sometimes on page load with larger lists where it was re-rendered, and that's now gone. There's a few other places where this the UI has been improved.
 - Settings page has been reworked for better clarity and future maintenance.
 - A demo instance has been set up with Koyeb [here](https://qualified-eleanore-digital-dilemma-fc08fc19.koyeb.app/)
-- The example `docker-compose.yml` now includes a simple health-check which checks for a http response once a minute. 
+- The example `docker-compose.yml` now includes a simple health-check which checks for a http response once a minute.
 - "Show active tasks" and "Show completed tasks" button that used to live at the bottom of the list now moved to the top button group.
 
 # 0.2d  Released Christmas, 2025

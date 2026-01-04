@@ -1455,8 +1455,7 @@ my $app = sub {
                     </li>
                     <li>
                         <span class="pt-3 small text-white-50">
-                            Database schema version (Actual / Required):
-                                <strong class="text-white">$config->{'database_schema_version'} / $database_schema_version</strong>
+                            Database schema version <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$database_schema_version</strong>
                         </span>
                     </li>
                     <li>
