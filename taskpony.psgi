@@ -877,8 +877,6 @@ my $app = sub {
                                             <!-- Set List as Inactive -->
                                             <button type="button"
                                             class="btn btn-sm btn-danger"
-                                            data-bs-toggle="tooltip"
-                                            title="Set list as inactive"
                                             data-bs-toggle="modal"
                                             data-bs-placement="auto"
                                             data-bs-target="#deleteListModal"
