@@ -805,13 +805,13 @@ my $app = sub {
                                         $desc
                                     </td>
 
-                                    <td>
+                                    <td align="right">
                                         <a href="/?lid=$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                                         $active_count
                                         </a>
                                     </td>
 
-                                    <td>
+                                    <td align="right">
                                         <a href="/?lid=$list->{'id'}&sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
                                         $completed_count
                                         </a>
