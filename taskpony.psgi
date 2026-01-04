@@ -744,7 +744,7 @@ my $app = sub {
                                 <tr>
                                     <td>
                                         <strong>
-                                            <a href="/?lid=1" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
+                                            <a href="/?lid=1"  class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
                                                 All Tasks
                                             </a>
                                         </strong>
