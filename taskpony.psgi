@@ -229,7 +229,7 @@ my $app = sub {
     # Set LIST nn as UnDeleted (Active)
     if ($req->path eq "/list_undelete") {
         if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('id');
+            my $lid = $req->param('lid');
             if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
                 print STDERR "INFO: Undeleting list id $lid\n";
                 my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
