@@ -107,7 +107,7 @@ my $icon_comment_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24
 my $icon_goto = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-3v-6h3" /><path d="M3 9v6" /><path d="M6 9v6" />');
 
 # Very small FA icons,
-my $icon_rotate_left_small = build_tabler_icon(12,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
+my $icon_rotate_left_small = build_tabler_icon(18,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
@@ -2269,7 +2269,7 @@ sub show_tasks {
                      ~;
 
             $checkbox .= qq~
-                <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-$config->{cfg_header_colour}" title="Mark as uncompleted">
+                <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-secondary" title="Mark as uncompleted">
                 $icon_rotate_left_small
                 </a>
                 ~;
