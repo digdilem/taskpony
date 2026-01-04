@@ -2102,7 +2102,7 @@ sub show_tasks {
             <!-- Task row -->
             <tr>                
                 <!-- Checkbox / Undo button -->
-                <td>$checkbox</td>
+                <td style="text-align: center;">$checkbox</td>
                 <!-- Title Link -->
                 <td>$title_link
                 </td>
