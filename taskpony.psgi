@@ -780,12 +780,15 @@ my $app = sub {
                                         </strong>
                                     </td>
                                     <td>
-                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-$config->{'cfg_header_colour'} text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
-                                          $icon_goto &nbsp;
-                                        </a>
                                         $desc
                                     </td>
-                                    <td>$active_count</td>
+
+                                    <td>
+                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-$config->{'cfg_header_colour'} text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                                        $active_count
+                                        </a>
+                                    </td>
+
                                     <td>$completed_count</td>
 
                                     <!-- Actions column -->
@@ -810,7 +813,7 @@ my $app = sub {
                                             <!-- Set all tasks Active Button -->
                                             <a href="/list_setall_active?lid=$list->{'id'}"
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in List as Active"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                                             onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
                                             <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_right
@@ -820,7 +823,7 @@ my $app = sub {
                                             <!-- Set all tasks Completed Button -->
                                             <a href="/list_setall_completed?lid=$list->{'id'}"
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in List as Completed"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
                                             <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_left
