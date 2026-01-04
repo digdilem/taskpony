@@ -1641,7 +1641,7 @@ sub header {
                 </a>                
                 ~;
     
-    # Add the list selection pulldown
+    # Add the list selection pulldown.
     $html .= list_pulldown($list_id);  
 
     $html .= qq~
