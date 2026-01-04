@@ -1003,7 +1003,6 @@ my $app = sub {
         # Step through deleted lists
         while (my $a = $deleted_list_sth->fetchrow_hashref()) {
             my $title = html_escape($a->{'Title'});
-            my $deleted_date = $a->{'DeletedDate'};            
             
             $html .= qq~
                                 <tr>
@@ -1013,23 +1012,23 @@ my $app = sub {
                                         </strong>
                                     </td>
                                     <td>
-                                        $deleted_date
+                                        $a->{'DeletedDate'}
                                     </td>
 
                                    <!-- Actions column -->
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
-                                            <a href="/set_default_list?id=$list->{'id'}"
+                                            <a href="/set_default_list?id=$a->{'id'}"
                                             class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
                                             <span style="font-size: 30px; line-height:1;">
-                                                $icon_circle_right
+                                                $icon_rotate_right
                                             </span>
                                             </a>
 
                                             <!-- Delete all Tasks -->
-                                            <a href="/list_setall_active?lid=$list->{'id'}"
+                                            <a href="/list_setall_active?lid=$a->{'id'}"
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all tasks within this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
@@ -1039,7 +1038,7 @@ my $app = sub {
                                             </a>                                            
 
                                             <!-- Permanently delete this List -->
-                                            <a href="/list_setall_completed?lid=$list->{'id'}"
+                                            <a href="/list_setall_completed?lid=$a->{'id'}"
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?');">
