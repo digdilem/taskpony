@@ -142,8 +142,8 @@ my $app = sub {
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
-    update_db_mtime();                          # Ensure we have the latest mtime cached
     calculate_stats();                          # Update stats hashref if needed
+    update_db_mtime();                          # Ensure we have the latest mtime cached as $db_mtime
 
     # If no list lid specified, get the active list from ConfigTb to provide consistency to user
     if ($list_id == 0) {
@@ -176,6 +176,14 @@ my $app = sub {
         $res->header('Content-Type' => 'text/plain');
         $res->header('Cache-Control' => 'no-cache, no-store');
         $res->body($db_mtime);
+        return $res->finalize;
+        } # End /api/dbstate
+
+    # /api/ping check - suitable for health checks
+    if ($req->path eq "/api/ping") {
+        $res->header('Content-Type' => 'text/plain');
+        $res->header('Cache-Control' => 'no-cache, no-store');
+        $res->body('pong';
         return $res->finalize;
         } # End /api/dbstate
 
@@ -1455,7 +1463,7 @@ my $app = sub {
                     </li>
                     <li>
                         <span class="pt-3 small text-white-50">
-                            Database schema version <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$database_schema_version</strong>
+                            Database schema version: <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$database_schema_version</strong>
                         </span>
                     </li>
                     <li>

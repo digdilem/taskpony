@@ -9,13 +9,13 @@ services:
     container_name: taskpony
     ports:
       - "5000:5000"
-    volumes:  
-      # We need a persistent directory mounted in order to save our tasks database. 
+    volumes:
+      # We need a persistent directory mounted in order to save our tasks database.
       - ./data:/opt/taskpony/db
     restart: unless-stopped
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/ping"]
       interval: 60s
       timeout: 10s
       retries: 3

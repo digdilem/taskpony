@@ -1,6 +1,6 @@
 > "A small and simple self-hosted personal tasks organiser"
 
-![Foss](https://img.shields.io/badge/-FOSS-brightgreen) ![Selfhosted](https://img.shields.io/badge/-Self--Hosted-purple) ![Docker](https://img.shields.io/badge/-Docker-blue) ![Productivity](https://img.shields.io/badge/-Productivity-orange) 
+![Foss](https://img.shields.io/badge/-FOSS-brightgreen) ![Selfhosted](https://img.shields.io/badge/-Self--Hosted-purple) ![Docker](https://img.shields.io/badge/-Docker-blue) ![Productivity](https://img.shields.io/badge/-Productivity-orange)
 
 # TASKPONY
 
@@ -8,7 +8,7 @@
 - ![A](https://img.shields.io/badge/-A-blue) ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
 - ![S](https://img.shields.io/badge/-S-blue) imple - Easy to install, easy to understand, and easy to operate.
 - ![K](https://img.shields.io/badge/-K-blue) eep everything - Unlimited tasks and unlimited lists — no artificial limits.
-- ![P](https://img.shields.io/badge/-P-blue) rivate - Your data stays with you. No cloud, no telemetry, no external dependencies. 
+- ![P](https://img.shields.io/badge/-P-blue) rivate - Your data stays with you. No cloud, no telemetry, no external dependencies.
 - ![O](https://img.shields.io/badge/-O-blue) pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
 - ![N](https://img.shields.io/badge/-N-blue) o clutter - A focused interface that shows only what you actually need.
 - ![Y](https://img.shields.io/badge/-Y-blue) ours - Free to use and always will be. No commercial edition, no hosted version.
@@ -19,7 +19,7 @@
 
 # Features
 
-Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed. 
+Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
 
 No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included. The list will automatically reload if another browser has changed the database to ensure it's up to date.
 
@@ -35,7 +35,7 @@ See some more [Screenshots](#screenshots)
 
 Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
 
-## Table of contents 
+## Table of contents
 
 - [Features](#features)
 - [Demo](#demo)
@@ -72,7 +72,7 @@ There is an example `docker-compose.yml` file in the repository which should wor
 
 Copy this to your chosen directory, inspect and adjust as desired, and run: `docker compose up -d`
 
-On completion, Taskpony should be available on http://localhost:5000 
+On completion, Taskpony should be available on http://localhost:5000
 
 The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.
 
@@ -84,7 +84,7 @@ The default version mounts a persistant volume in `./data` where the Sqlite data
 
 > The latest version of Taskpony is on [Dockerhub](https://hub.docker.com/repositories/digdilem) as `digdilem/taskpony:latest`
 
-Install docker and run something like the following. 
+Install docker and run something like the following.
 
 `docker run -d -p 5000:5000 digdilem/taskpony:latest`
 
@@ -164,13 +164,13 @@ WorkingDirectory=/opt/taskpony
 
 See output logs with `journalctl -u taskpony` or the current status with `systemctl status taskpony`
 
-# Security 
+# Security
 
 Part of Taskpony's design choice is that there are no authentication systems built in. If you require authentication, such as a multi-user LAN or you are accessing Taskpony from the internet, you are strongly encouraged to use a reverse proxy with authentication in front of it. This could be [Nginx Proxy Manager](https://nginxproxymanager.com/), [Apache](https://httpd.apache.org/) configured to operate with a reverse proxy, or a cloud solution such as [Cloudflare Tunnels](https://www.cloudflare.com) protected by an Access policy.
 
 # FAQ
 
-> Can I tell you about bugs or suggest improvements? 
+> Can I tell you about bugs or suggest improvements?
 
 Please do! The best place is to use [Github issues](https://github.com/digdilem/taskpony/issues) and raise a `New Issue`
 
@@ -190,7 +190,7 @@ Never, sorry. This is a hard design choice to keep Taskpony small and simple. Th
 
 One way around this is to run multiple instances, each with their own port.
 
-> How do I add HTTPS? 
+> How do I add HTTPS?
 
 Use a reverse proxy - see [#security](#security)
 
@@ -208,7 +208,7 @@ Not presently. SQLite was chosen to keep things small and simple. I think it sho
 
 # Upgrading
 
-Upgrading Taskpony should be easy - overwrite all files but ensure taskpony.db survives. 
+Upgrading Taskpony should be easy - overwrite all files but ensure taskpony.db survives.
 
 ## Linux Systemd Service
 
@@ -247,12 +247,12 @@ Follow the [install guides](#installation) above, and you should be able to acce
 
 - Clicking on the Taskpony Logo and name will load the current Tasks Page.
 
-- The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists. 
+- The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
 
-  - Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This quick form will be missing if "All lists" is selected. 
+  - Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This quick form will be missing if "All lists" is selected.
 
-  - Then the main tasks lists is shown. 
-  
+  - Then the main tasks lists is shown.
+
 - Tick the checkbox to mark a task as *completed* which removes it from the *active* tasks. If you make a mistake, you can select the "Show completed Tasks" icon at the top and click the undo button to set it as active.
 
 - To reduce clutter, the dates and list name for tasks can be hidden in the main tasks list be disabling  `Show Dates` and `Show Lists` in Settings.
@@ -272,7 +272,7 @@ Follow the [install guides](#installation) above, and you should be able to acce
 ![The Export Buttons](docs/buttons.jpg)
 
 - `Copy` = Copy the contents of the List into the clipboard, allowing you to paste it elsewhere.
-- `CSV` = Triggers a download of the chosen tasks as a CSV file allowing you to import them into a spreadsheet. 
+- `CSV` = Triggers a download of the chosen tasks as a CSV file allowing you to import them into a spreadsheet.
 - `PDF` = Generates a PDF of the tasks and downloads it.
 - `Print` = Creates a clean, printable page and triggers the Print dialog, allowing you to make the tasklist physical. (Such as printing out a shopping list)
 
@@ -282,15 +282,15 @@ Follow the [install guides](#installation) above, and you should be able to acce
 
 ![Repeating Tasks](docs/repeating-task-list.jpg)
 
-Tasks can be set to repeat a set number of days after completing. This is useful for tasks that need to be done every NN days - watering the plants, taking the bins out and so on. 
+Tasks can be set to repeat a set number of days after completing. This is useful for tasks that need to be done every NN days - watering the plants, taking the bins out and so on.
 
-To enable this, create a task as normal and then click on it to Edit the task, then you can check these two fields to enable Repeat behaviour and set the number of days. 
+To enable this, create a task as normal and then click on it to Edit the task, then you can check these two fields to enable Repeat behaviour and set the number of days.
 
 ![Repeating Task Settings](docs/repeating-form.jpg)
 
 When this task is next checked as completed, it will disappear as normal. Once that number of days has passed, it will re-appear in the list as before.
 
-To stop a task for repeating, you can either 
+To stop a task for repeating, you can either
 
 - Edit the Task, Untick the `Repeat this Task` box, or
 - Edit the Task and click `Delete Task` to permanently remove it.
@@ -305,15 +305,15 @@ You can edit any List by clicking on its title.
 
 The `Default` button allows you to select a Default List. The Default List appears at the top of the Lists Picklist in the header.
 
-If a Default List is deleted, Taskpony will automatically select the oldest active list and make that default to avoid being without one. 
+If a Default List is deleted, Taskpony will automatically select the oldest active list and make that default to avoid being without one.
 
-When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected. 
+When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected.
 
 Lists are Alpha-sorted and are case sensitive, so 'A-Z' then 'a-z'
 
 ## Backups
 
-Each day, Taskpony will automatically make a backup of its database by copying `taskpony.db` to `taskpony.db.0`, and rename any previous backups incrementally (.1 to .2, .0 to .1 etc) You can configure how many backups to keep in Settings -> `Number of daily database backups to keep`. 
+Each day, Taskpony will automatically make a backup of its database by copying `taskpony.db` to `taskpony.db.0`, and rename any previous backups incrementally (.1 to .2, .0 to .1 etc) You can configure how many backups to keep in Settings -> `Number of daily database backups to keep`.
 
 Restoring a database is a manual process:
 
@@ -321,17 +321,23 @@ Restoring a database is a manual process:
 2. Change to the directory containing taskpony.db (`cd /opt/taskpony/db` or if docker `cd data`)
 3. Move the existing taskpony.db elsewhere (`mv taskpony.db taskpony.db.old`)
 4. Copy the chosen backup to taskpony.db (`cp taskpony.db.3 taskpony.db`)
-5. Restart Taskpony and it should now be using the restored database. 
+5. Restart Taskpony and it should now be using the restored database.
 
 Any issues during this process are likely to be file or permission related, and Taskpony should show them in its console. (`journalctl -u taskpony` or `docker compose logs`)
 
 Because Taskpony's database is a simple sqlite3 file, it would be possible to automate this process allowing some interesting thoughts about resetting a demo instance or swapping datasets around for some purpose.
 
+## Misc
+
+- The http endpoint `/api/ping` exists for external health checks. It will return 200 and "pong" if it's able to.
+- The supplied docker-compose.yml file contains an internal healthcheck compatible with Docker's Health monitoring.
+
+
 ## Goals
 
 - Be easy for any user to pick up and use. Features should be self explaining as much as possible.
-- Be a small, fast and responsive web based app that is usable on all devices by a standard browser. 
-- Remain focused on providing single user Tasks and Lists. 
+- Be a small, fast and responsive web based app that is usable on all devices by a standard browser.
+- Remain focused on providing single user Tasks and Lists.
 - Be free and open in all senses of the word. No telemetry, no lock-in, no registration, no freemium models.
 - Be linux native or docker for easy self-hosting.
 - Remain simple to install and update, with automated database upgrades.
@@ -339,14 +345,14 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 ## Non-goals
 - Not become over featured.
 - Not spread into Teamware or become group-based.
-- Not add complex systems like Gantt Charts, Kanbans etc. 
+- Not add complex systems like Gantt Charts, Kanbans etc.
 
-## The Name? 
+## The Name?
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
 
  ## Support
 
-In terms of helping the project, then filing Bug Reports and Suggestions for improvement via the [Issues](http://gitea.digdilem.org/flash/taskpony/issues) system is very helpful. 
+In terms of helping the project, then filing Bug Reports and Suggestions for improvement via the [Issues](http://gitea.digdilem.org/flash/taskpony/issues) system is very helpful.
 
 It's not necessary to pay to use Taskpony but  but if you wish to show appreciation, then thank you!
 
@@ -386,7 +392,7 @@ Taskpony is built with the help of this great FOSS software:
 
 - [Perl 5](https://www.perl.org/)
 - [Plack](https://plackperl.org/)
-- [SQLite](https://sqlite.org/index.html) 
+- [SQLite](https://sqlite.org/index.html)
 - [Bootstrap 5](https://getbootstrap.com/) (Bundled)
 - [JQuery](https://jquery.com/) (Bundled)
 - [Datatables](https://datatables.net/) (Bundled)
@@ -396,7 +402,7 @@ Taskpony is built with the help of this great FOSS software:
 
 # Licence
 
-Taskpony is released under the MIT Licence. 
+Taskpony is released under the MIT Licence.
 
 You may use, copy, modify, and distribute your code for any purpose, as long as they include my original copyright notice and licence text.
 
