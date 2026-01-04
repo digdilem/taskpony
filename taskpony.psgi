@@ -637,7 +637,7 @@ my $app = sub {
             } # End /lists form submission handling
 
         ###############################################
-        # Page - Display List of Lists
+        # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
         $html .= start_card('Lists Management', $icon_list, 0);
         $html .= qq~  
@@ -649,7 +649,6 @@ my $app = sub {
                                         <th>Description</th>
                                         <th>Active Tasks</th>
                                         <th>Completed Tasks</th>
-                                        <th><span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="auto" title="The default list appears at the top of the list picklist">Default</span></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -666,7 +665,6 @@ my $app = sub {
                                     <td>View tasks from all lists</td>
                                     <td><a href="/tasks-by-status?status=1" class="text-white text-decoration-none">$all_active</a></td>
                                     <td><a href="/tasks-by-status?status=2" class="text-white text-decoration-none">$all_completed</a></td>
-                                    <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                 </tr>
         ~;
@@ -724,10 +722,11 @@ my $app = sub {
                                     </td>
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
-                                    <td>$is_default_str</td>
                                     <td class="text-end">
+                                    $is_default_str
+                                    
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">
-                                            Delete
+                                            $icon_trash
                                         </button>
                                     </td>
                                 </tr>
