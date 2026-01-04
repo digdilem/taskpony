@@ -681,7 +681,7 @@ my $app = sub {
         ###############################################
         # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
-        $html .= start_card('Lists Management', $icon_list, 0);
+        $html .= start_card('Active Lists', $icon_list, 0);
         $html .= qq~  
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
@@ -753,7 +753,7 @@ my $app = sub {
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
                                             <a href="/set_default_list?id=$list->{'id'}"
-                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
                                             <span style="font-size: 30px; line-height:1;">
                                                 ~;
@@ -976,10 +976,10 @@ my $app = sub {
         $html .= "\n<!-- End Add New List Card -->\n";
 
         ###############################################
-        # Show deleted lists card
-        $html .= "\n\n<!-- Start Deleted Lists Card -->\n";
-        # Deleted Lists Card and Table
-        $html .= start_mini_card('Deleted Lists', $icon_trash, 0);
+        # Show inactive lists card
+        $html .= "\n\n<!-- Start Inactive Lists Card -->\n";
+        # Inactive Lists Card and Table
+        $html .= start_mini_card('Inactive Lists', $icon_trash, 0);
 
         $html .= qq~  
                             <div class="table-responsive">
