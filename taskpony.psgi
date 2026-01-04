@@ -1608,7 +1608,6 @@ sub header {
         body { background-color: #1A2122; }
         .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
         .muted { color: rgba(255,255,255,0.65); }
-        .dt-hidden { visibility: hidden; }
         .header-bar { min-height: 72px; }
         .dataTables_paginate .paginate_button.disabled { display: none !important; }
         .icon { width: 1em; height: 1em; vertical-align: middle; }
@@ -1735,6 +1734,75 @@ sub footer {
             </p>
         </footer>
 
+        <script>
+            \$(document).ready(function() {
+            \$('#tasks').DataTable({
+                paging:   true,
+                ordering: true,
+                info:     true,
+                autoWidth: false,
+                columnDefs: [{ width: '10%', targets: 0 }],
+                initComplete: function () { 
+                    \$('#tasks').removeClass('dt-hidden'); 
+                    \$('#hideUntilShow').removeClass('d-none'); 
+                    \$('#hideUntilShow2').removeClass('d-none'); 
+                    },
+                ~;
+
+            # Show search if configured
+            if ($config->{'cfg_include_datatable_search'} eq 'on') {
+                $html .= qq~
+                "searching": true,
+                ~;
+                } else {
+                $html .= qq~
+                "searching": false,
+                ~;
+                }
+
+            # Continue
+            $html .= qq~
+                "pageLength": $config->{cfg_task_pagination_length},
+                ~;
+
+            # Show buttons if configured, otherwise show default dom
+            if ($config->{'cfg_include_datatable_buttons'} eq 'on') {
+                $html .= "dom: 'ftiBp',";
+                } else {
+                $html .= "dom: 'ftip',";
+                }
+
+            $html .= qq~
+                buttons: [
+                ~;
+
+            # Set buttons configuration, including whether to export all columns or just the first
+            if ($config->{'cfg_export_all_cols'} eq 'on') {
+                    $html .= qq~
+                    { extend: 'copy', className: 'btn btn-dark btn-sm' },
+                    { extend: 'csv', className: 'btn btn-dark btn-sm' },
+                    { extend: 'pdf', className: 'btn btn-dark btn-sm'},
+                    { extend: 'print', className: 'btn btn-dark btn-sm' }
+                    ~;
+                    } else {
+                    $html .= qq~
+                    { extend: 'copy', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
+                    { extend: 'csv', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  },
+                    { extend: 'pdf', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]} },
+                    { extend: 'print', className: 'btn btn-dark btn-sm', exportOptions: {columns: [1]}  }
+                    ~;
+                    }
+
+            $html .= qq~
+                ],
+                "language": {
+                    "emptyTable": "No tasks found! 🎉",
+                    "search": "Filter tasks:",
+                    "info": "Displaying _START_ to _END_ of _TOTAL_ tasks  &nbsp; &nbsp; &nbsp;"
+                }
+            });
+        });
+        </script>
 
         <script>
         \$(document).ready(function(){
