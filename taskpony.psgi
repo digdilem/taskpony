@@ -1,6 +1,6 @@
 #!/usr/bin/env/perl
 # Taskpony - a simple perl PSGI web app for various daily tasks - https://github.com/digdilem/taskpony
-# Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org 
+# Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
 # MIT Licence
 
 use strict;
@@ -21,15 +21,15 @@ use FindBin qw($Dir);                # To find Taskpony's Paddock (starting dire
 
 
 ###############################################
-# Path to Taskpony installation root and associated dirs. 
+# Path to Taskpony installation root and associated dirs.
 my $taskpony_path = $Dir;
-my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created. 
+my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created.
 my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
 ###############################################
 # Default configuration. Don't change them here, use /config page.
 our $config = {
-    cfg_task_pagination_length => 25,           # Number of tasks to show per page 
+    cfg_task_pagination_length => 25,           # Number of tasks to show per page
     cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
@@ -46,7 +46,7 @@ our $config = {
     };
 
 ###############################################
-# Global variables that are used throughout - do not change these.  
+# Global variables that are used throughout - do not change these.
 my $app_title = 'Taskpony';             # Name of app.
 my $app_version = '0.4';               # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
@@ -54,7 +54,7 @@ my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/release
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
 my $new_version_available = 0;
 
-my $dbh;                            # Global database handle 
+my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
 my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
@@ -105,7 +105,7 @@ my $icon_repeat_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H
 my $icon_comment_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
 my $icon_goto = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-3v-6h3" /><path d="M3 9v6" /><path d="M6 9v6" />');
 
-# Very small FA icons, 
+# Very small FA icons,
 my $icon_rotate_left_small = build_tabler_icon(12,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
 
 # Preflight checks
@@ -132,14 +132,14 @@ my $running_in_docker = 0;  # 1 if in docker, 0 if not
 if (-f '/.dockerenv') { $running_in_docker = 1;}  # Test for this magical file that docker created.
 
 my $app = sub {
-    my $env = shift; 
+    my $env = shift;
     my $req = Plack::Request->new($env);
     my $res = Plack::Response->new(200);
 
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers
-    $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. 
+    $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
     update_db_mtime();                          # Ensure we have the latest mtime cached
     calculate_stats();                          # Update stats hashref if needed
@@ -198,7 +198,7 @@ my $app = sub {
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
 
             print STDERR "INFO: Task $task_id marked as complete\n";
-            $stats->{tasks_completed_today} += 1; 
+            $stats->{tasks_completed_today} += 1;
             add_alert("Task #$task_id marked as completed. $stats->{tasks_completed_today} tasks completed today!");
             }
 
@@ -212,13 +212,13 @@ my $app = sub {
     if ($req->path eq "/ust") {
         if ($req->method && uc($req->method) eq 'GET') {
             my $task_id = $req->param('task_id') // 0;
-            
+
             if ($task_id > 0) {
                 my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
                 eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
                 print STDERR "INFO: Task $task_id marked as active again\n";
                 add_alert("Task #$task_id re-activated.");
-                $stats->{tasks_completed_today} -= 1; 
+                $stats->{tasks_completed_today} -= 1;
             }
         }
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
@@ -266,7 +266,7 @@ my $app = sub {
                 print STDERR "Setting list $lid as default list.\n";
                 single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
                 my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
-                eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set default lid update failed: $@";                
+                eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set default lid update failed: $@";
                 add_alert("List #$lid set as default.");
                 }
             }
@@ -369,7 +369,7 @@ my $app = sub {
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "WARN: Task insert into list $list_id failed: $@";
                 }
 
-            $stats->{tasks_added_today} += 1; 
+            $stats->{tasks_added_today} += 1;
             add_alert("Task '$title' added.  That's $stats->{tasks_added_today} new tasks today!");
             $res->redirect('/');
             return $res->finalize;
@@ -411,10 +411,10 @@ my $app = sub {
             my $title = sanitize($req->param('Title') // '');
             my $desc  = sanitize($req->param('Description') // '');
             my $list_id = $req->param('ListId') // 0;
-            my $is_recurring = sanitize($req->param('IsRecurring') // '');            
+            my $is_recurring = sanitize($req->param('IsRecurring') // '');
             my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
             # Validate recurring interval
-            if ($recurring_interval !~ /^\d+$/) { 
+            if ($recurring_interval !~ /^\d+$/) {
                 print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
                 $recurring_interval = 1;
                 }
@@ -448,13 +448,13 @@ my $app = sub {
 
             if ($task) {
                 my $html = header();
-                
+
                 # Build list dropdown
                 my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
                 my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
                 $list_sth->execute();
-                
-                # Build list 
+
+                # Build list
                 while (my $list= $list_sth->fetchrow_hashref()) {
                     my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
                     my $title = html_escape($list->{'Title'});
@@ -496,9 +496,9 @@ my $app = sub {
 
                                 <div class="border p-3 mb-3">
                                     <div class="d-flex flex-column flex-md-row gap-3">
-                                         
+
                                         <div class="border p-3 flex-fill ">
-                                            
+
                                             <div class="form-check form-switch m-0">
                                             Repeat this task after completion
                                                 <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
@@ -506,8 +506,8 @@ my $app = sub {
 
                                             # Precheck the box if IsRecurring is already 'on'
 
-                                            if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; } 
-                                            
+                                            if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
+
                                             $html .= qq~>
                                             <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
                                                 $icon_info_small
@@ -516,7 +516,7 @@ my $app = sub {
                                         </div>
 
                                         <div class="border p-3 flex-fill ">
-                                            
+
                                             <div class="d-flex align-items-center gap-2">
                                                 Repeat every
                                                     <input type="number" class="form-control form-control-sm" style="width: 80px;"
@@ -555,7 +555,7 @@ my $app = sub {
                                     <a class="btn btn-warning" href="/ust?task_id=$task_id">Set Task as Active</a>
                                     ~;
                                     }
-                                    
+
 
                                 $html .= qq~
                                     <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
@@ -630,7 +630,7 @@ my $app = sub {
                 add_alert("List deleted. Active tasks have been orphaned.");
                 $stats->{total_lists} -= 1;
                 $stats->{total_active_lists} -= 1;
-                
+
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                 if ($current_active == $list_id) {
@@ -645,7 +645,7 @@ my $app = sub {
                     'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1'
                     );
                 eval { $update_sth->execute($list_id); 1 } or print STDERR "Task completion failed: $@";
-                
+
                 my $delete_sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
@@ -653,7 +653,7 @@ my $app = sub {
                 add_alert("List deleted and all active tasks marked as completed.");
                 $stats->{total_lists} -= 1;
                 $stats->{total_active_lists} -= 1;
-                
+
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                 if ($current_active == $list_id) {
@@ -665,22 +665,22 @@ my $app = sub {
                 } elsif ($action eq 'delete_move' && $list_id > 1) {
                 # Move all active tasks to another list, then delete the list
                 my $target_list_id = $req->param('target_list_id') // 0;
-                
+
                 if ($target_list_id > 1 && $target_list_id != $list_id) {
                     my $move_sth = $dbh->prepare(
                         'UPDATE TasksTb SET ListId = ? WHERE ListId = ? AND Status = 1'
                         );
                     eval { $move_sth->execute($target_list_id, $list_id); 1 } or print STDERR "Task move failed: $@";
-                    
+
                     my $delete_sth = $dbh->prepare(
                         'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                         );
                     eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
-                    
+
                     add_alert("List deleted and active tasks moved to target list.");
                     $stats->{total_lists} -= 1;
                     $stats->{total_active_lists} -= 1;
-                    
+
                     # Check if deleted list was the active list, if so switch to default
                     my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                     if ($current_active == $list_id) {
@@ -702,7 +702,7 @@ my $app = sub {
                 add_alert("List deleted.");
                 $stats->{total_lists} -= 1;
                 $stats->{total_active_lists} -= 1;
-                
+
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                 if ($current_active == $list_id) {
@@ -721,12 +721,12 @@ my $app = sub {
         # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
         $html .= start_card('Active Lists', $icon_list, 0);
-        $html .= qq~  
+        $html .= qq~
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
                                 <thead>
                                     <tr>
-                                        <th>List</th> 
+                                        <th>List</th>
                                         <th>Description</th>
                                         <th>Active Tasks</th>
                                         <th>Completed Tasks</th>
@@ -739,7 +739,7 @@ my $app = sub {
         # Add "All Tasks Lists" row
         my $all_active = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 1') // 0;
         my $all_completed = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 2') // 0;
-        
+
         $html .= qq~
                                 <tr>
                                     <td><strong><a href="/?lid=1"> <span class="badge bg-secondary text-white">All Tasks</span></a></strong></td>
@@ -768,7 +768,7 @@ my $app = sub {
 
             my $title = html_escape($list->{'Title'});
             my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
-            
+
             $html .= qq~
                                 <tr>
                                     <td>
@@ -785,11 +785,16 @@ my $app = sub {
 
                                     <td>
                                         <a href="/?lid=$list->{'id'}" class="btn-sm text-$config->{'cfg_header_colour'} text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
-                                        $active_count
+                                        <span class="badge bg-secondary">$active_count</span
+
                                         </a>
                                     </td>
 
-                                    <td>$completed_count</td>
+                                    <td>
+                                        <a href="/?lid=$list->{'id'}&sc=1" class="btn-sm text-$config->{'cfg_header_colour'} text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
+                                        $completed_count
+                                        </a>
+                                    </td>
 
                                     <!-- Actions column -->
                                     <td class="text-end">
@@ -802,7 +807,7 @@ my $app = sub {
                                                 ~;
                                                 if ($list->{'IsDefault'} == 1) {
                                                     $html .= $icon_star_on;
-                                                    
+
                                                     } else {
                                                     $html .= $icon_star_off;
                                                     }
@@ -818,7 +823,7 @@ my $app = sub {
                                             <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_right
                                             </span>
-                                            </a>                                            
+                                            </a>
 
                                             <!-- Set all tasks Completed Button -->
                                             <a href="/list_setall_completed?lid=$list->{'id'}"
@@ -828,8 +833,8 @@ my $app = sub {
                                             <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_left
                                             </span>
-                                            </a>                                                   
-                                        
+                                            </a>
+
                                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">
                                                 $icon_trash
                                             </button>
@@ -856,7 +861,7 @@ my $app = sub {
         while (my $ml = $move_lists_sth->fetchrow_hashref()) {
             push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
         }
-        
+
         # Convert to JSON for JavaScript use
         my $move_lists_json = '[';
         foreach my $i (0 .. $#move_lists) {
@@ -917,7 +922,7 @@ my $app = sub {
 
         <script>
         var allLists = $move_lists_json;
-        
+
         document.addEventListener('DOMContentLoaded', function() {
           // Handle modal opening - populate with list details and options
           var deleteListModal = document.getElementById('deleteListModal');
@@ -926,10 +931,10 @@ my $app = sub {
             var listId = button.getAttribute('data-list-id');
             var listTitle = button.getAttribute('data-list-title');
             var activeTasksCount = button.getAttribute('data-active-tasks');
-            
+
             document.getElementById('modalListId').value = listId;
             document.getElementById('modalListTitle').innerHTML = listTitle + ' <i>(' + activeTasksCount + ' active tasks)</i>';
-            
+
             // Populate target list dropdown, excluding the list being deleted
             var selectElement = document.getElementById('targetListId');
             selectElement.innerHTML = '';
@@ -963,7 +968,7 @@ my $app = sub {
           // Handle delete button click
           document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
             var selectedOption = document.querySelector('input[name="delete_option"]:checked').value;
-            
+
             // Validate that move option has a target list selected
             if (selectedOption === 'delete_move') {
               var targetListId = document.getElementById('targetListId').value;
@@ -1024,12 +1029,12 @@ my $app = sub {
         # Inactive Lists Card and Table
         $html .= start_card('Inactive Lists', $icon_grave, 0);
 
-        $html .= qq~  
+        $html .= qq~
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
                                 <thead>
                                     <tr>
-                                        <th>List</th> 
+                                        <th>List</th>
                                         <th>Deleted Date</th>
                                         <th>Tasks</th>
                                         <th>Action</th>
@@ -1039,8 +1044,8 @@ my $app = sub {
         ~;
         my $deleted_list_sth = $dbh->prepare(
             'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
-            );  # Don't select ListsTb.id=1, "All" 
-        $deleted_list_sth->execute();   
+            );  # Don't select ListsTb.id=1, "All"
+        $deleted_list_sth->execute();
         # Step through deleted lists
         while (my $a = $deleted_list_sth->fetchrow_hashref()) {
             my $title = html_escape($a->{'Title'});
@@ -1048,7 +1053,7 @@ my $app = sub {
                 'SELECT COUNT(*) FROM TasksTb WHERE ListId = ?',
                 $a->{'id'}
                 ) // 0;
-            
+
             $html .= qq~
                                 <tr>
                                     <td>
@@ -1085,7 +1090,7 @@ my $app = sub {
                                             <span style="font-size: 30px; line-height:1;">
                                                 $icon_xcircle
                                             </span>
-                                            </a>                                            
+                                            </a>
 
                                             <!-- Permanently delete this List -->
                                             <a href="/list_delete_list?lid=$a->{'id'}"
@@ -1095,8 +1100,8 @@ my $app = sub {
                                             <span style="font-size: 30px; line-height:1;">
                                                 $icon_grave
                                             </span>
-                                            </a>                                                   
-                                                                           
+                                            </a>
+
                                         </div>
                                     </td>
                                     <!-- End Actions column -->
@@ -1186,7 +1191,7 @@ my $app = sub {
             # If POST, update the config in DB and redirect to root
             if ($req->method && uc($req->method) eq 'POST') {
 
-                if ($req->param('save_config') eq 'true') { 
+                if ($req->param('save_config') eq 'true') {
                     print STDERR "Config form received\n";
 
                     # Loop through config keys and try to get them from param
@@ -1213,8 +1218,8 @@ my $app = sub {
                         } # End keys lookup
                     # Save config to db
                     save_config();
-                    } 
-                
+                    }
+
                 add_alert("Configuration saved");
                 $res->redirect('/');
                 return $res->finalize;
@@ -1236,7 +1241,7 @@ my $app = sub {
             $html .= qq~
                 <div class="row">
 
-                    <!-- COLUMN ONE ############################################### -->                    
+                    <!-- COLUMN ONE ############################################### -->
                     <div class="col">
                         <div class="card bg-dark text-white" style="width: 18rem;">
                             <h5 class="card-title">Task List Settings</h5>
@@ -1247,11 +1252,11 @@ my $app = sub {
 
                     # Draw Row 1 - Visual Settings
                     $html .= config_show_option('cfg_include_datatable_search','Display Filter Box','Show the filter box at the top right of the Tasks table','check',0,0);
-                    $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0); 
+                    $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0);
                     $html .= config_show_option('cfg_show_dates','Show Dates','Include the Date when a Task was added or completed in the Task List','check',0,0);
                     $html .= config_show_option('cfg_show_lists','Show Lists','Include the List name a task belongs to in the Task List','check',0,0);
 
-                    $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);                     
+                    $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);
                     $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
                     $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
 
@@ -1269,7 +1274,7 @@ my $app = sub {
 
                 <div class="card-body">
                 ~;
-               
+
                 $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
                 $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
                 $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
@@ -1282,7 +1287,7 @@ my $app = sub {
             <br/
             >
             <div class="text-end">
-                <button class="btn btn-primary">Save Settings</button>  
+                <button class="btn btn-primary">Save Settings</button>
             </div>
 
             </div>
@@ -1304,16 +1309,16 @@ my $app = sub {
             $html .= qq~
             <form method="post" action="/background_set" enctype="multipart/form-data">
                 <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
-                    <label for="background" class="form-label mb-0 flex-grow-1"  
+                    <label for="background" class="form-label mb-0 flex-grow-1"
                         data-bs-toggle="tooltip" data-bs-placement="auto"
                         title="If enabled above, Taskpony can show a background image on the page">
                         Change the background image
                     </label>
-                    
+
                     <div class="d-flex align-items-center gap-2">
                         <input
                             class="form-control"
-                            style="width: 200px;" 
+                            style="width: 200px;"
                             type="file"
                             id="background"
                             name="background"
@@ -1328,7 +1333,7 @@ my $app = sub {
                 <div class="form-text mt-1">
                     Upload a JPG to replace the current background image.
                 </div>
-            </form>            
+            </form>
             ~;
 
         $html .= end_card();
@@ -1421,14 +1426,14 @@ my $app = sub {
                 <ul>
                     <li>
                         <span class="pt-3 small text-white-50">
-                            First task created: 
+                            First task created:
                                 <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
                                 <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
                         </span>
                     </li>
                     <li>
                         <span class="pt-3 small text-white-50">
-                            Database schema version (Actual / Required): 
+                            Database schema version (Actual / Required):
                                 <strong class="text-white">$config->{'database_schema_version'} / $database_schema_version</strong>
                         </span>
                     </li>
@@ -1439,7 +1444,7 @@ my $app = sub {
                                 } else {
                                 $html .= qq~Running on host as a native service ~;
                                 }
-                            $html .= qq~ 
+                            $html .= qq~
                         </span>
                     </li>
                 </ul>
@@ -1486,7 +1491,7 @@ my $app = sub {
 
     ###############################################
     # /?delete_task=nn - Delete task nn (Actually delete, not just set as completed)
-    my $delete_task = $req->param('delete_task') // 0;        
+    my $delete_task = $req->param('delete_task') // 0;
     if ($delete_task > 0) {
         my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
         eval { $sth->execute($delete_task); 1 } or print STDERR "WARN: Delete TasksTb.id=$delete_task failed: $@";
@@ -1538,8 +1543,8 @@ my $app = sub {
     return $res->finalize;
     };   # End main loop, pages and paths handling
 
-builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.    
-    enable 'Plack::Middleware::Static', 
+builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.
+    enable 'Plack::Middleware::Static',
         path => qr{^/static/},
         root => $static_dir;
     $app;
@@ -1551,8 +1556,8 @@ builder { # Enable Static middleware for specific paths, including favicon.ico, 
 
 ###############################################
 # Checks whether the sqlite database file exists and if not, creates it, populates schema, and connects to it
-sub connect_db { 
-    # Check database exists. 
+sub connect_db {
+    # Check database exists.
     if (! -e $db_path) {
         # Database file does not exist, so create it and initialise it.
         print STDERR "Database file $db_path not found. Assuming new install and creating new database\n";
@@ -1592,7 +1597,7 @@ sub connect_db {
         }
 
     # Check for any needed schema upgrades each time we connect
-    check_database_upgrade(); 
+    check_database_upgrade();
     }  # End connect_db()
 
 ###############################################
@@ -1600,7 +1605,7 @@ sub connect_db {
 # Run-safe initialise of database scema. Starting with v.1 and upgrading as needed.
 
 # Create the v.1 database schema in a new database. New DB is created and we are connected via the global $dbh
-sub initialise_database { 
+sub initialise_database {
     ###############################################
     # Create ConfigTb
     print STDERR "Creating ConfigTb table.\n";
@@ -1614,7 +1619,7 @@ sub initialise_database {
 
     print STDERR "ConfigTb created. Populating.\n";
     $dbh->do(qq~
-            INSERT INTO ConfigTb (key, value) VALUES 
+            INSERT INTO ConfigTb (key, value) VALUES
             ('database_schema_version', '1'),
             ('active_list', '2')
             ;
@@ -1641,9 +1646,9 @@ sub initialise_database {
     # Populate with a default list
     print STDERR "ListsTb created. Populating with default lists.\n";
     $dbh->do(qq~
-        INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES 
+        INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES
         (1, 'All Tasks', 'View tasks from all lists', 0),
-        (2, 'Main', 'Main day to day list', 1) 
+        (2, 'Main', 'Main day to day list', 1)
         ON CONFLICT(id) DO NOTHING;
         ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
 
@@ -1722,7 +1727,7 @@ sub check_database_upgrade  {
 
 ###############################################
 # Return HTML header for all pages
-sub header { 
+sub header {
     my $html = qq~
     <!doctype html>
     <html lang="en" class="dark">
@@ -1761,12 +1766,12 @@ sub header {
     </style>
 
     </head>
-    <body 
+    <body
         class="text-white d-flex flex-column min-vh-100"
         ~;
 
     if ($config->{'cfg_background_image'} eq 'on') {   # Show a background if enabled. Use the mtime of the file to trigger a cache reload by the client
-        my $bg_mtime = (stat("./static/background.jpg"))[9] || time();  
+        my $bg_mtime = (stat("./static/background.jpg"))[9] || time();
         $html .= qq~ style="background: url('/static/background.jpg?v=$bg_mtime') center / cover no-repeat;" ~;
         }
 
@@ -1785,11 +1790,11 @@ sub header {
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
                     <img src="/static/taskpony-logo.png" width="82" height="82" alt="logo">
                     <h3 class="mb-0">$app_title</h3>
-                </a>                
+                </a>
                 ~;
-    
+
     # Add the list selection pulldown.
-    $html .= list_pulldown($list_id);  
+    $html .= list_pulldown($list_id);
 
     $html .= qq~
                     </div>
@@ -1801,7 +1806,7 @@ sub header {
                 my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
                 if ($list_id == 1) {
                     $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2");
-                    }                
+                    }
                 $html .= qq~
                 <a href="/?sc=1"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
@@ -1841,7 +1846,7 @@ sub header {
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Settings" aria-label="Settings">
                     $icon_gear
                 </a>
-                
+
             </div>
         </div>
     ~;
@@ -1851,7 +1856,7 @@ sub header {
 
 ###############################################
 # Return standard HTML footer for all pages
-sub footer { 
+sub footer {
     my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $html .= qq~
@@ -1871,7 +1876,7 @@ sub footer {
                 <a href="$app_releases_page" class="text-white text-decoration-none" target="_blank">
                     New version available
                 </a>
-            </span> 
+            </span>
             &nbsp;
         ~;
         }
@@ -1889,10 +1894,10 @@ sub footer {
                 info:     true,
                 autoWidth: false,
                 columnDefs: [{ width: '10%', targets: 0 }],
-                initComplete: function () { 
-                    \$('#tasks').removeClass('dt-hidden'); 
-                    \$('#hideUntilShow').removeClass('d-none'); 
-                    \$('#hideUntilShow2').removeClass('d-none'); 
+                initComplete: function () {
+                    \$('#tasks').removeClass('dt-hidden');
+                    \$('#hideUntilShow').removeClass('d-none');
+                    \$('#hideUntilShow2').removeClass('d-none');
                     \$('#tasktitle').focus();
                     },
                 ~;
@@ -1947,7 +1952,7 @@ sub footer {
                     "emptyTable": "No tasks found! 🎉",
                     "search": "Filter tasks:",
                     "info": "Displaying _START_ to _END_ of _TOTAL_ tasks  &nbsp; &nbsp; &nbsp;"
-                }           
+                }
             });
         });
         </script>
@@ -1985,14 +1990,14 @@ sub list_pulldown {
 
     # Redirect to root with ?lid=<id> when selection changes (no enclosing form required)
     my $html = qq~
-        <select name="lid" 
+        <select name="lid"
             class="form-select form-select-sm" style="width:auto; display:inline-block; margin-left:10px;" onchange="window.location='/?lid=' + encodeURIComponent(this.value)">
         ~;
 
     # We should check whether there is a default list. If so, select the oldest non-deleted one.
     my $default_cnt_sql = 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NULL';
     my $default_cnt = $dbh->selectrow_array($default_cnt_sql);
-    
+
     if ($default_cnt == 0) {
         print STDERR "Odd. There's no default, active list. Maybe it just got deleted. Making the oldest list the new default.\n";
         # Clear any old isDefault lists, even if they're isDeleted
@@ -2005,7 +2010,7 @@ sub list_pulldown {
     my $sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
     $sth->execute();
 
-    # Prepend the "All lists" option and then loop through, adding each. 
+    # Prepend the "All lists" option and then loop through, adding each.
     while (my $row = $sth->fetchrow_hashref()) {
         my $selected = ($row->{'id'} == $selected_lid) ? ' selected' : '';
         my $title = sanitize($row->{'Title'});
@@ -2095,7 +2100,7 @@ sub show_tasks {
         SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
         FROM TasksTb t
         LEFT JOIN ListsTb p ON t.ListId = p.id
-        WHERE t.Status = ? 
+        WHERE t.Status = ?
         ";
 
     if ($list_id != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
@@ -2106,7 +2111,7 @@ sub show_tasks {
         }
 
     # Append ordering and finish query
-    $sql .= " 
+    $sql .= "
         ORDER BY t.AddedDate DESC
         ";
 
@@ -2129,13 +2134,13 @@ sub show_tasks {
                 } else { # Completed tasks. Show completed date
                 $html .= "<th>Completed</th>\n";
                 }
-            } 
+            }
 
         # Show or hide list column based on config
         if ($config->{'cfg_show_lists'} eq 'on') {
                     $html .= qq~<th>List</th>
                     ~;
-            } 
+            }
 
         # Close row
         $html .= qq~
@@ -2150,7 +2155,7 @@ sub show_tasks {
             <td data-order="$a->{'AddedDate'}">
                 <a href="#" class="text-reset text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Added at: $a->{'AddedDate'}">
                 ~
-                . human_friendly_date($a->{'AddedDate'}) . qq~</a> 
+                . human_friendly_date($a->{'AddedDate'}) . qq~</a>
             </td>
             ~;
 
@@ -2189,10 +2194,10 @@ sub show_tasks {
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">
                 $icon_repeat_small
             </span> ~;
-            }            
-        
+            }
+
         # Active tasks. Show checkbox to mark complete
-        if ($status == 1) {  
+        if ($status == 1) {
             $checkbox .= qq~
                 <form method="post" action="/complete" style="display:inline;">
                     <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
@@ -2204,9 +2209,9 @@ sub show_tasks {
                 ~;
 
             $title_link .= qq~
-                    <a 
+                    <a
                     href="/edittask?id=$a->{'id'}"
-                    class="text-white text-decoration-none" 
+                    class="text-white text-decoration-none"
                     data-bs-toggle="tooltip" data-bs-placement="auto"
                     data-bs-html="true"
                     title="$description">
@@ -2214,21 +2219,21 @@ sub show_tasks {
                     ~;
             if ($description) {
                 $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $icon_comment_small
-                </span> 
+                </span>
                 ~;
                 }
             $title_link .= qq~
                     </a>
                      ~;
-            } 
+            }
 
         # Completed tasks. Show undo button to mark uncompleted
         if ($status == 2) { # Completed tasks
             $title_link .= qq~
-                    <a 
+                    <a
                     href="/edittask?id=$a->{'id'}"
-                    class="text-white text-decoration-none" 
-                    data-bs-toggle="tooltip" data-bs-placement="auto" 
+                    class="text-white text-decoration-none"
+                    data-bs-toggle="tooltip" data-bs-placement="auto"
                     title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~">
                         <span class="opacity-50">$title</span>
                     </a>
@@ -2240,13 +2245,13 @@ sub show_tasks {
                 </a>
                 ~;
             }
-        
+
         ###############################################
         # Output the table row
         ###############################################
         $html .= qq~
             <!-- Task row -->
-            <tr>                
+            <tr>
                 <!-- Checkbox / Undo button -->
                 <td style="text-align: center;">$checkbox</td>
                 <!-- Title Link -->
@@ -2258,7 +2263,7 @@ sub show_tasks {
         # Show or hide date and list column header based on config var cfg_show_dates.
         $html .= qq~
                 <!-- Date column -->
-                ~;        
+                ~;
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
                     $friendly_date
@@ -2266,8 +2271,8 @@ sub show_tasks {
             }
 
         ###############################################
-        # Show or hide date and list column header based on config var cfg_show_dates_lists            
-        if ($config->{'cfg_show_lists'} eq 'on') {  
+        # Show or hide date and list column header based on config var cfg_show_dates_lists
+        if ($config->{'cfg_show_lists'} eq 'on') {
             $html .= qq~
                     <!-- List column -->
                     <td>
@@ -2279,9 +2284,9 @@ sub show_tasks {
                     ~;
                 } else {
                 $html .= qq~
-                        <a 
+                        <a
                         href="/?lid=$a->{'ListId'}"
-                        class="text-$config->{'cfg_header_colour'} text-decoration-none" 
+                        class="text-$config->{'cfg_header_colour'} text-decoration-none"
                         data-bs-toggle="tooltip" data-bs-placement="auto"
                         title="Jump to $a->{'ListTitle'}">
                         $list_title
@@ -2328,7 +2333,7 @@ sub show_tasks {
             // Fail silently
             }
         }
-        
+
         setInterval(checkDbStats, $db_interval_check_ms);
         })();
         </script> <!-- End DB stats check script -->
@@ -2339,12 +2344,12 @@ sub show_tasks {
     } # End show_tasks()
 
 ###############################################
-# show_alert() 
+# show_alert()
 # Check ConfigTb for last_alert and if found, show it once and clear it
-sub show_alert { 
+sub show_alert {
     my $alert_text = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
 
-    if ($alert_text) { # There is an alert pending    
+    if ($alert_text) { # There is an alert pending
         single_db_value("DELETE FROM ConfigTb WHERE `key` = 'last_alert'");
 
         return qq~
@@ -2352,7 +2357,7 @@ sub show_alert {
             <div class="col-md-3">
             </div>
             <div class="col-md-6">
-              <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">                
+              <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
                 $alert_text
               <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 
@@ -2369,7 +2374,7 @@ sub show_alert {
 ###############################################
 # add_alert($alert_text)
 # Store an alert message in ConfigTb to be shown on next page load
-sub add_alert { 
+sub add_alert {
     my $alert_text = shift;
     $dbh->do(
         "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
@@ -2386,33 +2391,33 @@ sub add_alert {
 sub human_friendly_date {
     my ($db_date) = @_;
     return '' unless defined $db_date;
-        
+
     my ($year, $month, $day, $hour, $min, $sec) =  $db_date =~ /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
-    
+
     return $db_date unless $year;  # Return original if parse fails
-    
+
     my $db_time = timelocal($sec, $min, $hour, $day, $month - 1, $year);
     my $now = time();
     my $diff_seconds = $now - $db_time;
-    
+
     return 'Just now' if $diff_seconds < 60;
-    
+
     my $diff_minutes = int($diff_seconds / 60);
     return "$diff_minutes minute" . ($diff_minutes == 1 ? '' : 's') . " ago" if $diff_minutes < 60;
-    
+
     my $diff_hours = int($diff_seconds / 3600);
     return "$diff_hours hour" . ($diff_hours == 1 ? '' : 's') . " ago" if $diff_hours < 24;
-    
+
     my $diff_days = int($diff_seconds / 86400);
     return 'Yesterday' if $diff_days == 1;
     return "$diff_days days ago" if $diff_days < 7;
-    
+
     my $diff_weeks = int($diff_days / 7);
     return "$diff_weeks week" . ($diff_weeks == 1 ? '' : 's') . " ago" if $diff_weeks < 4;
-    
+
     my $diff_months = int($diff_days / 30);
     return "$diff_months month" . ($diff_months == 1 ? '' : 's') . " ago" if $diff_months < 12;
-    
+
     my $diff_years = int($diff_days / 365);
     return "$diff_years year" . ($diff_years == 1 ? '' : 's') . " ago";
     } # End human_friendly_date()
@@ -2444,9 +2449,9 @@ sub start_card {
     my $card_icon = shift || '';
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
-    my $html = qq~ 
+    my $html = qq~
             <!-- Start Card $card_title -->
-            <div class="card shadow-sm mb-4"> 
+            <div class="card shadow-sm mb-4">
             ~;
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
@@ -2548,7 +2553,7 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
     $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
 
     $stats->{stats_last_calculated} = time;
-    } # End calculate_stats()    
+    } # End calculate_stats()
 
 ###############################################
 # Run any daily tasks we need to. Return if already run today.
@@ -2648,16 +2653,16 @@ sub save_config {
     print STDERR "Saving configuration\n";
 
     # First, check any numbers are sensible
-    ensure_sensible_config_range('cfg_task_pagination_length', 3, 1000);        # Number of tasks to show per page 
-    ensure_sensible_config_range('cfg_description_short_length', 3, 1000);      # Number of characters to show in task list before truncating description 
+    ensure_sensible_config_range('cfg_task_pagination_length', 3, 1000);        # Number of tasks to show per page
+    ensure_sensible_config_range('cfg_description_short_length', 3, 1000);      # Number of characters to show in task list before truncating description
     ensure_sensible_config_range('cfg_list_short_length', 1, 100);             # Number of characters to show in task list before truncating list name
     ensure_sensible_config_range('cfg_backup_number_to_keep', 1, 100);           # Number of database backups to keep
 
     # Loop through $config keys and save each of them to ConfigTb
     for my $key (keys %$config) {
-        my $sql = "INSERT INTO ConfigTb (`key`,`value`) 
-            VALUES (?, ?) 
-            ON CONFLICT(key) 
+        my $sql = "INSERT INTO ConfigTb (`key`,`value`)
+            VALUES (?, ?)
+            ON CONFLICT(key)
             DO UPDATE SET value = excluded.value;";
 
         $dbh->do(
@@ -2694,7 +2699,7 @@ sub ensure_sensible_config_range {
 ###############################################
 # check_latest_release()
 # Get latest release from github
-sub check_latest_release {    
+sub check_latest_release {
     if ($config->{'cfg_version_check'} ne 'on') { return; }             # If disabled, return early
     if ($new_version_available == 1) { return; }                       # No point checking again if we know there is a new version waiting
 
@@ -2712,9 +2717,9 @@ sub check_latest_release {
         $github_latest_version =~ s/\D//g;   # Just return the digits for numeric comparison
         } else {
         print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
-        return;        
+        return;
         }
-    
+
     my $normalised_app_version = $app_version;
     $normalised_app_version =~ s/\D//g;
 
@@ -2728,7 +2733,7 @@ sub check_latest_release {
 ###############################################
 # config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper);
 # Output a line of a setting  for /config forms
-sub config_show_option { 
+sub config_show_option {
     my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
 
     my $retstr= qq~
@@ -2738,22 +2743,22 @@ sub config_show_option {
             $title
             </label> ~;
 
-    if ($type eq 'check') {  # Checkbox 
+    if ($type eq 'check') {  # Checkbox
         $retstr .= qq~
             <div class="form-check form-switch mb-0">
                 <input class="form-check-input " type="checkbox" role="switch" id="autoUpdateToggle" name="$key" ~;
-                
+
             if ($config->{$key} eq 'on') { $retstr .= " checked "; }
 
             $retstr .= qq~>
             </div>
             ~;
-        } 
-    
+        }
+
     if ($type eq 'number') { # Numerical entry
         $retstr .= qq~
-            <input type="number" class="form-control w-25" 
-                value="$config->{$key}" 
+            <input type="number" class="form-control w-25"
+                value="$config->{$key}"
                 name="$key"
                 min="$num_range_lower" max="$num_range_upper">
             ~;
@@ -2761,7 +2766,7 @@ sub config_show_option {
 
     if ($type eq 'colour') { # Colour picker
         $retstr .= qq~
-            <select class="form-select w-25" id="themeColor" name="$key">                                        
+            <select class="form-select w-25" id="themeColor" name="$key">
                 <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
                 <option value="primary" class="bg-primary text-white">Primary</option>
                 <option value="secondary" class="bg-secondary text-white">Secondary</option>
@@ -2799,7 +2804,7 @@ sub build_tabler_icon {
 ###############################################
 # Update the global $db_mtime variable with the current database file modification time
 sub update_db_mtime {
-    $db_mtime = (stat($db_path))[9] // 0;    
+    $db_mtime = (stat($db_path))[9] // 0;
     }
 
 ##############################################
