@@ -1029,7 +1029,7 @@ my $app = sub {
 
                                             <!-- Delete all Tasks -->
                                             <a href="/list_setall_active?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all tasks within this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
                                             <span style="font-size: 30px; line-height:1;">
@@ -1039,7 +1039,7 @@ my $app = sub {
 
                                             <!-- Permanently delete this List -->
                                             <a href="/list_setall_completed?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?');">
                                             <span style="font-size: 30px; line-height:1;">
