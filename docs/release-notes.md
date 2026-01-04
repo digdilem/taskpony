@@ -18,7 +18,7 @@
 - Task List page now has config options to toggle Dates and Lists independently instead of both together. This does mean that any existing config setting for this will be lost during upgrade and will need to be reset.
 - Taskpony now identifies its installation directory on startup. This should avoid needing to manually set this if installed as a systemd service in a different directory.
 - Styled checkbox to improve visuals
-- Added /api/ping endpoint for lighter automated health checks
+- Added /api/ping endpoint for lighter automated health checks. Updated docker-compose.yml to use this
 
 
 # 0.3
