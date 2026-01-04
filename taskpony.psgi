@@ -687,22 +687,6 @@ my $app = sub {
 
             my $title = html_escape($list->{'Title'});
             my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
-            
-            # Show toggles for default list
-            my $is_default_str = qq~
-                <a href="/set_default_list?id=$list->{'id'}">
-                <span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="auto" title="Make this the default list">                
-                    $icon_star_off
-                </span>
-                </a>
-                ~;
-
-            if ($list->{'IsDefault'} == 1) {
-                $is_default_str = qq~
-                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is the default list">
-                        $icon_star_on
-                    </span>~;
-                }
 
             $html .= qq~
                                 <tr>
@@ -722,13 +706,30 @@ my $app = sub {
                                     </td>
                                     <td>$active_count</td>
                                     <td>$completed_count</td>
+                                    <!-- Actions column -->
                                     <td class="text-end">
-                                    $is_default_str
-                                    
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">
-                                            $icon_trash
-                                        </button>
+                                        <div class="btn-group" role="group">
+                                            <a href="/set_default_list?id=$list->{'id'}"
+                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
+                                            <span style="font-size: 30px; line-height:1;">
+                                                ~;
+                                                if ($list->{'IsDefault'} == 1) {
+                                                    $html .= $icon_star_on;
+                                                } else {
+                                                    $html .= $icon_star_off;
+                                                }
+                                                $html .= qq~
+                                            </span>
+                                            </a>
+
+                                        
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">
+                                                $icon_trash
+                                            </button>
+                                        </div>
                                     </td>
+                                    <!-- End Actions column -->
                                 </tr>
                 ~;
             } # End lists loop
