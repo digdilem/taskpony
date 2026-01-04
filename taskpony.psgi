@@ -1392,7 +1392,6 @@ my $app = sub {
         <script>
             $(document).ready(function () {
                 $('#tasktitle').trigger('focus');
-                }
             });
         </script>
     ~;
