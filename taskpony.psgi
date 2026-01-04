@@ -1387,17 +1387,6 @@ my $app = sub {
 
     $html .= end_card();
 
-    # Add some code to re-autofocus the input box, as datatables steals that
-    $html .= q~
-        <script>
-            $('#tasks').DataTable({
-                initComplete: function () {
-                    $('#tasktitle').focus();
-                }
-            });
-        </script>
-    ~;
-
     $html .= footer();
     $res->body($html);
     return $res->finalize;
@@ -1758,6 +1747,7 @@ sub footer {
                     \$('#tasks').removeClass('dt-hidden'); 
                     \$('#hideUntilShow').removeClass('d-none'); 
                     \$('#hideUntilShow2').removeClass('d-none'); 
+                    \$('#tasktitle').focus();
                     },
                 ~;
 
@@ -1811,10 +1801,11 @@ sub footer {
                     "emptyTable": "No tasks found! 🎉",
                     "search": "Filter tasks:",
                     "info": "Displaying _START_ to _END_ of _TOTAL_ tasks  &nbsp; &nbsp; &nbsp;"
-                }
+                }           
             });
         });
         </script>
+        <!-- End DataTables setup -->
 
         <script>
         \$(document).ready(function(){
