@@ -715,7 +715,7 @@ my $app = sub {
                                             <span style="font-size: 30px; line-height:1;">
                                                 ~;
                                                 if ($list->{'IsDefault'} == 1) {
-                                                    $html .= $icon_list;
+                                                    $html .= $icon_star_on;
                                                     
                                                     } else {
                                                     $html .= $icon_star_off;
