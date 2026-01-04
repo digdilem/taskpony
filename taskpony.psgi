@@ -742,11 +742,33 @@ my $app = sub {
 
         $html .= qq~
                                 <tr>
-                                    <td><strong><a href="/?lid=1"> <span class="badge bg-secondary text-white">All Tasks</span></a></strong></td>
-                                    <td>View tasks from all lists</td>
-                                    <td><a href="/?lid=1" class="text-white text-decoration-none">$all_active</a></td>
-                                    <td><a href="/?lid=1&sc=1" class="text-white text-decoration-none">$all_completed</a></td>
-                                    <td>&nbsp;</td>
+                                    <td>
+                                        <strong>
+                                            <a href="/?lid=1" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
+                                                All Tasks
+                                            </a>
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        View tasks from all lists
+                                    </td>
+
+                                    <td>
+                                        <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
+                                            $all_active
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <a href="/?lid=1&sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
+                                            $all_completed
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        &nbsp;
+                                    </td>
                                 </tr>
         ~;
 
