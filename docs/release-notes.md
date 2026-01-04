@@ -3,10 +3,13 @@
 # 0.4
 
 ## Bugfixes
-- Repeating tasks were reset using 'date' instead of 'datetime' leading to YYYY-MM-DD dates displaying in Tasks List instead of a human friendly string.
+
+- Repeating tasks weren't showing a "human friendly" date after being reset. Fixed.
 - Description line breaks are now preserved. This allows for better formatting in the Edit Task description field, and the hovering tooltip over a task in the Task List
+- Quick task input was no longer auto-focusing. Fixed.
 
 ## Features:
+
 - Reflow App/title onto one line to reduce some vertical height
 - Taskpony will now automatically reload the page if the database has changed since the page was first loaded. This would normally happen if a task was changed from another client. Check interval set to 60s initially. 
 - Switched from Fontawesome to Tabler icons for a greater range.
@@ -18,6 +21,7 @@
 # 0.3  
 
 ## Features:
+
 - You can now upload a JPG for a page background. There is a toggle in /config and a new upload form. 
 - "Show completed/active tasks" button now includes the number of tasks that will be shown. It can also be hidden entirely in Settings now for a cleaner look.
 - Tasks that have a description now show an info icon in the list to indicate that they can be hovered to see it.
@@ -29,6 +33,8 @@
 
 # 0.2d  Released Christmas, 2025
 
+## Bugfixes
+
 - Fix a couple of regressions: favicon displaying, and rounded page bottoms.
 
 # 0.2c  Released Christmas, 2025
@@ -37,7 +43,11 @@
 
 ### To upgrade v.0.01 to v.0.2, follow the [Upgrade Instructions](../README.md#upgrading)
 
-- Bugfix: Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
+## Bugfixes
+
+- Re-add html_escape() which had previously been merged with sanitize() and change calls to use it when displaying output. This corrects where tasks were stored and displayed with certain characters were made safe that didn't need to be. Quotes, single quotes, ampersands etc.
+
+## Features:
 
 - UX: Renamed "All Lists" to "All Tasks" @halcyonloon https://github.com/digdilem/taskpony/issues/1
 - UX: Removed blue link colour for dates in main list. (Link only there for tooltip on hover)
