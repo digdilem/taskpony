@@ -1390,8 +1390,10 @@ my $app = sub {
     # Add some code to re-autofocus the input box, as datatables steals that
     $html .= q~
         <script>
-            $(document).ready(function () {
-                $('#tasktitle').trigger('focus');
+            $('#tasks').DataTable({
+                initComplete: function () {
+                    $('#tasktitle').focus();
+                }
             });
         </script>
     ~;
