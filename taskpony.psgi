@@ -1355,7 +1355,7 @@ my $app = sub {
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
                         <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
-                            <input name="Title" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$list_name' " />
+                            <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$list_name' " />
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
                         <h2>
@@ -1386,6 +1386,17 @@ my $app = sub {
     #####################################
 
     $html .= end_card();
+
+    # Add some code to re-autofocus the input box, as datatables steals that
+    $html .= qq~
+        $(document).ready(function () {
+            $('#tasks').DataTable({
+            initComplete: function () {
+                $('#tasktitle').trigger('focus');
+                }
+            });
+        });
+    ~;
 
     $html .= footer();
     $res->body($html);
@@ -1592,6 +1603,7 @@ sub header {
     <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
 
     <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
 
     <script src="/static/js/dataTables.buttons.min.js"></script>
     <script src="/static/js/buttons.html5.min.js"></script>
