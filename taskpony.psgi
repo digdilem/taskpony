@@ -784,8 +784,8 @@ my $app = sub {
                                     </td>
 
                                     <td>
-                                        <a href="/?lid=$list->{'id'}" class="btn-sm text-$config->{'cfg_header_colour'} text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
-                                        <span class="badge bg-secondary">$active_count</span
+                                        <a href="/?lid=$list->{'id'}" class="badge bg-$config->{'cfg_header_colour'}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                                        $active_count
 
                                         </a>
                                     </td>
