@@ -710,7 +710,7 @@ my $app = sub {
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
                                             <a href="/set_default_list?id=$list->{'id'}"
-                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center "
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
                                             <span style="font-size: 30px; line-height:1;">
                                                 ~;
