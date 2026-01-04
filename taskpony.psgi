@@ -728,9 +728,9 @@ my $app = sub {
                                     <tr>
                                         <th>List</th>
                                         <th>Description</th>
-                                        <th>Active Tasks</th>
-                                        <th>Completed Tasks</th>
-                                        <th>Actions</th>
+                                        <th align="right">Active Tasks</th>
+                                        <th align="right">Completed Tasks</th>
+                                        <th align="right">Actions</th>
                                     </tr>
                                 </thead>
                             <tbody>
