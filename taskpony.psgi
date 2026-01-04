@@ -317,6 +317,43 @@ my $app = sub {
         } # End /list_setall_completed
 
     ###############################################
+    # Permanently delete all tasks in LIST nn
+    if ($req->path eq "/list_delete_all_tasks") {
+        if ($req->method && uc($req->method) eq 'GET') {
+            my $lid = $req->param('lid');
+            if ($lid > 1) { # Don't allow for "All Tasks Lists"
+                my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ?', $lid) // 0;
+                if ($count > 0) {
+                    print STDERR "INFO: Permanently deleting all tasks in list $lid\n";
+                    my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE ListId = ?');
+                    eval { $sth->execute($lid); 1 } or print STDERR "WARN: Delete all tasks failed: $@";
+                    add_alert("$count task(s) permanently deleted from list.");
+                } else {
+                    add_alert("No tasks found in this list.");
+                }
+            }
+        }
+        $res->redirect('/lists');
+        return $res->finalize;
+        } # End /list_delete_all_tasks
+
+    ###############################################
+    # Permanently delete LIST nn
+    if ($req->path eq "/list_delete_list") {
+        if ($req->method && uc($req->method) eq 'GET') {
+            my $lid = $req->param('lid');
+            if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
+                print STDERR "INFO: Permanently deleting list $lid\n";
+                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ?');
+                eval { $sth->execute($lid); 1 } or print STDERR "WARN: Permanent list delete failed: $@";
+                add_alert("List permanently deleted.");
+            }
+        }
+        $res->redirect('/lists');
+        return $res->finalize;
+        } # End /list_delete_list
+
+    ###############################################
     # Create a new task
     if ($req->path eq "/add") {
 
@@ -1016,7 +1053,7 @@ my $app = sub {
                                             $title
                                         </strong>
                                     </td>
-                                    
+
                                     <td>
                                         $a->{'DeletedDate'}
                                     </td>
@@ -1029,7 +1066,7 @@ my $app = sub {
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
-                                            <a href="/set_default_list?id=$a->{'id'}"
+                                            <a href="/list_undelete?lid=$a->{'id'}"
                                             class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
                                             <span style="font-size: 30px; line-height:1;">
@@ -1038,7 +1075,7 @@ my $app = sub {
                                             </a>
 
                                             <!-- Delete all Tasks -->
-                                            <a href="/list_setall_active?lid=$a->{'id'}"
+                                            <a href="/list_delete_all_tasks?lid=$a->{'id'}"
                                             class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all tasks within this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
@@ -1048,7 +1085,7 @@ my $app = sub {
                                             </a>                                            
 
                                             <!-- Permanently delete this List -->
-                                            <a href="/list_setall_completed?lid=$a->{'id'}"
+                                            <a href="/list_delete_list?lid=$a->{'id'}"
                                             class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?');">
