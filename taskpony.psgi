@@ -754,13 +754,13 @@ my $app = sub {
                                         View tasks from all lists
                                     </td>
 
-                                    <td>
+                                    <td align="right"
                                         <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
                                             $all_active
                                         </a>
                                     </td>
 
-                                    <td>
+                                    <td align="right">
                                         <a href="/?lid=1&sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
                                             $all_completed
                                         </a>
