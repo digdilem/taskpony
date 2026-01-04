@@ -1391,11 +1391,8 @@ my $app = sub {
     $html .= q~
         <script>
             $(document).ready(function () {
-                $('#tasks').DataTable({
-                initComplete: function () {
-                    $('#tasktitle').trigger('focus');
-                    }
-                });
+                $('#tasktitle').trigger('focus');
+                }
             });
         </script>
     ~;
