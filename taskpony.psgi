@@ -183,7 +183,7 @@ my $app = sub {
     if ($req->path eq "/api/ping") {
         $res->header('Content-Type' => 'text/plain');
         $res->header('Cache-Control' => 'no-cache, no-store');
-        $res->body('pong';
+        $res->body('pong');
         return $res->finalize;
         } # End /api/dbstate
 
