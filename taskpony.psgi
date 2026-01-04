@@ -2637,9 +2637,11 @@ sub config_show_option {
 sub build_tabler_icon {
     my ($size, $svg) = @_;
 
-    return qq~<span style="font-size: ~ . $size . qq~px;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
-        </span>~;
+    # return qq~<span style="font-size: ~ . $size . qq~px;">
+    #     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
+    #     </span>~;
+    return qq~<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
+    ~;
     } # end build_tabler_icon
 
 ###############################################
