@@ -2051,7 +2051,7 @@ sub show_tasks {
                 <form method="post" action="/complete" style="display:inline;">
                     <label class="btn btn-sm btn-outline-success m-0" style="padding:0.25rem 0.5rem; line-height:1.2;">
                         <input type="hidden" name="task_id" value="$a->{'id'}" />
-                        <input type="checkbox" class="form-check-input" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
+                        <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
                     </label>
                 </form>
                 ~;
