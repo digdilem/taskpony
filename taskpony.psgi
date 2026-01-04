@@ -979,7 +979,7 @@ my $app = sub {
         # Show inactive lists card
         $html .= "\n\n<!-- Start Inactive Lists Card -->\n";
         # Inactive Lists Card and Table
-        $html .= start_mini_card('Inactive Lists', $icon_trash, 0);
+        $html .= start_card('Inactive Lists', $icon_trash, 0);
 
         $html .= qq~  
                             <div class="table-responsive">
