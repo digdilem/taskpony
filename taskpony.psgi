@@ -94,7 +94,7 @@ my $icon_trash = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fil
 my $icon_image = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />');
 my $icon_list_add = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 8h-14" /><path d="M5 12h9" /><path d="M11 16h-6" /><path d="M15 16h6" /><path d="M18 13v6" />');
 my $icon_star_off = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" />');
-my $icon_star_on = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" /></svg>';  # Solid, so needs different svg
+my $icon_star_on = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" /></svg>';  # Solid, so needs different svg header
 
 # Smaller FA icons for inline use in tables, 16px
 my $icon_link_slash = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
@@ -271,6 +271,48 @@ my $app = sub {
         $res->redirect('/lists'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
         } # End /set_default_list
+
+    ###############################################
+    # Set all tasks in LIST nn as Active
+    if ($req->path eq "/list_setall_active") {
+        if ($req->method && uc($req->method) eq 'GET') {
+            my $lid = $req->param('lid');
+            if ($lid > 1) { # Don't allow for "All Tasks Lists"
+                my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 2', $lid) // 0;
+                if ($count > 0) {
+                    print STDERR "INFO: Setting all tasks in list $lid as active\n";
+                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
+                    eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks active failed: $@";
+                    add_alert("$count task(s) in list set as active.");
+                } else {
+                    add_alert("No completed tasks found in this list.");
+                }
+            }
+        }
+        $res->redirect('/lists');
+        return $res->finalize;
+        } # End /list_setall_active
+
+    ###############################################
+    # Set all tasks in LIST nn as Completed
+    if ($req->path eq "/list_setall_completed") {
+        if ($req->method && uc($req->method) eq 'GET') {
+            my $lid = $req->param('lid');
+            if ($lid > 1) { # Don't allow for "All Tasks Lists"
+                my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 1', $lid) // 0;
+                if ($count > 0) {
+                    print STDERR "INFO: Setting all tasks in list $lid as completed\n";
+                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
+                    eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks completed failed: $@";
+                    add_alert("$count task(s) in list marked as completed.");
+                } else {
+                    add_alert("No active tasks found in this list.");
+                }
+            }
+        }
+        $res->redirect('/lists');
+        return $res->finalize;
+        } # End /list_setall_completed
 
     ###############################################
     # Create a new task
@@ -709,6 +751,7 @@ my $app = sub {
                                     <!-- Actions column -->
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
+                                            <!-- Default Button -->
                                             <a href="/set_default_list?id=$list->{'id'}"
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
@@ -724,6 +767,25 @@ my $app = sub {
                                             </span>
                                             </a>
 
+                                            <!-- Set all tasks Active Button -->
+                                            <a href="/list_setall_active?lid=$list->{'id'}"
+                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in List as Active"
+                                            onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
+                                            <span style="font-size: 30px; line-height:1;">
+                                                $icon_rotate_right
+                                            </span>
+                                            </a>                                            
+
+                                            <!-- Set all tasks Completed Button -->
+                                            <a href="/list_setall_completed?lid=$list->{'id'}"
+                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in List as Completed"
+                                            onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
+                                            <span style="font-size: 30px; line-height:1;">
+                                                $icon_rotate_left
+                                            </span>
+                                            </a>                                                   
                                         
                                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-placement="auto" data-bs-target="#deleteListModal" data-list-id="$list->{'id'}" data-list-title="$title" data-active-tasks="$active_count">
                                                 $icon_trash
