@@ -688,22 +688,6 @@ my $app = sub {
             my $title = html_escape($list->{'Title'});
             my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
             
-            # Show toggles for default list
-            my $is_default_str = qq~
-                <a href="/set_default_list?id=$list->{'id'}">
-                <span class="badge bg-secondary text-white" data-bs-toggle="tooltip" data-bs-placement="auto" title="Make this the default list">                
-                    $icon_star_off
-                </span>
-                </a>
-                ~;
-
-            if ($list->{'IsDefault'} == 1) {
-                $is_default_str = qq~
-                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is the default list">
-                        $icon_star_on
-                    </span>~;
-                }
-
             $html .= qq~
                                 <tr>
                                     <td>
@@ -731,11 +715,10 @@ my $app = sub {
                                             <span style="font-size: 30px; line-height:1;">
                                                 ~;
                                                 if ($list->{'IsDefault'} == 1) {
-                                                    $html .= $icon_star_on;
-                                                    $html .= "ON";
+                                                    $html .= $icon_list;
+                                                    
                                                     } else {
                                                     $html .= $icon_star_off;
-                                                    $html .= "OFF";
                                                     }
                                                 $html .= qq~
                                             </span>
