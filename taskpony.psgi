@@ -1587,6 +1587,21 @@ sub header {
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
+
+    <script src="/static/js/jquery.min.js"></script>
+
+    <script src="/static/js/dataTables.buttons.min.js"></script>
+    <script src="/static/js/buttons.html5.min.js"></script>
+    <script src="/static/js/buttons.print.min.js"></script>
+
+    <script src="/static/js/jszip.min.js"></script>
+    <script src="/static/js/pdfmake.min.js"></script>
+    <script src="/static/js/vfs_fonts.js"></script>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
 
     <style>
         body { background-color: #1A2122; }
