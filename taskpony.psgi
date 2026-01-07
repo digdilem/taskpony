@@ -1,7 +1,7 @@
 #!/usr/bin/env/perl
 # Taskpony - a simple perl PSGI web app for various daily tasks - https://github.com/digdilem/taskpony
 # Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
-# MIT Licence
+# MIT Licence = Free to use and modify as you see fit, but please give credit where due.
 
 use strict;
 use warnings;
@@ -17,8 +17,6 @@ use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
 use File::Copy qw(copy move);   # For database backup copy function
 use FindBin qw($Dir);                # To find Taskpony's Paddock (starting directory)
-
-
 
 ###############################################
 # Path to Taskpony installation root and associated dirs.
@@ -500,9 +498,6 @@ my $app = sub {
                                 >~ . html_escape($task->{'Description'}) . qq~</textarea>
                                 </div>
 
-
-
-
                                 <div class="border p-3 mb-3">
                                     <div class="d-flex flex-column flex-md-row gap-3">
 
@@ -514,7 +509,6 @@ my $app = sub {
                                             ~;
 
                                             # Precheck the box if IsRecurring is already 'on'
-
                                             if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
 
                                             $html .= qq~>
@@ -541,8 +535,6 @@ my $app = sub {
                                     </div>
                                 </div>
 
-
-
                                 <div class="col-12">
                                 <label class="form-label">List</label>
                                 $list_dropdown
@@ -564,7 +556,6 @@ my $app = sub {
                                     <a class="btn btn-warning" href="/ust?task_id=$task_id">Set Task as Active</a>
                                     ~;
                                     }
-
 
                                 $html .= qq~
                                     <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
@@ -588,8 +579,8 @@ my $app = sub {
 
                         </div>
                     </div>
-                    </div>
-                    ~;
+                </div>
+                ~;
 
                 $html .= footer();
                 $res->body($html);
@@ -700,7 +691,7 @@ my $app = sub {
                     }
                 } else {
                     add_alert("Invalid target list selected.");
-                }
+                    }
                 } elsif ($action eq 'delete' && $list_id > 1) {
                 # Legacy delete (orphan) - for backwards compatibility
                 my $sth = $dbh->prepare(
@@ -718,9 +709,9 @@ my $app = sub {
                     my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                     if ($default_list) {
                         $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                        }
                     }
-                }
-                }
+                } # End list action handling
 
             $res->redirect('/lists');
             return $res->finalize;
@@ -898,7 +889,7 @@ my $app = sub {
         my @move_lists;
         while (my $ml = $move_lists_sth->fetchrow_hashref()) {
             push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
-        }
+            } # End move lists building
 
         # Convert to JSON for JavaScript use
         my $move_lists_json = '[';
@@ -906,7 +897,7 @@ my $app = sub {
             my $ml = $move_lists[$i];
             $move_lists_json .= qq~{"id":"$ml->{'id'}","title":"$ml->{'title'}"}~;
             $move_lists_json .= ',' if $i < $#move_lists;
-        }
+            }
         $move_lists_json .= ']';
 
         # Add delete list modal
@@ -1631,7 +1622,7 @@ sub connect_db {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
-        }
+            }
 
     # Check for any needed schema upgrades each time we connect
     check_database_upgrade();
@@ -2831,9 +2822,6 @@ sub config_show_option {
 sub build_tabler_icon {
     my ($size, $svg) = @_;
 
-    # return qq~<span style="font-size: ~ . $size . qq~px;">
-    #     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
-    #     </span>~;
     return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
         </span>~;
@@ -2849,4 +2837,4 @@ sub update_db_mtime {
 # End Functions
 
 #################################################
-# End of file
+# End of Taskpony
