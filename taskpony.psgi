@@ -1749,7 +1749,7 @@ sub check_database_upgrade  {
         # !! Add v.2 to v.3 upgrade steps here !!
 
         } else {
-        print STDERR "Preflight checks: Database schema version is up to date at version $current_db_version. Required version is $database_schema_version. We're good.\n";
+        print STDERR "Database schema version is up to date at version $current_db_version. Required version is $database_schema_version. We're good.\n";
         }
     } # End check_database_upgrade()
 
