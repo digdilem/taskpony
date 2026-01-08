@@ -206,6 +206,10 @@ No. It may do in the future but there are no initial plans to do so.
 
 Not presently. SQLite was chosen to keep things small and simple. I think it should suffice for a task application.
 
+> When I return to Taskpony, it's changed list.
+
+Check your shortcut doesn't have a `?lid=N` suffix to the URL, and if you have multiple clients, the same is true there. This will switch the "remembered" list if accessed for all clients.
+
 # Upgrading
 
 Upgrading Taskpony should be easy - overwrite all files but ensure taskpony.db survives.
@@ -331,7 +335,6 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 
 - The http endpoint `/api/ping` exists for external health checks. It will return 200 and "pong" if it's able to.
 - The supplied docker-compose.yml file contains an internal healthcheck compatible with Docker's Health monitoring.
-
 
 ## Goals
 
