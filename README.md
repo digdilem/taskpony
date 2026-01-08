@@ -206,9 +206,9 @@ No. It may do in the future but there are no initial plans to do so.
 
 Not presently. SQLite was chosen to keep things small and simple. I think it should suffice for a task application.
 
-> When I return to Taskpony, it's changed list.
+> When I return to Taskpony, it has changed list.
 
-Check your shortcut doesn't have a `?lid=N` suffix to the URL, and if you have multiple clients, the same is true there. This will switch the "remembered" list if accessed for all clients.
+If another client changes the Active List, then all other clients will load that when they check for database changes. If it's switching between lists, check that you don't have any clients using a bookmark or shortcut that includes`?lid=N` as a URL argument as that will change the Active List.
 
 # Upgrading
 
