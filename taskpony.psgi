@@ -59,7 +59,7 @@ my $debug = 0;                      # Set to 1 to enable debug messages to STDER
 my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
 my $db_mtime = 0;                   # Cached database file modification time for /api/dbstate
-my $db_interval_check_ms = 60000;   # How many milliseconds between checking /api/dbstate for changes
+my $db_interval_check_ms = 60000;   # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
 
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
