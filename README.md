@@ -27,7 +27,7 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-[Try the Demo!](https://equivalent-giralda-digital-dilemma2-169926c3.koyeb.app/)
+[Try the Demo!](https://relieved-irma-digital-dilemma2-5693a6d5.koyeb.app/)
 
 *(This instance is reset every few hours, losing all its data)*
 
