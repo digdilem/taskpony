@@ -19,8 +19,7 @@
 - Taskpony now identifies its installation directory on startup. This should avoid needing to manually set this if installed as a systemd service in a different directory.
 - Styled checkbox to improve visuals
 - Added /api/ping endpoint for lighter automated health checks. Updated docker-compose.yml to use this
-- The self-page reload function would reload the page that was displayed. Great, except when it had been specified with a ?lid= parameter, which caused the active list to be repeatedly reset back to that, even if another client had changed it. Now the refresh calls a redirect to / instead of reloading the current.
-
+- The self-page reload function would reload the page that was displayed. Great, except when it had been specified with a ?lid= parameter, which caused the active list to be repeatedly reset back to that, even if another client had changed it. Now the refresh calls a redirect to / instead of reloading the current. A manual change to a different list using the picklist should now 'stick' and update any sub-clients to reload the screen and also loading the new active task list.
 
 # 0.3
 
