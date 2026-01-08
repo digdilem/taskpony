@@ -2356,7 +2356,7 @@ sub show_tasks {
             if (!Number.isFinite(currentValue)) return;
 
             if (currentValue !== lastValue) {
-                window.location.reload();
+                window.location.href = '/';
             }
             } catch (e) {
             // Fail silently
