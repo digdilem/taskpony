@@ -1,5 +1,6 @@
-# Systemctl .service file to use for Task Pony
+# Systemctl .service file to use for Taskpony
 # To install, ensire taskpony.psgi and taskpony.service (this file) are in /opt/taskpony  (or change all paths)
+# To change the http port, change "-p 5000" in the ExecStart line below to your chosen port (Tip: Keep it above 1000 or you'll need to run setcap)
 # Link this file to the systemd service directory and start and enable it using the command below:
 #      cp /opt/taskpony/taskpony.service /etc/systemd/system
 #      systemctl daemon-reload
