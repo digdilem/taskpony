@@ -1,7 +1,7 @@
 #!/usr/bin/env/perl
 # Taskpony - a simple perl PSGI web app for various daily tasks - https://github.com/digdilem/taskpony
 # Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
-# MIT Licence = Free to use and modify as you see fit, but please give credit where due.
+# MIT Licence = Free to use and modify as you see fit, but please give credit where due
 
 use strict;
 use warnings;
@@ -21,7 +21,7 @@ use FindBin qw($Dir);           # To find Taskpony's Paddock (starting directory
 ###############################################
 # Path to Taskpony installation root and associated dirs.
 my $taskpony_path = $Dir;
-my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created.
+my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created
 my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
 ###############################################
