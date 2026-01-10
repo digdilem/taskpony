@@ -28,7 +28,7 @@ my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, 
 # Default configuration. Don't change them here, use /config page.
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page
-    cfg_description_short_length => 30,         # Number of characters to show in task list before truncating description (Cosmetic only)
+    cfg_description_short_length => 35,         # Number of characters to show in task list before truncating description (Cosmetic only)
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
     cfg_include_datatable_buttons => 'on',      # Include the CSV/Copy/PDF etc buttons at the bottom of each table
     cfg_include_datatable_search => 'on',       # Include the search box at the top right of each table
