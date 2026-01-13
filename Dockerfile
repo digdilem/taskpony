@@ -32,45 +32,7 @@ ENV PATH="/opt/taskpony/local/bin:${PATH}"
 # Starman runs on port 5000 by default in this config
 EXPOSE 5000
 
-# Start the app using Starman via Carton
-# --workers 5: Adjust this based on your CPU cores (usually cores * 2 + 1)
-# --preload-app: Highly recommended for performance/memory sharing
-CMD ["carton", "exec", "starman", "--port", "5000", "--workers", "2", "--preload-app", "taskpony.psgi"]
-
-
-
-
-
-
-
-# #FROM perl:5.38
-# FROM perl:5.38-slim-bookworm
-
-# # Install system packages for Sqlite
-# RUN apt-get update && \
-#     apt-get install -y libcpan-sqlite-perl && \
-#     cpanm --notest Carton
-
-# WORKDIR /opt/taskpony
-
-# COPY Dockerfile Dockerfile
-# COPY cpanfile cpanfile
-# COPY static/ static/
-# COPY taskpony.psgi taskpony.psgi
-# COPY README.md README.md
-
-# RUN ls -l && \
-#     carton install
-
-# COPY . .
-
-# # Expose Plack on port 5000
-# EXPOSE 5000
-
-# # Start the PSGI app using plackup
-# # We don't want it to automatically restart whenver the database changes, so we omit the --reload option.
-# # CMD ["carton", "exec", "plackup", "-R", ".", "-p", "5000", "taskpony.psgi"]
-# CMD ["carton", "exec", "plackup", "-p", "5000", "taskpony.psgi"]
-
-# # End of file
+# Sticking with plackup for lower memory use and for the single-threaded nature of the app
+#CMD ["carton", "exec", "starman", "--port", "5000", "--workers", "2", "--preload-app", "taskpony.psgi"]
+CMD ["carton", "exec", "plackup", "-p", "5000", "taskpony.psgi"]
 
