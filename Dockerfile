@@ -1,5 +1,5 @@
 #FROM perl:5.38
-FROM perl:5.38-slim-alpine
+FROM perl:5.38-alpine
 
 # Install system packages for Sqlite
 RUN apt-get update && \
