@@ -18,7 +18,7 @@ COPY cpanfile* ./
 
 # Install app dependencies via Carton
 # This will now succeed because build-essential is present
-RUN carton install --deployment
+RUN carton install
 
 # Copy the rest of your application code
 COPY static/ static/
