@@ -1,60 +1,55 @@
-
 ########################################
 # Builder stage
 ########################################
 FROM alpine:3.20 AS builder
 
-# Install build + runtime deps
+# Install build deps + perl modules
 RUN apk add --no-cache \
     perl \
     perl-dev \
     perl-utils \
     perl-dbi \
     perl-dbd-sqlite \
+    perl-carton \
+    perl-app-cpanminus \
     build-base \
     curl \
     git \
     openssl-dev \
-    sqlite-dev
-
-# Install cpanminus + Carton
-RUN curl -L https://cpanmin.us | perl - App::cpanminus \
-    && cpanm --notest Carton
+    sqlite-dev \
+    ca-certificates
 
 WORKDIR /opt/taskpony
 
-# Copy only dependency files first (better layer caching)
+# Copy dependency file for layer caching
 COPY cpanfile cpanfile
 
-# Install Perl deps via Carton
-RUN carton install
+# Install Perl dependencies via Carton
+RUN carton install --deployment --without=test
 
 ########################################
-# Runtime stage (small + hardened)
+# Runtime stage
 ########################################
 FROM alpine:3.20
 
-# Runtime-only Perl deps
+# Runtime-only deps
 RUN apk add --no-cache \
     perl \
     perl-dbi \
     perl-dbd-sqlite \
+    perl-carton \
     ca-certificates \
     && adduser -D -H -s /sbin/nologin appuser
 
 WORKDIR /opt/taskpony
 
-# Copy Perl libs + binaries from builder
+# Copy installed Perl libs and binaries from builder
 COPY --from=builder /opt/taskpony/local /opt/taskpony/local
-COPY --from=builder /usr/bin/perl /usr/bin/perl
 
-# Copy application files
+# Copy app files
 COPY static/ static/
 COPY taskpony.psgi taskpony.psgi
 COPY README.md README.md
-
-# Optional: copy the rest if needed
-# COPY . .
 
 # Fix ownership
 RUN chown -R appuser:appuser /opt/taskpony
