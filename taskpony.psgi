@@ -8,12 +8,14 @@ use warnings;
 
 use Plack::Request;         # Perl PSGI web framework
 use Plack::Response;        # Ditto
+use Plack::App::File;       # For mounted static file serving
+use Plack::Builder;         # Favicon
+
 use DBI;                    # Database interface for SQLite
 use Time::Local;            # For human friendly date function
 use HTTP::Tiny;             # To fetch latest version from github
 use JSON::PP;               # Part github json response
 
-use Plack::Builder;         # Favicon
 use File::Spec::Functions qw(catdir);
 use File::Copy qw(copy move);   # For database backup copy function
 use FindBin qw($Dir);           # To find Taskpony's Paddock (starting directory)
