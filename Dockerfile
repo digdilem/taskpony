@@ -1,9 +1,8 @@
 #FROM perl:5.38
-FROM dhi.io/alpine:latest
+FROM cgr.dev/chainguard/perl
 
 # Install system packages for Sqlite
-RUN apk add --no-cache perl \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y libcpan-sqlite-perl && \
     cpanm --notest Carton
 
