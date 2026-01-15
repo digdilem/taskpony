@@ -1,5 +1,14 @@
 # Taskpony Version History
 
+## To upgrade follow the [Upgrade Instructions](../README.md#upgrading)
+
+# 0.5
+
+## Features:
+
+- Docker image building switched to alpine, which has shrunk the size of the Docker image from 450Mb to 183Mb
+- Did performance testing using Starman instead of Plackup. Whilst there's no doubting Starman's benefits in concurrency, it uses a tad more memory and was no faster in my tests in single-threaded use, which is the intended role of Taskpony. So reverted to Plackup in the docker build. Systemd users can select Starman instead, should they wish, and commented line left in Dockerfile if anyone wants it in Docker.
+
 # 0.4
 
 ## Bugfixes
@@ -44,7 +53,7 @@
 
 "Improved orphan handing. Added repeating tasks, stats and database backups. Multiple bugfixes and UI improvements."
 
-### To upgrade v.0.01 to v.0.2, follow the [Upgrade Instructions](../README.md#upgrading)
+
 
 ## Bugfixes
 

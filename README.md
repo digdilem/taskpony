@@ -212,22 +212,9 @@ If another client changes the Active List, then all other clients will load that
 
 Upgrading Taskpony should be easy - overwrite all files but ensure taskpony.db survives.
 
-## Linux Systemd Service
+There is no need to upgrade Taskpony sequentially - any later version should install over the top of an older version and be fine. Just pick the latest version when you wish to upgrade.
 
-1. Read the [Release Notes](docs/release-notes.md) for any breaking changes
-2. Make a copy of the old `/opt/taskpony` directory, especially the `db/taskpony.db` database as a backup.
-3. Download the latest files from https://github.com/digdilem/taskpony/ (Code -> Download ZIP)
-4. Unzip its contents into /opt/taskpony, overwriting the existing Taskpony files.
-
-Taskpony should restart itself automatically when its own file changes, this will be shown in its log with `-- /opt/taskpony/taskpony.psgi updated`. If there are any issues, restarting Taskpony with `systemctl restart taskpony` is advised.
-
-If the upgrade includes any database schema changes, Taskpony should automatically detect and apply any updates when it's first started, see logs; `journalctl -u taskpony`
-
-## Docker
-
-Stop the existing container and repeat the installation instructions to pull the new image.
-
-## Docker-Compose
+## Upgrading Docker-Compose
 
 Change to the directory you put your `docker-compose.yml`
 
@@ -240,6 +227,22 @@ docker compose down
 docker compose pull
 docker compose up -d
 ```
+
+## Upgrading Linux Systemd Service
+
+1. Read the [Release Notes](docs/release-notes.md) for any breaking changes
+2. Make a copy of the old `/opt/taskpony` directory, especially the `db/taskpony.db` database as a backup.
+3. Download the latest files from https://github.com/digdilem/taskpony/ (Code -> Download ZIP)
+4. Unzip its contents into /opt/taskpony, overwriting the existing files.
+
+Taskpony should restart itself automatically when its own file changes, this will be shown in its log with `-- /opt/taskpony/taskpony.psgi updated`. If there are any issues, restarting Taskpony with `systemctl restart taskpony` is advised.
+
+If the upgrade includes any database schema changes, Taskpony should automatically detect and apply any updates when it's first started, see logs; `journalctl -u taskpony`
+
+## Upgrading Docker
+
+Stop the existing container and repeat the installation instructions to pull the new image.
+
 
 # Documentation
 

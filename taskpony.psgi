@@ -2138,10 +2138,12 @@ sub show_tasks {
         debug("show_tasks: Showing tasks for ALL lists");
         }
 
-    # Append ordering and finish query
-    $sql .= "
-        ORDER BY t.AddedDate DESC
-        ";
+    # Append ordering and finish query. If completed, sort by completed date, else by added date
+    if ($status == 2) {
+        $sql .= " ORDER BY t.CompletedDate DESC ";
+        } else {
+        $sql .= " ORDER BY t.AddedDate DESC ";
+        }
 
     my $sth = $dbh->prepare($sql);
     $sth->execute($status);
