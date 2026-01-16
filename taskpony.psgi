@@ -819,7 +819,7 @@ my $app = sub {
 
                                     <!-- Actions column -->
                                     <td class="text-end">
-                                        <div class="btn-group" role="group">
+                                        <div class="btn-group btn-sm" role="group">
                                             <!-- Default Button -->
                                             <a href="/set_default_list?id=$list->{'id'}"
                                             class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
