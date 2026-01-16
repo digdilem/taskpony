@@ -819,12 +819,12 @@ my $app = sub {
 
                                     <!-- Actions column -->
                                     <td class="text-end">
-                                        <div class="btn-group btn-sm" role="group">
+                                        <div class="btn-group" role="group">
                                             <!-- Default Button -->
                                             <a href="/set_default_list?id=$list->{'id'}"
                                             class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
-                                            <span style="font-size: 30px; line-height:1;">
+                                            <span style="font-size: 24px; line-height:1;">
                                                 ~;
                                                 if ($list->{'IsDefault'} == 1) {
                                                     $html .= $icon_star_on;
@@ -841,7 +841,7 @@ my $app = sub {
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                                             onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
-                                            <span style="font-size: 30px; line-height:1;">
+                                            <span style="font-size: 24px; line-height:1;">
                                                 $icon_rotate_right
                                             </span>
                                             </a>
@@ -851,7 +851,7 @@ my $app = sub {
                                             class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
-                                            <span style="font-size: 30px; line-height:1;">
+                                            <span style="font-size: 24px; line-height:1;">
                                                 $icon_rotate_left
                                             </span>
                                             </a>
