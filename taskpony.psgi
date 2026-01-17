@@ -1117,7 +1117,7 @@ my $app = sub {
                                             <a href="/list_delete_all_tasks?lid=$a->{'id'}"
                                             class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
-                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list? Any tasks within this list will be orphaned.');">
+                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
                                                 $icon_xcircle
                                             </a>
 
@@ -1125,7 +1125,7 @@ my $app = sub {
                                             <a href="/list_delete_list?lid=$a->{'id'}"
                                             class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
-                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?');">
+                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
                                                 $icon_grave
                                             </a>
 
