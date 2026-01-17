@@ -831,7 +831,7 @@ my $app = sub {
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
                                             <a href="/set_default_list?id=$list->{'id'}"
-                                            class="btn btn-success d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-default d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
 
                                                 ~;
@@ -846,7 +846,7 @@ my $app = sub {
 
                                             <!-- Set all tasks Active Button -->
                                             <a href="/list_setall_active?lid=$list->{'id'}"
-                                            class="btn btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-light d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                                             onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
                                                 $icon_rotate_right
@@ -854,7 +854,7 @@ my $app = sub {
 
                                             <!-- Set all tasks Completed Button -->
                                             <a href="/list_setall_completed?lid=$list->{'id'}"
-                                            class="btn btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-secondary d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
                                                 $icon_rotate_left_medium
