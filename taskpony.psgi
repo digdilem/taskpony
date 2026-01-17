@@ -862,7 +862,7 @@ my $app = sub {
 
                                             <!-- Set List as Inactive -->
                                             <button type="button"
-                                            class="btn btn-danger"
+                                            class="btn btn-outline-danger"
                                             data-bs-toggle="modal"
                                             data-bs-placement="auto"
                                             data-bs-target="#deleteListModal"
