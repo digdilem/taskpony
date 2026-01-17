@@ -9,6 +9,7 @@
 - Docker image building switched to alpine, which has shrunk the size of the Docker image from 450Mb to 183Mb
 - Did performance testing using Starman instead of Plackup. Whilst there's no doubting Starman's benefits in concurrency, it uses a tad more memory and was no faster in my tests in single-threaded use, which is the intended role of Taskpony. So reverted to Plackup in the docker build. Systemd users can select Starman instead, should they wish, and commented line left in Dockerfile if anyone wants it in Docker.
 - Completed Tasks now default sorted by CompletedDate instead of AddedDate
+- Slightly shrunk the Lists Menu Actions Buttons
 
 # 0.4
 
