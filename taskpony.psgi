@@ -1108,31 +1108,25 @@ my $app = sub {
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
                                             <a href="/list_undelete?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_right
-                                            </span>
                                             </a>
 
                                             <!-- Delete all Tasks -->
                                             <a href="/list_delete_all_tasks?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all tasks within this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_xcircle
-                                            </span>
                                             </a>
 
                                             <!-- Permanently delete this List -->
                                             <a href="/list_delete_list?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?');">
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_grave
-                                            </span>
                                             </a>
 
                                         </div>
