@@ -2373,7 +2373,7 @@ sub show_tasks {
         <span class="float-end muted">
             <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
-            title="Permanent link to $list_name">
+            title="Permanent link to List $list_name">
                 $icon_link
             </a>
         </span>
