@@ -1675,7 +1675,7 @@ sub initialise_database {
     $dbh->do(qq~
         INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES
         (1, 'All Tasks', 'View tasks from all lists', 0),
-        (2, 'Main', 'Main day to day list', 1)
+        (2, 'Default List', 'Main day to day list', 1)
         ON CONFLICT(id) DO NOTHING;
         ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
 
