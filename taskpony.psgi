@@ -136,8 +136,6 @@ $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list
 ####################################
 # Start main loop
 
-$taskpony_icon = 'taskpony-logo-xmas.png';
-
 my $static_dir = catdir($FindBin::Bin);
 my $running_in_docker = 0;  # 1 if in docker, 0 if not
 if (-f '/.dockerenv') { $running_in_docker = 1;}  # Test for this magical file that docker created.
