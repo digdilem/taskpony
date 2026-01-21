@@ -51,6 +51,7 @@ my $database_schema_version = 2;        # Current database schema version. Do no
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
 my $new_version_available = 0;
+my $taskpony_icon = 'taskpony-logo.png';  # Default icon file name in ./static dir
 
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
@@ -134,6 +135,8 @@ $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list
 
 ####################################
 # Start main loop
+
+$taskpony_icon = 'taskpony-logo-xmas.png';
 
 my $static_dir = catdir($FindBin::Bin);
 my $running_in_docker = 0;  # 1 if in docker, 0 if not
@@ -1814,7 +1817,7 @@ sub header {
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
-                    <img src="/static/taskpony-logo.png" width="82" height="82" alt="logo">
+                    <img src="/static/$taskpony_icon" width="82" height="82" alt="logo">
                     <h3 class="mb-0">$app_title</h3>
                 </a>
                 ~;
@@ -2643,6 +2646,19 @@ sub run_daily_tasks {
     ###############################################
     # We ran run_daily_tasks() today, so let's update the last run time and return
     $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
+
+    # Frivolity: Check if a special date and change the logo
+    # If month is December and day is between 20 and 31, show a festive icon
+    my ($sec,$min,$hour,$mday,$mon,$year) = localtime();
+    if ( ($mon == 11) && ($mday >= 20) && ($mday <= 31) ) {
+        $taskpony_icon = 'taskpony-logo-xmas.png';
+        print STDERR "Taskponies love Christmas!\n";
+        } else {
+        $taskpony_icon = 'taskpony-logo.png';  # Reset to normal logo
+        }
+    # Back to seriousness
+
+
     return;
     } # End run_daily_tasks()
 
