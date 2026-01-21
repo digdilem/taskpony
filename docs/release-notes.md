@@ -11,6 +11,7 @@
 - Completed Tasks now default sorted by CompletedDate instead of AddedDate
 - Slightly shrunk the Lists Menu Actions Buttons
 - Logo will change close to Christmas
+- On new installation, "Main" List now changed name to "Default List"
 
 # 0.4
 

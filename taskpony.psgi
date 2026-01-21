@@ -2368,6 +2368,7 @@ sub show_tasks {
         })();
         </script> <!-- End DB stats check script -->
 
+    HERE!!
         ~;
 
     return $html;
