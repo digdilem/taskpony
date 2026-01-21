@@ -2370,12 +2370,13 @@ sub show_tasks {
         </script> <!-- End DB stats check script -->
 
         <!-- Footer of show_tasks() card -->
-        <a href="/?lid=$a->{'ListId'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
-        data-bs-toggle="tooltip" data-bs-placement="auto"
-        title="Permanent link to $a->{'ListTitle'}">
-            $icon_link
-        </a>
-
+        <span class="float-end muted">
+            <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            data-bs-toggle="tooltip" data-bs-placement="auto"
+            title="Permanent link to $a->{'ListTitle'}">
+                $icon_link
+            </a>
+        </span>
         <!-- End footer of show_tasks() card -->
 
         ~;
