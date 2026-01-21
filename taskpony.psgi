@@ -113,6 +113,7 @@ my $icon_info_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z
 my $icon_repeat_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
 my $icon_comment_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
 my $icon_goto = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-3v-6h3" /><path d="M3 9v6" /><path d="M6 9v6" />');
+my $icon_link = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');
 
 # Very small FA icons,
 my $icon_rotate_left_small = build_tabler_icon(18,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
@@ -2368,7 +2369,15 @@ sub show_tasks {
         })();
         </script> <!-- End DB stats check script -->
 
-    HERE!!
+        <!-- Footer of show_tasks() card -->
+        <a href="/?lid=$a->{'ListId'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+        data-bs-toggle="tooltip" data-bs-placement="auto"
+        title="Permanent link to $a->{'ListTitle'}">
+            $icon_link
+        </a>
+
+        <!-- End footer of show_tasks() card -->
+
         ~;
 
     return $html;
