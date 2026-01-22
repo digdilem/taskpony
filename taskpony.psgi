@@ -89,7 +89,7 @@ my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
 my $icon_grave = build_tabler_icon('Grave');  # Grave icon
 my $icon_image = build_tabler_icon('Image');  # Image / picture icon
 #my $smallicon_info = build_tabler_icon('InfoCircle');  # Info circle small icon
-my $icon_link = build_tabler_icon('Link');  # Link icon
+#my $icon_link = build_tabler_icon('Link');  # Link icon
 #my $icon_link_slash = build_tabler_icon('LinkSlash');  # Link with slash icon
 my $icon_list = build_tabler_icon('List');      # List icon
 my $icon_list_add = build_tabler_icon('ListAdd');  # List with plus icon
@@ -108,6 +108,7 @@ my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z"
 my $smallicon_repeat = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
 my $smallicon_comment = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
 my $smallicon_rotate_left = build_inline_icon(18,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
+my $smallicon_link = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
@@ -2367,7 +2368,7 @@ sub show_tasks {
             <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to List $list_name">
-                $icon_link
+                $smallicon_link
             </a>
         </span>
         <!-- End footer of show_tasks() card -->
