@@ -85,7 +85,7 @@ my $stats = {                           # Hashref to hold various stats for dash
 my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
 my $icon_list = build_tabler_icon('List');      # List icon
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
-my $arrow_rotate_left = build_tabler_icon('ArrowLeft');  # Rotate left icon
+my $icon_rotate_left = build_tabler_icon('ArrowLeft');  # Rotate left icon
 
 # my $icon_list = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3.5 5.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 11.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 17.5l1.5 1.5l2.5 -2.5" /><path d="M11 6l9 0" /><path d="M11 12l9 0" /><path d="M11 18l9 0" />');
 
