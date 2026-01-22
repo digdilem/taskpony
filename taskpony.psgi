@@ -1793,6 +1793,7 @@ sub header {
         .header-bar { min-height: 72px; }
         .dataTables_paginate .paginate_button.disabled { display: none !important; }
         .icon { width: 1em; height: 1em; vertical-align: middle; }
+        .icon-white { filter: brightness(0) invert(1); }
     </style>
 
     </head>
