@@ -2850,7 +2850,7 @@ sub config_show_option {
 # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
 sub build_tabler_icon {
     my $icon_name = shift;
-    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />"~;
+    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
     # my ($size, $svg) = @_;
 
     # return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
