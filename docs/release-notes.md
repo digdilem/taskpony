@@ -12,6 +12,7 @@
 - Slightly shrunk the Lists Menu Actions Buttons
 - Logo will change close to Christmas
 - On new installation, "Main" List now changed name to "Default List"
+- Task list now has small footer icon for a permanent link to that list.
 
 # 0.4
 

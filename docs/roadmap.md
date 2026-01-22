@@ -21,3 +21,4 @@ Some features for the future that may, or may not, be added.
   - Groups / teams / multiple users / shared and embeddded tasks = Taskpony is a single user Tasks app. There are several good FOSS groupware/multi-user systems around.
   - Authentication, https = See [security](../README.md#security) for an explanation.
   - Plugins = It's just a Tasks manager, right? If features are needed, they can be baked in.
+  - Statistical graphs = This would mean bundling in a graphing library. For something that many users may not use, it's hard to think of this as anything other than bloat.
