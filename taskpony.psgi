@@ -81,6 +81,7 @@ my $stats = {                           # Hashref to hold various stats for dash
     repeating_tasks => 0,
     };
 
+my $icon_gear = build_tabler_icon('Settings');
 # Some inline SVG tabler icons to prevent including the entire svg map just for a few icons. 30px
 # Copy SVG from Tabler and remove everything up to the first "<path" and also the closing "</svg>" tag.
 my $icon_gear = '<img src="/static/settings.svg" alt="Settings" class="icon-white" />';
@@ -2846,14 +2847,18 @@ sub config_show_option {
     } # end config_show_option()
 
 ###############################################
-# build_icon($size,$svg);
+# build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
 sub build_tabler_icon {
-    my ($size, $svg) = @_;
+    my $icon_name = shift;
+    return qq~<img src="/static/icons$icon_name.svg" alt="$icon_name" class="icon-white" />"~;
+    # my ($size, $svg) = @_;
 
-    return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
-        </span>~;
+    # return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
+    #     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
+    #     </span>~;
     } # end build_tabler_icon
+
+
 
 ###############################################
 # Update the global $db_mtime variable with the current database file modification time
