@@ -1150,12 +1150,13 @@ my $app = sub {
             if ($req->method && uc($req->method) eq 'POST') {
                 my $title = sanitize($req->param('Title') // '');
                 my $desc = sanitize($req->param('Description') // '');
+                my $colour = sanitize($req->param('Colour') // '');
 
                 if (length $title && $list_id > 1) {
                     my $sth = $dbh->prepare(
                         'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
-                    eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
+                    eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
                     add_alert("List '$title' updated.");
                 }
 
@@ -1183,7 +1184,7 @@ my $app = sub {
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
 
                                     <br>
-                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The highlight colour for this List">Highlight Colour</label>
+                                    <label class="form-label">Highlight Colour</label>
                                     <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
 
                                     <div class="text-end">
