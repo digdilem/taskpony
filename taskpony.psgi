@@ -1159,7 +1159,7 @@ my $app = sub {
                         'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
                 eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
-                $list_colour = $colour if $current_list_id == $list_id;
+                $list_colour = $colour;
                 add_alert("List '$title' updated.");
                 }
 
