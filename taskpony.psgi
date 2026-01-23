@@ -1196,7 +1196,7 @@ my $app = sub {
 
                                 <hr>
 
-                                String 1, string 2
+                                This is list id $list->{id} which was created on $list->{CreatedDate}.
 
                             </form>
                         </div>
