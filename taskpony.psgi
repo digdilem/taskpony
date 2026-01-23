@@ -2226,14 +2226,11 @@ sub show_tasks {
             #     </form>
             #     ~;
             $checkbox .= qq~
-                    <a
-                    href="/edittask?id=$a->{'id'}"
-                    class="text-white text-decoration-none"
-                    data-bs-toggle="tooltip" data-bs-placement="auto"
-                    title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~">
-                        <span class="opacity-50">$title</span>
-                    </a>
+                  <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour}" title="Set Task as Active again">
+                $icon_rotate_left
+                </a>
                 ~;
+
             $title_link .= qq~
                     <a
                     href="/edittask?id=$a->{'id'}"
@@ -2279,9 +2276,12 @@ sub show_tasks {
             <!-- Task row -->
             <tr>
                 <!-- Checkbox / Undo button -->
-                <td style="text-align: center;">$checkbox</td>
+                <td style="text-align: center;">
+                    $checkbox
+                </td>
                 <!-- Title Link -->
-                <td>$title_link
+                <td>
+                    $title_link
                 </td>
                 ~;
 
