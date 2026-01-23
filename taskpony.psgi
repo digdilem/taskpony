@@ -2517,7 +2517,6 @@ sub start_card {
     $html .= qq~
                 <!-- Start Card $card_title -->
                 ~;
-print STDERR "!!!! start_card(): colour=[$list_colour]\n";
 
     if (length $list_colour > 2) {  # This list has a highlight colour override, use it
         $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
@@ -2551,7 +2550,14 @@ sub start_mini_card {
             <div class="row justify-content-center">
                 <div class="col-md-11 mb-4">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                    ~;
+
+    if (length $list_colour > 2) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
+        } else { # Show default bg-
+        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
+        }
+    $html .= qq~
                             <h2>
                                 $card_title
                                 ~;
