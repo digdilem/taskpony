@@ -1480,7 +1480,6 @@ my $app = sub {
             } # End /stats
 
     ###############################################
-    # End named paths
 
     ###############################################
     # /background_set  = Receive new background image upload
@@ -1524,6 +1523,10 @@ my $app = sub {
 
     ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
+
+    ###############################################
+    ###############################################
+    # End named paths
 
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
@@ -2504,7 +2507,7 @@ sub start_card {
                 ~;
 print STDERR "!!!! start_card(): card_title=[$card_title], card_icon=[$card_icon] colour=[$list_colour]\n";
 
-    if ($list_colour > 0) {  # This list has a highlight colour override, use it
+    if (length $list_colour > 2) {  # This list has a highlight colour override, use it
         $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
         } else { # Show default bg-
         $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
