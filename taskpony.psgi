@@ -2503,8 +2503,8 @@ sub start_card {
                 <!-- Start Card $card_title -->
                 ~;
 
-    if ($highlight_colour > 0) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$highlight_colour;">~;
+    if ($list_colour > 0) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
         } else { # Show default bg-
         $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
         }
