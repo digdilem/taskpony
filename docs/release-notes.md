@@ -13,6 +13,7 @@
 - Logo will change close to Christmas
 - On new installation, "Main" List now changed name to "Default List"
 - Task list now has small footer icon for a permanent link to that list.
+- Redone icons yet again. This time most are external SVGs with only a few left embedded.
 
 # 0.4
 
