@@ -2387,6 +2387,8 @@ sub show_tasks {
                 $smallicon_edit
             </a>
 
+            &nbsp;&nbsp;
+
             <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to this list">
