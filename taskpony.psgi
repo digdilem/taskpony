@@ -1192,6 +1192,7 @@ my $app = sub {
                                 <div class="col-12">
                                     <button class="btn btn-primary" type="submit">Save List</button>
                                     <a class="btn btn-secondary" href="/lists">Cancel</a>
+                                <hr>
                                 <p class="text-$config->{cfg_header_colour}">This is list id #$list->{id} which was created on $list->{CreatedDate}</p>
                                 </div>
                             </form>
