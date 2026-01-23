@@ -1177,19 +1177,12 @@ my $app = sub {
                                 <div class="col-12">
                                     <label class="form-label">Title</label>
                                     <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
-                                </div>
 
-                                <div class="col-12">
                                     <label class="form-label">Description</label>
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
-                                </div>
-
-                                <div class="col-12">
                                     <label class="form-label">Highlight Colour</label>
                                     <textarea name="colour" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'colour'} // '') . qq~</textarea>
-                                </div>
 
-                                <div class="col-12">
                                     <button class="btn btn-primary" type="submit">Save List</button>
                                     <a class="btn btn-secondary" href="/lists">Cancel</a>
                                 <hr>
