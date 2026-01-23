@@ -1196,7 +1196,7 @@ my $app = sub {
 
                                 <hr>
 
-                                <p class="text-muted">This is list id #$list->{id} which was created on $list->{CreatedDate}</p>
+                                <p class="text-$config->{cfg_header_colour}">This is list id #$list->{id} which was created on $list->{CreatedDate}</p>
 
                             </form>
                         </div>
