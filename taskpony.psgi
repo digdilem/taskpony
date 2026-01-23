@@ -213,7 +213,7 @@ my $app = sub {
     ###############################################
     # Set TASK nn as Status 1 in TasksTb (Active)
     if ($req->path eq "/ust") {
-        if ($req->method && uc($req->method) eq 'GET') {
+#        if ($req->method && uc($req->method) eq 'GET') {
             my $task_id = $req->param('task_id') // 0;
 
             if ($task_id > 0) {
@@ -222,7 +222,7 @@ my $app = sub {
                 print STDERR "INFO: Task $task_id marked as active again\n";
                 add_alert("Task #$task_id re-activated.");
                 $stats->{tasks_completed_today} -= 1;
-            }
+ #           }
         }
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
