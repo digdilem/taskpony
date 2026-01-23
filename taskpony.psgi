@@ -2216,19 +2216,14 @@ sub show_tasks {
 
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {
-            # $checkbox .= qq~
-            #     <form method="post" action="/complete" style="display:inline;">
-            #         <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
-            #             <input type="hidden" name="task_id" value="$a->{'id'}" />
-            #             <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
-            #             ✓
-            #         </label>
-            #     </form>
-            #     ~;
             $checkbox .= qq~
-                  <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour}" title="Set Task as Active again">
-                $icon_rotate_left
-                </a>
+                <form method="post" action="/complete" style="display:inline;">
+                    <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
+                        <input type="hidden" name="task_id" value="$a->{'id'}" />
+                        <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
+                        ✓
+                    </label>
+                </form>
                 ~;
 
             $title_link .= qq~
@@ -2276,12 +2271,9 @@ sub show_tasks {
             <!-- Task row -->
             <tr>
                 <!-- Checkbox / Undo button -->
-                <td style="text-align: center;">
-                    $checkbox
-                </td>
+                <td style="text-align: center;">$checkbox</td>
                 <!-- Title Link -->
-                <td>
-                    $title_link
+                <td>$title_link
                 </td>
                 ~;
 
