@@ -2264,7 +2264,7 @@ sub show_tasks {
             #     ~;
 
             $checkbox .= qq~
-                <form method="post" action="/complete" style="display:inline;">
+                <form method="post" action="/ust" style="display:inline;">
                     <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
                         <input type="hidden" name="task_id" value="$a->{'id'}" />
                         <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
