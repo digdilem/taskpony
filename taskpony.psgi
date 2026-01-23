@@ -2263,8 +2263,7 @@ sub show_tasks {
             #     </a>
             #     ~;
             $checkbox .= qq~
-                <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0"
-           style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem; cursor:pointer;">
+                <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem; cursor:pointer; d-inline-flex; justify-content:center; align-items:center;">
             <input type="hidden" name="task_id" value="$a->{'id'}" />
             <input type="checkbox" class="d-none"
                onchange="this.form.submit();" />
