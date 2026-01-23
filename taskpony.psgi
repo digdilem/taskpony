@@ -56,7 +56,7 @@ my $taskpony_icon = 'taskpony-logo.png';  # Default icon file name in ./static d
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
-my $list_name_colour;               # Current list highlight colour (overrides default)
+my $list_colour;                    # Current list highlight colour (overrides default)
 my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
