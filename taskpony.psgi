@@ -2380,7 +2380,7 @@ sub show_tasks {
         </script> <!-- End DB stats check script -->
 
         <!-- Footer of show_tasks() card -->
-        <span class="float-end muted d-flex gap-2">
+        <span class="float-end muted d-flex gap-3">
             <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
