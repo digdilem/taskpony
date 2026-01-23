@@ -1158,8 +1158,9 @@ my $app = sub {
                     my $sth = $dbh->prepare(
                         'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
-                    eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
-                    add_alert("List '$title' updated.");
+                eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
+                $list_colour = $colour if $current_list_id == $list_id;
+                add_alert("List '$title' updated.");
                 }
 
                 $res->redirect('/lists');
@@ -2379,8 +2380,10 @@ sub show_tasks {
         })();
         </script> <!-- End DB stats check script -->
 
-        <!-- Footer of show_tasks() card -->
+        <!-- Gutter of show_tasks() card -->
+
         <span class="float-end muted d-flex gap-3">
+
             <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
@@ -2392,6 +2395,7 @@ sub show_tasks {
             title="Permanent link to this list">
                 $smallicon_link
             </a>
+
         </span>
         <!-- End footer of show_tasks() card -->
 
