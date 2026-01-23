@@ -155,6 +155,7 @@ my $app = sub {
             $list_id
             ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+        $list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
         }
 
     ###############################################
