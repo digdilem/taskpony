@@ -1175,15 +1175,15 @@ my $app = sub {
                     $html .= qq~
                             <form method="post" action="/editlist?id=$list_id" class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label">Title</label>
+                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
                                     <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
 
                                     <br>
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="A brief description of this List">Description</label>
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
 
                                     <br>
-                                    <label class="form-label">Highlight Colour</label>
+                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The highlight colour for this List">Highlight Colour</label>
                                     <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
 
                                     <div class="text-end">
