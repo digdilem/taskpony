@@ -1778,6 +1778,7 @@ sub header {
         .icon { width: 1em; height: 1em; vertical-align: middle; }
         .icon-white { filter: brightness(0) invert(1); }
         .icon-highlight { filter: brightness(1.2) saturate(1.5); }
+        
     </style>
 
     </head>
