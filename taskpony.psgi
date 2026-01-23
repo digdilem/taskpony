@@ -56,6 +56,7 @@ my $taskpony_icon = 'taskpony-logo.png';  # Default icon file name in ./static d
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
+my $list_name_colour;               # Current list highlight colour (overrides default)
 my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
@@ -118,6 +119,7 @@ print STDERR "+------------------------------------+\n\n";
 # Get additional config values.
 $list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
 $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+$list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
 
 ####################################
 # Start main loop
@@ -1151,7 +1153,7 @@ my $app = sub {
 
                 if (length $title && $list_id > 1) {
                     my $sth = $dbh->prepare(
-                        'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
+                        'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
                     eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
                     add_alert("List '$title' updated.");
@@ -1163,7 +1165,7 @@ my $app = sub {
 
             # If GET, show the edit-list form
             if ($list_id > 1) {
-                my $sth = $dbh->prepare('SELECT id, Title, Description FROM ListsTb WHERE id = ?');
+                my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
                 $sth->execute($list_id);
                 my $list= $sth->fetchrow_hashref();
 
@@ -1176,14 +1178,26 @@ my $app = sub {
                                     <label class="form-label">Title</label>
                                     <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
                                 </div>
+
                                 <div class="col-12">
                                     <label class="form-label">Description</label>
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
                                 </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Highlight Colour</label>
+                                    <textarea name="colour" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'colour'} // '') . qq~</textarea>
+                                </div>
+
                                 <div class="col-12">
                                     <button class="btn btn-primary" type="submit">Save List</button>
                                     <a class="btn btn-secondary" href="/lists">Cancel</a>
                                 </div>
+
+                                <hr>
+
+                                String 1, string 2
+
                             </form>
                         </div>
                     ~;
@@ -1292,9 +1306,8 @@ my $app = sub {
                 $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
                 $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
                 $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
-                $html .= config_show_option('cfg_header_colour','Highlight Colour','Select colour for panel header backgrounds and highlights','colour',0,0);
+                $html .= config_show_option('cfg_header_colour','Default Highlight Colour','Select default colour for panel header backgrounds and highlights','colour',0,0);
                 $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
-
 
             $html .= qq~
 

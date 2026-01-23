@@ -10,7 +10,6 @@ Some features for the future that may, or may not, be added.
   - Add colour to tasks. (Possibly based on priority, possibly a per-task setting. Beware making things too messy - we don't want fruit salad)
   - Multi-language support.
   - Daily email report. Possibly showing outstanding tasks from Default list and summary stats.
-  - Some sort of toggleable daily progress badge "N tasks done today". Unsure of need/benefit.
   - A history table for tasks and actions. Extra detail for recurring tasks, when lists were created, changed etc.
   - Add ability to switch between dark/light modes, or themes.
   - Lists page: Split the three cards into Tabs to keep things above the fold more. Or introduce a quick-add "New List" form like Tasks.
