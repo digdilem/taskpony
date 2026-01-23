@@ -2257,20 +2257,20 @@ sub show_tasks {
                     </a>
                      ~;
 
-            # $checkbox .= qq~
-            #     <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-secondary" title="Set Task as Active again">
-            #     $icon_rotate_left
-            #     </a>
-            #     ~;
             $checkbox .= qq~
-            <a href="/ust?task_id=$a->{'id'}&sc=1" title="Set Task as Active again">
-                <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" >
-                    <input type="hidden" name="task_id" value="$a->{'id'}" />
-                    <input type="checkbox" class="d-none" onchange="this.form.submit();" />
-                    $icon_rotate_left
-                </label>
-            </a>
+                <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour title="Set Task as Active again">
+                $icon_rotate_left
+                </a>
                 ~;
+            # $checkbox .= qq~
+            # <a href="/ust?task_id=$a->{'id'}&sc=1" title="Set Task as Active again">
+            #     <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" >
+            #         <input type="hidden" name="task_id" value="$a->{'id'}" />
+            #         <input type="checkbox" class="d-none" onchange="this.form.submit();" />
+            #         $icon_rotate_left
+            #     </label>
+            # </a>
+            #     ~;
             }
 
         ###############################################
