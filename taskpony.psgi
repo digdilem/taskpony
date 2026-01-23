@@ -2485,13 +2485,13 @@ sub start_card {
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
     my $html = qq~
-            <!-- Start Card $card_title -->
             <div class="card shadow-sm mb-4">
             ~;
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
 
     $html .= qq~
+                <!-- Start Card $card_title -->
                         <div class="card-header bg-$config->{cfg_header_colour} text-white">
                             <h2 >
                                 $card_title
