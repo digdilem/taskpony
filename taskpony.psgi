@@ -2258,7 +2258,7 @@ sub show_tasks {
                      ~;
 
             $checkbox .= qq~
-                <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour title="Set Task as Active again">
+                <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour}" title="Set Task as Active again">
                 $icon_rotate_left
                 </a>
                 ~;
