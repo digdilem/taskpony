@@ -2268,7 +2268,7 @@ sub show_tasks {
             <input type="hidden" name="task_id" value="$a->{'id'}" />
             <input type="checkbox" class="d-none"
                onchange="this.form.submit();" />
-                ↩
+                $icon_rotate_left
             </label>
                 ~;
             }
