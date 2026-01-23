@@ -2216,16 +2216,24 @@ sub show_tasks {
 
         # Active tasks. Show checkbox to mark complete
         if ($status == 1) {
+            # $checkbox .= qq~
+            #     <form method="post" action="/complete" style="display:inline;">
+            #         <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
+            #             <input type="hidden" name="task_id" value="$a->{'id'}" />
+            #             <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
+            #             ✓
+            #         </label>
+            #     </form>
+            #     ~;
             $checkbox .= qq~
-                <form method="post" action="/complete" style="display:inline;">
-                    <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
-                        <input type="hidden" name="task_id" value="$a->{'id'}" />
-                        <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
-                        ✓
-                    </label>
-                </form>
+                    <a
+                    href="/edittask?id=$a->{'id'}"
+                    class="text-white text-decoration-none"
+                    data-bs-toggle="tooltip" data-bs-placement="auto"
+                    title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~">
+                        <span class="opacity-50">$title</span>
+                    </a>
                 ~;
-
             $title_link .= qq~
                     <a
                     href="/edittask?id=$a->{'id'}"
@@ -2262,15 +2270,6 @@ sub show_tasks {
                 $icon_rotate_left
                 </a>
                 ~;
-            # $checkbox .= qq~
-            # <a href="/ust?task_id=$a->{'id'}&sc=1" title="Set Task as Active again">
-            #     <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" >
-            #         <input type="hidden" name="task_id" value="$a->{'id'}" />
-            #         <input type="checkbox" class="d-none" onchange="this.form.submit();" />
-            #         $icon_rotate_left
-            #     </label>
-            # </a>
-            #     ~;
             }
 
         ###############################################
@@ -2288,12 +2287,11 @@ sub show_tasks {
 
         ###############################################
         # Show or hide date and list column header based on config var cfg_show_dates.
-        $html .= qq~
-                <!-- Date column -->
-                ~;
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
+                    <!-- Date column -->
                     $friendly_date
+                    <!-- End Date column -->
                 ~;
             }
 
