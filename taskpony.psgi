@@ -2506,7 +2506,7 @@ sub start_card {
     $html .= qq~
                 <!-- Start Card $card_title -->
                 ~;
-print STDERR "!!!! start_card(): card_title=[$card_title], card_icon=[$card_icon] colour=[$list_colour]\n";
+print STDERR "!!!! start_card(): colour=[$list_colour]\n";
 
     if (length $list_colour > 2) {  # This list has a highlight colour override, use it
         $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
