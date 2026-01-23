@@ -2266,7 +2266,7 @@ sub show_tasks {
                 <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" >
             <input type="hidden" name="task_id" value="$a->{'id'}" />
             <input type="checkbox" class="d-none" onchange="this.form.submit();" />
-                $icon_rotate_left
+                <img src="/static/icons/ArrowLeft.svg" height="16" alt="ArrowLeft" class="icon-white" />
             </label>
                 ~;
             }
