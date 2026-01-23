@@ -2501,7 +2501,7 @@ sub start_card {
 
     $html .= qq~
                 <!-- Start Card $card_title -->
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white" style="background-color:#00ffff;">
+                        <div class="card-header text-white" style="background-color:#00ffff;">
                             <h2 >
                                 $card_title
                                 ~;
