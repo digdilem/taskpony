@@ -1778,7 +1778,7 @@ sub header {
         .icon { width: 1em; height: 1em; vertical-align: middle; }
         .icon-white { filter: brightness(0) invert(1); }
         .icon-highlight { filter: brightness(1.2) saturate(1.5); }
-        
+
     </style>
 
     </head>
@@ -1876,8 +1876,7 @@ sub footer {
     my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $html .= qq~
-                    <!-- Footer -->
-                </div>
+                <!-- Footer -->
             </div>
         </div>
         </main>
@@ -2392,14 +2391,12 @@ sub show_alert {
 
         return qq~
         <div class="row g-3 mb-2">
-            <div class="col-md-3">
-            </div>
+            <div class="col-md-3"></div>
             <div class="col-md-6">
-              <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
                 $alert_text
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-
-            </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             </div>
         </div>
         ~;
