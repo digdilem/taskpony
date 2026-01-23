@@ -1186,8 +1186,10 @@ my $app = sub {
                                     <label class="form-label">Highlight Colour</label>
                                     <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
 
-                                    <button class="btn btn-primary" type="submit">Save List</button>
-                                    <a class="btn btn-secondary" href="/lists">Cancel</a>
+                                    <div class="text-end">
+                                        <button class="btn btn-primary" type="submit">Save List</button>
+                                        <a class="btn btn-secondary" href="/lists">Cancel</a>
+                                    </div>
                                 <hr>
                                 <p class="text-$config->{cfg_header_colour}">This is list id #$list->{id} which was created on $list->{CreatedDate}</p>
                                 </div>
