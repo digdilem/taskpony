@@ -1190,6 +1190,12 @@ my $app = sub {
                                     <label class="form-label"  data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
                                     <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
 
+                                    <div class="form-check mb-3">
+                                        <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" name="clear_colours"> Clear Highlight Colour
+                                        </label>
+                                    </div>
+
                                     <div class="text-end">
                                         <button class="btn btn-primary" type="submit">Save List</button>
                                         <a class="btn btn-secondary" href="/lists">Cancel</a>
