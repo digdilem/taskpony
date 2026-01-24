@@ -88,6 +88,7 @@ my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
 my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
 my $icon_grave = build_tabler_icon('Grave');  # Grave icon
 my $icon_image = build_tabler_icon('Image');  # Image / picture icon
+my $icon_info = build_tabler_icon('Info');  # Info icon
 my $icon_list = build_tabler_icon('List');      # List icon
 my $icon_list_add = build_tabler_icon('ListAdd');  # List with plus icon
 my $icon_rotate_left = build_tabler_icon('ArrowLeft');  # Rotate left icon
@@ -720,7 +721,8 @@ my $app = sub {
         ###############################################
         # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
-        $html .= start_card('Active Lists', $icon_list, 0);
+        my $active_list_html = "Active Lists <a href=# class=\"text-white text-decoration-none\" data-bs-toggle=\"tooltip\" data-bs-placement=\"auto\" title=\"Show only active (non-deleted) lists.\"><i class=\"bi bi-info\"></i></a>";
+        $html .= start_card($active_list_html, $icon_list, 0);
         $html .= qq~
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
