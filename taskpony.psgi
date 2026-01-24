@@ -1192,43 +1192,21 @@ my $app = sub {
 
                                     <br>
 
-<div class="row">
-    <!-- Colour picker -->
-    <div class="col-md-6">
-        <label class="form-label"
-               data-bs-toggle="tooltip"
-               data-bs-placement="auto"
-               title="Select a highlight colour for this List">
-            Highlight Colour
-        </label>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6">
+                                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
+                                            <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
+                                        </div>
 
-        <input type="color"
-               name="Colour"
-               class="form-control form-control-color"
-               value="~ . html_escape($list->{'Colour'} // '') . qq~" />
-    </div>
-
-    <!-- Clear option -->
-    <div class="col-md-6">
-        <label class="form-label">
-            Clear Highlight Colour
-        </label>
-
-        <div class="form-check mt-1">
-            <input class="form-check-input"
-                   type="checkbox"
-                   name="clear_colours"
-                   id="clear_colours">
-
-            <label class="form-check-label"
-                   for="clear_colours">
-                Remove highlight
-            </label>
-        </div>
-    </div>
-</div>
-
-
+                                        <div class="col-md-6 d-flex align-items-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
+                                                <label class="form-check-label" for="clear_colours">
+                                                    Clear Highlight Colour
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="text-end">
                                         <button class="btn btn-primary" type="submit">Save List</button>
