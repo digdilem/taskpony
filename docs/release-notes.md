@@ -13,8 +13,10 @@
 - Logo will change close to Christmas
 - On new installation, "Main" List now changed name to "Default List"
 - Task list now has small footer icon for a permanent link to that list.
+- Next to this is another new icon providing a link to edit the current List without needing to enter the Lists page.
 - Redone icons yet again. This time most are external SVGs with only a few left embedded.
 - Change re-activate task link to a form element instead of normal link to match completed link.
+- Each list can now have its own colour highlight. This is set with a new colour picker on the Edit List page. There's also a "Clear highlight" checkbox to revert this to the global Highlight colour.
 
 # 0.4
 
