@@ -1192,12 +1192,13 @@ my $app = sub {
 
                                     <br>
 
-                                    <div class="row align-items-center">
+                                    <div class="row align-items-end">
                                         <div class="col-md-6">
                                             <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
                                             <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
                                         </div>
-                                        <div class="col-md-6 d-flex align-items-center" style="padding-top: 32px;">
+                                        <div class="col-md-6">
+                                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this box to remove the highlight colour override">&nbsp;</label>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
                                                 <label class="form-check-label" for="clear_colours">
