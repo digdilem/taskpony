@@ -1201,7 +1201,7 @@ my $app = sub {
                                         <div class="col-md-6 d-flex align-items-center">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
-                                                <label class="form-check-label" for="clear_colours">
+                                                <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
                                                     Clear Highlight Colour
                                                 </label>
                                             </div>
