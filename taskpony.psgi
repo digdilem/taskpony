@@ -2402,12 +2402,19 @@ sub show_tasks {
 
         <span class="float-end muted d-flex gap-3">
 
-            <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
-            data-bs-toggle="tooltip" data-bs-placement="auto"
-            title="Edit this list">
-                $smallicon_edit
-            </a>
+            ~;
 
+            if ($list_id != 1) {  # Not "All lists", so show link to add task to this list
+                $html .= qq~
+                <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+                data-bs-toggle="tooltip" data-bs-placement="auto"
+                title="Edit this list">
+                    $smallicon_edit
+                </a>
+                ~;
+                }
+
+            $html .= qq~
             <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to this list">
