@@ -1187,14 +1187,21 @@ my $app = sub {
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
 
                                     <br>
-                                    <label class="form-label"  data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
-                                    <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
 
-                                    <div class="form-check mb-3">
-                                        <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" name="clear_colours"> Clear Highlight Colour
-                                        </label>
+                                    <div class="row">
+                                        <div class="col-*-*">
+                                            <label class="form-label"  data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
+                                        <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
+                                        </div>
+                                        <div class="col-*-*">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" name="clear_colours"> Clear Highlight Colour
+                                            </label>
+                                        </div>
+
                                     </div>
+
+
 
                                     <div class="text-end">
                                         <button class="btn btn-primary" type="submit">Save List</button>
