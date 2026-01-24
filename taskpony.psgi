@@ -721,7 +721,8 @@ my $app = sub {
         ###############################################
         # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
-        my $active_list_html = "Active Lists <a href=# class=\"text-white text-decoration-none\" data-bs-toggle=\"tooltip\" data-bs-placement=\"auto\" title=\"Show only active (non-deleted) lists.\">$icon_info</i></a>";
+        my $active_list_html = qq~Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</i></a>~;
+
         $html .= start_card($active_list_html, $icon_list, 0);
         $html .= qq~
                             <div class="table-responsive">
@@ -1025,7 +1026,8 @@ my $app = sub {
 
         # Add New List form
         $html .= "\n\n<!-- Start Add New List Card -->\n";
-        $html .= start_mini_card('Add New List', $icon_list_add);
+        my $add_list_html = qq~Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</i></a>~;
+        $html .= start_mini_card($add_list_html, $icon_list_add);
         $html .= qq~
                         <form method="post" action="/lists" class="row g-3">
                             <input type="hidden" name="action" value="add" />
@@ -1053,7 +1055,8 @@ my $app = sub {
         # Show inactive lists card
         $html .= "\n\n<!-- Start Inactive Lists Card -->\n";
         # Inactive Lists Card and Table
-        $html .= start_card('Inactive Lists', $icon_sleep, 0);
+        my $inactive_list_html = qq~Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</i></a>~;
+        $html .= start_card($inactive_list_html, $icon_sleep, 0);
 
         $html .= qq~
                             <div class="table-responsive">
