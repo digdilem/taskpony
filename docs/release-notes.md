@@ -17,6 +17,7 @@
 - Redone icons yet again. This time most are external SVGs with only a few left embedded.
 - Change re-activate task link to a form element instead of normal link to match completed link.
 - Each list can now have its own colour highlight. This is set with a new colour picker on the Edit List page. There's also a "Clear highlight" checkbox to revert this to the global Highlight colour.
+- Bugfix where human date reported "0 months ago" when at 29 or 30 days.
 
 # 0.4
 
@@ -61,8 +62,6 @@
 # 0.2c  Released Christmas, 2025
 
 "Improved orphan handing. Added repeating tasks, stats and database backups. Multiple bugfixes and UI improvements."
-
-
 
 ## Bugfixes
 
