@@ -10,14 +10,15 @@
 - Did performance testing using Starman instead of Plackup. Whilst there's no doubting Starman's benefits in concurrency, it uses a tad more memory and was no faster in my tests in single-threaded use, which is the intended role of Taskpony. So reverted to Plackup in the docker build. Systemd users can select Starman instead, should they wish, and commented line left in Dockerfile if anyone wants it in Docker.
 - Completed Tasks now default sorted by CompletedDate instead of AddedDate
 - Slightly shrunk the Lists Menu Actions Buttons
-- Logo will change close to Christmas
-- On new installation, "Main" List now changed name to "Default List"
-- Task list now has small footer icon for a permanent link to that list.
-- Next to this is another new icon providing a link to edit the current List without needing to enter the Lists page.
-- Redone icons yet again. This time most are external SVGs with only a few left embedded.
-- Change re-activate task link to a form element instead of normal link to match completed link.
-- Each list can now have its own colour highlight. This is set with a new colour picker on the Edit List page. There's also a "Clear highlight" checkbox to revert this to the global Highlight colour.
-- Bugfix where human date reported "0 months ago" when at 29 or 30 days.
+- Logo will change to a festive one close to Christmas
+- On new installations, "Main" List now changed name to "Default List" to remove ambiguity
+- Task list now has small footer icon for a permanent link to that list
+- Next to this is another new icon providing a link to edit the current List without needing to enter the Lists page
+- Redone icons yet again. This time most are external SVGs with only a few left embedded
+- Change re-activate task link to a form element instead of normal link to match completed link
+- Each list can now have its own colour highlight. This is set with a new colour picker on the Edit List page. There's also a "Clear highlight" checkbox to revert this to the global Highlight colour
+- Bugfix where human date reported "0 months ago" when at 29 or 30 days
+- Added info buttons on Lists page to explain what each panel does
 
 # 0.4
 

@@ -905,7 +905,7 @@ my $app = sub {
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white">
               <div class="modal-header">
-                <h5 class="modal-title" id="deleteListModalLabel">Delete List</h5>
+                <h5 class="modal-title" id="deleteListModalLabel">Make List Inactive</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -916,19 +916,19 @@ my $app = sub {
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteOrphan" value="delete_orphan" checked>
                       <label class="form-check-label" for="deleteOrphan">
-                        Delete List and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List')</i>
+                        Make List Inactive and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List' but remain a member of this List, so will re-appear if the List is reactivated)</i>
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
                       <label class="form-check-label" for="deleteComplete">
-                        Delete List and mark any tasks as Completed?
+                        Make List Inactive and mark any tasks as Completed?
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
                       <label class="form-check-label" for="deleteMove">
-                        Delete List and move any active tasks to another list?
+                        Make List Inactive and move any active tasks to another list?
                       </label>
                     </div>
                     <div id="moveListContainer" class="mt-2" style="display:none;">
@@ -941,7 +941,7 @@ my $app = sub {
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete List</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Make List Inactive</button>
               </div>
             </div>
           </div>

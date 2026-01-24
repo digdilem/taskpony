@@ -302,6 +302,27 @@ To stop a task for repeating, you can either
 
 ## About Lists
 
+Each task normally belongs to a Task List allowing you to group multiple types of things together.
+
+In usage, you swap between Task Lists by selecting them from the Pulldown at the top of every page, and navigate back to the Tasks page for that List by clicking the Logo, top left.
+
+### Creating and Managing Lists
+
+Click on the "Manage Lists" icon at the top right, which takes you to the /lists page. Here's you'll find three cards.
+
+#### Active Lists
+
+This shows all the currently Active Lists, showing their Name, Description and a count of Active and Completed Tasks belonging to them.
+
+There's also four Actions you can perform on each List: (Hover over each to get a short description)
+
+1. Make Default.  Only one List can be the Default, which means that it's placed at the top of the Pulldown at the top of each page, making it easier to load. This might be for your daily, most used List.
+2. Set all Tasks Active. This Action will change the status of every Task in this List to "Active". This can be useful if you have something like a regular shopping list which you tick off items as you buy them, but want to start over again next time you go shopping.
+3. Set all Tasks Completed. As above, but marks all tasks as Completed.
+4. Delete List. This actually makes the list Inactive, so it can be undeleted later (see below). When clicked, you'll be prompted with several options about what to do with the tasks within that list.
+
+
+
 The header shows a Lists button at the top right which takes you to `/lists` where you can manage Taskpony's Lists.
 
 Here you can see all the Lists along with how many tasks, active or completed, within each.
