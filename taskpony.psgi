@@ -1039,7 +1039,7 @@ my $app = sub {
                                 <label class="form-label">Description</label>
                                 <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 text-end">
                                 <button class="btn btn-primary" type="submit">Add List</button>
                                 <a class="btn btn-secondary" href="/">Cancel</a>
                             </div>
