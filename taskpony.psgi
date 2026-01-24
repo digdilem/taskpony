@@ -1187,7 +1187,7 @@ my $app = sub {
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
 
                                     <br>
-                                    <label class="form-label">Highlight Colour</label>
+                                    <label class="form-label"  data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
                                     <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
 
                                     <div class="text-end">
