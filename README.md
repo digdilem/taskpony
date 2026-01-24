@@ -306,6 +306,8 @@ Each task normally belongs to a Task List allowing you to group multiple types o
 
 In usage, you swap between Task Lists by selecting them from the Pulldown at the top of every page, and navigate back to the Tasks page for that List by clicking the Logo, top left.
 
+In most places, Lists are Alpha-sorted and are case sensitive, so 'A-Z' then 'a-z'
+
 ### Creating and Managing Lists
 
 Click on the "Manage Lists" icon at the top right, which takes you to the /lists page. Here's you'll find three cards.
@@ -314,28 +316,40 @@ Click on the "Manage Lists" icon at the top right, which takes you to the /lists
 
 This shows all the currently Active Lists, showing their Name, Description and a count of Active and Completed Tasks belonging to them.
 
+##### Edit List
+
+You can click on the Title of each List to edit it, and there's a link at the bottom of each Tasks List which takes you to the same Edit List page, directly from Tasks.
+
+List Editing allows you to change the Name and Description, and also set a Highlight Colour. This Colour will replace the global `Default Highlight Colour` when displaying pages related to that particular List, and may be useful to remind yourself which list you're in.
+
+If you want to revert to the Default Highlight Colour for that list, just tick the `Clear Highlight Colour` checkbox and then click Save List.
+
+#### Back on the Active List Panel
+
 There's also four Actions you can perform on each List: (Hover over each to get a short description)
 
-1. Make Default.  Only one List can be the Default, which means that it's placed at the top of the Pulldown at the top of each page, making it easier to load. This might be for your daily, most used List.
-2. Set all Tasks Active. This Action will change the status of every Task in this List to "Active". This can be useful if you have something like a regular shopping list which you tick off items as you buy them, but want to start over again next time you go shopping.
-3. Set all Tasks Completed. As above, but marks all tasks as Completed.
-4. Delete List. This actually makes the list Inactive, so it can be undeleted later (see below). When clicked, you'll be prompted with several options about what to do with the tasks within that list.
+1. `Make Default` Only one List can be the Default, which means that it's placed at the top of the Pulldown at the top of each page, making it easier to load. This might be for your daily, most used List.
+2. `Set all Tasks Active` This Action will change the status of every Task in this List to "Active". This can be useful if you have something like a regular shopping list which you tick off items as you buy them, but want to start over again next time you go shopping.
+3. `Set all Tasks Completed` As above, but marks all tasks as Completed.
+4. `Delete List` This actually makes the list Inactive, so it can be made Active again later (see below). When clicked, you'll be prompted with several options about what to do with the tasks within that list.
 
+#### Add a New List
 
+Simply allows you to create a new list with a description. There are no limit to the number of lists you can create.
 
-The header shows a Lists button at the top right which takes you to `/lists` where you can manage Taskpony's Lists.
+#### Inactive Lists
 
-Here you can see all the Lists along with how many tasks, active or completed, within each.
+Any list set as Inactive from the `Active Lists` panel will move here.
 
-You can edit any List by clicking on its title.
+This is a sort of holding area for Lists. It allows you to recover an accidentally "deleted" List, but also put Lists that aren't in current use. For example, I have a list for my Christmas Dinner process which lives here until December when I make it Active again.
 
-The `Default` button allows you to select a Default List. The Default List appears at the top of the Lists Picklist in the header.
+The options here are:
 
-If a Default List is deleted, Taskpony will automatically select the oldest active list and make that default to avoid being without one.
+1. `Set this List as Active`  This will return the List to the `Active Lists` panel, and it will again appear in the Picklist.
+2. `Permanently Delete all Tasks`  This will permanently delete all Tasks belonging to this List.
+3. `Permanently Delete This List`  This will delete the List, but not its tasks.
 
-When a List is chosen from the picklist, it will be automatically chosen on subsequent task list reloads until another is selected.
-
-Lists are Alpha-sorted and are case sensitive, so 'A-Z' then 'a-z'
+Deleting a List without first removing its Tasks will make them Orphans. They will still exist in the State they were previously, and will show up in the "Show all Lists" Tasks List.
 
 ## Backups
 

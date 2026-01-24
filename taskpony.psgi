@@ -855,17 +855,17 @@ my $app = sub {
                                             </a>
 
                                             <!-- Set List as Inactive -->
-<div data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive">
-    <button type="button"
-    class="btn btn-outline-danger"
-    data-bs-toggle="modal"
-    data-bs-target="#deleteListModal"
-    data-list-id="$list->{'id'}"
-    data-list-title="$title"
-    data-active-tasks="$active_count">
-        $icon_trash
-    </button>
-</div>
+                                            <div data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive">
+                                                <button type="button"
+                                                class="btn btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteListModal"
+                                                data-list-id="$list->{'id'}"
+                                                data-list-title="$title"
+                                                data-active-tasks="$active_count">
+                                                    $icon_trash
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                     <!-- End Actions column -->
