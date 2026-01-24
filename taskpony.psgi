@@ -2496,14 +2496,14 @@ sub human_friendly_date {
     return 'Yesterday' if $diff_days == 1;
     return "$diff_days days ago" if $diff_days < 7;
 
-    my $diff_weeks = int($diff_days / 7);
-    return "$diff_weeks week" . ($diff_weeks == 1 ? '' : 's') . " ago" if $diff_days < 28;
+my $diff_weeks = int($diff_days / 7);
+return "$diff_weeks week" . ($diff_weeks == 1 ? '' : 's') . " ago" if $diff_days < 28;
 
-    my $diff_months = int($diff_days / 30);
-    return "$diff_months month" . ($diff_months == 1 ? '' : 's') . " ago" if $diff_months < 12;
+my $diff_months = int($diff_days / 30);
+return "$diff_months month" . ($diff_months == 1 ? '' : 's') . " ago" if $diff_months > 0 && $diff_months < 12;
 
-    my $diff_years = int($diff_days / 365);
-    return "$diff_years year" . ($diff_years == 1 ? '' : 's') . " ago";
+my $diff_years = int($diff_days / 365);
+return "$diff_years year" . ($diff_years == 1 ? '' : 's') . " ago";
     } # End human_friendly_date()
 
 ###############################################
