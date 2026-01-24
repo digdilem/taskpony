@@ -19,6 +19,7 @@
 - Each list can now have its own colour highlight. This is set with a new colour picker on the Edit List page. There's also a "Clear highlight" checkbox to revert this to the global Highlight colour
 - Bugfix where human date reported "0 months ago" when at 29 or 30 days
 - Added info buttons on Lists page to explain what each panel does
+- Changed wording about Deleting an Active List - making it clearer that it's actually being made inactive
 
 # 0.4
 

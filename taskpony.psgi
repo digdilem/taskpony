@@ -856,6 +856,7 @@ my $app = sub {
 
                                             <!-- Set List as Inactive -->
                                             <button type="button"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive"
                                             class="btn btn-outline-danger"
                                             data-bs-toggle="modal"
                                             data-bs-placement="auto"
@@ -922,13 +923,13 @@ my $app = sub {
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
                       <label class="form-check-label" for="deleteComplete">
-                        Make List Inactive and mark any tasks as Completed?
+                        Make List Inactive and mark its tasks as Completed?
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
                       <label class="form-check-label" for="deleteMove">
-                        Make List Inactive and move any active tasks to another list?
+                        Make List Inactive and move its active tasks to another list?
                       </label>
                     </div>
                     <div id="moveListContainer" class="mt-2" style="display:none;">
