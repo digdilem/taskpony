@@ -721,7 +721,7 @@ my $app = sub {
         ###############################################
         # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
-        my $active_list_html = "Active Lists <a href=# class=\"text-white text-decoration-none\" data-bs-toggle=\"tooltip\" data-bs-placement=\"auto\" title=\"Show only active (non-deleted) lists.\"><i class=\"bi bi-info\"></i></a>";
+        my $active_list_html = "Active Lists <a href=# class=\"text-white text-decoration-none\" data-bs-toggle=\"tooltip\" data-bs-placement=\"auto\" title=\"Show only active (non-deleted) lists.\">$icon_info</i></a>";
         $html .= start_card($active_list_html, $icon_list, 0);
         $html .= qq~
                             <div class="table-responsive">
