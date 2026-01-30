@@ -53,10 +53,12 @@ my $database_schema_version = 2;        # Current database schema version. Do no
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
 my $new_version_available = 0;
+my $taskpony_icon = 'taskpony-logo.png';  # Default icon file name in ./static dir
 
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
+my $list_colour;                    # Current list highlight colour (overrides default)
 my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
@@ -82,32 +84,29 @@ my $stats = {                           # Hashref to hold various stats for dash
     repeating_tasks => 0,
     };
 
-# Some inline SVG tabler icons to prevent including the entire svg map just for a few icons. 30px
-# Copy SVG from Tabler and remove everything up to the first "<path" and also the closing "</svg>" tag.
-my $icon_gear = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />');
-my $icon_list = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3.5 5.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 11.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 17.5l1.5 1.5l2.5 -2.5" /><path d="M11 6l9 0" /><path d="M11 12l9 0" /><path d="M11 18l9 0" />');
-my $icon_rotate_left = build_tabler_icon(30,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
-my $icon_rotate_right = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 14l4 -4l-4 -4" /><path d="M19 10h-11a4 4 0 1 0 0 8h1" />');
-my $icon_chart = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" /><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" /><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" /><path d="M4 20h14" />');
-my $icon_edit = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
-my $icon_trash = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />');
-my $icon_image = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" />');
-my $icon_list_add = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 8h-14" /><path d="M5 12h9" /><path d="M11 16h-6" /><path d="M15 16h6" /><path d="M18 13v6" />');
-my $icon_star_off = build_tabler_icon(30,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245" />');
-my $icon_star_on = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" /></svg>';  # Solid, so needs different svg header
-my $icon_xcircle = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-xbox-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10m3.6 5.2a1 1 0 0 0 -1.4 .2l-2.2 2.933l-2.2 -2.933a1 1 0 1 0 -1.6 1.2l2.55 3.4l-2.55 3.4a1 1 0 1 0 1.6 1.2l2.2 -2.933l2.2 2.933a1 1 0 0 0 1.6 -1.2l-2.55 -3.4l2.55 -3.4a1 1 0 0 0 -.2 -1.4" /></svg>';
-my $icon_grave = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-grave-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 16.17v-9.17a3 3 0 0 1 3 -3h4a3 3 0 0 1 3 3v9.171" /><path d="M12 7v5" /><path d="M10 9h4" /><path d="M5 21v-2a3 3 0 0 1 3 -3h8a3 3 0 0 1 3 3v2h-14" /></svg>';
-my $icon_sleep = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-zzz"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12h6l-6 8h6" /><path d="M14 4h6l-6 8h6" /></svg>';
+# New icons to be saved in /static/icons and alt text matches the filename.svg
+my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
+my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
+my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
+my $icon_grave = build_tabler_icon('Grave');  # Grave icon
+my $icon_image = build_tabler_icon('Image');  # Image / picture icon
+my $icon_info = build_tabler_icon('Info');  # Info icon
+my $icon_list = build_tabler_icon('List');      # List icon
+my $icon_list_add = build_tabler_icon('ListAdd');  # List with plus icon
+my $icon_rotate_left = build_tabler_icon('ArrowLeft');  # Rotate left icon
+my $icon_rotate_right = build_tabler_icon('ArrowRight');  # Rotate right icon
+my $icon_sleep = build_tabler_icon('Zzz');  # Sleep / Zzz icon
+my $icon_star_off = build_tabler_icon('StarOff');  # Star outline icon
+my $icon_star_on = build_tabler_icon('StarOn');    # Star filled icon
+my $icon_trash = build_tabler_icon('Trash');  # Trash can icon
+my $icon_xcircle = build_tabler_icon('XCircle');  # X in circle icon
 
-# Smaller FA icons for inline use in tables, 16px
-my $icon_link_slash = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
-my $icon_info_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />');
-my $icon_repeat_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
-my $icon_comment_small = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
-my $icon_goto = build_tabler_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-3v-6h3" /><path d="M3 9v6" /><path d="M6 9v6" />');
-
-# Very small FA icons,
-my $icon_rotate_left_small = build_tabler_icon(18,'<path d="M9 14l-4 -4l4 -4" /><path d="M5 10h11a4 4 0 1 1 0 8h-1" />');
+# These small icons need to be inline, so we can style them to match the current highlght colour
+my $smallicon_comment = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
+my $smallicon_link = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');my $smallicon_link_slash = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
+my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />');
+my $smallicon_repeat = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
+my $smallicon_edit = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
@@ -124,6 +123,7 @@ print STDERR "+------------------------------------+\n\n";
 # Get additional config values.
 $list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
 $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+$list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
 
 ####################################
 # Start main loop
@@ -159,6 +159,7 @@ my $app = sub {
             $list_id
             ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
+        $list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
         }
 
     ###############################################
@@ -219,7 +220,6 @@ my $app = sub {
     ###############################################
     # Set TASK nn as Status 1 in TasksTb (Active)
     if ($req->path eq "/ust") {
-        if ($req->method && uc($req->method) eq 'GET') {
             my $task_id = $req->param('task_id') // 0;
 
             if ($task_id > 0) {
@@ -229,7 +229,6 @@ my $app = sub {
                 add_alert("Task #$task_id re-activated.");
                 $stats->{tasks_completed_today} -= 1;
             }
-        }
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
         } # End /ust
@@ -515,7 +514,7 @@ my $app = sub {
 
                                             $html .= qq~>
                                             <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
-                                                $icon_info_small
+                                                $smallicon_info
                                             </span>
                                             </div>
                                         </div>
@@ -530,7 +529,7 @@ my $app = sub {
                                                         days
                                                     </span>
                                                     <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
-                                                        $icon_info_small
+                                                        $smallicon_info
                                                     </span>
                                             </div>
                                         </div>
@@ -722,7 +721,9 @@ my $app = sub {
         ###############################################
         # Page - Display List of Lists #List
         $html .= "<!-- Lists Management Card -->\n";
-        $html .= start_card('Active Lists', $icon_list, 0);
+        my $active_list_html = qq~Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</i></a>~;
+
+        $html .= start_card($active_list_html, $icon_list, 0);
         $html .= qq~
                             <div class="table-responsive">
                             <table class="table table-dark table-striped">
@@ -824,9 +825,9 @@ my $app = sub {
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
                                             <a href="/set_default_list?id=$list->{'id'}"
-                                            class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this is the Default List" >
-                                            <span style="font-size: 30px; line-height:1;">
+                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this as the Default List" >
+
                                                 ~;
                                                 if ($list->{'IsDefault'} == 1) {
                                                     $html .= $icon_star_on;
@@ -835,40 +836,36 @@ my $app = sub {
                                                     $html .= $icon_star_off;
                                                     }
                                                 $html .= qq~
-                                            </span>
                                             </a>
 
                                             <!-- Set all tasks Active Button -->
                                             <a href="/list_setall_active?lid=$list->{'id'}"
-                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                                             onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_right
-                                            </span>
                                             </a>
 
                                             <!-- Set all tasks Completed Button -->
                                             <a href="/list_setall_completed?lid=$list->{'id'}"
-                                            class="btn btn-sm btn-warning d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_left
-                                            </span>
                                             </a>
 
                                             <!-- Set List as Inactive -->
-                                            <button type="button"
-                                            class="btn btn-sm btn-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-placement="auto"
-                                            data-bs-target="#deleteListModal"
-                                            data-list-id="$list->{'id'}"
-                                            data-list-title="$title"
-                                            data-active-tasks="$active_count">
-                                                $icon_trash
-                                            </button>
+                                            <div data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive">
+                                                <button type="button"
+                                                class="btn btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteListModal"
+                                                data-list-id="$list->{'id'}"
+                                                data-list-title="$title"
+                                                data-active-tasks="$active_count">
+                                                    $icon_trash
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                     <!-- End Actions column -->
@@ -909,7 +906,7 @@ my $app = sub {
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white">
               <div class="modal-header">
-                <h5 class="modal-title" id="deleteListModalLabel">Delete List</h5>
+                <h5 class="modal-title" id="deleteListModalLabel">Make List Inactive</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -920,19 +917,19 @@ my $app = sub {
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteOrphan" value="delete_orphan" checked>
                       <label class="form-check-label" for="deleteOrphan">
-                        Delete List and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List')</i>
+                        Make List Inactive and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List' but remain a member of this List, so will re-appear if the List is reactivated)</i>
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
                       <label class="form-check-label" for="deleteComplete">
-                        Delete List and mark any tasks as Completed?
+                        Make List Inactive and mark its tasks as Completed?
                       </label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
                       <label class="form-check-label" for="deleteMove">
-                        Delete List and move any active tasks to another list?
+                        Make List Inactive and move its active tasks to another list?
                       </label>
                     </div>
                     <div id="moveListContainer" class="mt-2" style="display:none;">
@@ -945,7 +942,7 @@ my $app = sub {
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete List</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Make List Inactive</button>
               </div>
             </div>
           </div>
@@ -1030,7 +1027,8 @@ my $app = sub {
 
         # Add New List form
         $html .= "\n\n<!-- Start Add New List Card -->\n";
-        $html .= start_mini_card('Add New List', $icon_list_add);
+        my $add_list_html = qq~Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</i></a>~;
+        $html .= start_mini_card($add_list_html, $icon_list_add);
         $html .= qq~
                         <form method="post" action="/lists" class="row g-3">
                             <input type="hidden" name="action" value="add" />
@@ -1042,7 +1040,7 @@ my $app = sub {
                                 <label class="form-label">Description</label>
                                 <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 text-end">
                                 <button class="btn btn-primary" type="submit">Add List</button>
                                 <a class="btn btn-secondary" href="/">Cancel</a>
                             </div>
@@ -1058,7 +1056,8 @@ my $app = sub {
         # Show inactive lists card
         $html .= "\n\n<!-- Start Inactive Lists Card -->\n";
         # Inactive Lists Card and Table
-        $html .= start_card('Inactive Lists', $icon_sleep, 0);
+        my $inactive_list_html = qq~Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</i></a>~;
+        $html .= start_card($inactive_list_html, $icon_sleep, 0);
 
         $html .= qq~
                             <div class="table-responsive">
@@ -1106,31 +1105,25 @@ my $app = sub {
                                         <div class="btn-group" role="group">
                                             <!-- Default Button -->
                                             <a href="/list_undelete?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-success d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_rotate_right
-                                            </span>
                                             </a>
 
                                             <!-- Delete all Tasks -->
                                             <a href="/list_delete_all_tasks?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all tasks within this List"
+                                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
-                                            <span style="font-size: 30px; line-height:1;">
                                                 $icon_xcircle
-                                            </span>
                                             </a>
 
                                             <!-- Permanently delete this List -->
                                             <a href="/list_delete_list?lid=$a->{'id'}"
-                                            class="btn btn-sm btn-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
-                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?');">
-                                            <span style="font-size: 30px; line-height:1;">
+                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
                                                 $icon_grave
-                                            </span>
                                             </a>
 
                                         </div>
@@ -1165,13 +1158,19 @@ my $app = sub {
             if ($req->method && uc($req->method) eq 'POST') {
                 my $title = sanitize($req->param('Title') // '');
                 my $desc = sanitize($req->param('Description') // '');
+                my $colour = sanitize($req->param('Colour') // '');
+                my $clear_colours = $req->param('clear_colours') // '';
+                if ($clear_colours eq 'on') {  # Remove override
+                    $colour = '';
+                    }
 
                 if (length $title && $list_id > 1) {
                     my $sth = $dbh->prepare(
-                        'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
+                        'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
-                    eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
-                    add_alert("List '$title' updated.");
+                eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
+                $list_colour = $colour;
+                add_alert("List '$title' updated.");
                 }
 
                 $res->redirect('/lists');
@@ -1180,7 +1179,7 @@ my $app = sub {
 
             # If GET, show the edit-list form
             if ($list_id > 1) {
-                my $sth = $dbh->prepare('SELECT id, Title, Description FROM ListsTb WHERE id = ?');
+                my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
                 $sth->execute($list_id);
                 my $list= $sth->fetchrow_hashref();
 
@@ -1190,16 +1189,37 @@ my $app = sub {
                     $html .= qq~
                             <form method="post" action="/editlist?id=$list_id" class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label">Title</label>
+                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
                                     <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Description</label>
+
+                                    <br>
+                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="A brief description of this List">Description</label>
                                     <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary" type="submit">Save List</button>
-                                    <a class="btn btn-secondary" href="/lists">Cancel</a>
+
+                                    <br>
+
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6">
+                                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
+                                            <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
+                                        </div>
+
+                                        <div class="col-md-6 d-flex align-items-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
+                                                <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
+                                                    Clear Highlight Colour
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button class="btn btn-primary" type="submit">Save List</button>
+                                        <a class="btn btn-secondary" href="/lists">Cancel</a>
+                                    </div>
+                                <hr>
+                                <p class="text-$config->{cfg_header_colour}">This is list id #$list->{id} which was created on $list->{CreatedDate}</p>
                                 </div>
                             </form>
                         </div>
@@ -1309,9 +1329,8 @@ my $app = sub {
                 $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
                 $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
                 $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
-                $html .= config_show_option('cfg_header_colour','Highlight Colour','Select colour for panel header backgrounds and highlights','colour',0,0);
+                $html .= config_show_option('cfg_header_colour','Default Highlight Colour','Select default colour for panel header backgrounds and highlights','colour',0,0);
                 $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
-
 
             $html .= qq~
 
@@ -1488,7 +1507,6 @@ my $app = sub {
             } # End /stats
 
     ###############################################
-    # End named paths
 
     ###############################################
     # /background_set  = Receive new background image upload
@@ -1532,6 +1550,10 @@ my $app = sub {
 
     ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
+
+    ###############################################
+    ###############################################
+    # End named paths
 
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
@@ -1678,7 +1700,7 @@ sub initialise_database {
     $dbh->do(qq~
         INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES
         (1, 'All Tasks', 'View tasks from all lists', 0),
-        (2, 'Main', 'Main day to day list', 1)
+        (2, 'Default List', 'Main day to day list', 1)
         ON CONFLICT(id) DO NOTHING;
         ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
 
@@ -1793,6 +1815,9 @@ sub header {
         .header-bar { min-height: 72px; }
         .dataTables_paginate .paginate_button.disabled { display: none !important; }
         .icon { width: 1em; height: 1em; vertical-align: middle; }
+        .icon-white { filter: brightness(0) invert(1); }
+        .icon-highlight { filter: brightness(1.2) saturate(1.5); }
+
     </style>
 
     </head>
@@ -1818,7 +1843,7 @@ sub header {
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
-                    <img src="/static/taskpony-logo.png" width="82" height="82" alt="logo">
+                    <img src="/static/$taskpony_icon" width="82" height="82" alt="logo">
                     <h3 class="mb-0">$app_title</h3>
                 </a>
                 ~;
@@ -1890,8 +1915,7 @@ sub footer {
     my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $html .= qq~
-                    <!-- Footer -->
-                </div>
+                <!-- Footer -->
             </div>
         </div>
         </main>
@@ -2140,10 +2164,12 @@ sub show_tasks {
         debug("show_tasks: Showing tasks for ALL lists");
         }
 
-    # Append ordering and finish query
-    $sql .= "
-        ORDER BY t.AddedDate DESC
-        ";
+    # Append ordering and finish query. If completed, sort by completed date, else by added date
+    if ($status == 2) {
+        $sql .= " ORDER BY t.CompletedDate DESC ";
+        } else {
+        $sql .= " ORDER BY t.AddedDate DESC ";
+        }
 
     my $sth = $dbh->prepare($sql);
     $sth->execute($status);
@@ -2215,7 +2241,7 @@ sub show_tasks {
 
             # Prefix task title with an orphaned marker, coloured red
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This task belongs to a deleted list">
-                $icon_link_slash
+                $smallicon_link_slash
             </span>
             ~;
             }
@@ -2223,7 +2249,7 @@ sub show_tasks {
         # Add a repeat icon if the task is recurring
         if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">
-                $icon_repeat_small
+                $smallicon_repeat
             </span> ~;
             }
 
@@ -2249,7 +2275,7 @@ sub show_tasks {
                         $title
                     ~;
             if ($description) {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $icon_comment_small
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $smallicon_comment
                 </span>
                 ~;
                 }
@@ -2270,10 +2296,20 @@ sub show_tasks {
                     </a>
                      ~;
 
+            # $checkbox .= qq~
+            #     <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour}" title="Set Task as Active again">
+            #     $icon_rotate_left
+            #     </a>
+            #     ~;
+
             $checkbox .= qq~
-                <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-secondary" title="Set Task as Active again">
-                $icon_rotate_left
-                </a>
+                <form method="post" action="/ust" style="display:inline;">
+                    <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
+                        <input type="hidden" name="task_id" value="$a->{'id'}" />
+                        <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
+                        $icon_rotate_left
+                    </label>
+                </form>
                 ~;
             }
 
@@ -2292,12 +2328,11 @@ sub show_tasks {
 
         ###############################################
         # Show or hide date and list column header based on config var cfg_show_dates.
-        $html .= qq~
-                <!-- Date column -->
-                ~;
         if ($config->{'cfg_show_dates'} eq 'on') {
             $html .= qq~
+                    <!-- Date column -->
                     $friendly_date
+                    <!-- End Date column -->
                 ~;
             }
 
@@ -2369,6 +2404,32 @@ sub show_tasks {
         })();
         </script> <!-- End DB stats check script -->
 
+        <!-- Gutter of show_tasks() card -->
+
+        <span class="float-end muted d-flex gap-3">
+
+            ~;
+
+            if ($list_id != 1) {  # Not "All lists", so show link to add task to this list
+                $html .= qq~
+                <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+                data-bs-toggle="tooltip" data-bs-placement="auto"
+                title="Edit this list">
+                    $smallicon_edit
+                </a>
+                ~;
+                }
+
+            $html .= qq~
+            <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            data-bs-toggle="tooltip" data-bs-placement="auto"
+            title="Permanent link to this list">
+                $smallicon_link
+            </a>
+
+        </span>
+        <!-- End footer of show_tasks() card -->
+
         ~;
 
     return $html;
@@ -2385,14 +2446,12 @@ sub show_alert {
 
         return qq~
         <div class="row g-3 mb-2">
-            <div class="col-md-3">
-            </div>
+            <div class="col-md-3"></div>
             <div class="col-md-6">
-              <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
                 $alert_text
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-
-            </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
             </div>
         </div>
         ~;
@@ -2447,6 +2506,7 @@ sub human_friendly_date {
     return "$diff_weeks week" . ($diff_weeks == 1 ? '' : 's') . " ago" if $diff_weeks < 4;
 
     my $diff_months = int($diff_days / 30);
+    $diff_months = 1 if $diff_months < 1;
     return "$diff_months month" . ($diff_months == 1 ? '' : 's') . " ago" if $diff_months < 12;
 
     my $diff_years = int($diff_days / 365);
@@ -2481,14 +2541,22 @@ sub start_card {
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
     my $html = qq~
-            <!-- Start Card $card_title -->
             <div class="card shadow-sm mb-4">
             ~;
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
 
     $html .= qq~
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                <!-- Start Card $card_title -->
+                ~;
+
+    if (length $list_colour > 2) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
+        } else { # Show default bg-
+        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
+        }
+
+    $html .= qq~
                             <h2 >
                                 $card_title
                                 ~;
@@ -2514,7 +2582,14 @@ sub start_mini_card {
             <div class="row justify-content-center">
                 <div class="col-md-11 mb-4">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-$config->{cfg_header_colour} text-white">
+                    ~;
+
+    if (length $list_colour > 2) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
+        } else { # Show default bg-
+        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
+        }
+    $html .= qq~
                             <h2>
                                 $card_title
                                 ~;
@@ -2645,6 +2720,19 @@ sub run_daily_tasks {
     ###############################################
     # We ran run_daily_tasks() today, so let's update the last run time and return
     $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
+
+    # Frivolity: Check if a special date and change the logo
+    # If month is December and day is between 20 and 31, show a festive icon
+    my ($sec,$min,$hour,$mday,$mon,$year) = localtime();
+    if ( ($mon == 11) && ($mday >= 20) && ($mday <= 31) ) {
+        $taskpony_icon = 'taskpony-logo-xmas.png';
+        print STDERR "Taskponies love Christmas!\n";
+        } else {
+        $taskpony_icon = 'taskpony-logo.png';  # Reset to normal logo
+        }
+    # Back to seriousness
+
+
     return;
     } # End run_daily_tasks()
 
@@ -2820,14 +2908,19 @@ sub config_show_option {
     } # end config_show_option()
 
 ###############################################
-# build_icon($size,$svg);
+# build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
 sub build_tabler_icon {
+    my $icon_name = shift;
+    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
+    } # end build_tabler_icon
+
+sub build_inline_icon {
     my ($size, $svg) = @_;
 
     return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
         </span>~;
-    } # end build_tabler_icon
+    } # end build_inline_icon
 
 ###############################################
 # Update the global $db_mtime variable with the current database file modification time
