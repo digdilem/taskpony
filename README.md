@@ -27,7 +27,8 @@ See some more [Screenshots](#screenshots)
 
 # Demo
 
-[Try the Demo!](https://taskpony.onrender.com)   [Demo Site 2](https://relieved-irma-digital-dilemma2-5693a6d5.koyeb.app/)
+- [Try the Demo!](https://relieved-irma-digital-dilemma2-5693a6d5.koyeb.app/)
+- [Demo Site 2](https://taskpony.onrender.com)
 
 # Quick start
 

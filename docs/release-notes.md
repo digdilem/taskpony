@@ -1,6 +1,6 @@
-# Taskpony Version History
+# Taskpony Version History / Release Notes / Changelog
 
-## To upgrade follow the [Upgrade Instructions](../README.md#upgrading)
+## To upgrade, follow the [Upgrade Instructions](../README.md#upgrading)
 
 # 0.5
 
