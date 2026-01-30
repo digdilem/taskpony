@@ -36,3 +36,4 @@ EXPOSE 5000
 #CMD ["carton", "exec", "starman", "--port", "5000", "--workers", "2", "--preload-app", "taskpony.psgi"]
 CMD ["carton", "exec", "plackup", "-p", "5000", "taskpony.psgi"]
 
+# End of file
