@@ -2030,21 +2030,21 @@ sub footer {
         // Handle copy link to clipboard
         document.addEventListener('DOMContentLoaded', function() {
             const copyLinkButtons = document.querySelectorAll('.copy-link-btn');
-            
+
             copyLinkButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
+
                     const url = this.getAttribute('data-copy-url');
                     // Get the full URL including domain
                     const fullUrl = window.location.origin + url;
-                    
+
                     // Copy to clipboard
                     navigator.clipboard.writeText(fullUrl).then(() => {
                         // Show feedback by updating tooltip
                         const originalTitle = this.getAttribute('title');
                         this.setAttribute('data-bs-original-title', 'Link copied to clipboard!');
-                        
+
                         // Reinitialize the tooltip to show the new message
                         const tooltip = bootstrap.Tooltip.getInstance(this);
                         if (tooltip) {
@@ -2052,7 +2052,7 @@ sub footer {
                         }
                         new bootstrap.Tooltip(this);
                         this.dispatchEvent(new Event('mouseenter'));
-                        
+
                         // Reset the tooltip after 2 seconds
                         setTimeout(() => {
                             this.setAttribute('data-bs-original-title', originalTitle);
