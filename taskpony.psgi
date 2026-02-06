@@ -1,7 +1,7 @@
 #!/usr/bin/env/perl
 # Taskpony - a simple perl PSGI web app for various daily tasks - https://github.com/digdilem/taskpony
 # Started Christmas, 2025. Simon Avery / digdilem / https://digdilem.org
-# MIT Licence = Free to use and modify as you see fit, but please give credit where due.
+# MIT Licence = Free to use and modify as you see fit, but please give credit where due
 
 use strict;
 use warnings;
@@ -2026,50 +2026,6 @@ sub footer {
         }, 5000);
         </script>
 
-        <script>
-        // Handle copy link to clipboard
-        document.addEventListener('DOMContentLoaded', function() {
-            const copyLinkButtons = document.querySelectorAll('.copy-link-btn');
-
-            copyLinkButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const url = this.getAttribute('data-copy-url');
-                    // Get the full URL including domain
-                    const fullUrl = window.location.origin + url;
-
-                    // Copy to clipboard
-                    navigator.clipboard.writeText(fullUrl).then(() => {
-                        // Show feedback by updating tooltip
-                        const originalTitle = this.getAttribute('title');
-                        this.setAttribute('data-bs-original-title', 'Link copied to clipboard!');
-
-                        // Reinitialize the tooltip to show the new message
-                        const tooltip = bootstrap.Tooltip.getInstance(this);
-                        if (tooltip) {
-                            tooltip.dispose();
-                        }
-                        new bootstrap.Tooltip(this);
-                        this.dispatchEvent(new Event('mouseenter'));
-
-                        // Reset the tooltip after 2 seconds
-                        setTimeout(() => {
-                            this.setAttribute('data-bs-original-title', originalTitle);
-                            const newTooltip = bootstrap.Tooltip.getInstance(this);
-                            if (newTooltip) {
-                                newTooltip.dispose();
-                            }
-                            new bootstrap.Tooltip(this);
-                        }, 2000);
-                    }).catch(() => {
-                        alert('Failed to copy link to clipboard');
-                    });
-                });
-            });
-        });
-        </script>
-
         </body>
         </html>
         <!-- End Footer() -->
@@ -2463,11 +2419,9 @@ sub show_tasks {
                 }
 
             $html .= qq~
-            <a href="javascript:void(0)"
-                class="text-$config->{'cfg_header_colour'} text-decoration-none copy-link-btn"
-                data-copy-url="/?lid=$list_id"
-                data-bs-toggle="tooltip" data-bs-placement="auto"
-                title="Click to copy permanent link to clipboard">
+            <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            data-bs-toggle="tooltip" data-bs-placement="auto"
+            title="Permanent link to this list">
                 $smallicon_link
             </a>
 
