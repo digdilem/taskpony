@@ -1545,7 +1545,17 @@ my $app = sub {
         return $res->finalize;
         } # End /?delete_task=nn
 
-      # End individual page handling.
+    ###############################################
+    # /showalltasks Show a page with all lists and tasks
+    if ($req->path eq '/showalltasks') {
+        my $html = header();
+        $html .= showalltasks();
+        $res->content_type('text/html');
+        $res->body($html);
+        return $res->finalize;
+        }
+
+    # End individual page handling.
     ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
@@ -2885,6 +2895,23 @@ sub config_show_option {
     return $retstr;
     } # end config_show_option()
 
+###############################################
+ # showalltasks() - Loop through all active lists and show a panel for each with the tasks in that list.
+sub showalltasks {
+    my $html = '';
+
+    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
+    $lists_sth->execute();
+
+    while (my $list = $lists_sth->fetchrow_hashref()) {
+        $html .= start_card($list->{'Title'}, '', 0);
+        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
+        $html .= end_card(0);
+        }
+
+    $html .= footer();
+    return $html;
+    } # End showalltasks()
 
 ###############################################
 # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
