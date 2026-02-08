@@ -2158,7 +2158,7 @@ sub debug {
 # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
 sub show_tasks {
     my ($status, $list_id) = @_;
-
+print STDERR "show_tasks: Showing tasks with status $status for list_id $list_id\n";
     # Build SQL query
     my $sql = "
         SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
@@ -2926,7 +2926,6 @@ sub showalltasks {
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
-print STDERR "Showing tasks for list: $list->{Title}\n";
         $html .= start_card($list->{'Title'}, '', 1);
         $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
         $html .= end_card();
