@@ -581,6 +581,7 @@ my $app = sub {
                 </div>
                 ~;
 
+                $html .= end_card();
                 $html .= footer();
                 $res->body($html);
                 return $res->finalize;
@@ -2551,13 +2552,14 @@ sub start_card {
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
     my $html = qq~
+            <!-- Start Card $card_title -->
+
             <div class="card shadow-sm mb-4">
             ~;
 
     if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
 
     $html .= qq~
-                <!-- Start Card $card_title -->
                 ~;
 
     if (length $list_colour > 2) {  # This list has a highlight colour override, use it
@@ -2618,9 +2620,13 @@ sub start_mini_card {
     } # End start_mini_card()
 
 ###############################################
-# Close the card
+# Close the card  ($table_card parameter is used to determine whether to close the div that hides the card until datatables is loaded)
 sub end_card {
-    my $html = qq~
+    my $html;
+    my $table_card = shift || 0;
+    if ($table_card == 1) { $html = qq~                            </div>~; }  # Close the div that hides the card until datatables is loaded
+
+    $html .= qq~
                         </div>
                     </div>
                 <!-- End Card -->
