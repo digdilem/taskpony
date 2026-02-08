@@ -2590,6 +2590,7 @@ sub end_card {
     my $table_card = shift || 0;
     if ($table_card == 1) { $html = qq~                            </div>~; }  # Close the div that hides the card until datatables is loaded
     $html .= qq~
+                            </div>
                         </div>
                     </div>
                 <!-- End Card -->
