@@ -2903,6 +2903,7 @@ sub showalltasks {
         $html .= start_card($list->{'Title'}, '', 0);
         $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
         $html .= end_card(0);
+        $html .= footer();
         }
 
     return $html;
