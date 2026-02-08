@@ -2922,7 +2922,7 @@ sub config_show_option {
 sub showalltasks {
     my $html = '';
 
-    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY Title ASC");
+    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
