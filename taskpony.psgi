@@ -717,7 +717,20 @@ my $app = sub {
             } # End /lists form submission handling
 
         ###############################################
+        # /showalltasks Show a page with all lists and tasks
+        ###############################################
+        if ($path eq '/showalltasks') {
+            $html .= showalltasks();
+            $res->content_type('text/html');
+            return $res->finalize;
+            }
+
+        # End individual page handling.
+        ###############################################
+
+        ###############################################
         # Page - Display List of Lists #List
+        ###############################################
         $html .= "<!-- Lists Management Card -->\n";
         my $active_list_html = qq~Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</i></a>~;
 
@@ -2904,6 +2917,23 @@ sub config_show_option {
 
     return $retstr;
     } # end config_show_option()
+
+###############################################
+ # showalltasks() - Loop through all active lists and show a panel for each with the tasks in that list.
+sub showalltasks {
+    my $html = '';
+
+    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY Title ASC");
+    $lists_sth->execute();
+
+    while (my $list = $lists_sth->fetchrow_hashref()) {
+        $html .= start_card($list->{'Title'}, '', 1);
+        $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
+        $html .= end_card();
+        }
+
+    return $html;
+    } # End showalltasks()
 
 ###############################################
 # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
