@@ -57,7 +57,7 @@ my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
 my $list_colour;                    # Current list highlight colour (overrides default)
-my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
+my $debug = 1;                      # Set to 1 to enable debug messages to STDERR
 my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
 my $db_mtime = 0;                   # Cached database file modification time for /api/dbstate
@@ -2158,7 +2158,6 @@ sub debug {
 # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
 sub show_tasks {
     my ($status, $list_id) = @_;
-print STDERR "show_tasks: Showing tasks with status $status for list_id $list_id\n";
     # Build SQL query
     my $sql = "
         SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
