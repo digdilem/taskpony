@@ -1910,7 +1910,7 @@ sub header {
 
             </div>
         </div>
-        <!-- End header() -->
+<!-- End header() -->
     ~;
 
     return $html;
@@ -2553,12 +2553,12 @@ sub start_card {
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
     my $html = qq~
-            <!-- start_card($table_card) $card_title -->
-            <!-- ############################################################################################## -->
+<!-- start_card($table_card) $card_title -->
+<!-- ############################################################################################## -->
             <div class="card shadow-sm mb-4">
             ~;
 
-    if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
+    if ($table_card == 1) { $html .= qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
 
     $html .= qq~
                 ~;
@@ -2583,7 +2583,7 @@ sub start_card {
                     </div>
 
                     <div class="card-body bg-dark text-white rounded-bottom">
-                    <!-- End start_card() header -->
+<!-- End start_card() header -->
                     ~;
     return $html;
     } # End start_card()
