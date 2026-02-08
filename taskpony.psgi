@@ -719,7 +719,7 @@ my $app = sub {
         ###############################################
         # /showalltasks Show a page with all lists and tasks
         ###############################################
-        if ($path eq '/showalltasks') {
+        if ($$req->path eq '/showalltasks') {
             $html .= showalltasks();
             $res->content_type('text/html');
             return $res->finalize;
