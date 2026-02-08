@@ -876,6 +876,7 @@ my $app = sub {
         $html .= qq~
                                 </tbody>
                             </table>
+                        </div> <!-- Close table responsive div -->
                 ~;
         $html .= end_card(0);
         $html .= "<!-- End Lists Management Card -->\n";
