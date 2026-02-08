@@ -1142,7 +1142,6 @@ my $app = sub {
         $html .= "<!-- End Deleted Lists Card -->\n";
         # End Deleted lists card
 
-
         $html .= footer();
         $res->body($html);
         return $res->finalize;
@@ -1333,8 +1332,7 @@ my $app = sub {
 
             $html .= qq~
 
-            <br/
-            >
+            <br/>
             <div class="text-end">
                 <button class="btn btn-primary">Save Settings</button>
             </div>
@@ -2578,7 +2576,9 @@ sub start_card {
                             $html .= qq~
                             </h2>
                         </div>
+                        <!-- End Card Header -->
 
+                        <!-- Start Mini Card Body -->
                         <div class="card-body bg-dark text-white rounded-bottom">~;
     return $html;
     } # End start_card()
@@ -2589,6 +2589,8 @@ sub start_mini_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
     my $html = qq~
+            <!-- Start Mini Card $card_title -->
+
             <div class="row justify-content-center">
                 <div class="col-md-11 mb-4">
                     <div class="card shadow-sm">
@@ -2611,7 +2613,9 @@ sub start_mini_card {
     $html .= qq~
                             </h2>
                         </div>
+                        <!-- End Mini Card Header -->
 
+                        <!-- Start Mini Card Body -->
                         <div class="card-body bg-dark text-white rounded-bottom">
                         ~;
     return $html;
