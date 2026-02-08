@@ -1143,7 +1143,7 @@ my $app = sub {
         # End Deleted lists card
 
         # Additional card with actions
-        £html .= "\n\n<!-- Start List Actions Card -->\n";
+        $html .= "\n\n<!-- Start List Actions Card -->\n";
         $html .= start_card("List Actions", $icon_list, 0);
         $html .= qq~
                 <p>
