@@ -2539,6 +2539,7 @@ sub config_load {
 ###############################################
 # Open a consistent bootstrap 5 card for most pages.
 # Takes a title and optional icon HTML to show in the header. If $table_card is set to 1, it will add an id to the card that allows it to be hidden until the datatable is fully loaded, which reduces flicker.
+# Opens 2 divs, or 3 if table_card is set, but does not close them. Call end_card() to close the divs.
 sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
@@ -2567,30 +2568,32 @@ sub start_card {
                                 ~;
                             if ($card_icon ne '') {
                                 $html .= qq~
-                                                        <div class="float-end">$card_icon</div>
-                                                        ~;
+                        <div class="float-end">$card_icon</div>
+                        ~;
                                 }
                             $html .= qq~
                             </h2>
-                        </div>
-                        <!-- End Card Header -->
+                    </div>
+                    <!-- End Card Header -->
 
-                        <div class="card-body bg-dark text-white rounded-bottom">~;
+                    <div class="card-body bg-dark text-white rounded-bottom">
+                    <!-- End start_card() header -->
+                    ~;
     return $html;
     } # End start_card()
 
 ###############################################
 # Close the card  ($table_card,$is_mini_card parameter is used to determine whether to close the div that hides the card until datatables is loaded)
+# Closes 2 divs, or 3 if $table_card is set to 1
 sub end_card {
-    my $html;
+    my $html = "<!-- Start end_card() -->\n";
     my $table_card = shift || 0;
-    if ($table_card == 1) { $html = qq~                            </div>~; }  # Close the div that hides the card until datatables is loaded
+    if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
     $html .= qq~
-                            </div>
                         </div>
                     </div>
-                <!-- End Card -->
-        ~;
+                <!-- close end_card() -->
+                ~;
     return $html;
     } # End end_card()
 
