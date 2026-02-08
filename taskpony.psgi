@@ -2900,7 +2900,7 @@ sub showalltasks {
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
-        $html .= start_card($list->{'Title'}, '', 0);
+        $html .= start_card($list->{'Title'}, '', 1);
         $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
         $html .= end_card(0);
         }
