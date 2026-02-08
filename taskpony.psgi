@@ -1045,7 +1045,6 @@ my $app = sub {
                                 <a class="btn btn-secondary" href="/">Cancel</a>
                             </div>
                         </form>
-                    </div>
                 ~;
 
         $html .= end_card();
