@@ -2906,9 +2906,9 @@ sub showalltasks {
         $html .= start_card($list->{'Title'}, '', 0);
         $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
         $html .= end_card(0);
-        $html .= footer();
         }
 
+    $html .= footer();
     return $html;
     } # End showalltasks()
 
