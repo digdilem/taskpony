@@ -2182,6 +2182,7 @@ sub show_tasks {
     $sth->execute($status);
 
     my $html = qq~
+        <!-- Start show_tasks() -->
         <table id="tasks" class="display hover table-striped dt-hidden mb-3" style="width:90%">
             <thead>
                 <tr>
@@ -2372,6 +2373,7 @@ sub show_tasks {
         # Close the row
         $html .= qq~
             </tr>
+             <!-- End show_tasks() -->
         ~;
     } # End tasks loop
 
