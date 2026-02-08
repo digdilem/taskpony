@@ -581,7 +581,7 @@ my $app = sub {
                 </div>
                 ~;
 
-                $html .= end_card();
+                $html .= end_card(0);
                 $html .= footer();
                 $res->body($html);
                 return $res->finalize;
@@ -1028,7 +1028,7 @@ my $app = sub {
         # Add New List form
         $html .= "\n\n<!-- Start Add New List Card -->\n";
         my $add_list_html = qq~Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a>~;
-        $html .= start_mini_card($add_list_html, $icon_list_add);
+        $html .= start_card($add_list_html, $icon_list_add);
         $html .= qq~
                         <form method="post" action="/lists" class="row g-3">
                             <input type="hidden" name="action" value="add" />
@@ -1047,7 +1047,7 @@ my $app = sub {
                         </form>
                 ~;
 
-        $html .= end_card(0,1);
+        $html .= end_card(0);
 
         $html .= "\n<!-- End Add New List Card -->\n";
 
@@ -1349,7 +1349,7 @@ my $app = sub {
             </form>
             ~;
 
-            $html .= end_card();
+            $html .= end_card(0);
 
             $html .= start_card('Background Image Upload', $icon_image, 0);
 
@@ -2584,52 +2584,13 @@ sub start_card {
     } # End start_card()
 
 ###############################################
-# As above, but smaller. Used for second cards on a page (Eg: Add List)
-sub start_mini_card {
-    my $card_title = shift || 'Title Missing';
-    my $card_icon = shift || '';
-    my $html = qq~
-            <!-- Start Mini Card $card_title -->
-
-            <div class="row justify-content-center">
-                <div class="col-md-11 mb-4">
-                    <div class="card shadow-sm">
-                    ~;
-
-    if (length $list_colour > 2) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
-        } else { # Show default bg-
-        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
-        }
-    $html .= qq~
-                            <h2>
-                                $card_title
-                                ~;
-    if ($card_icon ne '') {
-        $html .= qq~
-                                <div class="float-end">$card_icon</div>
-                                ~;
-        }
-    $html .= qq~
-                            </h2>
-                        </div>
-                        <!-- End Mini Card Header -->
-
-                        <!-- Start Mini Card Body -->
-                        <div class="card-body bg-dark text-white rounded-bottom">
-                        ~;
-    return $html;
-    } # End start_mini_card()
-
-###############################################
 # Close the card  ($table_card,$is_mini_card parameter is used to determine whether to close the div that hides the card until datatables is loaded)
 sub end_card {
     my $html;
     my $table_card = shift || 0;
-    my $is_mini_card = shift || 0;
     if ($table_card == 1) { $html = qq~                            </div>~; }  # Close the div that hides the card until datatables is loaded
-    if ($is_mini_card == 1) { $html .= qq~                        </div>~; } # Add extra closing div if this is a mini card
     $html .= qq~
+                            </div>
                         </div>
                     </div>
                 <!-- End Card -->
