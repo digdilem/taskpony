@@ -1027,7 +1027,7 @@ my $app = sub {
 
         # Add New List form
         $html .= "\n\n<!-- Start Add New List Card -->\n";
-        my $add_list_html = qq~Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</i></a>~;
+        my $add_list_html = qq~Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a>~;
         $html .= start_mini_card($add_list_html, $icon_list_add);
         $html .= qq~
                         <form method="post" action="/lists" class="row g-3">
@@ -1056,7 +1056,7 @@ my $app = sub {
         # Show inactive lists card
         $html .= "\n\n<!-- Start Inactive Lists Card -->\n";
         # Inactive Lists Card and Table
-        my $inactive_list_html = qq~Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</i></a>~;
+        my $inactive_list_html = qq~Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</a>~;
         $html .= start_card($inactive_list_html, $icon_sleep, 0);
 
         $html .= qq~
