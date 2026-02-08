@@ -2621,7 +2621,6 @@ sub start_mini_card {
 # Close the card
 sub end_card {
     my $html = qq~
-                            </div>
                         </div>
                     </div>
                 <!-- End Card -->
