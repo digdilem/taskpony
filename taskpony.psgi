@@ -721,7 +721,7 @@ my $app = sub {
         # Page - Display List of Lists #List
         ###############################################
         $html .= "<!-- Lists Management Card -->\n";
-        my $active_list_html = qq~Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</i></a>~;
+        my $active_list_html = qq~Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</a>~;
 
         $html .= start_card($active_list_html, $icon_list, 0);
         $html .= qq~
@@ -757,7 +757,7 @@ my $app = sub {
                                         View tasks from all lists
                                     </td>
 
-                                    <td align="right"
+                                    <td align="right">
                                         <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
                                             $all_active
                                         </a>
