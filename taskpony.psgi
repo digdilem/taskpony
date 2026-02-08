@@ -877,7 +877,7 @@ my $app = sub {
                                 </tbody>
                             </table>
                 ~;
-        $html .= end_card();
+        $html .= end_card(0);
         $html .= "<!-- End Lists Management Card -->\n";
         # End Lists Management card
         ###############################################
@@ -1139,7 +1139,7 @@ my $app = sub {
                 </div>
             ~;
 
-        $html .= end_card();
+        $html .= end_card(0);
         $html .= "<!-- End Deleted Lists Card -->\n";
         # End Deleted lists card
 
@@ -1224,7 +1224,7 @@ my $app = sub {
                             </form>
                         </div>
                     ~;
-                    $html .= end_card();
+                    $html .= end_card(0);
                     $html .= footer();
                     $res->body($html);
                     return $res->finalize;
@@ -1386,8 +1386,7 @@ my $app = sub {
             </form>
             ~;
 
-        $html .= end_card();
-
+        $html .= end_card(0);
         $html .= footer();
         $res->body($html);
         return $res->finalize;
@@ -1500,7 +1499,7 @@ my $app = sub {
             </div>
             ~;
 
-            $html .= end_card();
+            $html .= end_card(0);
             $html .= footer();
             $res->body($html);
             return $res->finalize;
@@ -1599,8 +1598,7 @@ my $app = sub {
     # End list of tasks, continue with box
     #####################################
 
-    $html .= end_card();
-
+    $html .= end_card(1);
     $html .= footer();
     $res->body($html);
     return $res->finalize;
@@ -2933,7 +2931,7 @@ sub showalltasks {
     while (my $list = $lists_sth->fetchrow_hashref()) {
         $html .= start_card($list->{'Title'}, '', 0);
         $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
-        $html .= end_card();
+        $html .= end_card(0);
         }
 
     return $html;
