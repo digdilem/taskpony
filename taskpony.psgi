@@ -2553,7 +2553,8 @@ sub start_card {
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
     my $html = qq~
-            <!-- start_card() $card_title  ############################################################################################## -->
+            <!-- start_card($table_card) $card_title -->
+            <!-- ############################################################################################## -->
             <div class="card shadow-sm mb-4">
             ~;
 
