@@ -1920,9 +1920,8 @@ sub footer {
     my $html = show_alert();  # If there is an alert in ConfigTb waiting to be shown, display it above the footer.
 
     $html .= qq~
-                <!-- Footer -->
+        <!-- Footer -->
             </div>
-        </div>
         </main>
         <footer class="text-center text-white-50 py-2">
             <p>
