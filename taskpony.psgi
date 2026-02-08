@@ -2573,7 +2573,6 @@ sub start_card {
                             $html .= qq~
                             </h2>
                     </div>
-                    <!-- End Card Header -->
 
                     <div class="card-body bg-dark text-white rounded-bottom">
                     <!-- End start_card() header -->
@@ -2589,9 +2588,9 @@ sub end_card {
     my $table_card = shift || 0;
     if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
     $html .= qq~
-                    </div>
                 </div>
-                <!-- close end_card() -->
+            </div>
+            <!-- close end_card() -->
                 ~;
     return $html;
     } # End end_card()
