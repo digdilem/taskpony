@@ -1910,6 +1910,7 @@ sub header {
 
             </div>
         </div>
+        <!-- End header() -->
     ~;
 
     return $html;
