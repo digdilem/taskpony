@@ -1587,9 +1587,9 @@ my $app = sub {
 
     # Show completed tasks if ?sc=1
     if ($show_completed == 1) {
-        $html .= show_tasks(2,$list_id);
+        $html .= show_tasks(2,$list_id,0);
         } else { # Else show active tasks
-        $html .= show_tasks(1,$list_id);
+        $html .= show_tasks(1,$list_id,0);
         }
 
     # End list of tasks, continue with box
@@ -2156,7 +2156,7 @@ sub debug {
 # show_tasks($status, $list_id)
 # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
 sub show_tasks {
-    my ($status, $list_id) = @_;
+    my ($status, $list_id, $not_hidden) = @_;
     # Build SQL query
     my $sql = "
         SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
@@ -2182,9 +2182,12 @@ sub show_tasks {
     my $sth = $dbh->prepare($sql);
     $sth->execute($status);
 
+    my $hidden_string = 'dt-hidden';
+    if ($not_hidden == 1) { $hidden_string = ''; }  # Don't be smart if we're explicitly told not to be, such as displaying multiple lists
+
     my $html = qq~
         <!-- Start show_tasks() -->
-        <table id="tasks" class="display hover table-striped dt-hidden mb-3" style="width:90%">
+        <table id="tasks" class="display hover table-striped $hidden_string mb-3" style="width:90%">
             <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -2901,7 +2904,7 @@ sub showalltasks {
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
         $html .= start_card($list->{'Title'}, '', 0);
-        $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
+        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
         $html .= end_card(0);
         $html .= footer();
         }
