@@ -98,6 +98,7 @@ my $icon_star_off = build_tabler_icon('StarOff');  # Star outline icon
 my $icon_star_on = build_tabler_icon('StarOn');    # Star filled icon
 my $icon_trash = build_tabler_icon('Trash');  # Trash can icon
 my $icon_xcircle = build_tabler_icon('XCircle');  # X in circle icon
+my $icon_listletters = build_tabler_icon('ListLetters');  # List with letters icon
 
 # These small icons need to be inline, so we can style them to match the current highlght colour
 my $smallicon_comment = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
@@ -1544,17 +1545,7 @@ my $app = sub {
         return $res->finalize;
         } # End /?delete_task=nn
 
-    ###############################################
-    # /showalltasks Show a page with all lists and tasks
-    if ($req->path eq '/showalltasks') {
-        my $html = header();
-        $html .= showalltasks();
-        $res->content_type('text/html');
-        $res->body($html);
-        return $res->finalize;
-        }
-
-    # End individual page handling.
+      # End individual page handling.
     ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
@@ -2894,23 +2885,6 @@ sub config_show_option {
     return $retstr;
     } # end config_show_option()
 
-###############################################
- # showalltasks() - Loop through all active lists and show a panel for each with the tasks in that list.
-sub showalltasks {
-    my $html = '';
-
-    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
-    $lists_sth->execute();
-
-    while (my $list = $lists_sth->fetchrow_hashref()) {
-        $html .= start_card($list->{'Title'}, '', 0);
-        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
-        $html .= end_card(0);
-        }
-
-    $html .= footer();
-    return $html;
-    } # End showalltasks()
 
 ###############################################
 # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
