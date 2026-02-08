@@ -1047,7 +1047,7 @@ my $app = sub {
                         </form>
                 ~;
 
-        $html .= end_card();
+        $html .= end_card(0,1);
 
         $html .= "\n<!-- End Add New List Card -->\n";
 
@@ -2618,12 +2618,13 @@ sub start_mini_card {
     } # End start_mini_card()
 
 ###############################################
-# Close the card  ($table_card parameter is used to determine whether to close the div that hides the card until datatables is loaded)
+# Close the card  ($table_card,$is_mini_card parameter is used to determine whether to close the div that hides the card until datatables is loaded)
 sub end_card {
     my $html;
     my $table_card = shift || 0;
+    my $is_mini_card = shift || 0;
     if ($table_card == 1) { $html = qq~                            </div>~; }  # Close the div that hides the card until datatables is loaded
-
+    if ($is_mini_card == 1) { $html .= qq~                        </div>~; } # Add extra closing div if this is a mini card
     $html .= qq~
                         </div>
                     </div>
