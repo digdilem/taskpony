@@ -716,19 +716,7 @@ my $app = sub {
             return $res->finalize;
             } # End /lists form submission handling
 
-        ###############################################
-        # /showalltasks Show a page with all lists and tasks
-        ###############################################
-        if ($$req->path eq '/showalltasks') {
-            $html .= showalltasks();
-            $res->content_type('text/html');
-            return $res->finalize;
-            }
 
-        # End individual page handling.
-        ###############################################
-
-        ###############################################
         # Page - Display List of Lists #List
         ###############################################
         $html .= "<!-- Lists Management Card -->\n";
@@ -1559,6 +1547,17 @@ my $app = sub {
         return $res->finalize;
         } # End /?delete_task=nn
 
+    ###############################################
+    # /showalltasks Show a page with all lists and tasks
+    if ($$req->path eq '/showalltasks') {
+        my $html = header();
+        $html .= showalltasks();
+        $res->content_type('text/html');
+        $res->body($html);
+        return $res->finalize;
+        }
+
+    # End individual page handling.
     ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
 
