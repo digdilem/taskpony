@@ -1060,16 +1060,16 @@ my $app = sub {
 
         $html .= qq~
                             <div class="table-responsive">
-                            <table class="table table-dark table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>List</th>
-                                        <th>Deleted Date</th>
-                                        <th>Tasks</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            <tbody>
+                                <table class="table table-dark table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>List</th>
+                                            <th>Deleted Date</th>
+                                            <th>Tasks</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                <tbody>
         ~;
         my $deleted_list_sth = $dbh->prepare(
             'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
@@ -1131,9 +1131,9 @@ my $app = sub {
                 ~;
             } # End deleted lists loop
         $html .= qq~
-                        </tbody>
-                    </table>
-                </div>
+                                    </tbody>
+                                </table>
+                            </div>
             ~;
 
         $html .= end_card(0);
