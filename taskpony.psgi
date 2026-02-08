@@ -1124,7 +1124,6 @@ my $app = sub {
                                             onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
                                                 $icon_grave
                                             </a>
-
                                         </div>
                                     </td>
                                     <!-- End Actions column -->
@@ -1132,9 +1131,8 @@ my $app = sub {
                 ~;
             } # End deleted lists loop
         $html .= qq~
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             ~;
 
