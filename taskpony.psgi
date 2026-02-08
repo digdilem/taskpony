@@ -1131,7 +1131,7 @@ my $app = sub {
                                     <!-- End Actions column -->
                                 </tr>
                 ~;
-            } # End deleted lists loop
+            } # End inactive lists loop
         $html .= qq~
                                     </tbody>
                                 </table>
@@ -1141,6 +1141,20 @@ my $app = sub {
         $html .= end_card(0);
         $html .= "<!-- End Deleted Lists Card -->\n";
         # End Deleted lists card
+
+        # Additional card with actions
+        £html .= "\n\n<!-- Start List Actions Card -->\n";
+        $html .= start_card("List Actions", $icon_list, 0);
+        $html .= qq~
+                <p>
+                    <a href="/showalltasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
+                        Show All Tasks
+                    </a>
+                </p>
+                ~
+
+        $html .= end_card(0);
+        $html .= "<!-- End List Actions Card -->\n";
 
         $html .= footer();
         $res->body($html);
