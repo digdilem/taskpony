@@ -2543,7 +2543,8 @@ sub config_load {
     } # End config_load()
 
 ###############################################
-# Open a consistent bootstrap 5 card for most pages
+# Open a consistent bootstrap 5 card for most pages.
+# Takes a title and optional icon HTML to show in the header. If $table_card is set to 1, it will add an id to the card that allows it to be hidden until the datatable is fully loaded, which reduces flicker.
 sub start_card {
     my $card_title = shift || 'Title Missing';
     my $card_icon = shift || '';
@@ -2925,7 +2926,7 @@ sub showalltasks {
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
-        $html .= start_card($list->{'Title'}, '', 1);
+        $html .= start_card($list->{'Title'}, '', 0);
         $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
         $html .= end_card();
         }
