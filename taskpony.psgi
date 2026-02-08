@@ -1346,6 +1346,7 @@ my $app = sub {
 
             # End the main form
             $html .= qq~
+                        </div>
                     </div>
                 </div>
             </form>
