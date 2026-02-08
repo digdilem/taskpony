@@ -2546,8 +2546,7 @@ sub start_card {
     my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
     my $html = qq~
-            <!-- Start Card $card_title -->
-
+            <!-- start_card() $card_title -->
             <div class="card shadow-sm mb-4">
             ~;
 
@@ -2590,8 +2589,8 @@ sub end_card {
     my $table_card = shift || 0;
     if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
     $html .= qq~
-                        </div>
                     </div>
+                </div>
                 <!-- close end_card() -->
                 ~;
     return $html;
