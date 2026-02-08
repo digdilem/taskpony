@@ -2926,6 +2926,7 @@ sub showalltasks {
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
+print STDERR "Showing tasks for list: $list->{Title}\n";
         $html .= start_card($list->{'Title'}, '', 1);
         $html .= show_tasks(1, $list->{'id'});  # Show active tasks for this list
         $html .= end_card();
