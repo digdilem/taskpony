@@ -1151,7 +1151,7 @@ my $app = sub {
                         Show All Tasks
                     </a>
                 </p>
-                ~
+                ~;
 
         $html .= end_card(0);
         $html .= "<!-- End List Actions Card -->\n";
