@@ -2,6 +2,17 @@
 
 ## To upgrade, follow the [Upgrade Instructions](../README.md#upgrading)
 
+# 0.6
+
+## Features
+
+- New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks.
+- New card under /lists for "List Actions" to contain a button that takes you to the above.
+
+## Bugfixes
+
+- More work on tidying output html and chasing down stray divs.
+
 # 0.5
 
 ## Features:
