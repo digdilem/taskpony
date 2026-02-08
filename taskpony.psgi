@@ -2550,7 +2550,7 @@ sub start_card {
             <div class="card shadow-sm mb-4">
             ~;
 
-    if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded
+    if ($table_card == 1) { $html = qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
 
     $html .= qq~
                 ~;
@@ -2575,7 +2575,6 @@ sub start_card {
                         </div>
                         <!-- End Card Header -->
 
-                        <!-- Start Mini Card Body -->
                         <div class="card-body bg-dark text-white rounded-bottom">~;
     return $html;
     } # End start_card()
@@ -2587,7 +2586,6 @@ sub end_card {
     my $table_card = shift || 0;
     if ($table_card == 1) { $html = qq~                            </div>~; }  # Close the div that hides the card until datatables is loaded
     $html .= qq~
-                            </div>
                         </div>
                     </div>
                 <!-- End Card -->
