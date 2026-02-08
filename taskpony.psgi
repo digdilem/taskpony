@@ -1148,7 +1148,7 @@ my $app = sub {
         $html .= qq~
                 <p>
                     <a href="/showalltasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
-                        <img src="/static/icons/ListLetter.svg" width="16" height="16" class="me-2"> Show All Tasks
+                        <img src="/static/icons/ListLetters.svg" width="16" height="16" class="me-2"> Show All Tasks
                     </a>
                 </p>
                 ~;
