@@ -62,6 +62,7 @@ my $alert_text = '';                # If set, show this alert text on page load
 my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
 my $db_mtime = 0;                   # Cached database file modification time for /api/dbstate
 my $db_interval_check_ms = 60000;   # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
+my $default_listid;                 # default ListId
 
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
@@ -635,9 +636,8 @@ my $app = sub {
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                 if ($current_active == $list_id) {
-                    my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
-                    if ($default_list) {
-                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                    if ($default_list_id) {
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_listid, $default_listid);
                     }
                 }
                 } elsif ($action eq 'delete_complete' && $list_id > 1) {
@@ -1863,8 +1863,10 @@ sub header {
     <div class="container py-1">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
-                <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
+                <a href="/?lid=$default_listid" class="d-flex align-items-center gap-2 text-white text-decoration-none">
                     <img src="/static/$taskpony_icon" width="82" height="82" alt="logo">
+                </a>
+                <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none">
                     <h3 class="mb-0">$app_title</h3>
                 </a>
                 ~;
