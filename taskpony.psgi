@@ -1865,7 +1865,7 @@ sub header {
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
                 <a href="/?lid=$default_listid" class="d-flex align-items-center gap-2 text-white text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto" title="Load Default List - '$default_list_name'"
+                data-bs-toggle="tooltip" data-bs-placement="auto" title="Load Default List"
                 >
                     <img src="/static/$taskpony_icon" width="82" height="82" alt="logo">
                 </a>
