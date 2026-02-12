@@ -142,6 +142,7 @@ my $app = sub {
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
     $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
+    if (! $default_listid) { $default_listid = single_db_value('SELECT id FROM ListsTb WHERE IsDefault = 1 LIMIT 1') || 0; } # Get default list id for use in various
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $db_mtime
 
@@ -636,7 +637,7 @@ my $app = sub {
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                 if ($current_active == $list_id) {
-                    if ($default_list_id) {
+                    if ($default_listid) {
                         $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_listid, $default_listid);
                     }
                 }
