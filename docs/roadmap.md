@@ -17,9 +17,6 @@ Some features for the future that may, or may not, be added.
   - Some alternative font choices
   - A link to show orphaned tasks
   - A link to show recurring tasks
-  - Some option in the top bar to flip back to the default list in one-click, as well as pulldown. (Hard to think of how this might work)
-  - A link to "Show all active tasks, sorted by Lists"
-
 
 - Unlikely (Considered and discarded)
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however, and may not be possible within the [Goals](../README.md#goals)

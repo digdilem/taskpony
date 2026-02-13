@@ -1840,6 +1840,35 @@ sub header {
         .icon-white { filter: brightness(0) invert(1); }
         .icon-highlight { filter: brightness(1.2) saturate(1.5); }
 
+        /* Improved tooltip styling */
+        .tooltip-inner {
+            background-color: #1A2122;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            max-width: 300px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .tooltip-arrow::before {
+            border-top-color: #1A2122;
+        }
+
+        .bs-tooltip-top .tooltip-arrow::before,
+        .bs-tooltip-bottom .tooltip-arrow::before {
+            border-top-color: #1A2122;
+        }
+
+        .bs-tooltip-start .tooltip-arrow::before,
+        .bs-tooltip-end .tooltip-arrow::before {
+            border-left-color: #1A2122;
+        }
+
     </style>
 
     </head>
@@ -1865,7 +1894,7 @@ sub header {
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
                 <a href="/?lid=$default_listid" class="d-flex align-items-center gap-2 text-white text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto" title="Load Default List"
+                data-bs-toggle="tooltip" data-bs-placement="auto" title="Switch to Default List"
                 >
                     <img src="/static/$taskpony_icon" width="82" height="82" alt="logo">
                 </a>

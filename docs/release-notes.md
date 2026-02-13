@@ -8,6 +8,7 @@
 
 - New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks.
 - New card under /lists for "List Actions" to contain a button that takes you to the above.
+- Clicking the Logo now switches to the Default List. The Taskpony name still reloads the current List.
 
 ## Bugfixes
 
