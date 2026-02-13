@@ -868,17 +868,17 @@ my $app = sub {
                               $icon_rotate_left
                             </a>
                             <!-- Set List as Inactive -->
-                            <div data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive">
-                              <button type="button"
-                              class="btn btn-outline-danger"
-                              data-bs-toggle="modal"
-                              data-bs-target="#deleteListModal"
-                              data-list-id="$list->{'id'}"
-                              data-list-title="$title"
-                              data-active-tasks="$active_count">
-                                $icon_trash
-                              </button>
-                            </div>
+                            <button type="button"
+                            class="btn btn-outline-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteListModal"
+                            data-bs-placement="auto"
+                            title="Set List as Inactive"
+                            data-list-id="$list->{'id'}"
+                            data-list-title="$title"
+                            data-active-tasks="$active_count">
+                              $icon_trash
+                            </button>
                           </div>
                         </td>
                         <!-- End Actions column -->
@@ -1043,6 +1043,154 @@ my $app = sub {
               var target = event.target.getAttribute('data-bs-target');
               window.location.hash = target;
             });
+          });
+          
+          // Initialize tooltips on buttons with title attributes
+          var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+          tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+          });
+        });
+        </script>
+        ~;
+
+        # Build the list of available lists for moving tasks as JSON
+        my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+        $move_lists_sth->execute();
+        my @move_lists;
+        while (my $ml = $move_lists_sth->fetchrow_hashref()) {
+            push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
+            } # End move lists building
+
+        # Convert to JSON for JavaScript use
+        my $move_lists_json = '[';
+        foreach my $i (0 .. $#move_lists) {
+            my $ml = $move_lists[$i];
+            $move_lists_json .= qq~{"id":"$ml->{'id'}","title":"$ml->{'title'}"}~;
+            $move_lists_json .= ',' if $i < $#move_lists;
+            }
+        $move_lists_json .= ']';
+
+        # Add delete list modal
+        $html .= qq~
+        <!-- Delete List Modal -->
+        <div class="modal fade" id="deleteListModal" tabindex="-1" aria-labelledby="deleteListModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteListModalLabel">Make List Inactive</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>How would you like to handle any existing tasks in <strong id="modalListTitle"></strong>?</p>
+                <form id="deleteListForm" method="post" action="/lists">
+                  <input type="hidden" name="list_id" id="modalListId" value="">
+                  <div class="mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="delete_option" id="deleteOrphan" value="delete_orphan" checked>
+                      <label class="form-check-label" for="deleteOrphan">
+                        Make List Inactive and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List' but remain a member of this List, so will re-appear if the List is reactivated)</i>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
+                      <label class="form-check-label" for="deleteComplete">
+                        Make List Inactive and mark its tasks as Completed?
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
+                      <label class="form-check-label" for="deleteMove">
+                        Make List Inactive and move its active tasks to another list?
+                      </label>
+                    </div>
+                    <div id="moveListContainer" class="mt-2" style="display:none;">
+                      <label for="targetListId" class="form-label">Move tasks to:</label>
+                      <select class="form-select bg-dark text-white border-secondary" id="targetListId" name="target_list_id">
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Make List Inactive</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+        var allLists = $move_lists_json;
+
+        document.addEventListener('DOMContentLoaded', function() {
+          // Handle modal opening - populate with list details and options
+          var deleteListModal = document.getElementById('deleteListModal');
+          deleteListModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var listId = button.getAttribute('data-list-id');
+            var listTitle = button.getAttribute('data-list-title');
+            var activeTasksCount = button.getAttribute('data-active-tasks');
+
+            document.getElementById('modalListId').value = listId;
+            document.getElementById('modalListTitle').innerHTML = listTitle + ' <i>(' + activeTasksCount + ' active tasks)</i>';
+
+            // Populate target list dropdown, excluding the list being deleted
+            var selectElement = document.getElementById('targetListId');
+            selectElement.innerHTML = '';
+            allLists.forEach(function(list) {
+              if (list.id !== listId) {
+                var option = document.createElement('option');
+                option.value = list.id;
+                option.textContent = list.title;
+                selectElement.appendChild(option);
+              }
+            });
+          });
+
+          // Handle radio button changes for move option visibility
+          var deleteOrphan = document.getElementById('deleteOrphan');
+          var deleteComplete = document.getElementById('deleteComplete');
+          var deleteMove = document.getElementById('deleteMove');
+          var moveListContainer = document.getElementById('moveListContainer');
+
+          [deleteOrphan, deleteComplete, deleteMove].forEach(function(radio) {
+            radio.addEventListener('change', function() {
+              if (deleteMove.checked) {
+                moveListContainer.style.display = 'block';
+                document.getElementById('targetListId').focus();
+              } else {
+                moveListContainer.style.display = 'none';
+              }
+            });
+          });
+
+          // Handle delete button click
+          document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            var selectedOption = document.querySelector('input[name="delete_option"]:checked').value;
+
+            // Validate that move option has a target list selected
+            if (selectedOption === 'delete_move') {
+              var targetListId = document.getElementById('targetListId').value;
+              var currentListId = document.getElementById('modalListId').value;
+              if (!targetListId) {
+                alert('Please select a target list for moving tasks.');
+                return;
+              }
+              if (targetListId == currentListId) {
+                alert('Cannot move tasks to the same list. Please select a different list.');
+                return;
+              }
+            }
+
+            // Add action to form and submit
+            var form = document.getElementById('deleteListForm');
+            var actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = selectedOption;
+            form.appendChild(actionInput);
+            form.submit();
           });
         });
         </script>
