@@ -2075,7 +2075,7 @@ sub footer {
         <script>
         \$(document).ready(function(){
         \$('[data-bs-toggle="tooltip"]').tooltip({
-            delay: { show: 100, hide: 100 }
+            delay: { show: 500, hide: 500 }
         });
         });
         </script>
