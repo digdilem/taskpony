@@ -1612,6 +1612,19 @@ my $app = sub {
         return $res->finalize;
         }
 
+    ###############################################
+    # /show-recurring Show a page with all recurring tasks
+    if ($req->path eq '/show-recurring') {
+        my $html = header();
+        $html .= start_card('Recurring Tasks', $icon_repeat, 1);
+        $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
+        $html .= end_card(1);
+        $html .= footer();
+        $res->content_type('text/html');
+        $res->body($html);
+        return $res->finalize;
+        }
+
     # End individual page handling.
     ###############################################
     # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
