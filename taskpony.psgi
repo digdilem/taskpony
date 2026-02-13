@@ -1044,11 +1044,13 @@ my $app = sub {
               window.location.hash = target;
             });
           });
-          
+
           // Initialize tooltips on buttons with title attributes
           var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
           tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+              delay: { show: 250, hide: 200 }
+            });
           });
         });
         </script>
