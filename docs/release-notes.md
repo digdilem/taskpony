@@ -6,10 +6,13 @@
 
 ## Features
 
-- New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks.
-- New card under /lists for "List Actions" to contain a button that takes you to the above.
+- New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks. Button under Lists -> List Actions
+- New page /show-recurring  Lists all the tasks, active or completed, which are set as Recurring. Button under Lists -> List Actions. This page makes it easier to review recurring tasks.
+- New card under /lists for "List Actions" to contain new functions.
+- /Lists page now puts all four cards into different tabs to keep things in the eyeline.
 - Clicking the Logo now switches to the Default List. The Taskpony name still reloads the current List.
 - Tooltips now made prettier and added a 250ms delay before they show up.
+
 
 ## Bugfixes
 

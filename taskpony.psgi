@@ -2459,13 +2459,13 @@ sub show_tasks {
             }
 
         # Recurring tasks view - show title with status indicator
-        if ($show_recurring == 1) {
+        if (defined $show_recurring && $show_recurring == 1) {
             my $status_indicator = '';
-            if ($a->{'Status'} == 1) {
+            if (defined $a->{'Status'} && $a->{'Status'} == 1) {
                 $status_indicator = '(Active)';
-            } elsif ($a->{'Status'} == 2) {
+                } elsif (defined $a->{'Status'} && $a->{'Status'} == 2) {
                 $status_indicator = '(Completed)';
-            }
+                }
 
             $title_link .= qq~
                     <a
