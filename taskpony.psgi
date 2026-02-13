@@ -2261,34 +2261,53 @@ sub debug {
     } # End debug()
 
 ###############################################
-# show_tasks($status, $list_id)
+# show_tasks($status, $list_id, $not_hidden, $show_recurring)
 # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
+# If $show_recurring is 1, shows all recurring tasks regardless of status
 sub show_tasks {
-    my ($status, $list_id, $not_hidden) = @_;
+    my ($status, $list_id, $not_hidden, $show_recurring) = @_;
+    $show_recurring = $show_recurring // 0;  # Default to 0 if not provided
+
     # Build SQL query
     my $sql = "
         SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
         FROM TasksTb t
         LEFT JOIN ListsTb p ON t.ListId = p.id
-        WHERE t.Status = ?
+        WHERE 1=1
         ";
 
-    if ($list_id != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
+    my @params;  # Array to hold parameters for the query
+
+    if ($show_recurring == 1) {
+        # Show all recurring tasks regardless of status
+        $sql .= " AND t.IsRecurring = 'on' ";
+        debug("show_tasks: Showing all recurring tasks");
+        } else {
+        # Show tasks by status
+        $sql .= " AND t.Status = ? ";
+        push @params, $status;
+        }
+
+    if ($list_id != 1 && $show_recurring != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
         $sql .= " AND t.ListId = $list_id ";
         debug("show_tasks: Filtering tasks for list_id: [$list_id]");
         } else {
-        debug("show_tasks: Showing tasks for ALL lists");
+        if ($show_recurring != 1) {
+            debug("show_tasks: Showing tasks for ALL lists");
+            }
         }
 
-    # Append ordering and finish query. If completed, sort by completed date, else by added date
-    if ($status == 2) {
+    # Append ordering and finish query. If showing recurring, sort by interval and title. Otherwise, sort by date
+    if ($show_recurring == 1) {
+        $sql .= " ORDER BY t.RecurringIntervalDay ASC, t.Title ASC ";
+        } elsif ($status == 2) {
         $sql .= " ORDER BY t.CompletedDate DESC ";
         } else {
         $sql .= " ORDER BY t.AddedDate DESC ";
         }
 
     my $sth = $dbh->prepare($sql);
-    $sth->execute($status);
+    $sth->execute(@params);
 
     my $hidden_string = 'dt-hidden';
     if ($not_hidden == 1) { $hidden_string = ''; }  # Don't be smart if we're explicitly told not to be, such as displaying multiple lists
