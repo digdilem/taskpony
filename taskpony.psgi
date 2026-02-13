@@ -2453,6 +2453,34 @@ sub show_tasks {
                 ~;
             }
 
+        # Recurring tasks view - show title with status indicator
+        if ($show_recurring == 1) {
+            my $status_indicator = '';
+            if ($a->{'Status'} == 1) {
+                $status_indicator = '(Active)';
+            } elsif ($a->{'Status'} == 2) {
+                $status_indicator = '(Completed)';
+            }
+
+            $title_link .= qq~
+                    <a
+                    href="/edittask?id=$a->{'id'}"
+                    class="text-white text-decoration-none"
+                    data-bs-toggle="tooltip" data-bs-placement="auto"
+                    data-bs-html="true"
+                    title="$description">
+                        $title <span class="text-muted small">$status_indicator</span>
+                    ~;
+            if ($description) {
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $smallicon_comment
+                </span>
+                ~;
+                }
+            $title_link .= qq~
+                    </a>
+                     ~;
+            }
+
         ###############################################
         # Output the table row
         ###############################################
