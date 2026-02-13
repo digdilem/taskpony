@@ -92,6 +92,7 @@ my $icon_image = build_tabler_icon('Image');  # Image / picture icon
 my $icon_info = build_tabler_icon('Info');  # Info icon
 my $icon_list = build_tabler_icon('List');      # List icon
 my $icon_list_add = build_tabler_icon('ListAdd');  # List with plus icon
+my $icon_repeat = build_tabler_icon('Repeat');  # Repeat / recurring icon
 my $icon_rotate_left = build_tabler_icon('ArrowLeft');  # Rotate left icon
 my $icon_rotate_right = build_tabler_icon('ArrowRight');  # Rotate right icon
 my $icon_sleep = build_tabler_icon('Zzz');  # Sleep / Zzz icon
