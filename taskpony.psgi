@@ -1017,6 +1017,11 @@ my $app = sub {
                     $icon_listletters Show All Tasks
                   </a>
                 </p>
+                <p>
+                  <a href="/show-recurring" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all recurring tasks from all lists on a single, sorted page">
+                    $icon_repeat Show Recurring Tasks
+                  </a>
+                </p>
               </div>
             </div>
           </div>
