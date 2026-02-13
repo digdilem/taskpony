@@ -1843,15 +1843,15 @@ sub header {
         /* Improved tooltip styling */
         .tooltip-inner {
             background-color: #1A2122;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 3px solid #ffffff;
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 12px 18px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            max-width: 300px;
-            font-size: 13px;
+            max-width: 450px;
+            font-size: 19.5px;
             line-height: 1.4;
         }
 
