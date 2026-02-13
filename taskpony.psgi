@@ -2469,7 +2469,7 @@ sub show_tasks {
                     data-bs-toggle="tooltip" data-bs-placement="auto"
                     data-bs-html="true"
                     title="$description">
-                        12
+                        <span class="badge rounded-pill bg-dark">$a->{RecurringIntervalDay}</span>
                         $title <span class="text-muted small">$status_indicator</span>
                     ~;
             if ($description) {
