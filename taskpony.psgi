@@ -722,23 +722,46 @@ my $app = sub {
 
         # Page - Display List of Lists #List
         ###############################################
-        $html .= "<!-- Lists Management Card -->\n";
-        my $active_list_html = qq~Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</a>~;
+        $html .= "<!-- Lists Management Tabs -->\n";
 
-        $html .= start_card($active_list_html, $icon_list, 0);
+        # Build the tab navigation
         $html .= qq~
-                            <div class="table-responsive">
-                            <table class="table table-dark table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>List</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Active Tasks</th>
-                                        <th class="text-end">Completed Tasks</th>
-                                        <th class="text-end">Actions</th>
-                                    </tr>
-                                </thead>
-                            <tbody>
+        <ul class="nav nav-tabs mb-4" id="listsTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="add-list-tab" data-bs-toggle="tab" data-bs-target="#add-list" type="button" role="tab" aria-controls="add-list" aria-selected="false">Add New List</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="inactive-lists-tab" data-bs-toggle="tab" data-bs-target="#inactive-lists" type="button" role="tab" aria-controls="inactive-lists" aria-selected="false">Inactive Lists</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="list-actions-tab" data-bs-toggle="tab" data-bs-target="#list-actions" type="button" role="tab" aria-controls="list-actions" aria-selected="false">List Actions</button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="listsTabContent">
+          <!-- Active Lists Tab -->
+          <div class="tab-pane fade show active" id="active-lists" role="tabpanel" aria-labelledby="active-lists-tab">
+            <div class="card bg-dark text-white">
+              <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+                <span>$icon_list</span>
+                <span>Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</a></span>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-dark table-striped">
+                    <thead>
+                      <tr>
+                        <th>List</th>
+                        <th>Description</th>
+                        <th class="text-end">Active Tasks</th>
+                        <th class="text-end">Completed Tasks</th>
+                        <th class="text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
         ~;
 
         # Add "All Tasks Lists" row
@@ -746,35 +769,31 @@ my $app = sub {
         my $all_completed = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE Status = 2') // 0;
 
         $html .= qq~
-                                <tr>
-                                    <td>
-                                        <strong>
-                                            <a href="/?lid=1"  class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
-                                                All Tasks
-                                            </a>
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        View tasks from all lists
-                                    </td>
-
-                                    <td align="right">
-                                        <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
-                                            $all_active
-                                        </a>
-                                    </td>
-
-                                    <td align="right">
-                                        <a href="/?lid=1&sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
-                                            $all_completed
-                                        </a>
-                                    </td>
-
-                                    <td>
-                                        &nbsp;
-                                    </td>
-                                </tr>
+                      <tr>
+                        <td>
+                          <strong>
+                            <a href="/?lid=1"  class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
+                              All Tasks
+                            </a>
+                          </strong>
+                        </td>
+                        <td>
+                          View tasks from all lists
+                        </td>
+                        <td align="right">
+                          <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
+                            $all_active
+                          </a>
+                        </td>
+                        <td align="right">
+                          <a href="/?lid=1&sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
+                            $all_completed
+                          </a>
+                        </td>
+                        <td>
+                          &nbsp;
+                        </td>
+                      </tr>
         ~;
 
         my $list_sth = $dbh->prepare(
@@ -797,282 +816,130 @@ my $app = sub {
             my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
 
             $html .= qq~
-                                <tr>
-                                    <td>
-                                        <strong>
-                                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">
-                                                $title
-                                            </a>
-                                            </span>
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        $desc
-                                    </td>
-
-                                    <td align="right">
-                                        <a href="/?lid=$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
-                                        $active_count
-                                        </a>
-                                    </td>
-
-                                    <td align="right">
-                                        <a href="/?lid=$list->{'id'}&sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
-                                        $completed_count
-                                        </a>
-                                    </td>
-
-                                    <!-- Actions column -->
-                                    <td class="text-end">
-                                        <div class="btn-group" role="group">
-                                            <!-- Default Button -->
-                                            <a href="/set_default_list?id=$list->{'id'}"
-                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this as the Default List" >
-
-                                                ~;
-                                                if ($list->{'IsDefault'} == 1) {
-                                                    $html .= $icon_star_on;
-
-                                                    } else {
-                                                    $html .= $icon_star_off;
-                                                    }
-                                                $html .= qq~
-                                            </a>
-
-                                            <!-- Set all tasks Active Button -->
-                                            <a href="/list_setall_active?lid=$list->{'id'}"
-                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
-                                            onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
-                                                $icon_rotate_right
-                                            </a>
-
-                                            <!-- Set all tasks Completed Button -->
-                                            <a href="/list_setall_completed?lid=$list->{'id'}"
-                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
-                                            onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
-                                                $icon_rotate_left
-                                            </a>
-
-                                            <!-- Set List as Inactive -->
-                                            <div data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive">
-                                                <button type="button"
-                                                class="btn btn-outline-danger"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deleteListModal"
-                                                data-list-id="$list->{'id'}"
-                                                data-list-title="$title"
-                                                data-active-tasks="$active_count">
-                                                    $icon_trash
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <!-- End Actions column -->
-                                </tr>
-                ~;
+                      <tr>
+                        <td>
+                          <strong>
+                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">
+                              $title
+                            </a>
+                            </span>
+                          </strong>
+                        </td>
+                        <td>
+                          $desc
+                        </td>
+                        <td align="right">
+                          <a href="/?lid=$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                          $active_count
+                          </a>
+                        </td>
+                        <td align="right">
+                          <a href="/?lid=$list->{'id'}&sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
+                          $completed_count
+                          </a>
+                        </td>
+                        <!-- Actions column -->
+                        <td class="text-end">
+                          <div class="btn-group" role="group">
+                            <!-- Default Button -->
+                            <a href="/set_default_list?id=$list->{'id'}"
+                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this as the Default List" >
+                              ~;
+                              if ($list->{'IsDefault'} == 1) {
+                                  $html .= $icon_star_on;
+                                  } else {
+                                  $html .= $icon_star_off;
+                                  }
+                              $html .= qq~
+                            </a>
+                            <!-- Set all tasks Active Button -->
+                            <a href="/list_setall_active?lid=$list->{'id'}"
+                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
+                            onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
+                              $icon_rotate_right
+                            </a>
+                            <!-- Set all tasks Completed Button -->
+                            <a href="/list_setall_completed?lid=$list->{'id'}"
+                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
+                            onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
+                              $icon_rotate_left
+                            </a>
+                            <!-- Set List as Inactive -->
+                            <div data-bs-toggle="tooltip" data-bs-placement="auto" title="Set List as Inactive">
+                              <button type="button"
+                              class="btn btn-outline-danger"
+                              data-bs-toggle="modal"
+                              data-bs-target="#deleteListModal"
+                              data-list-id="$list->{'id'}"
+                              data-list-title="$title"
+                              data-active-tasks="$active_count">
+                                $icon_trash
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                        <!-- End Actions column -->
+                      </tr>
+            ~;
             } # End lists loop
 
         $html .= qq~
-                                </tbody>
-                            </table>
-                        </div> <!-- Close table responsive div -->
-                ~;
-        $html .= end_card(0);
-        $html .= "<!-- End Lists Management Card -->\n";
-        # End Lists Management card
-        ###############################################
-
-        # Build the list of available lists for moving tasks as JSON
-        my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
-        $move_lists_sth->execute();
-        my @move_lists;
-        while (my $ml = $move_lists_sth->fetchrow_hashref()) {
-            push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
-            } # End move lists building
-
-        # Convert to JSON for JavaScript use
-        my $move_lists_json = '[';
-        foreach my $i (0 .. $#move_lists) {
-            my $ml = $move_lists[$i];
-            $move_lists_json .= qq~{"id":"$ml->{'id'}","title":"$ml->{'title'}"}~;
-            $move_lists_json .= ',' if $i < $#move_lists;
-            }
-        $move_lists_json .= ']';
-
-        # Add delete list modal
-        $html .= qq~
-        <!-- Delete List Modal -->
-        <div class="modal fade" id="deleteListModal" tabindex="-1" aria-labelledby="deleteListModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-white">
-              <div class="modal-header">
-                <h5 class="modal-title" id="deleteListModalLabel">Make List Inactive</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p>How would you like to handle any existing tasks in <strong id="modalListTitle"></strong>?</p>
-                <form id="deleteListForm" method="post" action="/lists">
-                  <input type="hidden" name="list_id" id="modalListId" value="">
-                  <div class="mb-3">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="delete_option" id="deleteOrphan" value="delete_orphan" checked>
-                      <label class="form-check-label" for="deleteOrphan">
-                        Make List Inactive and orphan any active tasks? <br><i>(Tasks will still appear in the 'All Tasks List' but remain a member of this List, so will re-appear if the List is reactivated)</i>
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="delete_option" id="deleteComplete" value="delete_complete">
-                      <label class="form-check-label" for="deleteComplete">
-                        Make List Inactive and mark its tasks as Completed?
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="delete_option" id="deleteMove" value="delete_move">
-                      <label class="form-check-label" for="deleteMove">
-                        Make List Inactive and move its active tasks to another list?
-                      </label>
-                    </div>
-                    <div id="moveListContainer" class="mt-2" style="display:none;">
-                      <label for="targetListId" class="form-label">Move tasks to:</label>
-                      <select class="form-select bg-dark text-white border-secondary" id="targetListId" name="target_list_id">
-                      </select>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Make List Inactive</button>
+                    </tbody>
+                  </table>
+                </div> <!-- Close table responsive div -->
               </div>
             </div>
           </div>
-        </div>
 
-        <script>
-        var allLists = $move_lists_json;
+          <!-- Add New List Tab -->
+          <div class="tab-pane fade" id="add-list" role="tabpanel" aria-labelledby="add-list-tab">
+            <div class="card bg-dark text-white">
+              <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+                <span>$icon_list_add</span>
+                <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a></span>
+              </div>
+              <div class="card-body">
+                <form method="post" action="/lists" class="row g-3">
+                  <input type="hidden" name="action" value="add" />
+                  <div class="col-12">
+                    <label class="form-label">Title</label>
+                    <input name="Title" class="form-control" required maxlength="255" placeholder="Give your new list a useful name" />
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
+                  </div>
+                  <div class="col-12 text-end">
+                    <button class="btn btn-primary" type="submit">Add List</button>
+                    <a class="btn btn-secondary" href="/">Cancel</a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-          // Handle modal opening - populate with list details and options
-          var deleteListModal = document.getElementById('deleteListModal');
-          deleteListModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var listId = button.getAttribute('data-list-id');
-            var listTitle = button.getAttribute('data-list-title');
-            var activeTasksCount = button.getAttribute('data-active-tasks');
-
-            document.getElementById('modalListId').value = listId;
-            document.getElementById('modalListTitle').innerHTML = listTitle + ' <i>(' + activeTasksCount + ' active tasks)</i>';
-
-            // Populate target list dropdown, excluding the list being deleted
-            var selectElement = document.getElementById('targetListId');
-            selectElement.innerHTML = '';
-            allLists.forEach(function(list) {
-              if (list.id !== listId) {
-                var option = document.createElement('option');
-                option.value = list.id;
-                option.textContent = list.title;
-                selectElement.appendChild(option);
-              }
-            });
-          });
-
-          // Handle radio button changes for move option visibility
-          var deleteOrphan = document.getElementById('deleteOrphan');
-          var deleteComplete = document.getElementById('deleteComplete');
-          var deleteMove = document.getElementById('deleteMove');
-          var moveListContainer = document.getElementById('moveListContainer');
-
-          [deleteOrphan, deleteComplete, deleteMove].forEach(function(radio) {
-            radio.addEventListener('change', function() {
-              if (deleteMove.checked) {
-                moveListContainer.style.display = 'block';
-                document.getElementById('targetListId').focus();
-              } else {
-                moveListContainer.style.display = 'none';
-              }
-            });
-          });
-
-          // Handle delete button click
-          document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-            var selectedOption = document.querySelector('input[name="delete_option"]:checked').value;
-
-            // Validate that move option has a target list selected
-            if (selectedOption === 'delete_move') {
-              var targetListId = document.getElementById('targetListId').value;
-              var currentListId = document.getElementById('modalListId').value;
-              if (!targetListId) {
-                alert('Please select a target list for moving tasks.');
-                return;
-              }
-              if (targetListId == currentListId) {
-                alert('Cannot move tasks to the same list. Please select a different list.');
-                return;
-              }
-            }
-
-            // Add action to form and submit
-            var form = document.getElementById('deleteListForm');
-            var actionInput = document.createElement('input');
-            actionInput.type = 'hidden';
-            actionInput.name = 'action';
-            actionInput.value = selectedOption;
-            form.appendChild(actionInput);
-            form.submit();
-          });
-        });
-        </script>
-        ~; # End delete list modal
-        ###############################################
-
-        # Add New List form
-        $html .= "\n\n<!-- Start Add New List Card -->\n";
-        my $add_list_html = qq~Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a>~;
-        $html .= start_card($add_list_html, $icon_list_add);
-        $html .= qq~
-                        <form method="post" action="/lists" class="row g-3">
-                            <input type="hidden" name="action" value="add" />
-                            <div class="col-12">
-                                <label class="form-label">Title</label>
-                                <input name="Title" class="form-control" required maxlength="255" placeholder="Give your new list a useful name" />
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Description</label>
-                                <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
-                            </div>
-                            <div class="col-12 text-end">
-                                <button class="btn btn-primary" type="submit">Add List</button>
-                                <a class="btn btn-secondary" href="/">Cancel</a>
-                            </div>
-                        </form>
-                ~;
-
-        $html .= end_card(0);
-
-        $html .= "\n<!-- End Add New List Card -->\n";
-
-        ###############################################
-        # Show inactive lists card
-        $html .= "\n\n<!-- Start Inactive Lists Card -->\n";
-        # Inactive Lists Card and Table
-        my $inactive_list_html = qq~Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</a>~;
-        $html .= start_card($inactive_list_html, $icon_sleep, 0);
-
-        $html .= qq~
-                            <div class="table-responsive">
-                                <table class="table table-dark table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>List</th>
-                                            <th>Deleted Date</th>
-                                            <th>Tasks</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                <tbody>
+          <!-- Inactive Lists Tab -->
+          <div class="tab-pane fade" id="inactive-lists" role="tabpanel" aria-labelledby="inactive-lists-tab">
+            <div class="card bg-dark text-white">
+              <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+                <span>$icon_sleep</span>
+                <span>Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</a></span>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-dark table-striped">
+                    <thead>
+                      <tr>
+                        <th>List</th>
+                        <th>Deleted Date</th>
+                        <th>Tasks</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
         ~;
         my $deleted_list_sth = $dbh->prepare(
             'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
@@ -1087,75 +954,100 @@ my $app = sub {
                 ) // 0;
 
             $html .= qq~
-                                <tr>
-                                    <td>
-                                        <strong>
-                                            $title
-                                        </strong>
-                                    </td>
-
-                                    <td>
-                                        $a->{'DeletedDate'}
-                                    </td>
-
-                                    <td>
-                                        $tasks_in_list
-                                    </td>
-
-                                   <!-- Actions column -->
-                                    <td class="text-end">
-                                        <div class="btn-group" role="group">
-                                            <!-- Default Button -->
-                                            <a href="/list_undelete?lid=$a->{'id'}"
-                                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
-                                                $icon_rotate_right
-                                            </a>
-
-                                            <!-- Delete all Tasks -->
-                                            <a href="/list_delete_all_tasks?lid=$a->{'id'}"
-                                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
-                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
-                                                $icon_xcircle
-                                            </a>
-
-                                            <!-- Permanently delete this List -->
-                                            <a href="/list_delete_list?lid=$a->{'id'}"
-                                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
-                                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
-                                            onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
-                                                $icon_grave
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <!-- End Actions column -->
-                                </tr>
-                ~;
+                      <tr>
+                        <td>
+                          <strong>
+                            $title
+                          </strong>
+                        </td>
+                        <td>
+                          $a->{'DeletedDate'}
+                        </td>
+                        <td>
+                          $tasks_in_list
+                        </td>
+                        <!-- Actions column -->
+                        <td class="text-end">
+                          <div class="btn-group" role="group">
+                            <!-- Default Button -->
+                            <a href="/list_undelete?lid=$a->{'id'}"
+                            class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
+                              $icon_rotate_right
+                            </a>
+                            <!-- Delete all Tasks -->
+                            <a href="/list_delete_all_tasks?lid=$a->{'id'}"
+                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
+                            onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
+                              $icon_xcircle
+                            </a>
+                            <!-- Permanently delete this List -->
+                            <a href="/list_delete_list?lid=$a->{'id'}"
+                            class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
+                            onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
+                              $icon_grave
+                            </a>
+                          </div>
+                        </td>
+                        <!-- End Actions column -->
+                      </tr>
+            ~;
             } # End inactive lists loop
         $html .= qq~
-                                    </tbody>
-                                </table>
-                            </div>
-            ~;
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        $html .= end_card(0);
-        $html .= "<!-- End Deleted Lists Card -->\n";
-        # End Deleted lists card
-
-        # Additional card with actions
-        $html .= "\n\n<!-- Start List Actions Card -->\n";
-        $html .= start_card("List Actions", $icon_list, 0);
-        $html .= qq~
+          <!-- List Actions Tab -->
+          <div class="tab-pane fade" id="list-actions" role="tabpanel" aria-labelledby="list-actions-tab">
+            <div class="card bg-dark text-white">
+              <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+                <span>$icon_list</span>
+                <span>List Actions</span>
+              </div>
+              <div class="card-body">
                 <p>
-                    <a href="/showalltasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
-                        $icon_listletters Show All Tasks
-                    </a>
+                  <a href="/showalltasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
+                    $icon_listletters Show All Tasks
+                  </a>
                 </p>
-                ~;
+              </div>
+            </div>
+          </div>
+        </div>
 
-        $html .= end_card(0);
-        $html .= "<!-- End List Actions Card -->\n";
+        <script>
+        // Save and restore tab selection using URL hash
+        document.addEventListener('DOMContentLoaded', function() {
+          var listsTabs = document.getElementById('listsTabs');
+          var hash = window.location.hash;
+
+          // If there's a hash that matches a tab, activate it
+          if (hash) {
+            var targetTab = document.querySelector('[data-bs-target="' + hash + '"]');
+            if (targetTab) {
+              var tab = new bootstrap.Tab(targetTab);
+              tab.show();
+            }
+          }
+
+          // Save the active tab to URL hash when tabs are clicked
+          var tabButtons = listsTabs.querySelectorAll('.nav-link');
+          tabButtons.forEach(function(button) {
+            button.addEventListener('shown.bs.tab', function(event) {
+              var target = event.target.getAttribute('data-bs-target');
+              window.location.hash = target;
+            });
+          });
+        });
+        </script>
+        ~;
+
 
         $html .= footer();
         $res->body($html);
@@ -2075,7 +1967,7 @@ sub footer {
         <script>
         \$(document).ready(function(){
         \$('[data-bs-toggle="tooltip"]').tooltip({
-            delay: { show: 300, hide: 200 }
+            delay: { show: 250, hide: 200 }
         });
         });
         </script>
