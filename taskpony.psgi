@@ -109,6 +109,7 @@ my $smallicon_link = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z"
 my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />');
 my $smallicon_repeat = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
 my $smallicon_edit = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
+my $smallicon_listnumbers = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />');
 
 # Preflight checks
 print STDERR "Loading Taskpony $app_version...\n";
@@ -2581,6 +2582,14 @@ sub show_tasks {
         </script> <!-- End DB stats check script -->
 
         <!-- Gutter of show_tasks() card -->
+
+        <span class="float-start muted">
+            <a href="/show-recurring" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+                data-bs-toggle="tooltip" data-bs-placement="auto"
+                title="Show recurring tasks">
+                $smallicon_listnumbers
+            </a>
+        </span>
 
         <span class="float-end muted d-flex gap-3">
 
