@@ -2584,7 +2584,7 @@ sub show_tasks {
         <!-- Gutter of show_tasks() card -->
 
         <!-- Show Gutter Lefthand side for local choices -->
-        <span class="float-start muted">
+        <span class="float-start muted d-flex gap-3">
 
             <!-- Show permanent link to this list -->
             <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
