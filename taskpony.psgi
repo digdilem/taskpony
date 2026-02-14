@@ -2583,42 +2583,48 @@ sub show_tasks {
 
         <!-- Gutter of show_tasks() card -->
 
+        <!-- Show Gutter Lefthand side for local choices -->
         <span class="float-start muted">
-            <a href="/show-recurring" class="text-$config->{'cfg_header_colour'} text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto"
-                title="Show recurring tasks">
-                $smallicon_listnumbers
-            </a>
-        </span>
 
-        <span class="float-end muted d-flex gap-3">
-
-        <!-- Show link to recurring tasks -->
-        <a href="/show-recurring" class="text-$config->{'cfg_header_colour'} text-decoration-none"
-            data-bs-toggle="tooltip" data-bs-placement="auto"
-            title="Show recurring tasks">
-            $smallicon_repeat
-        </a>
-
-            ~;
-
-            if ($list_id != 1) {  # Not "All lists", so show link to add task to this list
-                $html .= qq~
-                <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto"
-                title="Edit this list">
-                    $smallicon_edit
-                </a>
-                ~;
-                }
-
-            $html .= qq~
+            <!-- Show permanent link to this list -->
             <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to this list">
                 $smallicon_link
             </a>
+        ~;
 
+        if ($list_id != 1) {  # Not "All lists", so show link to add task to this list
+            $html .= qq~
+            <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            data-bs-toggle="tooltip" data-bs-placement="auto"
+            title="Edit this list">
+                $smallicon_edit
+            </a>
+            ~;
+            }
+
+        $html .= qq~
+        </span>
+
+        <!-- Show Gutter Righthand side -->
+        <span class="float-end muted d-flex gap-3">
+            <!-- Show link to all tasks in all lists -->
+            <a href="/showalltasks" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+                data-bs-toggle="tooltip" data-bs-placement="auto"
+                title="Show all active tasks in lists">
+                $smallicon_listnumbers
+            </a>
+
+            <!-- Show link to recurring tasks -->
+            <a href="/show-recurring" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+                data-bs-toggle="tooltip" data-bs-placement="auto"
+                title="Show recurring tasks">
+                $smallicon_repeat
+            </a>
+            ~;
+
+        $html .= qq~
         </span>
         <!-- End footer of show_tasks() card -->
 
