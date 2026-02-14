@@ -52,6 +52,7 @@ my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/release
 my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
 my $new_version_available = 0;
 my $taskpony_icon = 'taskpony-logo.png';  # Default icon file name in ./static dir
+my $tooltip_delay = 'show: 250, hide: 10';  # Global tooltip delay for all tooltips in the app.
 
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
@@ -1055,7 +1056,7 @@ my $app = sub {
           var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
           tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl, {
-              delay: { show: 250, hide: 200 }
+              delay: { $tooltip_delay }
             });
           });
         });
@@ -2136,7 +2137,7 @@ sub footer {
         <script>
         \$(document).ready(function(){
         \$('[data-bs-toggle="tooltip"]').tooltip({
-            delay: { show: 250, hide: 200 }
+            delay: { $tooltip_delay }
         });
         });
         </script>
@@ -2582,6 +2583,13 @@ sub show_tasks {
         <!-- Gutter of show_tasks() card -->
 
         <span class="float-end muted d-flex gap-3">
+
+        <!-- Show link to recurring tasks -->
+        <a href="/show-recurring" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            data-bs-toggle="tooltip" data-bs-placement="auto"
+            title="Show recurring tasks">
+            $smallicon_repeat
+        </a>
 
             ~;
 
