@@ -184,27 +184,27 @@ my $app = sub {
     # Handle favicon requests
     if ($req->path eq "/favicon.ico") {  $res->redirect('./static/favicon.ico'); return $res->finalize; }
 
-    # Task functions
+    ###############################################
+    # ACTION functions
     # Action /task_complete/nn - Mark task nn as completed and redirect to home page
     if ($req->path =~ m{^/task_complete/(\d+)$})        { action_task_complete($1);     $res->redirect('/'); return $res->finalize; }
-
     # Action /task_delete/nn - Permanently delete task nn and redirect to home page
     if ($req->path =~ m{^/task_delete/(\d+)$})          { action_task_delete($1);       $res->redirect('/'); return $res->finalize; }
-
     # Action /task_activate/nn - Set task nn as active again and redirect to home page
     if ($req->path =~ m{^/task_activate/(\d+)$})        { action_task_activate($1);     $res->redirect('/'); return $res->finalize; }
-
     # Action /task_edit/nn - Show edit form for task nn, or if POST, update task nn and redirect to home page. Function returns full html
     if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
 
+    ###############################################
+    # SHOW functions
 
+    ###############################################
+    # RECEIVE functions
+    # Receive edit task form
+    if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
 
-
-
-
-
-
-
+    # Show a page with all lists and tasks
+if ($req->path eq '/show_all_tasks') {                  { $res->body(show_all_tasks());   return $res->finalize; }
 
 
 
@@ -216,8 +216,6 @@ my $app = sub {
     ###############################################
     # Recieve Forms
 
-    # Receive edit task form
-    if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
 
 
     # /task_form_edit/nn - If GET, show the edit form for task nn. If POST, update task nn with submitted values and redirect to home page
@@ -851,7 +849,7 @@ my $app = sub {
               </div>
               <div class="card-body">
                 <p>
-                  <a href="/showalltasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
+                  <a href="/show_all_tasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
                     $icon_listletters Show All Tasks
                   </a>
                 </p>
@@ -1437,15 +1435,7 @@ my $app = sub {
 
 
 
-    ###############################################
-    # /showalltasks Show a page with all lists and tasks
-    if ($req->path eq '/showalltasks') {
-        my $html = header();
-        $html .= showalltasks();
-        $res->content_type('text/html');
-        $res->body($html);
-        return $res->finalize;
-        }
+
 
     ###############################################
     # /show-recurring Show a page with all recurring tasks
@@ -2416,7 +2406,7 @@ sub show_tasks {
         <!-- Show Gutter Righthand side -->
         <span class="float-end muted d-flex gap-3">
             <!-- Show link to all tasks in all lists -->
-            <a href="/showalltasks" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/show_all_tasks" class="text-$config->{'cfg_header_colour'} text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto"
                 title="Show all active tasks in lists">
                 $smallicon_listnumbers
@@ -2886,9 +2876,11 @@ sub config_show_option {
     } # end config_show_option()
 
 ###############################################
- # showalltasks() - Loop through all active lists and show a panel for each with the tasks in that list.
-sub showalltasks {
-    my $html = '';
+# SHOW functions
+###############################################
+
+sub show_all_tasks {    # Loop through all active lists and show a panel for each with the tasks in that list.
+    my $html = header();
 
     my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
     $lists_sth->execute();
@@ -2901,22 +2893,31 @@ sub showalltasks {
 
     $html .= footer();
     return $html;
-    } # End showalltasks()
+    } # End show_all_tasks()
+
+# End SHOW functions
+###############################################
 
 ###############################################
-# build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
-sub build_tabler_icon {
+# BUILD functions - things that build HTML
+
+sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
     my $icon_name = shift;
     return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
     } # end build_tabler_icon
 
-sub build_inline_icon {
+sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixels and raw SVG code, and returns the SVG wrapped in a span with the correct size styling to make it match the text size
     my ($size, $svg) = @_;
 
     return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
         </span>~;
     } # end build_inline_icon
+
+# End BUILD functions
+###############################################
+
+
 
 ###############################################
 # Update the global $page->{'db_mtime'} variable with the current database file modification time
@@ -2925,7 +2926,7 @@ sub update_db_mtime {
     }
 
 ###############################################
-# Action functions - things that change stuff
+# ACTION functions - things that change stuff
 ###############################################
 
 sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
@@ -3114,11 +3115,14 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
 
     }
 
+# End Action functions
 ###############################################
-# Receive various forms. Will receive $req. Usually no html returned and parent handles redirect.
 
-# Receive Edit Task form
-sub receive_form_task_edit {
+###############################################
+# RECEIVE functions - to receive forms
+###############################################
+
+sub receive_form_task_edit { # Receive Edit Task form
     my ($task_id, $req) = @_;
     if ($task_id && $task_id =~ /^\d+$/) {
         my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
@@ -3162,13 +3166,17 @@ sub receive_form_task_edit {
         print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
         add_alert("Error updating task #$task_id: Task not found.");
         }
-
     } # End receive_form_task_edit
+
+
+# End Receive functions
+###############################################
+
 
 
 
 ##############################################
-# End Functions
+# End all Functions
 
 #################################################
 # End of Taskpony
