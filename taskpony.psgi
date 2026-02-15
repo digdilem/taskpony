@@ -144,7 +144,7 @@ $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id
 
 my $static_dir = catdir($FindBin::Bin);
 my $running_in_docker = 0;  # 1 if in docker, 0 if not
-if (-f '/.dockerenv') { $running_in_docker = 1;}  # Test for this magical file that docker created.
+if (-f '/.dockerenv') { $running_in_docker = 1; }  # Test for this magical file that docker created.
 
 my $app = sub {
     my $env = shift;
@@ -204,7 +204,7 @@ my $app = sub {
     if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
 
     # Show a page with all lists and tasks
-if ($req->path eq '/show_all_tasks') {                  { $res->body(show_all_tasks());   return $res->finalize; }
+    if ($req->path eq '/show_all_tasks')                     { $res->body(show_all_tasks());   return $res->finalize; }
 
 
 
