@@ -62,15 +62,14 @@ app_releases_page => 'https://github.com/digdilem/taskpony',                    
 ###############################################
 # Page specific variables.
 our $page = {
-    list_id = 1,                    # Current list id
-    list_name = '',                     # Current list name
-    list_colour = '',                   # Current list highlight colour (overrides default)
-    debug = 0,                      # Set to 1 to enable debug messages to STDERR
-    alert_text = '',                # If set, show this alert text on page load
-    show_completed = 0,             # If set to 1, show completed tasks instead of active ones
-    do_mtime = 1,              # If set to 1, the page will check /api/dbstate every $page->{'db_interval_check_ms'} milliseconds to see if the database has changed and reload the page if it has.
-    db_interval_check_ms = 60000,   # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
-    default_listid = 0,                 # default ListId
+    list_id => 1,                   # Current list id
+    list_name => '',                # Current list name
+    list_colour => '',              # Current list highlight colour (overrides default)
+    alert_text => '',               # If set, show this alert text on page load
+    show_completed => 0,            # If set to 1, show completed tasks instead of active ones
+    do_mtime => 1,                  # If set to 1, the page will check /api/dbstate every $page->{'db_interval_check_ms'} milliseconds to see if the database has changed and reload the page if it has.
+    db_interval_check_ms => 60000,  # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
+    default_listid => 0,            # default ListId
     };
 
 ###############################################
