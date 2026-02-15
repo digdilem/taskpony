@@ -795,7 +795,7 @@ my $app = sub {
                         <td class="text-end">
                           <div class="btn-group" role="group">
                             <!-- Default Button -->
-                            <a href="/list_undelete?lid=$a->{'id'}"
+                            <a href="/list_undelete/$a->{'id'}"
                             class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
                               $icon_rotate_right
