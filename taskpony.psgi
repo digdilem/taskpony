@@ -3072,7 +3072,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
 
                             if ($task->{'Status'} == 1) {
                                 $html .= qq~
-                                <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
+                                <a class="btn btn-warning" href="/task?complete/$task_id">Set Task as Completed</a>
                                 ~;
                                 } else {
                                 $html .= qq~
