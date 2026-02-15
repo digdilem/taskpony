@@ -2799,7 +2799,7 @@ sub verify_valid_list { # verify_valid_list($list_id) - checks whether a list id
 
     # 3. Verify list is viable and not disabled or deleted
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $proposed_list_id);
-    if (( !$exists or ($exists == 0) ) && ($checks_passed == 0) ) {
+    if (!$exists or ($exists == 0) ) {
         my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
         print STDERR "INFO: Current List ID ($original_list_id) is not valid or is deleted. Changing to List ID ($new_list_id)\n";
         $page->{'list_id'} = $new_list_id;
