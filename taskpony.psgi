@@ -2814,7 +2814,7 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
         # Also reload associated values
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
-        $page->{'default_list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'default_list_id' LIMIT 1") || 0;
+        $page->{'default_list_id'} = single_db_value("SELECT `id` FROM ListsTb WHERE `isDefault` = 1") || 0;
         }
 
     } # End verify_valid_list()
