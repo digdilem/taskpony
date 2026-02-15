@@ -628,7 +628,7 @@ my $app = sub {
                               $html .= qq~
                             </a>
                             <!-- Set all tasks Active Button -->
-                            <a href="/list_setall_active?lid=$list->{'id'}"
+                            <a href="/list_set_alltasks_active/$list->{'id'}"
                             class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                             onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
