@@ -45,7 +45,10 @@ our $config = {
 
 ###############################################
 # Global variables that are used throughout - do not change these.
-my $app_title = 'Taskpony';             # Name of app.
+our $global = {
+    app_title => 'Taskpony',             # Name of app.
+    };
+my
 my $app_version = '0.6';                # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
@@ -1389,8 +1392,8 @@ my $app = sub {
                 <div class="card-body">
                 ~;
 
-                $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $app_title will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
-                $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $app_title makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
+                $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
+                $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
                 $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
                 $html .= config_show_option('cfg_header_colour','Default Highlight Colour','Select default colour for panel header backgrounds and highlights','colour',0,0);
                 $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
@@ -1712,7 +1715,7 @@ sub connect_db {
             }
 
         print STDERR "----------------------------------------------------\n";
-        print STDERR "Welcome to $app_title!\n";
+        print STDERR "Welcome to $global->{'app_title'}!\n";
         print STDERR "----------------------------------------------------\n\n";
 
         # Create new database connection which will autocreate the new database file
@@ -1825,7 +1828,7 @@ sub check_database_upgrade  {
     my $current_db_version = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'database_schema_version' LIMIT 1") || 1;
 
     if ($current_db_version < $database_schema_version) {
-        print STDERR "INFO: Database schema version is $current_db_version - $app_title requires schema $database_schema_version.\n";
+        print STDERR "INFO: Database schema version is $current_db_version - $global->{'app_title'} requires schema $database_schema_version.\n";
 
         if ($current_db_version == 1) {
             ###############################################
@@ -1871,7 +1874,7 @@ sub header {
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>$app_title / $list_name</title>
+    <title>$global->{'app_title'} / $list_name</title>
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -1964,7 +1967,7 @@ sub header {
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto" title="Home - Show active tasks in '$list_name'"
                 >
-                    <h3 class="mb-0">$app_title</h3>
+                    <h3 class="mb-0">$global->{'app_title'}</h3>
                 </a>
                 ~;
 
@@ -2059,7 +2062,7 @@ sub footer {
         }
 
     $html .= qq~
-            <a href="https://github.com/digdilem/taskpony">$app_title v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
+            <a href="https://github.com/digdilem/taskpony">$global->{'app_title'} v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
             </p>
         </footer>
 
@@ -3015,7 +3018,7 @@ sub check_latest_release {
     $normalised_app_version =~ s/\D//g;
 
     if ($github_latest_version > $normalised_app_version) {
-        print STDERR "New version of $app_title is available\n";
+        print STDERR "New version of $global->{'app_title'} is available\n";
         $new_version_available = 1;
         }
     return;
