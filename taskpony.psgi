@@ -48,7 +48,7 @@ our $config = {
 our $global = {
     app_title => 'Taskpony',             # Name of app.
     };
-my
+
 my $app_version = '0.6';                # Version of app
 my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
 my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
