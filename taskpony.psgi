@@ -2782,13 +2782,13 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
     } # end build_inline_icon
 
 sub verify_valid_list { # verify_valid_list($list_id) - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
-    my ($proposed_list_id) = @_;
+    my ($proposed_list_id) = shift || 0;
     my $original_list_id = $page->{'list_id'} || 0;
 
 print STDERR "-------- (Original and proposed: $original_list_id, $proposed_list_id) --------\n";
 
     # 1. Change to something provided by ?lid
-    if ($proposed_list_id && $proposed_list_id =~ /^\d+$/) { # A lid was provided and is a number. Check it exists and is viable, then switch to it.
+    if ($proposed_list_id > 0 && $proposed_list_id =~ /^\d+$/) { # A lid was provided and is a number. Check it exists and is viable, then switch to it.
         print STDERR "INFO: List ID provided in ?lid= parameter: $proposed_list_id. \n";
         $page->{'list_id'} = $proposed_list_id;
         }
