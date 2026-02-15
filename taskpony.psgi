@@ -204,9 +204,10 @@ my $app = sub {
     if ($req->path =~ m{^/list_hard_delete/(\d+)$})     { action_list_hard_delete($1);  $res->redirect('/lists'); return $res->finalize; }
     # Set a LIST as the default list
     if ($req->path =~ m{^/list_set_default/(\d+)$})     { action_list_set_default($1);  $res->redirect('/lists'); return $res->finalize; }
-
     # Set all tasks in LIST nn as Active
     if ($req->path =~ m{^/list_set_alltasks_active/(\d+)$})         { action_list_set_alltasks_active($1);  $res->redirect('/lists'); return $res->finalize; }
+    # Set all tasks in LIST nn as Completed
+    if ($req->path =~ m{^/list_set_alltasks_completed/(\d+)$})      { action_list_set_alltasks_completed($1);  $res->redirect('/lists'); return $res->finalize; }
 
 
 
@@ -262,26 +263,6 @@ my $app = sub {
 
 
 
-    ###############################################
-    # Set all tasks in LIST nn as Completed
-    if ($req->path eq "/list_setall_completed") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('lid');
-            if ($lid > 1) { # Don't allow for "All Tasks Lists"
-                my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 1', $lid) // 0;
-                if ($count > 0) {
-                    print STDERR "INFO: Setting all tasks in list $lid as completed\n";
-                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
-                    eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks completed failed: $@";
-                    add_alert("$count task(s) in list marked as completed.");
-                } else {
-                    add_alert("No active tasks found in this list.");
-                }
-            }
-        }
-        $res->redirect('/lists');
-        return $res->finalize;
-        } # End /list_setall_completed
 
     ###############################################
     # Permanently delete all tasks in LIST nn
@@ -635,7 +616,7 @@ my $app = sub {
                               $icon_rotate_right
                             </a>
                             <!-- Set all tasks Completed Button -->
-                            <a href="/list_setall_completed?lid=$list->{'id'}"
+                            <a href="/list_set_alltasks_completed/$list->{'id'}"
                             class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
@@ -3108,6 +3089,18 @@ sub action_list_set_alltasks_active { # Set all tasks in "All Tasks" list (ListI
         print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_set_alltasks_active\n";
         }
     } # End action_list_set_alltasks_active
+
+sub action_list_set_alltasks_completed { # Set all tasks in "All Tasks" list (ListId 1) as completed by setting Status to 2 and CompletedDate to current timestamp
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        print STDERR "ACTION: Setting all tasks in list $list_id as completed\n";
+        my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
+        eval { $sth->execute($list_id); 1 } or print STDERR "WARN: Set all tasks completed failed: $@";
+        add_alert("All tasks in list $list_id set as completed.");
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_set_alltasks_completed\n";
+        }
+    } # End action_list_set_alltasks_completed
 
 
 
