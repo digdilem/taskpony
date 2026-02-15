@@ -194,8 +194,8 @@ my $app = sub {
     # Action /task_activate/nn - Set task nn as active again and redirect to home page
     if ($req->path =~ m{^/task_activate/(\d+)$})        { action_task_activate($1);     $res->redirect('/'); return $res->finalize; }
 
-
-
+    # Action /task_edit/nn - Show edit form for task nn, or if POST, update task nn and redirect to home page. Function returns full html
+    if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
 
 
 
@@ -212,6 +212,10 @@ my $app = sub {
 
     # End simple redirectors
     ###############################################
+
+    ###############################################
+    # Recieve Forms
+    # /task_form_edit/nn - If GET, show the edit form for task nn. If POST, update task nn with submitted values and redirect to home page
 
 
     ###############################################
@@ -424,191 +428,7 @@ my $app = sub {
         return $res->finalize;
         } # End /add
 
-    ###############################################
-    # Handle editing a task
-    if ($req->path eq "/edittask") {
-        my $task_id = $req->param('id') // 0;
 
-        # If POST, update the task in DB and redirect
-        if ($req->method && uc($req->method) eq 'POST') {
-            my $title = sanitize($req->param('Title') // '');
-            my $desc  = sanitize($req->param('Description') // '');
-            my $page->{'list_id'} = $req->param('ListId') // 0;
-            my $is_recurring = sanitize($req->param('IsRecurring') // '');
-            my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
-            # Validate recurring interval
-            if ($recurring_interval !~ /^\d+$/) {
-                print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
-                $recurring_interval = 1;
-                }
-            if ($recurring_interval < 1) {
-                print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
-                $recurring_interval = 1;
-                }
-            if ($recurring_interval > 365) {
-                print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
-                $recurring_interval = 365;
-                }
-
-            if (length $title && $task_id > 0 && $page->{'list_id'} > 1) {
-                my $sth = $dbh->prepare(
-                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
-                    );
-                eval { $sth->execute($title, $desc, $page->{'list_id'}, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
-                debug("Task $task_id updated");
-                }
-
-            add_alert("Task $task_id updated.");
-            $res->redirect('/');
-            return $res->finalize;
-            } # End /edittask form submission handling
-
-        # Display edit form
-        if ($task_id > 0) {
-            my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
-            $sth->execute($task_id);
-            my $task = $sth->fetchrow_hashref();
-
-            if ($task) {
-                my $html = header();
-
-                # Build list dropdown
-                my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
-                my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
-                $list_sth->execute();
-
-                # Build list
-                while (my $list= $list_sth->fetchrow_hashref()) {
-                    my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
-                    my $title = html_escape($list->{'Title'});
-                    $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
-                    }
-                $list_dropdown .= '</select>';
-
-                my $task_status = 'Completed';
-                if ($task->{'Status'} == 1) { $task_status = 'Active'; }
-
-                $html .= start_card("Edit Task #$task_id - $task_status", $icon_edit, 0);
-
-                $html .= qq~
-                            <form method="post" action="/edittask?id=$task_id" class="row g-3">
-
-                                <div class="col-12">
-                                <label class="form-label">Title</label>
-                                <input
-                                    name="Title"
-                                    class="form-control bg-dark text-white border-secondary"
-                                    required
-                                    maxlength="255"
-                                    value="~ . html_escape($task->{'Title'}) . qq~"
-                                />
-                                </div>
-
-                                <div class="col-12">
-                                <label class="form-label">Description</label>
-                                <textarea
-                                    name="Description"
-                                    class="form-control bg-dark text-white border-secondary"
-                                    rows="4"
-                                    maxlength="2000"
-                                >~ . html_escape($task->{'Description'}) . qq~</textarea>
-                                </div>
-
-                                <div class="border p-3 mb-3">
-                                    <div class="d-flex flex-column flex-md-row gap-3">
-
-                                        <div class="border p-3 flex-fill ">
-
-                                            <div class="form-check form-switch m-0">
-                                            Repeat this task after completion
-                                                <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
-                                            ~;
-
-                                            # Precheck the box if IsRecurring is already 'on'
-                                            if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
-
-                                            $html .= qq~>
-                                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
-                                                $smallicon_info
-                                            </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="border p-3 flex-fill ">
-
-                                            <div class="d-flex align-items-center gap-2">
-                                                Repeat every
-                                                    <input type="number" class="form-control form-control-sm" style="width: 80px;"
-                                                        name="RecurringIntervalDay" min="1" max="365" value="$task->{'RecurringIntervalDay'}">
-                                                    <span>
-                                                        days
-                                                    </span>
-                                                    <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
-                                                        $smallicon_info
-                                                    </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                <label class="form-label">List</label>
-                                $list_dropdown
-                                </div>
-
-                                <div class="col-12">
-                                <div class="d-flex flex-wrap gap-2">
-                                <button class="btn btn-primary me-auto" type="submit">Save Task</button>
-                                <a class="btn btn-secondary" href="/">Cancel</a>
-
-                                ~;
-
-                                if ($task->{'Status'} == 1) {
-                                    $html .= qq~
-                                    <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
-                                    ~;
-                                    } else {
-                                    $html .= qq~
-                                    <a class="btn btn-warning" href="/task_activate/$task_id">Set Task as Active</a>
-                                    ~;
-                                    }
-
-                                $html .= qq~
-                                    <a class="btn btn-danger" href="/task_delete/$task_id">Delete Task</a>
-                                </div>
-
-                               <br>
-                                <p class="text-secondary">
-                                    This task was created $task->{'AddedDate'}
-                                    ~;
-                                    if ($task->{'CompletedDate'}) {
-                                        $html .= qq~and completed $task->{'CompletedDate'}~;
-                                        }
-                                    $html .= qq~
-                                </p>
-
-                                </div>
-
-                            </form>
-                            </div>
-                        </div>
-
-                        </div>
-                    </div>
-                </div>
-                ~;
-
-                $html .= end_card(0);
-                $html .= footer();
-                $res->body($html);
-                return $res->finalize;
-                }
-            }
-
-        $res->status(404);
-        $res->body("Task not found");
-        return $res->finalize;
-        } # End /edittask
 
     ###############################################
     # Lists Management page
@@ -3106,7 +2926,7 @@ sub update_db_mtime {
 sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
     my ($task_id) = @_;
     if ($task_id && $task_id =~ /^\d+$/) {  # Check it's a valid numeric ID before we do anything
-        print STDERR "INFO: marking task $task_id as complete\n";
+        print STDERR "ACTION: Marking task $task_id as complete\n";
         my $sth = $dbh->prepare(
             'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
             );
@@ -3121,27 +2941,226 @@ sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
 sub action_task_delete { # Delete task nn from TasksTb
     my ($task_id) = @_;
     if ($task_id && $task_id =~ /^\d+$/) {
-        print STDERR "INFO: Deleting task $task_id\n";
+        print STDERR "ACTION: Deleting task $task_id\n";
         my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
         eval { $sth->execute($task_id); 1 } or print STDERR "WARN: Delete TasksTb.id=$task_id failed: $@";
         add_alert("Task #$task_id deleted.");
+        } else {
+        print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_delete\n";
         }
     } # End action_task_delete
 
 sub action_task_activate { # Set task nn as active (Status 1) in TasksTb
     my ($task_id) = @_;
     if ($task_id && $task_id =~ /^\d+$/) {
-        print STDERR "INFO: Re-activating task $task_id\n";
+        print STDERR "ACTION: Re-activating task $task_id\n";
         my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
         eval { $sth->execute($task_id); 1 } or print STDERR "WARN: Update TasksTb.id=$task_id failed: $@";
         add_alert("Task #$task_id re-activated.");
+        } else {
+        print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_activate\n";
         }
     } # End action_task_activate
 
+sub action_task_edit { # Show the edit form for task nn. Function returns full html
+    my ($task_id, $res) = @_;
+    if ($task_id && $task_id =~ /^\d+$/) {
+        my $html = header();
+
+        # Build list dropdown for later use in the form
+        my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
+        my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+        $list_sth->execute();
+        eval { $list_sth->execute(); 1 } or print STDERR "WARN: Update TasksTb.id=$task_id failed: $@";
+
+        # Build list
+        while (my $list= $list_sth->fetchrow_hashref()) {
+            my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
+            my $title = html_escape($list->{'Title'});
+            $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
+            }
+        $list_dropdown .= '</select>';
+
+        my $task_status = 'Completed';
+        if ($task->{'Status'} == 1) { $task_status = 'Active'; }
+
+        $html .= start_card("Edit Task #$task_id - $task_status", $icon_edit, 0);
+
+        $html .= qq~
+                    <form method="post" action="/task_form_edit/$task_id" class="row g-3">
+
+                        <div class="col-12">
+                        <label class="form-label">Title</label>
+                        <input
+                            name="Title"
+                            class="form-control bg-dark text-white border-secondary"
+                            required
+                            maxlength="255"
+                            value="~ . html_escape($task->{'Title'}) . qq~"
+                        />
+                        </div>
+
+                        <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea
+                            name="Description"
+                            class="form-control bg-dark text-white border-secondary"
+                            rows="4"
+                            maxlength="2000"
+                        >~ . html_escape($task->{'Description'}) . qq~</textarea>
+                        </div>
+
+                        <div class="border p-3 mb-3">
+                            <div class="d-flex flex-column flex-md-row gap-3">
+
+                                <div class="border p-3 flex-fill ">
+
+                                    <div class="form-check form-switch m-0">
+                                    Repeat this task after completion
+                                        <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
+                                    ~;
+
+                                    # Precheck the box if IsRecurring is already 'on'
+                                    if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
+
+                                    $html .= qq~>
+                                    <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
+                                        $smallicon_info
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="border p-3 flex-fill ">
+
+                                    <div class="d-flex align-items-center gap-2">
+                                        Repeat every
+                                            <input type="number" class="form-control form-control-sm" style="width: 80px;"
+                                                name="RecurringIntervalDay" min="1" max="365" value="$task->{'RecurringIntervalDay'}">
+                                            <span>
+                                                days
+                                            </span>
+                                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
+                                                $smallicon_info
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                        <label class="form-label">List</label>
+                        $list_dropdown
+                        </div>
+
+                        <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-primary me-auto" type="submit">Save Task</button>
+                        <a class="btn btn-secondary" href="/">Cancel</a>
+
+                        ~;
+
+                        if ($task->{'Status'} == 1) {
+                            $html .= qq~
+                            <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
+                            ~;
+                            } else {
+                            $html .= qq~
+                            <a class="btn btn-warning" href="/task_activate/$task_id">Set Task as Active</a>
+                            ~;
+                            }
+
+                        $html .= qq~
+                            <a class="btn btn-danger" href="/task_delete/$task_id">Delete Task</a>
+                        </div>
+
+                        <br>
+                        <p class="text-secondary">
+                            This task was created $task->{'AddedDate'}
+                            ~;
+                            if ($task->{'CompletedDate'}) {
+                                $html .= qq~and completed $task->{'CompletedDate'}~;
+                                }
+                            $html .= qq~
+                        </p>
+
+                        </div>
+
+                    </form>
+        ~;
+        #           </div>
+        #         </div>
+
+        #         </div>
+        #     </div>
+        # </div>
+
+        $html .= end_card(0);
+        $html .= footer();
+
+
+        #$res->body($html);
+        #return $res->finalize;
+#        }
+ #   }
+        return $html;
+        } else {
+        print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_edit\n";
+        return "Error in task_edit(): Invalid task ID";
+        }
+
+   ###############################################
+    # Handle editing a task
+
+
+
+        #     if ($task) {
+
+
+
+        # $res->status(404);
+        # $res->body("Task not found");
+        # return $res->finalize;
+        # } # End /edittask
 
 
 
 
+
+# #Receivee edit form
+
+#         # If POST, update the task in DB and redirect
+#         if ($req->method && uc($req->method) eq 'POST') {
+#             my $title = sanitize($req->param('Title') // '');
+#             my $desc  = sanitize($req->param('Description') // '');
+#             my $page->{'list_id'} = $req->param('ListId') // 0;
+#             my $is_recurring = sanitize($req->param('IsRecurring') // '');
+#             my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
+#             # Validate recurring interval
+#             if ($recurring_interval !~ /^\d+$/) {
+#                 print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
+#                 $recurring_interval = 1;
+#                 }
+#             if ($recurring_interval < 1) {
+#                 print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
+#                 $recurring_interval = 1;
+#                 }
+#             if ($recurring_interval > 365) {
+#                 print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
+#                 $recurring_interval = 365;
+#                 }
+
+#             if (length $title && $task_id > 0 && $page->{'list_id'} > 1) {
+#                 my $sth = $dbh->prepare(
+#                     'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
+#                     );
+#                 eval { $sth->execute($title, $desc, $page->{'list_id'}, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
+#                 debug("Task $task_id updated");
+#                 }
+
+#             add_alert("Task $task_id updated.");
+#             $res->redirect('/');
+#             return $res->finalize;
+#             } # End /edittask form submission handling
 
 
 
