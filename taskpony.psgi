@@ -26,9 +26,8 @@ my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, 
 
 my $dbh;                            # Global database handle
 
-###############################################
-# Default user editable configuration values. Don't change them here, use /config page.
 our $config = {
+    # Default user editable configuration values. Don't change them here, use /config page.
     cfg_task_pagination_length => 25,           # Number of tasks to show per page
     cfg_description_short_length => 35,         # Number of characters to show in task list before truncating description (Cosmetic only)
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
@@ -211,27 +210,11 @@ my $app = sub {
     ###############################################
     # Step through named paths
     ###############################################
-    # Set TASK nn as Status 2 in TasksTb (Completed)
-    if ($req->path eq "/complete") {
+    if ($req->path =~ m{^/complete/(\d+)$}) {   action_complete_task($1); $res->redirect('/'); return $res->finalize; } # "/complete/nn" - Mark task nn as completed and redirect to home page
 
-        # Accept task_id from GET or POST
-        my $task_id = $req->param('task_id') // 0;
 
-        if ($task_id > 0) {
-            my $sth = $dbh->prepare(
-                'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
-                );
-            eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
 
-            print STDERR "INFO: Task $task_id marked as complete\n";
-            $stats->{'tasks_completed_today'} += 1;
-            add_alert("Task #$task_id marked as completed. $stats->{'tasks_completed_today'} tasks completed today!");
-            }
 
-        # Always redirect
-        $res->redirect('/');
-        return $res->finalize;
-    } # End /complete
 
     ###############################################
     # Set TASK nn as Status 1 in TasksTb (Active)
@@ -2230,10 +2213,9 @@ sub sanitize {
     return $s;
     } # End sanitize()
 
-###############################################
-# html_escape($s)
-# Escape HTML special characters in a string
 sub html_escape {
+    # html_escape($s)
+    # Escape HTML special characters in a string
     my ($s) = @_;
     return '' unless defined $s;
     $s =~ s/&/&amp;/g;
@@ -2244,10 +2226,9 @@ sub html_escape {
     return $s;
     } # End html_escape()
 
-###############################################
-# html_escape_with_breaks($s)
-# Escape HTML special characters and convert newlines to <br> tags for display
 sub html_escape_with_breaks {
+    # html_escape_with_breaks($s)
+    # Escape HTML special characters and convert newlines to <br> tags for display
     my ($s) = @_;
     return '' unless defined $s;
     $s =~ s/&/&amp;/g;
@@ -2259,10 +2240,9 @@ sub html_escape_with_breaks {
     return $s;
     } # End html_escape_with_breaks()
 
-###############################################
-# single_db_value($sql, @params)
-# Execute a SQL query that returns a single value
 sub single_db_value {
+    # single_db_value($sql, @params)
+    # Execute a SQL query that returns a single value
     my ($sql, @params) = @_;
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
@@ -2270,10 +2250,9 @@ sub single_db_value {
     return $value;
     } # End single_db_value()
 
-###############################################
-# debug($msg)
-# Print debug message if debugging is globally enabled
 sub debug {
+    # debug($msg)
+    # Print debug message if debugging is globally enabled
     my $msg = shift;
     if ($global->{'debug'} == 1) {
         print STDERR "DEBUG: $msg\n";
@@ -3130,6 +3109,28 @@ sub build_inline_icon {
 sub update_db_mtime {
     $page->{'db_mtime'} = (stat($db_path))[9] // 0;
     }
+
+###############################################
+# Action functions - things that change stuff
+###############################################
+
+sub action_complete_task { # Set task nn as Status 2 in TasksTb (Completed)
+    my ($task_id) = @_;
+    if ($task_id > 0) {
+        my $sth = $dbh->prepare(
+            'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+            );
+        eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
+
+        print STDERR "INFO: Task $task_id marked as complete\n";
+        $stats->{'tasks_completed_today'} += 1;
+        add_alert("Task #$task_id marked as completed. $stats->{'tasks_completed_today'} tasks completed today!");
+        }
+    } # End action_complete_task
+
+
+
+
 
 ##############################################
 # End Functions
