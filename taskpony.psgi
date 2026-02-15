@@ -46,16 +46,17 @@ our $config = {
 ###############################################
 # Global variables that are used throughout - do not change these.
 our $global = {
-    app_title => 'Taskpony',             # Name of app.
+    app_title => 'Taskpony',             # Name of app
+    app_version => '0.6',                # Version of app
+    database_schema_version => 2,        # Current database schema version. Do not change this, it will be modified during updates.
+    github_version_url => 'https://api.github.com/repos/digdilem/taskpony/releases/latest',  # Used to get latest version for upgrade notification
+    app_releases_page => 'https://github.com/digdilem/taskpony',    # Where new versions are
+    new_version_available => 0,             # Set to 1 if a new version is available on github
+    taskpony_icon => 'taskpony-logo.png',  # Default icon file name in ./static dir
+    tooltip_delay => 'show: 250, hide: 10',  # Global tooltip delay for all tooltips in the app.
     };
 
-my $app_version = '0.6';                # Version of app
-my $database_schema_version = 2;        # Current database schema version. Do not change this, it will be modified during updates.
-my $github_version_url = 'https://api.github.com/repos/digdilem/taskpony/releases/latest';  # Used to get latest version for upgrade notification
-my $app_releases_page = 'https://github.com/digdilem/taskpony';     # Where new versions are
-my $new_version_available = 0;
-my $taskpony_icon = 'taskpony-logo.png';  # Default icon file name in ./static dir
-my $tooltip_delay = 'show: 250, hide: 10';  # Global tooltip delay for all tooltips in the app.
+
 
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
@@ -115,7 +116,7 @@ my $smallicon_edit = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z"
 my $smallicon_listnumbers = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />');
 
 # Preflight checks
-print STDERR "Loading Taskpony $app_version...\n";
+print STDERR "Loading Taskpony $global->{'app_version'}...\n";
 print STDERR "Paddock is '$taskpony_path'\n";
 connect_db();                   # Connect to the database
 config_load();                  # Load saved config values
@@ -1060,7 +1061,7 @@ my $app = sub {
           var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
           tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl, {
-              delay: { $tooltip_delay }
+              delay: { $global->{'tooltip_delay'} }
             });
           });
         });
@@ -1548,7 +1549,7 @@ my $app = sub {
                     </li>
                     <li>
                         <span class="pt-3 small text-white-50">
-                            Database schema version: <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$database_schema_version</strong>
+                            Database schema version: <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$global->{'database_schema_version'}</strong>
                         </span>
                     </li>
                     <li>
@@ -1824,11 +1825,11 @@ sub initialise_database {
 ###############################################
 # Check the database schema version and apply any needed upgrades
 sub check_database_upgrade  {
-    # Check database_schema_version in ConfigTb and compare to this script's $database_schema_version  - assume v.1 if it's missing
+    # Check database_schema_version in ConfigTb and compare to this script's $global->{'database_schema_version'}  - assume v.1 if it's missing
     my $current_db_version = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'database_schema_version' LIMIT 1") || 1;
 
-    if ($current_db_version < $database_schema_version) {
-        print STDERR "INFO: Database schema version is $current_db_version - $global->{'app_title'} requires schema $database_schema_version.\n";
+    if ($current_db_version < $global->{'database_schema_version'}) {
+        print STDERR "INFO: Database schema version is $current_db_version - $global->{'app_title'} requires schema $global->{'database_schema_version'}.\n";
 
         if ($current_db_version == 1) {
             ###############################################
@@ -1861,7 +1862,7 @@ sub check_database_upgrade  {
         # !! Add future db v.2 to v.3 upgrade steps here !!
 
         } else {
-        print STDERR "Database schema version is up to date at version $current_db_version. Required version is $database_schema_version. We're good.\n";
+        print STDERR "Database schema version is up to date at version $current_db_version. Required version is $global->{'database_schema_version'}. We're good.\n";
         }
     } # End check_database_upgrade()
 
@@ -1962,7 +1963,7 @@ sub header {
                 <a href="/?lid=$default_listid" class="d-flex align-items-center gap-2 text-white text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto" title="Switch to Default List"
                 >
-                    <img src="/static/$taskpony_icon" width="82" height="82" alt="logo">
+                    <img src="/static/$global->{'taskpony_icon'}" width="82" height="82" alt="logo">
                 </a>
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto" title="Home - Show active tasks in '$list_name'"
@@ -2050,10 +2051,10 @@ sub footer {
             ~;
 
     # Show label for a new version if it exists
-    if ( ($config->{cfg_version_check} eq 'on') && ($new_version_available == 1 ) ) {
+    if ( ($config->{cfg_version_check} eq 'on') && ($global->{'new_version_available'} == 1 ) ) {
         $html .= qq~
             <span class="badge rounded-pill  bg-$config->{cfg_header_colour}">
-                <a href="$app_releases_page" class="text-white text-decoration-none" target="_blank">
+                <a href="$global->{'app_releases_page'}" class="text-white text-decoration-none" target="_blank">
                     New version available
                 </a>
             </span>
@@ -2062,7 +2063,7 @@ sub footer {
         }
 
     $html .= qq~
-            <a href="https://github.com/digdilem/taskpony">$global->{'app_title'} v.$app_version</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
+            <a href="https://github.com/digdilem/taskpony">$global->{'app_title'} v.$global->{'app_version'}</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
             </p>
         </footer>
 
@@ -2141,7 +2142,7 @@ sub footer {
         <script>
         \$(document).ready(function(){
         \$('[data-bs-toggle="tooltip"]').tooltip({
-            delay: { $tooltip_delay }
+            delay: { $global->{'tooltip_delay'} }
         });
         });
         </script>
@@ -2900,10 +2901,10 @@ sub run_daily_tasks {
     # If month is December and day is between 20 and 31, show a festive icon
     my ($sec,$min,$hour,$mday,$mon,$year) = localtime();
     if ( ($mon == 11) && ($mday >= 20) && ($mday <= 31) ) {
-        $taskpony_icon = 'taskpony-logo-xmas.png';
+        $global->{'taskpony_icon'} = 'taskpony-logo-xmas.png';
         print STDERR "Taskponies love Christmas!\n";
         } else {
-        $taskpony_icon = 'taskpony-logo.png';  # Reset to normal logo
+        $global->{'taskpony_icon'} = 'taskpony-logo.png';  # Reset to normal logo
         }
     # Back to seriousness
 
@@ -2995,16 +2996,16 @@ sub ensure_sensible_config_range {
 # Get latest release from github
 sub check_latest_release {
     if ($config->{'cfg_version_check'} ne 'on') { return; }             # If disabled, return early
-    if ($new_version_available == 1) { return; }                       # No point checking again if we know there is a new version waiting
+    if ($global->{'new_version_available'} == 1) { return; }                       # No point checking again if we know there is a new version waiting
 
     my $github_latest_version;
 
     my $http = HTTP::Tiny->new(
-        agent => 'taskpony-version-check/$app_version',
+        agent => 'taskpony-version-check/$global->{'app_version'}',
         timeout => 10
         );
 
-    my $res = $http->get($github_version_url);
+    my $res = $http->get($global->{'github_version_url'});
     if ($res->{success}) {
         my $data = decode_json($res->{content});
         $github_latest_version = $data->{tag_name};
@@ -3014,12 +3015,12 @@ sub check_latest_release {
         return;
         }
 
-    my $normalised_app_version = $app_version;
+    my $normalised_app_version = $global->{'app_version'};
     $normalised_app_version =~ s/\D//g;
 
     if ($github_latest_version > $normalised_app_version) {
         print STDERR "New version of $global->{'app_title'} is available\n";
-        $new_version_available = 1;
+        $global->{'new_version_available'} = 1;
         }
     return;
     }  # End check_latest_release()
