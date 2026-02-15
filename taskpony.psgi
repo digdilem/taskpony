@@ -2792,7 +2792,7 @@ sub verify_valid_list { # verify_valid_list($list_id) - checks whether a list id
         }
 
     # 2. Try loading from config
-    if ( ($page->{'list_id'} == 0) && ($checks_passed == 0) ) { # No list id set, pull the default one from ConfigTb. If that fails, select the first viable list.
+    if ($page->{'list_id'} == 0) { # No list id set, pull the default one from ConfigTb. If that fails, select the first viable list.
         print STDERR "INFO: No list id set. Attempting to load active list id from ConfigTb\n";
         $page->{'list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
         }
