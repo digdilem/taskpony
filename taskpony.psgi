@@ -200,6 +200,9 @@ my $app = sub {
 
     # Set LIST nn as UnDeleted (Active)
     if ($req->path =~ m{^/list_undelete/(\d+)$})        { action_list_undelete($1);     $res->redirect('/lists'); return $res->finalize; }
+    # Permanently delete LIST nn and redirect to lists page
+    if ($req->path =~ m{^/list_hard_delete/(\d+)$})     { action_list_hard_delete($1);  $res->redirect('/lists'); return $res->finalize; }
+
 
 
 
@@ -260,20 +263,7 @@ my $app = sub {
 
 
     ###############################################
-    # Set LIST nn as Deleted
-    if ($req->path eq "/list_delete") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('id');
-            if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
-                print STDERR "INFO:Permanently deleting list id $lid\n";
-                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
-                eval { $sth->execute($lid); 1 } or print STDERR "WARN: List delete failed: $@";
-                add_alert("List #$lid deleted.");
-                }
-            }
-        $res->redirect('/lists'); # Redirect back to lists view
-        return $res->finalize;
-        } # End /list_delete
+
 
     ###############################################
     # Handle setting a list as default
@@ -808,7 +798,7 @@ my $app = sub {
                               $icon_xcircle
                             </a>
                             <!-- Permanently delete this List -->
-                            <a href="/list_delete_list?lid=$a->{'id'}"
+                            <a href="/list_hard_delete/$a->{'id'}"
                             class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                             onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
@@ -3118,6 +3108,23 @@ sub action_list_undelete { # Undelete list nn from ListsTb by setting DeletedDat
         print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_undelete\n";
         }
     } # End action_list_undelete
+
+sub action_list_hard_delete {  # Permanently delete List nn from ListsTb
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        if ($list_id > 1) { # Don't allow deleting "All Tasks Lists"
+            print STDERR "ACTION: Deleting list $list_id\n";
+            my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
+            eval { $sth->execute($list_id); 1 } or print STDERR "WARN: List delete failed: $@";
+            add_alert("List #$list_id deleted.");
+            } else {
+            print STDERR "WARN: Attempt to delete list with invalid ID ($list_id) passed to action_list_hard_delete\n";
+            }
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_hard_delete\n";
+        }
+    } # End action_list_hard_delete
+
 
 
 # End Action functions
