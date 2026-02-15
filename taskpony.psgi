@@ -135,9 +135,6 @@ print STDERR "|  [ ] Buy milk                      |\n";
 print STDERR "+------------------------------------+\n\n";
 
 # Get additional config values.
-$page->{'list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-$page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
-$page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
 
 ####################################
 # Start main loop
@@ -153,28 +150,15 @@ my $app = sub {
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers and preflight checks we should ensure are done on each page load
-    $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
-    $page->{'list_id'} = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
-    if (! $page->{'default_listid'}) { $page->{'default_listid'} = single_db_value('SELECT id FROM ListsTb WHERE IsDefault = 1 LIMIT 1') || 0; } # Get default list id for use in various
+
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
+    verify_valid_list($req->param('lid'));      # If lid specified, verify it is valid, if not valid, ensure the chosen list is viable
 
-    # If no list lid specified, get the active list from ConfigTb to provide consistency to user
-    if ($page->{'list_id'} == 0) {
-        $page->{'list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-        debug("List id (lid) was specified, using active list id from ConfigTb of: $page->{'list_id'}");
-        } else { # list id was specified, update active list in ConfigTb with it.
-        debug("List id (lid) was specified. Updating active_list id in ConfigTb to: $page->{'list_id'}");
-        $dbh->do(
-            "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?",
-            undef,
-            'active_list',
-            $page->{'list_id'},
-            $page->{'list_id'}
-            ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
-        $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
-        $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
-        }
+
+    $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. !!
+
+
 
     ###############################################
     # Preflight checks done. First, check with simple redirectors
@@ -197,7 +181,6 @@ my $app = sub {
     if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
 
     #     LIST ACTIONS
-
     # Set LIST nn as UnDeleted (Active)
     if ($req->path =~ m{^/list_undelete/(\d+)$})        { action_list_undelete($1);     $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete LIST nn and redirect to lists page
@@ -2798,6 +2781,44 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
         </span>~;
     } # end build_inline_icon
 
+sub verify_valid_list { # verify_valid_list($list_id) - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
+    my ($proposed_list_id) = @_;
+    my $original_list_id = $page->{'list_id'} || 0;
+
+    # 1. Change to something provided by ?lid
+    if ($proposed_list_id && $proposed_list_id =~ /^\d+$/) { # A lid was provided and is a number. Check it exists and is viable, then switch to it.
+        print STDERR "INFO: List ID provided in ?lid= parameter: $proposed_list_id. \n";
+        $page->{'list_id'} = $proposed_list_id;
+        }
+
+    # 2. Try loading from config
+    if ( ($page->{'list_id'} == 0) && ($checks_passed == 0) ) { # No list id set, pull the default one from ConfigTb. If that fails, select the first viable list.
+        print STDERR "INFO: No list id set. Attempting to load active list id from ConfigTb\n";
+        $page->{'list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+        }
+
+    # 3. Verify list is viable and not disabled or deleted
+    my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $proposed_list_id);
+    if (( !$exists or ($exists == 0) ) && ($checks_passed == 0) ) {
+        my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
+        print STDERR "INFO: Current List ID ($original_list_id) is not valid or is deleted. Changing to List ID ($new_list_id)\n";
+        $page->{'list_id'} = $new_list_id;
+        }
+
+    # If, after the above, list_id has changed, save it to config
+    if ($page->{'list_id'} != $original_list_id) {
+        print STDERR "INFO: List ID has changed from ($original_list_id) to ($page->{'list_id'}). Saving new List ID to ConfigTb\n";
+        $dbh->do("UPDATE ConfigTb SET `value` = ? WHERE `key` = 'active_list'", $page->{'list_id'}, $page->{'list_id'} ) or print STDERR "WARNING: Failed to save active_list in ConfigTb: " . $dbh->errstr;
+        # Also reload associated values
+        $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
+        $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
+        }
+
+    } # End verify_valid_list()
+
+
+
+
 # End BUILD functions
 ###############################################
 
@@ -3015,7 +3036,7 @@ sub action_list_undelete { # Undelete list nn from ListsTb by setting DeletedDat
         }
     } # End action_list_undelete
 
-sub action_list_hard_delete {  # Permanently delete List nn from ListsTb
+sub action_list_hard_delete {  # Permanently delete List nn
     my ($list_id) = @_;
     if ($list_id && $list_id =~ /^\d+$/) {
         if ($list_id > 1) { # Don't allow deleting "All Tasks Lists"
