@@ -2816,8 +2816,8 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
         }
 
-    if ($page->{'default_list_id'} == 0) {  # If this is 0, it needs reloading.
-        $page->{'default_list_id'} = single_db_value("SELECT `id` FROM ListsTb WHERE `isDefault` = 1") || 0;
+    if ($page->{'default_listid'} == 0) {  # If this is 0, it needs reloading.
+        $page->{'default_listid'} = single_db_value("SELECT `id` FROM ListsTb WHERE `isDefault` = 1") || 0;
         }
 
     } # End verify_valid_list()
