@@ -54,10 +54,10 @@ our $global = {
     new_version_available => 0,             # Set to 1 if a new version is available on github
     taskpony_icon => 'taskpony-logo.png',  # Default icon file name in ./static dir
     tooltip_delay => 'show: 250, hide: 10',  # Global tooltip delay for all tooltips in the app.
+    $global->{'dbh'};                               # Global database handle
     };
 
 
-my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
 my $list_colour;                    # Current list highlight colour (overrides default)
@@ -143,7 +143,7 @@ my $app = sub {
     my $req = Plack::Request->new($env);
     my $res = Plack::Response->new(200);
 
-    if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
+    if (not $global->{'dbh'}->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers
     $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
@@ -158,13 +158,13 @@ my $app = sub {
         debug("List id (lid) was specified, using active list id from ConfigTb of: $list_id");
         } else { # list id was specified, update active list in ConfigTb with it.
         debug("List id (lid) was specified. Updating active_list id in ConfigTb to: $list_id");
-        $dbh->do(
+        $global->{'dbh'}->do(
             "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?",
             undef,
             'active_list',
             $list_id,
             $list_id
-            ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
+            ) or print STDERR "WARNING: Failed to set active_list: " . $global->{'dbh'}->errstr;
         $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
         $list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
         }
@@ -209,7 +209,7 @@ my $app = sub {
         my $task_id = $req->param('task_id') // 0;
 
         if ($task_id > 0) {
-            my $sth = $dbh->prepare(
+            my $sth = $global->{'dbh'}->prepare(
                 'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                 );
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
@@ -230,7 +230,7 @@ my $app = sub {
             my $task_id = $req->param('task_id') // 0;
 
             if ($task_id > 0) {
-                my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
+                my $sth = $global->{'dbh'}->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
                 eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
                 print STDERR "INFO: Task $task_id marked as active again\n";
                 add_alert("Task #$task_id re-activated.");
@@ -247,7 +247,7 @@ my $app = sub {
             my $lid = $req->param('lid');
             if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
                 print STDERR "INFO: Undeleting list id $lid\n";
-                my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
+                my $sth = $global->{'dbh'}->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List undelete failed: $@";
                 add_alert("List #$lid restored.");
                 }
@@ -263,7 +263,7 @@ my $app = sub {
             my $lid = $req->param('id');
             if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
                 print STDERR "INFO:Permanently deleting list id $lid\n";
-                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
+                my $sth = $global->{'dbh'}->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List delete failed: $@";
                 add_alert("List #$lid deleted.");
                 }
@@ -280,7 +280,7 @@ my $app = sub {
             if ($lid > 1) { # Don't allow setting "All Tasks Lists" as default
                 print STDERR "Setting list $lid as default list.\n";
                 single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
-                my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
+                my $sth = $global->{'dbh'}->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set default lid update failed: $@";
                 add_alert("List #$lid set as default.");
                 }
@@ -298,7 +298,7 @@ my $app = sub {
                 my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 2', $lid) // 0;
                 if ($count > 0) {
                     print STDERR "INFO: Setting all tasks in list $lid as active\n";
-                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
+                    my $sth = $global->{'dbh'}->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
                     eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks active failed: $@";
                     add_alert("$count task(s) in list set as active.");
                 } else {
@@ -319,7 +319,7 @@ my $app = sub {
                 my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 1', $lid) // 0;
                 if ($count > 0) {
                     print STDERR "INFO: Setting all tasks in list $lid as completed\n";
-                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
+                    my $sth = $global->{'dbh'}->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
                     eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks completed failed: $@";
                     add_alert("$count task(s) in list marked as completed.");
                 } else {
@@ -340,7 +340,7 @@ my $app = sub {
                 my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ?', $lid) // 0;
                 if ($count > 0) {
                     print STDERR "INFO: Permanently deleting all tasks in list $lid\n";
-                    my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE ListId = ?');
+                    my $sth = $global->{'dbh'}->prepare('DELETE FROM TasksTb WHERE ListId = ?');
                     eval { $sth->execute($lid); 1 } or print STDERR "WARN: Delete all tasks failed: $@";
                     add_alert("$count task(s) permanently deleted from list.");
                 } else {
@@ -359,7 +359,7 @@ my $app = sub {
             my $lid = $req->param('lid');
             if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
                 print STDERR "INFO: Permanently deleting list $lid\n";
-                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ?');
+                my $sth = $global->{'dbh'}->prepare('DELETE FROM ListsTb WHERE id = ?');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: Permanent list delete failed: $@";
                 add_alert("List permanently deleted.");
             }
@@ -378,7 +378,7 @@ my $app = sub {
             my $desc  = sanitize($req->param('Description') // '');
 
             if (length $title) {
-                my $sth = $dbh->prepare(
+                my $sth = $global->{'dbh'}->prepare(
                     'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)'
                     );
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "WARN: Task insert into list $list_id failed: $@";
@@ -443,7 +443,7 @@ my $app = sub {
                 }
 
             if (length $title && $task_id > 0 && $list_id > 1) {
-                my $sth = $dbh->prepare(
+                my $sth = $global->{'dbh'}->prepare(
                     'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
                     );
                 eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
@@ -457,7 +457,7 @@ my $app = sub {
 
         # Display edit form
         if ($task_id > 0) {
-            my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
+            my $sth = $global->{'dbh'}->prepare('SELECT * FROM TasksTb WHERE id = ?');
             $sth->execute($task_id);
             my $task = $sth->fetchrow_hashref();
 
@@ -466,7 +466,7 @@ my $app = sub {
 
                 # Build list dropdown
                 my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
-                my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+                my $list_sth = $global->{'dbh'}->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
                 $list_sth->execute();
 
                 # Build list
@@ -615,7 +615,7 @@ my $app = sub {
             my $desc = sanitize($req->param('Description') // '');
 
             if ($action eq 'add' && length $title) {
-                my $sth = $dbh->prepare(
+                my $sth = $global->{'dbh'}->prepare(
                     'INSERT INTO ListsTb (Title, Description) VALUES (?, ?)'
                     );
 
@@ -624,7 +624,7 @@ my $app = sub {
                 $stats->{'total_lists'} += 1;
                 $stats->{'total_active_lists'} += 1;
                 } elsif ($action eq 'edit' && $list_id > 1 && length $title) {
-                my $sth = $dbh->prepare(
+                my $sth = $global->{'dbh'}->prepare(
                     'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
                     );
 
@@ -632,7 +632,7 @@ my $app = sub {
                 add_alert("List updated.");
                 } elsif ($action eq 'delete_orphan' && $list_id > 1) {
                 # Delete list, leave tasks orphaned (no list assignment)
-                my $sth = $dbh->prepare(
+                my $sth = $global->{'dbh'}->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
                 eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
@@ -644,17 +644,17 @@ my $app = sub {
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
                 if ($current_active == $list_id) {
                     if ($default_listid) {
-                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_listid, $default_listid);
+                        $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_listid, $default_listid);
                     }
                 }
                 } elsif ($action eq 'delete_complete' && $list_id > 1) {
                 # Mark all tasks in this list as completed, then delete list
-                my $update_sth = $dbh->prepare(
+                my $update_sth = $global->{'dbh'}->prepare(
                     'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1'
                     );
                 eval { $update_sth->execute($list_id); 1 } or print STDERR "Task completion failed: $@";
 
-                my $delete_sth = $dbh->prepare(
+                my $delete_sth = $global->{'dbh'}->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
                 eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
@@ -667,7 +667,7 @@ my $app = sub {
                 if ($current_active == $list_id) {
                     my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                     if ($default_list) {
-                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                        $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
                     }
                 }
                 } elsif ($action eq 'delete_move' && $list_id > 1) {
@@ -675,12 +675,12 @@ my $app = sub {
                 my $target_list_id = $req->param('target_list_id') // 0;
 
                 if ($target_list_id > 1 && $target_list_id != $list_id) {
-                    my $move_sth = $dbh->prepare(
+                    my $move_sth = $global->{'dbh'}->prepare(
                         'UPDATE TasksTb SET ListId = ? WHERE ListId = ? AND Status = 1'
                         );
                     eval { $move_sth->execute($target_list_id, $list_id); 1 } or print STDERR "Task move failed: $@";
 
-                    my $delete_sth = $dbh->prepare(
+                    my $delete_sth = $global->{'dbh'}->prepare(
                         'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                         );
                     eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
@@ -694,7 +694,7 @@ my $app = sub {
                     if ($current_active == $list_id) {
                         my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                         if ($default_list) {
-                            $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                            $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
                         }
                     }
                 } else {
@@ -702,7 +702,7 @@ my $app = sub {
                     }
                 } elsif ($action eq 'delete' && $list_id > 1) {
                 # Legacy delete (orphan) - for backwards compatibility
-                my $sth = $dbh->prepare(
+                my $sth = $global->{'dbh'}->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
 
@@ -716,7 +716,7 @@ my $app = sub {
                 if ($current_active == $list_id) {
                     my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                     if ($default_list) {
-                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                        $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
                         }
                     }
                 } # End list action handling
@@ -802,7 +802,7 @@ my $app = sub {
                       </tr>
         ~;
 
-        my $list_sth = $dbh->prepare(
+        my $list_sth = $global->{'dbh'}->prepare(
             'SELECT id, Title, Description, IsDefault FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC'
             );  # Don't select ListsTb.id=1, "All"
         $list_sth->execute();
@@ -819,7 +819,7 @@ my $app = sub {
                 ) // 0;
 
             my $title = html_escape($list->{'Title'});
-            my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{cfg_description_short_length});
+            my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{'cfg_description_short_length'});
 
             $html .= qq~
                       <tr>
@@ -947,7 +947,7 @@ my $app = sub {
                     </thead>
                     <tbody>
         ~;
-        my $deleted_list_sth = $dbh->prepare(
+        my $deleted_list_sth = $global->{'dbh'}->prepare(
             'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
             );  # Don't select ListsTb.id=1, "All"
         $deleted_list_sth->execute();
@@ -1068,7 +1068,7 @@ my $app = sub {
         ~;
 
         # Build the list of available lists for moving tasks as JSON
-        my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+        my $move_lists_sth = $global->{'dbh'}->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
         $move_lists_sth->execute();
         my @move_lists;
         while (my $ml = $move_lists_sth->fetchrow_hashref()) {
@@ -1231,7 +1231,7 @@ my $app = sub {
                     }
 
                 if (length $title && $list_id > 1) {
-                    my $sth = $dbh->prepare(
+                    my $sth = $global->{'dbh'}->prepare(
                         'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
                 eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
@@ -1245,7 +1245,7 @@ my $app = sub {
 
             # If GET, show the edit-list form
             if ($list_id > 1) {
-                my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
+                my $sth = $global->{'dbh'}->prepare('SELECT * FROM ListsTb WHERE id = ?');
                 $sth->execute($list_id);
                 my $list= $sth->fetchrow_hashref();
 
@@ -1285,7 +1285,7 @@ my $app = sub {
                                         <a class="btn btn-secondary" href="/lists">Cancel</a>
                                     </div>
                                 <hr>
-                                <p class="text-$config->{cfg_header_colour}">This is list id #$list->{id} which was created on $list->{CreatedDate}</p>
+                                <p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>
                                 </div>
                             </form>
                         </div>
@@ -1606,7 +1606,7 @@ my $app = sub {
     # /?delete_task=nn - Delete task nn (Actually delete, not just set as completed)
     my $delete_task = $req->param('delete_task') // 0;
     if ($delete_task > 0) {
-        my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
+        my $sth = $global->{'dbh'}->prepare('DELETE FROM TasksTb WHERE id = ?');
         eval { $sth->execute($delete_task); 1 } or print STDERR "WARN: Delete TasksTb.id=$delete_task failed: $@";
         add_alert("Task #$delete_task deleted.");
         $res->redirect('/'); # Redirect back to default page
@@ -1719,7 +1719,7 @@ sub connect_db {
         print STDERR "----------------------------------------------------\n\n";
 
         # Create new database connection which will autocreate the new database file
-        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $global->{'dbh'} = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -1730,7 +1730,7 @@ sub connect_db {
         print STDERR "Database file $db_path found, connecting to existing database.\n";
 
         # The database does exist, so connect to it.
-        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $global->{'dbh'} = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -1744,26 +1744,26 @@ sub connect_db {
 # initialise_database
 # Run-safe initialise of database scema. Starting with v.1 and upgrading as needed.
 
-# Create the v.1 database schema in a new database. New DB is created and we are connected via the global $dbh
+# Create the v.1 database schema in a new database. New DB is created and we are connected via the global $global->{'dbh'}
 sub initialise_database {
     ###############################################
     # Create ConfigTb
     print STDERR "Creating ConfigTb table.\n";
-    $dbh->do(qq~
+    $global->{'dbh'}->do(qq~
             CREATE TABLE IF NOT EXISTS ConfigTb (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 key TEXT UNIQUE,
                 value TEXT
                 );
-        ~) or print STDERR "WARN: Failed to create ConfigTb: " . $dbh->errstr;
+        ~) or print STDERR "WARN: Failed to create ConfigTb: " . $global->{'dbh'}->errstr;
 
     print STDERR "ConfigTb created. Populating.\n";
-    $dbh->do(qq~
+    $global->{'dbh'}->do(qq~
             INSERT INTO ConfigTb (key, value) VALUES
             ('database_schema_version', '1'),
             ('active_list', '2')
             ;
-        ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
+        ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $global->{'dbh'}->errstr;
 
     # Save initial config values from local config hash
     save_config();
@@ -1771,7 +1771,7 @@ sub initialise_database {
     ###############################################
     # Create ListsTb
     print STDERR "Creating ListsTb table.\n";
-    $dbh->do(qq~
+    $global->{'dbh'}->do(qq~
             CREATE TABLE IF NOT EXISTS ListsTb (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Title TEXT NOT NULL,
@@ -1781,21 +1781,21 @@ sub initialise_database {
                 Colour TEXT,
                 IsDefault INTEGER NOT NULL DEFAULT 0
                 );
-        ~) or print STDERR "WARN: Failed to create ListsTb: " . $dbh->errstr;
+        ~) or print STDERR "WARN: Failed to create ListsTb: " . $global->{'dbh'}->errstr;
 
     # Populate with a default list
     print STDERR "ListsTb created. Populating with default lists.\n";
-    $dbh->do(qq~
+    $global->{'dbh'}->do(qq~
         INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES
         (1, 'All Tasks', 'View tasks from all lists', 0),
         (2, 'Default List', 'Main day to day list', 1)
         ON CONFLICT(id) DO NOTHING;
-        ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
+        ~) or print STDERR "WARN: Failed to populate ListsTb: " . $global->{'dbh'}->errstr;
 
     ###############################################
     # Create TasksTb
     print STDERR "Creating TasksTb table.\n";
-    $dbh->do(qq~
+    $global->{'dbh'}->do(qq~
         CREATE TABLE IF NOT EXISTS TasksTb (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             Status INTEGER DEFAULT 1, -- 1 = Active, 2 = Deferred, 3 = Completed
@@ -1806,16 +1806,16 @@ sub initialise_database {
             StartDate TEXT,
             CompletedDate TEXT
             );
-        ~) or print STDERR "Failed to create TasksTb: " . $dbh->errstr;
+        ~) or print STDERR "Failed to create TasksTb: " . $global->{'dbh'}->errstr;
 
     # Populate with some sample tasks
     print STDERR "TasksTb created. Populating with sample tasks.\n";
-    $dbh->do(qq~
+    $global->{'dbh'}->do(qq~
         INSERT INTO TasksTb (Title, Description, ListId) VALUES
         ('Sample Task 1', 'This is a sample task description.', 2),
         ('Sample Task 2', 'Another sample task for demonstration.', 2),
         ('Sample Task 3', 'Install Taskpony. Hey, you did this, you can tick it off!', 2);
-        ~) or print STDERR "WARN: Failed to populate TasksTb: " . $dbh->errstr;
+        ~) or print STDERR "WARN: Failed to populate TasksTb: " . $global->{'dbh'}->errstr;
 
     print STDERR "Database initialisation complete, schema version 1.\n";
 
@@ -1845,7 +1845,7 @@ sub check_database_upgrade  {
 
             foreach my $upgrade_query (@db_upgrade_steps_1_to_2) {
                 print STDERR "Applying DB upgrade step: $upgrade_query\n";
-                eval { $dbh->do($upgrade_query); 1 } or print STDERR "WARN: Failed to apply DB upgrade step: $upgrade_query : " . $dbh->errstr;
+                eval { $global->{'dbh'}->do($upgrade_query); 1 } or print STDERR "WARN: Failed to apply DB upgrade step: $upgrade_query : " . $global->{'dbh'}->errstr;
                 }
 
             # Re-fetch current DB version after upgrade steps to ensure it's updated
@@ -2178,7 +2178,7 @@ sub list_pulldown {
 
     # We should check whether there is a default list. If so, select the oldest non-deleted one.
     my $default_cnt_sql = 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NULL';
-    my $default_cnt = $dbh->selectrow_array($default_cnt_sql);
+    my $default_cnt = $global->{'dbh'}->selectrow_array($default_cnt_sql);
 
     if ($default_cnt == 0) {
         print STDERR "Odd. There's no default, active list. Maybe it just got deleted. Making the oldest list the new default.\n";
@@ -2189,7 +2189,7 @@ sub list_pulldown {
         }
 
     # Get lists from ListsTb
-    my $sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
+    my $sth = $global->{'dbh'}->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
     $sth->execute();
 
     # Prepend the "All lists" option and then loop through, adding each.
@@ -2255,7 +2255,7 @@ sub html_escape_with_breaks {
 # Execute a SQL query that returns a single value
 sub single_db_value {
     my ($sql, @params) = @_;
-    my $sth = $dbh->prepare($sql);
+    my $sth = $global->{'dbh'}->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
     return $value;
@@ -2317,7 +2317,7 @@ sub show_tasks {
         $sql .= " ORDER BY t.AddedDate DESC ";
         }
 
-    my $sth = $dbh->prepare($sql);
+    my $sth = $global->{'dbh'}->prepare($sql);
     $sth->execute(@params);
 
     my $hidden_string = 'dt-hidden';
@@ -2667,13 +2667,13 @@ sub show_alert {
 # Store an alert message in ConfigTb to be shown on next page load
 sub add_alert {
     my $alert_text = shift;
-    $dbh->do(
+    $global->{'dbh'}->do(
         "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
         undef,
         'last_alert',
         $alert_text,
         $alert_text
-        ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
+        ) or print STDERR "Failed to set last_alert: " . $global->{'dbh'}->errstr;
     } # End add_alert()
 
 ###############################################
@@ -2822,16 +2822,16 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
         FROM TasksTb
         };
 
-    my $row = $dbh->selectrow_hashref($sql);
+    my $row = $global->{'dbh'}->selectrow_hashref($sql);
 
     # Merge DB values into existing stats hashref
     @$stats{ keys %$row } = values %$row;
 
-    $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
-    $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
-    $stats->{stats_first_task_created} = $dbh->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
-    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
-    $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
+    $stats->{total_lists} = $global->{'dbh'}->selectrow_array('SELECT COUNT(*) FROM ListsTb');
+    $stats->{total_active_lists} = $global->{'dbh'}->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
+    $stats->{stats_first_task_created} = $global->{'dbh'}->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
+    $stats->{stats_first_task_created_daysago} = $global->{'dbh'}->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
+    $stats->{repeating_tasks} = $global->{'dbh'}->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()
@@ -2839,7 +2839,7 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
 ###############################################
 # Run any daily tasks we need to. Return if already run today.
 sub run_daily_tasks {
-    my $tasks_ran_today = $dbh->selectrow_array("
+    my $tasks_ran_today = $global->{'dbh'}->selectrow_array("
         SELECT CASE
         WHEN value = date('now') THEN 1
         ELSE 0
@@ -2858,7 +2858,7 @@ sub run_daily_tasks {
 
     ###############################################
     # Look for any recurring tasks that need to be reactivated today
-    my $recurring_sth = $dbh->prepare("
+    my $recurring_sth = $global->{'dbh'}->prepare("
         SELECT id, Title, Description, AddedDate, CompletedDate, ListId, RecurringIntervalDay
         FROM TasksTb
         WHERE IsRecurring = 'on' AND Status = 2 AND CompletedDate IS NOT NULL
@@ -2881,20 +2881,20 @@ sub run_daily_tasks {
             print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}') after $interval_days days\n";
 
             # Reactivate the task
-            $dbh->do("
+            $global->{'dbh'}->do("
                 UPDATE TasksTb
                 SET Status = 1,
                     CompletedDate = NULL,
                     AddedDate = datetime('now')
                 WHERE id = ?
                 ", undef, $task->{'id'}
-                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $dbh->errstr;
+                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $global->{'dbh'}->errstr;
             }
         }
 
     ###############################################
     # We ran run_daily_tasks() today, so let's update the last run time and return
-    $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
+    $global->{'dbh'}->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $global->{'dbh'}->errstr;
 
     # Frivolity: Check if a special date and change the logo
     # If month is December and day is between 20 and 31, show a festive icon
@@ -2959,12 +2959,12 @@ sub save_config {
             ON CONFLICT(key)
             DO UPDATE SET value = excluded.value;";
 
-        $dbh->do(
+        $global->{'dbh'}->do(
             $sql,
             undef,
             $key,
             $config->{$key},
-            ) or warn "Failed to save config key ($key): " . $dbh->errstr;
+            ) or warn "Failed to save config key ($key): " . $global->{'dbh'}->errstr;
         }
     } # End save_config()
 
@@ -3087,7 +3087,7 @@ sub config_show_option {
 sub showalltasks {
     my $html = '';
 
-    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
+    my $lists_sth = $global->{'dbh'}->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
