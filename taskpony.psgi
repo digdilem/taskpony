@@ -2285,7 +2285,8 @@ sub debug {
 # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
 # If $show_recurring is 1, shows all recurring tasks regardless of status
 sub show_tasks {
-    my ($status, $page->{'list_id'}, $not_hidden, $show_recurring) = @_;
+    my ($status, $list_id_param, $not_hidden, $show_recurring) = @_;
+    $page->{'list_id'} = $list_id_param;
     $show_recurring = $show_recurring // 0;  # Default to 0 if not provided
 
     # Build SQL query
