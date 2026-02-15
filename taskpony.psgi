@@ -215,6 +215,11 @@ my $app = sub {
 
     ###############################################
     # Recieve Forms
+
+    # Receive edit task form
+    if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
+
+
     # /task_form_edit/nn - If GET, show the edit form for task nn. If POST, update task nn with submitted values and redirect to home page
 
 
@@ -3092,86 +3097,73 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
                             </div>
 
                         </form>
-            ~;
-            #           </div>
-            #         </div>
+                ~;
 
-            #         </div>
-            #     </div>
-            # </div>
-
-            $html .= end_card(0);
-            $html .= footer();
-            return $html;
-
-            #$res->body($html);
-            #return $res->finalize;
+                $html .= end_card(0);
+                $html .= footer();
+                return $html;
+                } else {
+                print STDERR "WARN: No task found with ID ($task_id) passed to action_task_edit\n";
+                return "Error in task_edit(): No task found with that ID";
+                }
             } else {
-            print STDERR "WARN: No task found with ID ($task_id) passed to action_task_edit\n";
-            return "Error in task_edit(): No task found with that ID";
+            print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_edit\n";
+            return "Error in task_edit(): Invalid task ID";
             }
-        } else {
-        print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_edit\n";
-        return "Error in task_edit(): Invalid task ID";
-        }
-    } # End action_task_edit
+        } # End action_task_edit
 
     }
 
-   ###############################################
-    # Handle editing a task
+###############################################
+# Receive various forms. Will receive $req. Usually no html returned and parent handles redirect.
 
+# Receive Edit Task form
+sub receive_form_task_edit {
+    my ($task_id, $req) = @_;
+    if ($task_id && $task_id =~ /^\d+$/) {
+        my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
+        $sth->execute($task_id);
+        my $task = $sth->fetchrow_hashref() or print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
 
+        if ($task) {
+            my $title = sanitize($req->param('Title') // '');
+            my $desc  = sanitize($req->param('Description') // '');
+            my $list_id = $req->param('ListId') // 0;
+            my $is_recurring = sanitize($req->param('IsRecurring') // '');
+            my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
 
-        #     if ($task) {
+            # Validate recurring interval
+            if ($recurring_interval !~ /^\d+$/) {
+                print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
+                $recurring_interval = 1;
+                }
+            if ($recurring_interval < 1) {
+                print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
+                $recurring_interval = 1;
+                }
+            if ($recurring_interval > 365) {
+                print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
+                $recurring_interval = 365;
+                }
 
+            if (length $title && $list_id > 1) {
+                my $sth = $dbh->prepare(
+                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
+                    );
+                eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update for $task_id failed: $@";
+                debug("Task $task_id updated");
+                add_alert("Task #$task_id updated");
+                } else {
+                print STDERR "WARN: Invalid data submitted in edit form for task ID ($task_id)\n";
+                add_alert("Error updating task #$task_id: Invalid input data.");
+                }
+        return;
+        } else {
+        print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
+        add_alert("Error updating task #$task_id: Task not found.");
+        }
 
-
-        # $res->status(404);
-        # $res->body("Task not found");
-        # return $res->finalize;
-        # } # End /
-
-
-
-
-
-# #Receivee edit form
-
-#         # If POST, update the task in DB and redirect
-#         if ($req->method && uc($req->method) eq 'POST') {
-#             my $title = sanitize($req->param('Title') // '');
-#             my $desc  = sanitize($req->param('Description') // '');
-#             my $page->{'list_id'} = $req->param('ListId') // 0;
-#             my $is_recurring = sanitize($req->param('IsRecurring') // '');
-#             my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
-#             # Validate recurring interval
-#             if ($recurring_interval !~ /^\d+$/) {
-#                 print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
-#                 $recurring_interval = 1;
-#                 }
-#             if ($recurring_interval < 1) {
-#                 print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
-#                 $recurring_interval = 1;
-#                 }
-#             if ($recurring_interval > 365) {
-#                 print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
-#                 $recurring_interval = 365;
-#                 }
-
-#             if (length $title && $task_id > 0 && $page->{'list_id'} > 1) {
-#                 my $sth = $dbh->prepare(
-#                     'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
-#                     );
-#                 eval { $sth->execute($title, $desc, $page->{'list_id'}, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
-#                 debug("Task $task_id updated");
-#                 }
-
-#             add_alert("Task $task_id updated.");
-#             $res->redirect('/');
-#             return $res->finalize;
-#             } # End /edittask form submission handling
-
+    } # End receive_form_task_edit
 
 
 
