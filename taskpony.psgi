@@ -2394,22 +2394,11 @@ sub show_tasks {
             </span> ~;
             }
 
-        # Active tasks. Show checkbox to mark complete
+        # Show Active tasks. Show checkbox to mark complete
         if ($status == 1) {
             $checkbox = qq~
-                <a href="/complete_task/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed">
-                    ✓
-                </a>
+                <a href="/complete_task/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed">✓</a>
                 ~;
-            # $checkbox .= qq~
-            #     <form method="post" action="/complete" style="display:inline;">
-            #         <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
-            #             <input type="hidden" name="task_id" value="$a->{'id'}" />
-            #             <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
-            #             ✓
-            #         </label>
-            #     </form>
-            #     ~;
 
             $title_link .= qq~
                     <a
