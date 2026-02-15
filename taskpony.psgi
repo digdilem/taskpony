@@ -56,7 +56,7 @@ app_releases_page => 'https://github.com/digdilem/taskpony',                    
     new_version_available => 0,                 # Set to 1 if a new version is available on github
     taskpony_icon => 'taskpony-logo.png',       # Default icon file name in ./static dir
     tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app.
-    debug = 0,                                  # Set to 1 to enable debug messages to STDERR
+    debug => 0,                                  # Set to 1 to enable debug messages to STDERR
     };
 
 ###############################################
