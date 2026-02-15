@@ -3117,54 +3117,6 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
 ###############################################
 # Receive various forms. Will receive $req. Usually no html returned and parent handles redirect.
 
-# Receive Edit Task form
-sub receive_form_task_edit {
-    my ($task_id, $req) = @_;
-    if ($task_id && $task_id =~ /^\d+$/) {
-        my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
-        $sth->execute($task_id);
-        my $task = $sth->fetchrow_hashref() or print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
-
-        if ($task) {
-            my $title = sanitize($req->param('Title') // '');
-            my $desc  = sanitize($req->param('Description') // '');
-            my $list_id = $req->param('ListId') // 0;
-            my $is_recurring = sanitize($req->param('IsRecurring') // '');
-            my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
-
-            # Validate recurring interval
-            if ($recurring_interval !~ /^\d+$/) {
-                print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
-                $recurring_interval = 1;
-                }
-            if ($recurring_interval < 1) {
-                print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
-                $recurring_interval = 1;
-                }
-            if ($recurring_interval > 365) {
-                print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
-                $recurring_interval = 365;
-                }
-
-            if (length $title && $list_id > 1) {
-                my $sth = $dbh->prepare(
-                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
-                    );
-                eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update for $task_id failed: $@";
-                debug("Task $task_id updated");
-                add_alert("Task #$task_id updated");
-                } else {
-                print STDERR "WARN: Invalid data submitted in edit form for task ID ($task_id)\n";
-                add_alert("Error updating task #$task_id: Invalid input data.");
-                }
-        return;
-        } else {
-        print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
-        add_alert("Error updating task #$task_id: Task not found.");
-        }
-
-    } # End receive_form_task_edit
-
 
 
 ##############################################
