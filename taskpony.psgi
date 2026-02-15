@@ -3125,6 +3125,8 @@ sub action_complete_task { # Set task nn as Status 2 in TasksTb (Completed)
         print STDERR "INFO: Task $task_id marked as complete\n";
         $stats->{'tasks_completed_today'} += 1;
         add_alert("Task #$task_id marked as completed. $stats->{'tasks_completed_today'} tasks completed today!");
+        } else {
+        print STDERR "WARN: Invalid task ID ($task_id) passed to action_complete_task\n";
         }
     } # End action_complete_task
 
