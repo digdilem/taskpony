@@ -205,9 +205,17 @@ my $app = sub {
     # Set a LIST as the default list
     if ($req->path =~ m{^/list_set_default/(\d+)$})     { action_list_set_default($1);  $res->redirect('/lists'); return $res->finalize; }
     # Set all tasks in LIST nn as Active
-    if ($req->path =~ m{^/list_set_alltasks_active/(\d+)$})         { action_list_set_alltasks_active($1);  $res->redirect('/lists'); return $res->finalize; }
+    if ($req->path =~ m{^/list_set_alltasks_active/(\d+)$})         { action_list_set_alltasks_active($1);      $res->redirect('/lists'); return $res->finalize; }
     # Set all tasks in LIST nn as Completed
-    if ($req->path =~ m{^/list_set_alltasks_completed/(\d+)$})      { action_list_set_alltasks_completed($1);  $res->redirect('/lists'); return $res->finalize; }
+    if ($req->path =~ m{^/list_set_alltasks_completed/(\d+)$})      { action_list_set_alltasks_completed($1);   $res->redirect('/lists'); return $res->finalize; }
+    # Permanently delete all tasks in LIST nn
+    if ($req->path =~ m{^/list_harddelete_alltasks/(\d+)$})         { action_list_harddelete_alltasks($1);      $res->redirect('/lists'); return $res->finalize; }
+
+
+
+
+
+
 
 
 
@@ -258,32 +266,6 @@ my $app = sub {
 
 
 
-
-
-
-
-
-
-    ###############################################
-    # Permanently delete all tasks in LIST nn
-    if ($req->path eq "/list_delete_all_tasks") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('lid');
-            if ($lid > 1) { # Don't allow for "All Tasks Lists"
-                my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ?', $lid) // 0;
-                if ($count > 0) {
-                    print STDERR "INFO: Permanently deleting all tasks in list $lid\n";
-                    my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE ListId = ?');
-                    eval { $sth->execute($lid); 1 } or print STDERR "WARN: Delete all tasks failed: $@";
-                    add_alert("$count task(s) permanently deleted from list.");
-                } else {
-                    add_alert("No tasks found in this list.");
-                }
-            }
-        }
-        $res->redirect('/lists');
-        return $res->finalize;
-        } # End /list_delete_all_tasks
 
     ###############################################
     # Permanently delete LIST nn
@@ -731,7 +713,7 @@ my $app = sub {
                               $icon_rotate_right
                             </a>
                             <!-- Delete all Tasks -->
-                            <a href="/list_delete_all_tasks?lid=$a->{'id'}"
+                            <a href="/list_harddelete_alltasks/$a->{'id'}"
                             class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
                             onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
@@ -3101,6 +3083,23 @@ sub action_list_set_alltasks_completed { # Set all tasks in "All Tasks" list (Li
         print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_set_alltasks_completed\n";
         }
     } # End action_list_set_alltasks_completed
+
+sub action_list_harddelete_alltasks { # Permanently delete all tasks in List NN
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        if ($list_id > 1) { # Don't allow deleting all tasks in "All Tasks Lists"
+            print STDERR "ACTION: Permanently deleting all tasks in list $list_id\n";
+            my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ?', $list_id) // 0;
+            my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE ListId = ?');
+            eval { $sth->execute($list_id); 1 } or print STDERR "WARN: Delete all tasks failed: $@";
+            add_alert("All $count tasks in list #$list_id permanently deleted.");
+            } else {
+            print STDERR "WARN: Attempt to delete all tasks in list with invalid ID ($list_id) passed to action_list_harddelete_alltasks\n";
+            }
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_harddelete_alltasks\n";
+        }
+    } # End action_list_harddelete_alltasks
 
 
 
