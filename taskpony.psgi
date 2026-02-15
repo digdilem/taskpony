@@ -2798,6 +2798,7 @@ sub verify_valid_list { # verify_valid_list($list_id) - checks whether a list id
         }
 
     # 3. Verify list is viable and not disabled or deleted
+    print STDERR "+++++++ SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL, $proposed_list_id\n\n";
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $proposed_list_id);
     if (!$exists or ($exists == 0) ) {
         my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
