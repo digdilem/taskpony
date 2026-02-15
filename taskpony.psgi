@@ -3113,6 +3113,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
         } else {
         print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_edit\n";
         return "Error in task_edit(): Invalid task ID";
+        }
     } # End action_task_edit
 
    ###############################################
