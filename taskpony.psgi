@@ -189,7 +189,7 @@ my $app = sub {
     if ($req->path =~ m{^/task_complete/(\d+)$})        { action_task_complete($1);     $res->redirect('/'); return $res->finalize; }
 
     # Action /task_delete/nn - Permanently delete task nn and redirect to home page
-    if ($req->path =~ m{^/task_delete/(\d+)$})          { action_delete_task($1);       $res->redirect('/'); return $res->finalize; }
+    if ($req->path =~ m{^/task_delete/(\d+)$})          { action_task_delete($1);       $res->redirect('/'); return $res->finalize; }
 
 
 
