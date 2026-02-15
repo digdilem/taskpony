@@ -186,7 +186,7 @@ my $app = sub {
 
     ###############################################
     # ACTION functions
-    # TASK ACTIONS
+    #     TASK ACTIONS
     # Action /task_complete/nn - Mark task nn as completed and redirect to home page
     if ($req->path =~ m{^/task_complete/(\d+)$})        { action_task_complete($1);     $res->redirect('/'); return $res->finalize; }
     # Action /task_delete/nn - Permanently delete task nn and redirect to home page
@@ -196,14 +196,17 @@ my $app = sub {
     # Action /task_edit/nn - Show edit form for task nn, or if POST, update task nn and redirect to home page. Function returns full html
     if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
 
-    # LIST ACTIONS
+    #     LIST ACTIONS
 
     # Set LIST nn as UnDeleted (Active)
     if ($req->path =~ m{^/list_undelete/(\d+)$})        { action_list_undelete($1);     $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete LIST nn and redirect to lists page
     if ($req->path =~ m{^/list_hard_delete/(\d+)$})     { action_list_hard_delete($1);  $res->redirect('/lists'); return $res->finalize; }
+    # Set a LIST as the default list
+    if ($req->path =~ m{^/list_set_default/(\d+)$})     { action_list_set_default($1);  $res->redirect('/lists'); return $res->finalize; }
 
-
+    # Set all tasks in LIST nn as Active
+    if ($req->path =~ m{^/list_set_alltasks_active/(\d+)$})         { action_list_set_alltasks_active($1);  $res->redirect('/lists'); return $res->finalize; }
 
 
 
@@ -258,50 +261,6 @@ my $app = sub {
 
 
 
-
-    ###############################################
-
-
-    ###############################################
-
-
-    ###############################################
-    # Handle setting a list as default
-    if ($req->path eq "/set_default_list") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('id');
-            if ($lid > 1) { # Don't allow setting "All Tasks Lists" as default
-                print STDERR "Setting list $lid as default list.\n";
-                single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
-                my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
-                eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set default lid update failed: $@";
-                add_alert("List #$lid set as default.");
-                }
-            }
-        $res->redirect('/lists'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
-        return $res->finalize;
-        } # End /set_default_list
-
-    ###############################################
-    # Set all tasks in LIST nn as Active
-    if ($req->path eq "/list_setall_active") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('lid');
-            if ($lid > 1) { # Don't allow for "All Tasks Lists"
-                my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 2', $lid) // 0;
-                if ($count > 0) {
-                    print STDERR "INFO: Setting all tasks in list $lid as active\n";
-                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
-                    eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks active failed: $@";
-                    add_alert("$count task(s) in list set as active.");
-                } else {
-                    add_alert("No completed tasks found in this list.");
-                }
-            }
-        }
-        $res->redirect('/lists');
-        return $res->finalize;
-        } # End /list_setall_active
 
     ###############################################
     # Set all tasks in LIST nn as Completed
@@ -657,7 +616,7 @@ my $app = sub {
                         <td class="text-end">
                           <div class="btn-group" role="group">
                             <!-- Default Button -->
-                            <a href="/set_default_list?id=$list->{'id'}"
+                            <a href="/list_set_default/$list->{'id'}"
                             class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this as the Default List" >
                               ~;
@@ -3124,6 +3083,32 @@ sub action_list_hard_delete {  # Permanently delete List nn from ListsTb
         print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_hard_delete\n";
         }
     } # End action_list_hard_delete
+
+sub action_list_set_default { # Set List nn as default by setting cfg_default_list in ConfigTb
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        print STDERR "ACTION: Setting list $list_id as default\n";
+        single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
+        my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
+        eval { $sth->execute($list_id); 1 } or print STDERR "WARN: Setting default list failed: $@";
+        add_alert("List #$list_id set as default.");
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_set_default\n";
+        }
+    } # End action_list_set_default
+
+sub action_list_set_alltasks_active { # Set all tasks in "All Tasks" list (ListId 1) as active by setting Status to 1 and clearing CompletedDate
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        print STDERR "ACTION: Setting all tasks in list $list_id as active\n";
+        my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
+        eval { $sth->execute($list_id); 1 } or print STDERR "WARN: Set all tasks active failed: $@";
+        add_alert("All tasks in list $list_id set as active.");
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_set_alltasks_active\n";
+        }
+    } # End action_list_set_alltasks_active
+
 
 
 
