@@ -2965,148 +2965,155 @@ sub action_task_activate { # Set task nn as active (Status 1) in TasksTb
 sub action_task_edit { # Show the edit form for task nn. Function returns full html
     my ($task_id, $res) = @_;
     if ($task_id && $task_id =~ /^\d+$/) {
-        my $html = header();
+        if ($task_id > 0) {
+        my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
+        $sth->execute($task_id);
+        my $task = $sth->fetchrow_hashref() or print STDERR "WARN: No task found with ID ($task_id) passed to action_task_edit\n";
 
-        # Build list dropdown for later use in the form
-        my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
-        my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
-        $list_sth->execute();
-        eval { $list_sth->execute(); 1 } or print STDERR "WARN: Update TasksTb.id=$task_id failed: $@";
+        if ($task) {
+            my $html = header();
 
-        # Build list
-        while (my $list= $list_sth->fetchrow_hashref()) {
-            my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
-            my $title = html_escape($list->{'Title'});
-            $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
-            }
-        $list_dropdown .= '</select>';
+            # Build list dropdown for later use in the form
+            my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
+            my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+            $list_sth->execute();
+            eval { $list_sth->execute(); 1 } or print STDERR "WARN: Update TasksTb.id=$task_id failed: $@";
 
-        my $task_status = 'Completed';
-        if ($task->{'Status'} == 1) { $task_status = 'Active'; }
+            # Build list
+            while (my $list= $list_sth->fetchrow_hashref()) {
+                my $selected = ($list->{'id'} == $task->{'ListId'}) ? ' selected' : '';
+                my $title = html_escape($list->{'Title'});
+                $list_dropdown .= qq~<option value="$list->{'id'}"$selected>$title</option>~;
+                }
+            $list_dropdown .= '</select>';
 
-        $html .= start_card("Edit Task #$task_id - $task_status", $icon_edit, 0);
+            my $task_status = 'Completed';
+            if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
-        $html .= qq~
-                    <form method="post" action="/task_form_edit/$task_id" class="row g-3">
+            $html .= start_card("Edit Task #$task_id - $task_status", $icon_edit, 0);
 
-                        <div class="col-12">
-                        <label class="form-label">Title</label>
-                        <input
-                            name="Title"
-                            class="form-control bg-dark text-white border-secondary"
-                            required
-                            maxlength="255"
-                            value="~ . html_escape($task->{'Title'}) . qq~"
-                        />
-                        </div>
+            $html .= qq~
+                        <form method="post" action="/task_form_edit/$task_id" class="row g-3">
 
-                        <div class="col-12">
-                        <label class="form-label">Description</label>
-                        <textarea
-                            name="Description"
-                            class="form-control bg-dark text-white border-secondary"
-                            rows="4"
-                            maxlength="2000"
-                        >~ . html_escape($task->{'Description'}) . qq~</textarea>
-                        </div>
+                            <div class="col-12">
+                            <label class="form-label">Title</label>
+                            <input
+                                name="Title"
+                                class="form-control bg-dark text-white border-secondary"
+                                required
+                                maxlength="255"
+                                value="~ . html_escape($task->{'Title'}) . qq~"
+                            />
+                            </div>
 
-                        <div class="border p-3 mb-3">
-                            <div class="d-flex flex-column flex-md-row gap-3">
+                            <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea
+                                name="Description"
+                                class="form-control bg-dark text-white border-secondary"
+                                rows="4"
+                                maxlength="2000"
+                            >~ . html_escape($task->{'Description'}) . qq~</textarea>
+                            </div>
 
-                                <div class="border p-3 flex-fill ">
+                            <div class="border p-3 mb-3">
+                                <div class="d-flex flex-column flex-md-row gap-3">
 
-                                    <div class="form-check form-switch m-0">
-                                    Repeat this task after completion
-                                        <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
-                                    ~;
+                                    <div class="border p-3 flex-fill ">
 
-                                    # Precheck the box if IsRecurring is already 'on'
-                                    if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
+                                        <div class="form-check form-switch m-0">
+                                        Repeat this task after completion
+                                            <input class="form-check-input" type="checkbox" name="IsRecurring" id="autoUpdateToggle"
+                                        ~;
 
-                                    $html .= qq~>
-                                    <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
-                                        $smallicon_info
-                                    </span>
+                                        # Precheck the box if IsRecurring is already 'on'
+                                        if ($task->{'IsRecurring'} eq 'on') { $html .= " checked "; }
+
+                                        $html .= qq~>
+                                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
+                                            $smallicon_info
+                                        </span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="border p-3 flex-fill ">
+                                    <div class="border p-3 flex-fill ">
 
-                                    <div class="d-flex align-items-center gap-2">
-                                        Repeat every
-                                            <input type="number" class="form-control form-control-sm" style="width: 80px;"
-                                                name="RecurringIntervalDay" min="1" max="365" value="$task->{'RecurringIntervalDay'}">
-                                            <span>
-                                                days
-                                            </span>
-                                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
-                                                $smallicon_info
-                                            </span>
+                                        <div class="d-flex align-items-center gap-2">
+                                            Repeat every
+                                                <input type="number" class="form-control form-control-sm" style="width: 80px;"
+                                                    name="RecurringIntervalDay" min="1" max="365" value="$task->{'RecurringIntervalDay'}">
+                                                <span>
+                                                    days
+                                                </span>
+                                                <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
+                                                    $smallicon_info
+                                                </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-12">
-                        <label class="form-label">List</label>
-                        $list_dropdown
-                        </div>
+                            <div class="col-12">
+                            <label class="form-label">List</label>
+                            $list_dropdown
+                            </div>
 
-                        <div class="col-12">
-                        <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-primary me-auto" type="submit">Save Task</button>
-                        <a class="btn btn-secondary" href="/">Cancel</a>
+                            <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2">
+                            <button class="btn btn-primary me-auto" type="submit">Save Task</button>
+                            <a class="btn btn-secondary" href="/">Cancel</a>
 
-                        ~;
-
-                        if ($task->{'Status'} == 1) {
-                            $html .= qq~
-                            <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
                             ~;
-                            } else {
-                            $html .= qq~
-                            <a class="btn btn-warning" href="/task_activate/$task_id">Set Task as Active</a>
-                            ~;
-                            }
 
-                        $html .= qq~
-                            <a class="btn btn-danger" href="/task_delete/$task_id">Delete Task</a>
-                        </div>
-
-                        <br>
-                        <p class="text-secondary">
-                            This task was created $task->{'AddedDate'}
-                            ~;
-                            if ($task->{'CompletedDate'}) {
-                                $html .= qq~and completed $task->{'CompletedDate'}~;
+                            if ($task->{'Status'} == 1) {
+                                $html .= qq~
+                                <a class="btn btn-warning" href="/complete?task_id=$task_id">Set Task as Completed</a>
+                                ~;
+                                } else {
+                                $html .= qq~
+                                <a class="btn btn-warning" href="/task_activate/$task_id">Set Task as Active</a>
+                                ~;
                                 }
+
                             $html .= qq~
-                        </p>
+                                <a class="btn btn-danger" href="/task_delete/$task_id">Delete Task</a>
+                            </div>
 
-                        </div>
+                            <br>
+                            <p class="text-secondary">
+                                This task was created $task->{'AddedDate'}
+                                ~;
+                                if ($task->{'CompletedDate'}) {
+                                    $html .= qq~and completed $task->{'CompletedDate'}~;
+                                    }
+                                $html .= qq~
+                            </p>
 
-                    </form>
-        ~;
-        #           </div>
-        #         </div>
+                            </div>
 
-        #         </div>
-        #     </div>
-        # </div>
+                        </form>
+            ~;
+            #           </div>
+            #         </div>
 
-        $html .= end_card(0);
-        $html .= footer();
+            #         </div>
+            #     </div>
+            # </div>
 
+            $html .= end_card(0);
+            $html .= footer();
+            return $html;
 
-        #$res->body($html);
-        #return $res->finalize;
-#        }
- #   }
-        return $html;
+            #$res->body($html);
+            #return $res->finalize;
+            } else {
+            print STDERR "WARN: No task found with ID ($task_id) passed to action_task_edit\n";
+            return "Error in task_edit(): No task found with that ID";
+            }
         } else {
         print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_edit\n";
         return "Error in task_edit(): Invalid task ID";
-        }
+    } # End action_task_edit
 
    ###############################################
     # Handle editing a task
