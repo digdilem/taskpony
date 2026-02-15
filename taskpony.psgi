@@ -2397,8 +2397,6 @@ sub show_tasks {
             $checkbox = qq~
                 <a href="/complete_task/?a=$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed">
                     <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
-                        <input type="hidden" name="task_id" value="$a->{'id'}" />
-                        <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
                         ✓
                     </label>
                 </a>
