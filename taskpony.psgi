@@ -25,7 +25,7 @@ my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file tha
 my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
 ###############################################
-# Default configuration. Don't change them here, use /config page.
+# Default user editable configuration values. Don't change them here, use /config page.
 our $config = {
     cfg_task_pagination_length => 25,           # Number of tasks to show per page
     cfg_description_short_length => 35,         # Number of characters to show in task list before truncating description (Cosmetic only)
@@ -69,8 +69,8 @@ my $db_interval_check_ms = 60000;   # How many milliseconds between checking /ap
 my $default_listid;                 # default ListId
 
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
-my $calculate_stats_interval = 3600;    # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
-my $stats = {                           # Hashref to hold various stats for dashboard
+my $stats = {
+    calculate_stats_interval => 3600,       # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
     total_tasks => 0,
     active_tasks => 0,
     completed_tasks => 0,
@@ -215,8 +215,8 @@ my $app = sub {
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
 
             print STDERR "INFO: Task $task_id marked as complete\n";
-            $stats->{tasks_completed_today} += 1;
-            add_alert("Task #$task_id marked as completed. $stats->{tasks_completed_today} tasks completed today!");
+            $stats->{'tasks_completed_today'} += 1;
+            add_alert("Task #$task_id marked as completed. $stats->{'tasks_completed_today'} tasks completed today!");
             }
 
         # Always redirect
@@ -234,7 +234,7 @@ my $app = sub {
                 eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
                 print STDERR "INFO: Task $task_id marked as active again\n";
                 add_alert("Task #$task_id re-activated.");
-                $stats->{tasks_completed_today} -= 1;
+                $stats->{'tasks_completed_today'} -= 1;
             }
         $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
@@ -384,8 +384,8 @@ my $app = sub {
                 eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "WARN: Task insert into list $list_id failed: $@";
                 }
 
-            $stats->{tasks_added_today} += 1;
-            add_alert("Task '$title' added.  That's $stats->{tasks_added_today} new tasks today!");
+            $stats->{'tasks_added_today'} += 1;
+            add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
             $res->redirect('/');
             return $res->finalize;
             } # End /add form submission handling
@@ -531,7 +531,7 @@ my $app = sub {
                                             <div class="d-flex align-items-center gap-2">
                                                 Repeat every
                                                     <input type="number" class="form-control form-control-sm" style="width: 80px;"
-                                                        name="RecurringIntervalDay" min="1" max="365" value="$task->{RecurringIntervalDay}">
+                                                        name="RecurringIntervalDay" min="1" max="365" value="$task->{'RecurringIntervalDay'}">
                                                     <span>
                                                         days
                                                     </span>
@@ -571,10 +571,10 @@ my $app = sub {
 
                                <br>
                                 <p class="text-secondary">
-                                    This task was created $task->{AddedDate}
+                                    This task was created $task->{'AddedDate'}
                                     ~;
-                                    if ($task->{CompletedDate}) {
-                                        $html .= qq~and completed $task->{CompletedDate}~;
+                                    if ($task->{'CompletedDate'}) {
+                                        $html .= qq~and completed $task->{'CompletedDate'}~;
                                         }
                                     $html .= qq~
                                 </p>
@@ -621,8 +621,8 @@ my $app = sub {
 
                 eval { $sth->execute($title, $desc); 1 } or print STDERR "Insert failed: $@";
                 add_alert("List '$title' added.");
-                $stats->{total_lists} += 1;
-                $stats->{total_active_lists} += 1;
+                $stats->{'total_lists'} += 1;
+                $stats->{'total_active_lists'} += 1;
                 } elsif ($action eq 'edit' && $list_id > 1 && length $title) {
                 my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
@@ -637,8 +637,8 @@ my $app = sub {
                     );
                 eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted. Active tasks have been orphaned.");
-                $stats->{total_lists} -= 1;
-                $stats->{total_active_lists} -= 1;
+                $stats->{'total_lists'} -= 1;
+                $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
@@ -659,8 +659,8 @@ my $app = sub {
                     );
                 eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted and all active tasks marked as completed.");
-                $stats->{total_lists} -= 1;
-                $stats->{total_active_lists} -= 1;
+                $stats->{'total_lists'} -= 1;
+                $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
@@ -686,8 +686,8 @@ my $app = sub {
                     eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
 
                     add_alert("List deleted and active tasks moved to target list.");
-                    $stats->{total_lists} -= 1;
-                    $stats->{total_active_lists} -= 1;
+                    $stats->{'total_lists'} -= 1;
+                    $stats->{'total_active_lists'} -= 1;
 
                     # Check if deleted list was the active list, if so switch to default
                     my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
@@ -708,8 +708,8 @@ my $app = sub {
 
                 eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted.");
-                $stats->{total_lists} -= 1;
-                $stats->{total_active_lists} -= 1;
+                $stats->{'total_lists'} -= 1;
+                $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
@@ -2798,7 +2798,7 @@ sub end_card {
 # calculate_stats()
 sub calculate_stats { # Calculate stats and populate the global $stats hashref
     # Check to see whether we've run this recently. If so, return before hitting the database
-    if ( $stats->{stats_last_calculated} && time - $stats->{stats_last_calculated} < $calculate_stats_interval ) { return; }
+    if ( $stats->{stats_last_calculated} && time - $stats->{stats_last_calculated} < $stats->{'calculate_stats_interval'} ) { return; }
 
     # Before we get onto working out the stats, check whether the daily tasks have been run today
     run_daily_tasks();  # Will return early if already run today
