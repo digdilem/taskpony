@@ -150,10 +150,9 @@ my $app = sub {
     my $env = shift;
     my $req = Plack::Request->new($env);
     my $res = Plack::Response->new(200);
-
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
-    # Global modifiers
+    # Global modifiers and preflight checks we should ensure are done on each page load
     $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
     $page->{'list_id'} = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
     if (! $page->{'default_listid'}) { $page->{'default_listid'} = single_db_value('SELECT id FROM ListsTb WHERE IsDefault = 1 LIMIT 1') || 0; } # Get default list id for use in various
@@ -178,11 +177,58 @@ my $app = sub {
         }
 
     ###############################################
-    # favicon handling before header()
-    if ($req->path eq "/favicon.ico") {     # Redirect to ./static/favicon.ico
-        $res->redirect('./static/favicon.ico');
+    # Preflight checks done. First, check with simple redirectors
+    ###############################################
+    debug("Handling request for path: " . $req->path);
+
+    # Handle favicon requests
+    if ($req->path eq "/favicon.ico") {  $res->redirect('./static/favicon.ico'); return $res->finalize; }
+
+    # Task functions
+    # Action /task_complete/nn - Mark task nn as completed and redirect to home page
+    if ($req->path =~ m{^/task_complete/(\d+)$})        { action_task_complete($1);     $res->redirect('/'); return $res->finalize; }
+
+    # Action /task_delete/nn - Permanently delete task nn and redirect to home page
+    if ($req->path =~ m{^/task_delete/(\d+)$})          { action_delete_task($1);       $res->redirect('/'); return $res->finalize; }
+
+
+
+
+
+
+
+
+
+
+
+    ###############################################
+    # Set TASK nn as Status 1 in TasksTb (Active)
+    if ($req->path eq "/ust") {
+            my $task_id = $req->param('task_id') // 0;
+
+            if ($task_id > 0) {
+                my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
+                eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
+                print STDERR "INFO: Task $task_id marked as active again\n";
+                add_alert("Task #$task_id re-activated.");
+                $stats->{'tasks_completed_today'} -= 1;
+            }
+        $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
         return $res->finalize;
-        } # End /favicon.ico
+        } # End /ust
+
+
+
+
+
+
+
+
+
+
+    # End simple redirectors
+    ###############################################
+
 
     ###############################################
     # /api/dbstate check - returns simple JSON with last mtime of the database
@@ -210,29 +256,13 @@ my $app = sub {
     ###############################################
     # Step through named paths
     ###############################################
-    debug("Handling request for path: " . $req->path);
-
-
-    if ($req->path =~ m{^/complete_task/(\d+)$}) {   action_complete_task($1); $res->redirect('/'); return $res->finalize; } # "/complete/nn" - Mark task nn as completed and redirect to home page
 
 
 
 
-    ###############################################
-    # Set TASK nn as Status 1 in TasksTb (Active)
-    if ($req->path eq "/ust") {
-            my $task_id = $req->param('task_id') // 0;
 
-            if ($task_id > 0) {
-                my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
-                eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
-                print STDERR "INFO: Task $task_id marked as active again\n";
-                add_alert("Task #$task_id re-activated.");
-                $stats->{'tasks_completed_today'} -= 1;
-            }
-        $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
-        return $res->finalize;
-        } # End /ust
+
+
 
     ###############################################
     # Set LIST nn as UnDeleted (Active)
@@ -560,7 +590,7 @@ my $app = sub {
                                     }
 
                                 $html .= qq~
-                                    <a class="btn btn-danger" href="/?delete_task=$task_id">Delete Task</a>
+                                    <a class="btn btn-danger" href="/task_delete/$task_id">Delete Task</a>
                                 </div>
 
                                <br>
@@ -1596,16 +1626,7 @@ my $app = sub {
         return [302, [ Location => '/config' ], []];
         } # End /background_set
 
-    ###############################################
-    # /?delete_task=nn - Delete task nn (Actually delete, not just set as completed)
-    my $delete_task = $req->param('delete_task') // 0;
-    if ($delete_task > 0) {
-        my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
-        eval { $sth->execute($delete_task); 1 } or print STDERR "WARN: Delete TasksTb.id=$delete_task failed: $@";
-        add_alert("Task #$delete_task deleted.");
-        $res->redirect('/'); # Redirect back to default page
-        return $res->finalize;
-        } # End /?delete_task=nn
+
 
     ###############################################
     # /showalltasks Show a page with all lists and tasks
@@ -2397,7 +2418,7 @@ sub show_tasks {
         # Show Active tasks. Show checkbox to mark complete
         if ($status == 1) {
             $checkbox = qq~
-                <a href="/complete_task/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed">✓</a>
+                <a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed">✓</a>
                 ~;
 
             $title_link .= qq~
@@ -3110,9 +3131,9 @@ sub update_db_mtime {
 # Action functions - things that change stuff
 ###############################################
 
-sub action_complete_task { # Set task nn as Status 2 in TasksTb (Completed)
+sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
     my ($task_id) = @_;
-    if ($task_id > 0) {
+    if ($task_id && $task_id =~ /^\d+$/) {  # Check it's a valid numeric ID before we do anything
         my $sth = $dbh->prepare(
             'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
             );
@@ -3122,9 +3143,18 @@ sub action_complete_task { # Set task nn as Status 2 in TasksTb (Completed)
         $stats->{'tasks_completed_today'} += 1;
         add_alert("Task #$task_id marked as completed. $stats->{'tasks_completed_today'} tasks completed today!");
         } else {
-        print STDERR "WARN: Invalid task ID ($task_id) passed to action_complete_task\n";
+        print STDERR "WARN: Invalid task ID ($task_id) passed to action_task_complete\n";
         }
-    } # End action_complete_task
+    } # End action_task_complete
+
+sub action_task_delete { # Delete task nn from TasksTb
+    my ($task_id) = @_;
+    if ($task_id && $task_id =~ /^\d+$/) {  # Check it's a valid numeric ID before we do anything
+        my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
+        eval { $sth->execute($task_id); 1 } or print STDERR "WARN: Delete TasksTb.id=$task_id failed: $@";
+        add_alert("Task #$task_id deleted.");
+        }
+    } # End action_task_delete
 
 
 
