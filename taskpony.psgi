@@ -186,6 +186,7 @@ my $app = sub {
 
     ###############################################
     # ACTION functions
+    # TASK ACTIONS
     # Action /task_complete/nn - Mark task nn as completed and redirect to home page
     if ($req->path =~ m{^/task_complete/(\d+)$})        { action_task_complete($1);     $res->redirect('/'); return $res->finalize; }
     # Action /task_delete/nn - Permanently delete task nn and redirect to home page
@@ -194,6 +195,14 @@ my $app = sub {
     if ($req->path =~ m{^/task_activate/(\d+)$})        { action_task_activate($1);     $res->redirect('/'); return $res->finalize; }
     # Action /task_edit/nn - Show edit form for task nn, or if POST, update task nn and redirect to home page. Function returns full html
     if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
+
+    # LIST ACTIONS
+
+    # Set LIST nn as UnDeleted (Active)
+    if ($req->path =~ m{^/list_undelete/(\d+)$})        { action_list_undelete($1);     $res->redirect('/lists'); return $res->finalize; }
+
+
+
 
     ###############################################
     # SHOW functions
@@ -206,11 +215,17 @@ my $app = sub {
     # Show a page with all lists and tasks
     if ($req->path eq '/show_all_tasks')                     { $res->body(show_all_tasks());   return $res->finalize; }
 
+    ###############################################
+    # MISC functions
+
+    # /api/ping check - suitable for health checks
+    if ($req->path eq "/api/ping")     { $res->header('Content-Type' => 'text/plain');  $res->header('Cache-Control' => 'no-cache, no-store');  $res->body('pong');  return $res->finalize;  }
+
+    # /api/dbstate check - returns simple JSON with last mtime of the database
+    if ($req->path eq "/api/dbstate") {  update_db_mtime();  $res->header('Content-Type' => 'text/plain'); $res->header('Cache-Control' => 'no-cache, no-store'); $res->body($page->{'db_mtime'}); return $res->finalize; }
 
 
-
-
-    # End simple redirectors
+    # End redirectors
     ###############################################
 
     ###############################################
@@ -222,23 +237,9 @@ my $app = sub {
 
 
     ###############################################
-    # /api/dbstate check - returns simple JSON with last mtime of the database
-    if ($req->path eq "/api/dbstate") {
-        update_db_mtime();  # Ensure we have the latest mtime cached
-        debug("API DB State requested, returning mtime: $page->{'db_mtime'}");
-        $res->header('Content-Type' => 'text/plain');
-        $res->header('Cache-Control' => 'no-cache, no-store');
-        $res->body($page->{'db_mtime'});
-        return $res->finalize;
-        } # End /api/dbstate
 
-    # /api/ping check - suitable for health checks
-    if ($req->path eq "/api/ping") {
-        $res->header('Content-Type' => 'text/plain');
-        $res->header('Cache-Control' => 'no-cache, no-store');
-        $res->body('pong');
-        return $res->finalize;
-        } # End /api/dbstate
+
+
 
     ###############################################
     # Start building page
@@ -256,20 +257,7 @@ my $app = sub {
 
 
     ###############################################
-    # Set LIST nn as UnDeleted (Active)
-    if ($req->path eq "/list_undelete") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('lid');
-            if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
-                print STDERR "INFO: Undeleting list id $lid\n";
-                my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
-                eval { $sth->execute($lid); 1 } or print STDERR "WARN: List undelete failed: $@";
-                add_alert("List #$lid restored.");
-                }
-            }
-        $res->redirect('/lists'); # Redirect back to lists view
-        return $res->finalize;
-        } # End /list_undelete
+
 
     ###############################################
     # Set LIST nn as Deleted
@@ -3114,6 +3102,23 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
         } # End action_task_edit
 
     }
+
+sub action_list_undelete { # Undelete list nn from ListsTb by setting DeletedDate to NULL
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        if ($list_id > 1) { # Don't allow undeleting "All Tasks Lists"
+            print STDERR "ACTION: Undeleting list $list_id\n";
+            my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
+            eval { $sth->execute($list_id); 1 } or print STDERR "WARN: List undelete failed: $@";
+            add_alert("List #$list_id restored.");
+            } else {
+            print STDERR "WARN: Attempt to undelete list with invalid ID ($list_id) passed to action_list_undelete\n";
+            }
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_undelete\n";
+        }
+    } # End action_list_undelete
+
 
 # End Action functions
 ###############################################
