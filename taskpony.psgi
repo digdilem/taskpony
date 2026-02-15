@@ -153,8 +153,10 @@ my $app = sub {
 
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
-    verify_valid_list($req->param('lid'));      # If lid specified, verify it is valid, if not valid, ensure the chosen list is viable
-
+    if ($req->param('lid')) {
+        $page->{'list_id'} = $req->param('lid');
+        verify_valid_list($page->{'list_id'});      # If lid specified, verify it is valid, if not valid, ensure the chosen list is viable
+        }
 
     $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. !!
 
@@ -2781,11 +2783,8 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
         </span>~;
     } # end build_inline_icon
 
-sub verify_valid_list { # verify_valid_list($list_id) - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
-    my ($proposed_list_id) = shift || 0;
+sub verify_valid_list { # verify_valid_list() - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
     my $original_list_id = $page->{'list_id'} || 0;
-
-print STDERR "-------- (Original and proposed: $original_list_id, $proposed_list_id) --------\n";
 
     # 1. Change to something provided by ?lid
     if ($proposed_list_id > 0 && $proposed_list_id =~ /^\d+$/) { # A lid was provided and is a number. Check it exists and is viable, then switch to it.
@@ -2810,7 +2809,7 @@ print STDERR "-------- (Original and proposed: $original_list_id, $proposed_list
     # If, after the above, list_id has changed, save it to config
     if ($page->{'list_id'} != $original_list_id) {
         print STDERR "INFO: List ID has changed from ($original_list_id) to ($page->{'list_id'}). Saving new List ID to ConfigTb\n";
-        $dbh->do("UPDATE ConfigTb SET `value` = ? WHERE `key` = 'active_list'", $page->{'list_id'}, $page->{'list_id'} ) or print STDERR "WARNING: Failed to save active_list in ConfigTb: " . $dbh->errstr;
+        $dbh->do("UPDATE ConfigTb SET `value` = ? WHERE `key` = 'active_list' ", $page->{'list_id'}, $page->{'list_id'} ) or print STDERR "WARNING: Failed to save active_list in ConfigTb: " . $dbh->errstr;
         # Also reload associated values
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
