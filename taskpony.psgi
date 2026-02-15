@@ -57,7 +57,6 @@ our $global = {
     };
 
 
-
 my $dbh;                            # Global database handle
 my $list_id = 1;                    # Current list id
 my $list_name;                      # Current list name
@@ -3001,7 +3000,7 @@ sub check_latest_release {
     my $github_latest_version;
 
     my $http = HTTP::Tiny->new(
-        agent => 'taskpony-version-check/$global->{'app_version'}',
+        agent => "taskpony-version-check/$global->{'app_version'}",
         timeout => 10
         );
 
