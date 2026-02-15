@@ -12,6 +12,7 @@
 - /Lists page now puts all four cards into different tabs to keep things in the eyeline.
 - Clicking the Logo now switches to the Default List. The Taskpony name still reloads the current List.
 - Tooltips now made prettier and added a 250ms delay before they show up.
+- Extensive code rewrite and tidying. This involves changing many endpoint for consistency, neatness and clarity. Eg, /ust=NN now becomes /task_activate/NNN
 
 
 ## Bugfixes

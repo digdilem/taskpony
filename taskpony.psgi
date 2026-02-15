@@ -191,6 +191,8 @@ my $app = sub {
     # Action /task_delete/nn - Permanently delete task nn and redirect to home page
     if ($req->path =~ m{^/task_delete/(\d+)$})          { action_task_delete($1);       $res->redirect('/'); return $res->finalize; }
 
+    # Action /task_activate/nn - Set task nn as active again and redirect to home page
+    if ($req->path =~ m{^/task_activate/(\d+)$})        { action_task_activate($1);     $res->redirect('/'); return $res->finalize; }
 
 
 
@@ -198,24 +200,6 @@ my $app = sub {
 
 
 
-
-
-
-    ###############################################
-    # Set TASK nn as Status 1 in TasksTb (Active)
-    if ($req->path eq "/ust") {
-            my $task_id = $req->param('task_id') // 0;
-
-            if ($task_id > 0) {
-                my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
-                eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
-                print STDERR "INFO: Task $task_id marked as active again\n";
-                add_alert("Task #$task_id re-activated.");
-                $stats->{'tasks_completed_today'} -= 1;
-            }
-        $res->redirect('/?sc=1'); # Redirect back to completed tasks view and show completed tasks, as we probably came from there
-        return $res->finalize;
-        } # End /ust
 
 
 
@@ -585,7 +569,7 @@ my $app = sub {
                                     ~;
                                     } else {
                                     $html .= qq~
-                                    <a class="btn btn-warning" href="/ust?task_id=$task_id">Set Task as Active</a>
+                                    <a class="btn btn-warning" href="/task_activate/$task_id">Set Task as Active</a>
                                     ~;
                                     }
 
@@ -2452,20 +2436,8 @@ sub show_tasks {
                     </a>
                      ~;
 
-            # $checkbox .= qq~
-            #     <a href="/ust?task_id=$a->{'id'}&sc=1" class="btn btn-sm btn-outline-$config->{cfg_header_colour}" title="Set Task as Active again">
-            #     $icon_rotate_left
-            #     </a>
-            #     ~;
-
             $checkbox .= qq~
-                <form method="post" action="/ust" style="display:inline;">
-                    <label class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" style="padding:0.25rem 0.5rem; line-height:1.2; width: 3rem;">
-                        <input type="hidden" name="task_id" value="$a->{'id'}" />
-                        <input type="checkbox" class="d-none" style="cursor:pointer; transform:scale(1.2);" onchange="this.form.submit();" />
-                        $icon_rotate_left
-                    </label>
-                </form>
+                <a href="/task_activate/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Active">$icon_rotate_left</a>
                 ~;
             }
 
@@ -3134,12 +3106,11 @@ sub update_db_mtime {
 sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
     my ($task_id) = @_;
     if ($task_id && $task_id =~ /^\d+$/) {  # Check it's a valid numeric ID before we do anything
+        print STDERR "INFO: marking task $task_id as complete\n";
         my $sth = $dbh->prepare(
             'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
             );
-        eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
-
-        print STDERR "INFO: Task $task_id marked as complete\n";
+        eval { $sth->execute($task_id); 1 } or print STDERR "Setting task $task_id as completed failed: $@";
         $stats->{'tasks_completed_today'} += 1;
         add_alert("Task #$task_id marked as completed. $stats->{'tasks_completed_today'} tasks completed today!");
         } else {
@@ -3149,12 +3120,27 @@ sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
 
 sub action_task_delete { # Delete task nn from TasksTb
     my ($task_id) = @_;
-    if ($task_id && $task_id =~ /^\d+$/) {  # Check it's a valid numeric ID before we do anything
+    if ($task_id && $task_id =~ /^\d+$/) {
+        print STDERR "INFO: Deleting task $task_id\n";
         my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
         eval { $sth->execute($task_id); 1 } or print STDERR "WARN: Delete TasksTb.id=$task_id failed: $@";
         add_alert("Task #$task_id deleted.");
         }
     } # End action_task_delete
+
+sub action_task_activate { # Set task nn as active (Status 1) in TasksTb
+    my ($task_id) = @_;
+    if ($task_id && $task_id =~ /^\d+$/) {
+        print STDERR "INFO: Re-activating task $task_id\n";
+        my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
+        eval { $sth->execute($task_id); 1 } or print STDERR "WARN: Update TasksTb.id=$task_id failed: $@";
+        add_alert("Task #$task_id re-activated.");
+        }
+    } # End action_task_activate
+
+
+
+
 
 
 
