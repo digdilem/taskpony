@@ -24,6 +24,8 @@ my $taskpony_path = $Dir;
 my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created
 my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
+my $dbh;                            # Global database handle
+
 ###############################################
 # Default user editable configuration values. Don't change them here, use /config page.
 our $config = {
@@ -46,28 +48,32 @@ our $config = {
 ###############################################
 # Global variables that are used throughout - do not change these.
 our $global = {
-    app_title => 'Taskpony',             # Name of app
-    app_version => '0.6',                # Version of app
-    database_schema_version => 2,        # Current database schema version. Do not change this, it will be modified during updates.
-    github_version_url => 'https://api.github.com/repos/digdilem/taskpony/releases/latest',  # Used to get latest version for upgrade notification
-    app_releases_page => 'https://github.com/digdilem/taskpony',    # Where new versions are
-    new_version_available => 0,             # Set to 1 if a new version is available on github
-    taskpony_icon => 'taskpony-logo.png',  # Default icon file name in ./static dir
-    tooltip_delay => 'show: 250, hide: 10',  # Global tooltip delay for all tooltips in the app.
-    dbh,                                # Global database handle
+    app_title => 'Taskpony',                    # Name of app
+    app_version => '0.6',                       # Version of app
+    database_schema_version => 2,               # Current database schema version. Do not change this, it will be modified during updates.
+    github_version_url => 'https://api.github.com/repos/digdilem/taskpony/releases/latest',     # Used to get latest version for upgrade notification
+app_releases_page => 'https://github.com/digdilem/taskpony',                                    # Where new versions are
+    new_version_available => 0,                 # Set to 1 if a new version is available on github
+    taskpony_icon => 'taskpony-logo.png',       # Default icon file name in ./static dir
+    tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app.
+    debug = 0,                                  # Set to 1 to enable debug messages to STDERR
     };
 
+###############################################
+# Page specific variables.
+our $page = {
+    list_id = 1,                    # Current list id
+    list_name = '',                     # Current list name
+    list_colour = '',                   # Current list highlight colour (overrides default)
+    debug = 0,                      # Set to 1 to enable debug messages to STDERR
+    alert_text = '',                # If set, show this alert text on page load
+    show_completed = 0,             # If set to 1, show completed tasks instead of active ones
+    do_mtime = 1,              # If set to 1, the page will check /api/dbstate every $page->{'db_interval_check_ms'} milliseconds to see if the database has changed and reload the page if it has.
+    db_interval_check_ms = 60000,   # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
+    default_listid = 0,                 # default ListId
+    };
 
-my $list_id = 1;                    # Current list id
-my $list_name;                      # Current list name
-my $list_colour;                    # Current list highlight colour (overrides default)
-my $debug = 0;                      # Set to 1 to enable debug messages to STDERR
-my $alert_text = '';                # If set, show this alert text on page load
-my $show_completed = 0;             # If set to 1, show completed tasks instead of active ones
-my $db_mtime = 0;                   # Cached database file modification time for /api/dbstate
-my $db_interval_check_ms = 60000;   # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
-my $default_listid;                 # default ListId
-
+###############################################
 # Statistics variables. Not stored in config. Recalculated periodically and updated on change.
 my $stats = {
     calculate_stats_interval => 3600,       # Wait at least this many seconds between recalculating stats. (Only checked on web activity)
@@ -88,6 +94,10 @@ my $stats = {
     };
 
 # New icons to be saved in /static/icons and alt text matches the filename.svg
+my $icons = {
+    chart => build_tabler_icon('Statistics'),  # Chart icon
+
+    };
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
 my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
 my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
@@ -127,9 +137,9 @@ print STDERR "|  [ ] Buy milk                      |\n";
 print STDERR "+------------------------------------+\n\n";
 
 # Get additional config values.
-$list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-$list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
-$list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
+$page->{'list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+$page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
+$page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
 
 ####################################
 # Start main loop
@@ -143,30 +153,30 @@ my $app = sub {
     my $req = Plack::Request->new($env);
     my $res = Plack::Response->new(200);
 
-    if (not $global->{'dbh'}->ping) { connect_db(); }      # Reconnect to DB if needed
+    if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers
-    $show_completed = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
-    $list_id = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
-    if (! $default_listid) { $default_listid = single_db_value('SELECT id FROM ListsTb WHERE IsDefault = 1 LIMIT 1') || 0; } # Get default list id for use in various
+    $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks.
+    $page->{'list_id'} = $req->param('lid') || 0;         # Select list from ?lid= param, or 0 if not set
+    if (! $page->{'default_listid'}) { $page->{'default_listid'} = single_db_value('SELECT id FROM ListsTb WHERE IsDefault = 1 LIMIT 1') || 0; } # Get default list id for use in various
     calculate_stats();                          # Update stats hashref if needed
-    update_db_mtime();                          # Ensure we have the latest mtime cached as $db_mtime
+    update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
 
     # If no list lid specified, get the active list from ConfigTb to provide consistency to user
-    if ($list_id == 0) {
-        $list_id = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-        debug("List id (lid) was specified, using active list id from ConfigTb of: $list_id");
+    if ($page->{'list_id'} == 0) {
+        $page->{'list_id'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+        debug("List id (lid) was specified, using active list id from ConfigTb of: $page->{'list_id'}");
         } else { # list id was specified, update active list in ConfigTb with it.
-        debug("List id (lid) was specified. Updating active_list id in ConfigTb to: $list_id");
-        $global->{'dbh'}->do(
+        debug("List id (lid) was specified. Updating active_list id in ConfigTb to: $page->{'list_id'}");
+        $dbh->do(
             "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?",
             undef,
             'active_list',
-            $list_id,
-            $list_id
-            ) or print STDERR "WARNING: Failed to set active_list: " . $global->{'dbh'}->errstr;
-        $list_name = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $list_id) || 'Unknown List';
-        $list_colour = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $list_id) || '0';
+            $page->{'list_id'},
+            $page->{'list_id'}
+            ) or print STDERR "WARNING: Failed to set active_list: " . $dbh->errstr;
+        $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
+        $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
         }
 
     ###############################################
@@ -180,10 +190,10 @@ my $app = sub {
     # /api/dbstate check - returns simple JSON with last mtime of the database
     if ($req->path eq "/api/dbstate") {
         update_db_mtime();  # Ensure we have the latest mtime cached
-        debug("API DB State requested, returning mtime: $db_mtime");
+        debug("API DB State requested, returning mtime: $page->{'db_mtime'}");
         $res->header('Content-Type' => 'text/plain');
         $res->header('Cache-Control' => 'no-cache, no-store');
-        $res->body($db_mtime);
+        $res->body($page->{'db_mtime'});
         return $res->finalize;
         } # End /api/dbstate
 
@@ -209,7 +219,7 @@ my $app = sub {
         my $task_id = $req->param('task_id') // 0;
 
         if ($task_id > 0) {
-            my $sth = $global->{'dbh'}->prepare(
+            my $sth = $dbh->prepare(
                 'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                 );
             eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
@@ -230,7 +240,7 @@ my $app = sub {
             my $task_id = $req->param('task_id') // 0;
 
             if ($task_id > 0) {
-                my $sth = $global->{'dbh'}->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
+                my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE id = ?');
                 eval { $sth->execute($task_id); 1 } or print STDERR "Update failed: $@";
                 print STDERR "INFO: Task $task_id marked as active again\n";
                 add_alert("Task #$task_id re-activated.");
@@ -247,7 +257,7 @@ my $app = sub {
             my $lid = $req->param('lid');
             if ($lid > 1) { # Don't allow undeleting "All Tasks Lists"
                 print STDERR "INFO: Undeleting list id $lid\n";
-                my $sth = $global->{'dbh'}->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
+                my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = NULL WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List undelete failed: $@";
                 add_alert("List #$lid restored.");
                 }
@@ -263,7 +273,7 @@ my $app = sub {
             my $lid = $req->param('id');
             if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
                 print STDERR "INFO:Permanently deleting list id $lid\n";
-                my $sth = $global->{'dbh'}->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
+                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ? LIMIT 1');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: List delete failed: $@";
                 add_alert("List #$lid deleted.");
                 }
@@ -280,7 +290,7 @@ my $app = sub {
             if ($lid > 1) { # Don't allow setting "All Tasks Lists" as default
                 print STDERR "Setting list $lid as default list.\n";
                 single_db_value('UPDATE ListsTb SET IsDefault = 0 WHERE IsDefault = 1'); # Clear current default
-                my $sth = $global->{'dbh'}->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
+                my $sth = $dbh->prepare('UPDATE ListsTb SET IsDefault = 1 WHERE id = ?');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set default lid update failed: $@";
                 add_alert("List #$lid set as default.");
                 }
@@ -298,7 +308,7 @@ my $app = sub {
                 my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 2', $lid) // 0;
                 if ($count > 0) {
                     print STDERR "INFO: Setting all tasks in list $lid as active\n";
-                    my $sth = $global->{'dbh'}->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
+                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 1, AddedDate = CURRENT_TIMESTAMP, CompletedDate = NULL WHERE ListId = ? AND Status = 2');
                     eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks active failed: $@";
                     add_alert("$count task(s) in list set as active.");
                 } else {
@@ -319,7 +329,7 @@ my $app = sub {
                 my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ? AND Status = 1', $lid) // 0;
                 if ($count > 0) {
                     print STDERR "INFO: Setting all tasks in list $lid as completed\n";
-                    my $sth = $global->{'dbh'}->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
+                    my $sth = $dbh->prepare('UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1');
                     eval { $sth->execute($lid); 1 } or print STDERR "WARN: Set all tasks completed failed: $@";
                     add_alert("$count task(s) in list marked as completed.");
                 } else {
@@ -340,7 +350,7 @@ my $app = sub {
                 my $count = single_db_value('SELECT COUNT(*) FROM TasksTb WHERE ListId = ?', $lid) // 0;
                 if ($count > 0) {
                     print STDERR "INFO: Permanently deleting all tasks in list $lid\n";
-                    my $sth = $global->{'dbh'}->prepare('DELETE FROM TasksTb WHERE ListId = ?');
+                    my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE ListId = ?');
                     eval { $sth->execute($lid); 1 } or print STDERR "WARN: Delete all tasks failed: $@";
                     add_alert("$count task(s) permanently deleted from list.");
                 } else {
@@ -359,7 +369,7 @@ my $app = sub {
             my $lid = $req->param('lid');
             if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
                 print STDERR "INFO: Permanently deleting list $lid\n";
-                my $sth = $global->{'dbh'}->prepare('DELETE FROM ListsTb WHERE id = ?');
+                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ?');
                 eval { $sth->execute($lid); 1 } or print STDERR "WARN: Permanent list delete failed: $@";
                 add_alert("List permanently deleted.");
             }
@@ -378,10 +388,10 @@ my $app = sub {
             my $desc  = sanitize($req->param('Description') // '');
 
             if (length $title) {
-                my $sth = $global->{'dbh'}->prepare(
+                my $sth = $dbh->prepare(
                     'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)'
                     );
-                eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "WARN: Task insert into list $list_id failed: $@";
+                eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
                 }
 
             $stats->{'tasks_added_today'} += 1;
@@ -425,7 +435,7 @@ my $app = sub {
         if ($req->method && uc($req->method) eq 'POST') {
             my $title = sanitize($req->param('Title') // '');
             my $desc  = sanitize($req->param('Description') // '');
-            my $list_id = $req->param('ListId') // 0;
+            my $page->{'list_id'} = $req->param('ListId') // 0;
             my $is_recurring = sanitize($req->param('IsRecurring') // '');
             my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
             # Validate recurring interval
@@ -442,11 +452,11 @@ my $app = sub {
                 $recurring_interval = 365;
                 }
 
-            if (length $title && $task_id > 0 && $list_id > 1) {
-                my $sth = $global->{'dbh'}->prepare(
+            if (length $title && $task_id > 0 && $page->{'list_id'} > 1) {
+                my $sth = $dbh->prepare(
                     'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
                     );
-                eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
+                eval { $sth->execute($title, $desc, $page->{'list_id'}, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update failed: $@";
                 debug("Task $task_id updated");
                 }
 
@@ -457,7 +467,7 @@ my $app = sub {
 
         # Display edit form
         if ($task_id > 0) {
-            my $sth = $global->{'dbh'}->prepare('SELECT * FROM TasksTb WHERE id = ?');
+            my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
             $sth->execute($task_id);
             my $task = $sth->fetchrow_hashref();
 
@@ -466,7 +476,7 @@ my $app = sub {
 
                 # Build list dropdown
                 my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
-                my $list_sth = $global->{'dbh'}->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+                my $list_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
                 $list_sth->execute();
 
                 # Build list
@@ -610,12 +620,12 @@ my $app = sub {
         # If POST, handle add/edit/delete list
         if ($req->method && uc($req->method) eq 'POST') {
             my $action = $req->param('action') // '';
-            my $list_id = $req->param('list_id') // 0;
+            my $page->{'list_id'} = $req->param('list_id') // 0;
             my $title = sanitize($req->param('Title') // '');
             my $desc = sanitize($req->param('Description') // '');
 
             if ($action eq 'add' && length $title) {
-                my $sth = $global->{'dbh'}->prepare(
+                my $sth = $dbh->prepare(
                     'INSERT INTO ListsTb (Title, Description) VALUES (?, ?)'
                     );
 
@@ -623,67 +633,67 @@ my $app = sub {
                 add_alert("List '$title' added.");
                 $stats->{'total_lists'} += 1;
                 $stats->{'total_active_lists'} += 1;
-                } elsif ($action eq 'edit' && $list_id > 1 && length $title) {
-                my $sth = $global->{'dbh'}->prepare(
+                } elsif ($action eq 'edit' && $page->{'list_id'} > 1 && length $title) {
+                my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?'
                     );
 
-                eval { $sth->execute($title, $desc, $list_id); 1 } or print STDERR "Update failed: $@";
+                eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
                 add_alert("List updated.");
-                } elsif ($action eq 'delete_orphan' && $list_id > 1) {
+                } elsif ($action eq 'delete_orphan' && $page->{'list_id'} > 1) {
                 # Delete list, leave tasks orphaned (no list assignment)
-                my $sth = $global->{'dbh'}->prepare(
+                my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
-                eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                eval { $sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted. Active tasks have been orphaned.");
                 $stats->{'total_lists'} -= 1;
                 $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-                if ($current_active == $list_id) {
-                    if ($default_listid) {
-                        $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_listid, $default_listid);
+                if ($current_active == $page->{'list_id'}) {
+                    if ($page->{'default_listid'}) {
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $page->{'default_listid'}, $page->{'default_listid'});
                     }
                 }
-                } elsif ($action eq 'delete_complete' && $list_id > 1) {
+                } elsif ($action eq 'delete_complete' && $page->{'list_id'} > 1) {
                 # Mark all tasks in this list as completed, then delete list
-                my $update_sth = $global->{'dbh'}->prepare(
+                my $update_sth = $dbh->prepare(
                     'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1'
                     );
-                eval { $update_sth->execute($list_id); 1 } or print STDERR "Task completion failed: $@";
+                eval { $update_sth->execute($page->{'list_id'}); 1 } or print STDERR "Task completion failed: $@";
 
-                my $delete_sth = $global->{'dbh'}->prepare(
+                my $delete_sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
-                eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                eval { $delete_sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted and all active tasks marked as completed.");
                 $stats->{'total_lists'} -= 1;
                 $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-                if ($current_active == $list_id) {
+                if ($current_active == $page->{'list_id'}) {
                     my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                     if ($default_list) {
-                        $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
                     }
                 }
-                } elsif ($action eq 'delete_move' && $list_id > 1) {
+                } elsif ($action eq 'delete_move' && $page->{'list_id'} > 1) {
                 # Move all active tasks to another list, then delete the list
                 my $target_list_id = $req->param('target_list_id') // 0;
 
-                if ($target_list_id > 1 && $target_list_id != $list_id) {
-                    my $move_sth = $global->{'dbh'}->prepare(
+                if ($target_list_id > 1 && $target_list_id != $page->{'list_id'}) {
+                    my $move_sth = $dbh->prepare(
                         'UPDATE TasksTb SET ListId = ? WHERE ListId = ? AND Status = 1'
                         );
-                    eval { $move_sth->execute($target_list_id, $list_id); 1 } or print STDERR "Task move failed: $@";
+                    eval { $move_sth->execute($target_list_id, $page->{'list_id'}); 1 } or print STDERR "Task move failed: $@";
 
-                    my $delete_sth = $global->{'dbh'}->prepare(
+                    my $delete_sth = $dbh->prepare(
                         'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                         );
-                    eval { $delete_sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                    eval { $delete_sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
 
                     add_alert("List deleted and active tasks moved to target list.");
                     $stats->{'total_lists'} -= 1;
@@ -691,32 +701,32 @@ my $app = sub {
 
                     # Check if deleted list was the active list, if so switch to default
                     my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-                    if ($current_active == $list_id) {
+                    if ($current_active == $page->{'list_id'}) {
                         my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                         if ($default_list) {
-                            $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                            $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
                         }
                     }
                 } else {
                     add_alert("Invalid target list selected.");
                     }
-                } elsif ($action eq 'delete' && $list_id > 1) {
+                } elsif ($action eq 'delete' && $page->{'list_id'} > 1) {
                 # Legacy delete (orphan) - for backwards compatibility
-                my $sth = $global->{'dbh'}->prepare(
+                my $sth = $dbh->prepare(
                     'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
                     );
 
-                eval { $sth->execute($list_id); 1 } or print STDERR "Delete failed: $@";
+                eval { $sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
                 add_alert("List deleted.");
                 $stats->{'total_lists'} -= 1;
                 $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
                 my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-                if ($current_active == $list_id) {
+                if ($current_active == $page->{'list_id'}) {
                     my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                     if ($default_list) {
-                        $global->{'dbh'}->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
                         }
                     }
                 } # End list action handling
@@ -802,7 +812,7 @@ my $app = sub {
                       </tr>
         ~;
 
-        my $list_sth = $global->{'dbh'}->prepare(
+        my $list_sth = $dbh->prepare(
             'SELECT id, Title, Description, IsDefault FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC'
             );  # Don't select ListsTb.id=1, "All"
         $list_sth->execute();
@@ -947,7 +957,7 @@ my $app = sub {
                     </thead>
                     <tbody>
         ~;
-        my $deleted_list_sth = $global->{'dbh'}->prepare(
+        my $deleted_list_sth = $dbh->prepare(
             'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
             );  # Don't select ListsTb.id=1, "All"
         $deleted_list_sth->execute();
@@ -1068,7 +1078,7 @@ my $app = sub {
         ~;
 
         # Build the list of available lists for moving tasks as JSON
-        my $move_lists_sth = $global->{'dbh'}->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
+        my $move_lists_sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id > 1 ORDER BY Title ASC');
         $move_lists_sth->execute();
         my @move_lists;
         while (my $ml = $move_lists_sth->fetchrow_hashref()) {
@@ -1218,7 +1228,7 @@ my $app = sub {
         ###############################################
         # Handle editing a list
         if ($req->path eq "/editlist") {
-            my $list_id = $req->param('id') // 0;
+            my $page->{'list_id'} = $req->param('id') // 0;
 
             # If POST, update the list in DB and redirect
             if ($req->method && uc($req->method) eq 'POST') {
@@ -1230,12 +1240,12 @@ my $app = sub {
                     $colour = '';
                     }
 
-                if (length $title && $list_id > 1) {
-                    my $sth = $global->{'dbh'}->prepare(
+                if (length $title && $page->{'list_id'} > 1) {
+                    my $sth = $dbh->prepare(
                         'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
                     );
-                eval { $sth->execute($title, $desc, $colour, $list_id); 1 } or print STDERR "Update failed: $@";
-                $list_colour = $colour;
+                eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
+                $page->{'list_colour'} = $colour;
                 add_alert("List '$title' updated.");
                 }
 
@@ -1244,16 +1254,16 @@ my $app = sub {
                 } # End /editlist form submission handling
 
             # If GET, show the edit-list form
-            if ($list_id > 1) {
-                my $sth = $global->{'dbh'}->prepare('SELECT * FROM ListsTb WHERE id = ?');
-                $sth->execute($list_id);
+            if ($page->{'list_id'} > 1) {
+                my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
+                $sth->execute($page->{'list_id'});
                 my $list= $sth->fetchrow_hashref();
 
                 if ($list) {
                     my $html = header();
                     $html .= start_card("Edit List", $icon_list, 0);
                     $html .= qq~
-                            <form method="post" action="/editlist?id=$list_id" class="row g-3">
+                            <form method="post" action="/editlist?id=$page->{'list_id'}" class="row g-3">
                                 <div class="col-12">
                                     <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
                                     <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
@@ -1606,7 +1616,7 @@ my $app = sub {
     # /?delete_task=nn - Delete task nn (Actually delete, not just set as completed)
     my $delete_task = $req->param('delete_task') // 0;
     if ($delete_task > 0) {
-        my $sth = $global->{'dbh'}->prepare('DELETE FROM TasksTb WHERE id = ?');
+        my $sth = $dbh->prepare('DELETE FROM TasksTb WHERE id = ?');
         eval { $sth->execute($delete_task); 1 } or print STDERR "WARN: Delete TasksTb.id=$delete_task failed: $@";
         add_alert("Task #$delete_task deleted.");
         $res->redirect('/'); # Redirect back to default page
@@ -1647,20 +1657,20 @@ my $app = sub {
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
                         <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
-                            <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$list_name' " />
+                            <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$page->{'list_name'}' " />
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
                         <h2>
                     ~;
 
     # If showing all lists, change titlebar to show what is being displayed instead of the form
-    if ($list_id == 1) {
-        if ($show_completed == 1) {
+    if ($page->{'list_id'} == 1) {
+        if ($page->{'show_completed'} == 1) {
             $titlebar = "Showing completed tasks from all lists";
             } else {
             $titlebar = "Showing active tasks from all lists";
             }
-        } # End if ($list_id == 1)
+        } # End if ($page->{'list_id'} == 1)
 
     $html .= start_card($titlebar,'',1);
 
@@ -1668,10 +1678,10 @@ my $app = sub {
     # Show main list of tasks
 
     # Show completed tasks if ?sc=1
-    if ($show_completed == 1) {
-        $html .= show_tasks(2,$list_id,0);
+    if ($page->{'show_completed'} == 1) {
+        $html .= show_tasks(2,$page->{'list_id'},0);
         } else { # Else show active tasks
-        $html .= show_tasks(1,$list_id,0);
+        $html .= show_tasks(1,$page->{'list_id'},0);
         }
 
     # End list of tasks, continue with box
@@ -1719,7 +1729,7 @@ sub connect_db {
         print STDERR "----------------------------------------------------\n\n";
 
         # Create new database connection which will autocreate the new database file
-        $global->{'dbh'} = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -1730,7 +1740,7 @@ sub connect_db {
         print STDERR "Database file $db_path found, connecting to existing database.\n";
 
         # The database does exist, so connect to it.
-        $global->{'dbh'} = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -1744,26 +1754,26 @@ sub connect_db {
 # initialise_database
 # Run-safe initialise of database scema. Starting with v.1 and upgrading as needed.
 
-# Create the v.1 database schema in a new database. New DB is created and we are connected via the global $global->{'dbh'}
+# Create the v.1 database schema in a new database. New DB is created and we are connected via the global $dbh
 sub initialise_database {
     ###############################################
     # Create ConfigTb
     print STDERR "Creating ConfigTb table.\n";
-    $global->{'dbh'}->do(qq~
+    $dbh->do(qq~
             CREATE TABLE IF NOT EXISTS ConfigTb (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 key TEXT UNIQUE,
                 value TEXT
                 );
-        ~) or print STDERR "WARN: Failed to create ConfigTb: " . $global->{'dbh'}->errstr;
+        ~) or print STDERR "WARN: Failed to create ConfigTb: " . $dbh->errstr;
 
     print STDERR "ConfigTb created. Populating.\n";
-    $global->{'dbh'}->do(qq~
+    $dbh->do(qq~
             INSERT INTO ConfigTb (key, value) VALUES
             ('database_schema_version', '1'),
             ('active_list', '2')
             ;
-        ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $global->{'dbh'}->errstr;
+        ~) or print STDERR "WARN: Failed to populate ConfigTb: " . $dbh->errstr;
 
     # Save initial config values from local config hash
     save_config();
@@ -1771,7 +1781,7 @@ sub initialise_database {
     ###############################################
     # Create ListsTb
     print STDERR "Creating ListsTb table.\n";
-    $global->{'dbh'}->do(qq~
+    $dbh->do(qq~
             CREATE TABLE IF NOT EXISTS ListsTb (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Title TEXT NOT NULL,
@@ -1781,21 +1791,21 @@ sub initialise_database {
                 Colour TEXT,
                 IsDefault INTEGER NOT NULL DEFAULT 0
                 );
-        ~) or print STDERR "WARN: Failed to create ListsTb: " . $global->{'dbh'}->errstr;
+        ~) or print STDERR "WARN: Failed to create ListsTb: " . $dbh->errstr;
 
     # Populate with a default list
     print STDERR "ListsTb created. Populating with default lists.\n";
-    $global->{'dbh'}->do(qq~
+    $dbh->do(qq~
         INSERT INTO ListsTb (id, Title, Description, IsDefault) VALUES
         (1, 'All Tasks', 'View tasks from all lists', 0),
         (2, 'Default List', 'Main day to day list', 1)
         ON CONFLICT(id) DO NOTHING;
-        ~) or print STDERR "WARN: Failed to populate ListsTb: " . $global->{'dbh'}->errstr;
+        ~) or print STDERR "WARN: Failed to populate ListsTb: " . $dbh->errstr;
 
     ###############################################
     # Create TasksTb
     print STDERR "Creating TasksTb table.\n";
-    $global->{'dbh'}->do(qq~
+    $dbh->do(qq~
         CREATE TABLE IF NOT EXISTS TasksTb (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             Status INTEGER DEFAULT 1, -- 1 = Active, 2 = Deferred, 3 = Completed
@@ -1806,16 +1816,16 @@ sub initialise_database {
             StartDate TEXT,
             CompletedDate TEXT
             );
-        ~) or print STDERR "Failed to create TasksTb: " . $global->{'dbh'}->errstr;
+        ~) or print STDERR "Failed to create TasksTb: " . $dbh->errstr;
 
     # Populate with some sample tasks
     print STDERR "TasksTb created. Populating with sample tasks.\n";
-    $global->{'dbh'}->do(qq~
+    $dbh->do(qq~
         INSERT INTO TasksTb (Title, Description, ListId) VALUES
         ('Sample Task 1', 'This is a sample task description.', 2),
         ('Sample Task 2', 'Another sample task for demonstration.', 2),
         ('Sample Task 3', 'Install Taskpony. Hey, you did this, you can tick it off!', 2);
-        ~) or print STDERR "WARN: Failed to populate TasksTb: " . $global->{'dbh'}->errstr;
+        ~) or print STDERR "WARN: Failed to populate TasksTb: " . $dbh->errstr;
 
     print STDERR "Database initialisation complete, schema version 1.\n";
 
@@ -1845,7 +1855,7 @@ sub check_database_upgrade  {
 
             foreach my $upgrade_query (@db_upgrade_steps_1_to_2) {
                 print STDERR "Applying DB upgrade step: $upgrade_query\n";
-                eval { $global->{'dbh'}->do($upgrade_query); 1 } or print STDERR "WARN: Failed to apply DB upgrade step: $upgrade_query : " . $global->{'dbh'}->errstr;
+                eval { $dbh->do($upgrade_query); 1 } or print STDERR "WARN: Failed to apply DB upgrade step: $upgrade_query : " . $dbh->errstr;
                 }
 
             # Re-fetch current DB version after upgrade steps to ensure it's updated
@@ -1874,7 +1884,7 @@ sub header {
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>$global->{'app_title'} / $list_name</title>
+    <title>$global->{'app_title'} / $page->{'list_name'}</title>
 
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -1959,20 +1969,20 @@ sub header {
     <div class="container py-1">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
-                <a href="/?lid=$default_listid" class="d-flex align-items-center gap-2 text-white text-decoration-none"
+                <a href="/?lid=$page->{'default_listid'}" class="d-flex align-items-center gap-2 text-white text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto" title="Switch to Default List"
                 >
                     <img src="/static/$global->{'taskpony_icon'}" width="82" height="82" alt="logo">
                 </a>
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto" title="Home - Show active tasks in '$list_name'"
+                data-bs-toggle="tooltip" data-bs-placement="auto" title="Home - Show active tasks in '$page->{'list_name'}'"
                 >
                     <h3 class="mb-0">$global->{'app_title'}</h3>
                 </a>
                 ~;
 
     # Add the list selection pulldown.
-    $html .= list_pulldown($list_id);
+    $html .= list_pulldown($page->{'list_id'});
 
     $html .= qq~
                     </div>
@@ -1980,27 +1990,27 @@ sub header {
             ~;
 
     # Show completed/active button
-    if ($show_completed == 0) {  # We're on the active tasks page, so show button for completeds
-                my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $list_id");
-                if ($list_id == 1) {
+    if ($page->{'show_completed'} == 0) {  # We're on the active tasks page, so show button for completeds
+                my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $page->{'list_id'}");
+                if ($page->{'list_id'} == 1) {
                     $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2");
                     }
                 $html .= qq~
                 <a href="/?sc=1"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_completed_tasks completed tasks in '$list_name'" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_completed_tasks completed tasks in '$page->{'list_name'}'" >
                     $icon_rotate_left
                 </a>
                 ~;
                 } else { # We're showing completed tasks, so show button for the active list
-                my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $list_id");
-                if ($list_id == 1) {
+                my $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1 AND ListId = $page->{'list_id'}");
+                if ($page->{'list_id'} == 1) {
                     $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1");
                     }
                 $html .= qq~
                 <a href="/"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
-                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_active_tasks active tasks in '$list_name'" >
+                    data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_active_tasks active tasks in '$page->{'list_name'}'" >
                     $icon_rotate_right
                 </a>
                 ~;
@@ -2168,7 +2178,7 @@ sub footer {
 # list_pulldown($selected_lid)
 # Returns HTML for a pulldown list of available lists, with the selected list marked as selected
 sub list_pulldown {
-    my $selected_lid = shift || $list_id;
+    my $selected_lid = shift || $page->{'list_id'};
 
     # Redirect to root with ?lid=<id> when selection changes (no enclosing form required)
     my $html = qq~
@@ -2178,7 +2188,7 @@ sub list_pulldown {
 
     # We should check whether there is a default list. If so, select the oldest non-deleted one.
     my $default_cnt_sql = 'SELECT COUNT(*) FROM ListsTb WHERE isDefault =1 AND DeletedDate IS NULL';
-    my $default_cnt = $global->{'dbh'}->selectrow_array($default_cnt_sql);
+    my $default_cnt = $dbh->selectrow_array($default_cnt_sql);
 
     if ($default_cnt == 0) {
         print STDERR "Odd. There's no default, active list. Maybe it just got deleted. Making the oldest list the new default.\n";
@@ -2189,7 +2199,7 @@ sub list_pulldown {
         }
 
     # Get lists from ListsTb
-    my $sth = $global->{'dbh'}->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
+    my $sth = $dbh->prepare('SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL ORDER BY IsDefault DESC,Title ASC');
     $sth->execute();
 
     # Prepend the "All lists" option and then loop through, adding each.
@@ -2255,7 +2265,7 @@ sub html_escape_with_breaks {
 # Execute a SQL query that returns a single value
 sub single_db_value {
     my ($sql, @params) = @_;
-    my $sth = $global->{'dbh'}->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
     return $value;
@@ -2266,17 +2276,17 @@ sub single_db_value {
 # Print debug message if debugging is globally enabled
 sub debug {
     my $msg = shift;
-    if ($debug == 1) {
+    if ($global->{'debug'} == 1) {
         print STDERR "DEBUG: $msg\n";
         }
     } # End debug()
 
 ###############################################
-# show_tasks($status, $list_id, $not_hidden, $show_recurring)
+# show_tasks($status, $page->{'list_id'}, $not_hidden, $show_recurring)
 # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
 # If $show_recurring is 1, shows all recurring tasks regardless of status
 sub show_tasks {
-    my ($status, $list_id, $not_hidden, $show_recurring) = @_;
+    my ($status, $page->{'list_id'}, $not_hidden, $show_recurring) = @_;
     $show_recurring = $show_recurring // 0;  # Default to 0 if not provided
 
     # Build SQL query
@@ -2299,9 +2309,9 @@ sub show_tasks {
         push @params, $status;
         }
 
-    if ($list_id != 1 && $show_recurring != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
-        $sql .= " AND t.ListId = $list_id ";
-        debug("show_tasks: Filtering tasks for list_id: [$list_id]");
+    if ($page->{'list_id'} != 1 && $show_recurring != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
+        $sql .= " AND t.ListId = $page->{'list_id'} ";
+        debug("show_tasks: Filtering tasks for list_id: [$page->{'list_id'}]");
         } else {
         if ($show_recurring != 1) {
             debug("show_tasks: Showing tasks for ALL lists");
@@ -2317,7 +2327,7 @@ sub show_tasks {
         $sql .= " ORDER BY t.AddedDate DESC ";
         }
 
-    my $sth = $global->{'dbh'}->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
 
     my $hidden_string = 'dt-hidden';
@@ -2557,7 +2567,7 @@ sub show_tasks {
         <!-- Reload page if DB changed -->
         <script>
         (function () {
-        let lastValue = Number($db_mtime);
+        let lastValue = Number($page->{'db_mtime'});
 
         async function checkDbStats() {
             try {
@@ -2580,7 +2590,7 @@ sub show_tasks {
             }
         }
 
-        setInterval(checkDbStats, $db_interval_check_ms);
+        setInterval(checkDbStats, $page->{'db_interval_check_ms'});
         })();
         </script> <!-- End DB stats check script -->
 
@@ -2590,16 +2600,16 @@ sub show_tasks {
         <span class="float-start muted d-flex gap-3">
 
             <!-- Show permanent link to this list -->
-            <a href="/?lid=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/?lid=$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to this list">
                 $smallicon_link
             </a>
         ~;
 
-        if ($list_id != 1) {  # Not "All lists", so show link to add task to this list
+        if ($page->{'list_id'} != 1) {  # Not "All lists", so show link to add task to this list
             $html .= qq~
-            <a href="/editlist?id=$list_id" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/editlist?id=$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
                 $smallicon_edit
@@ -2640,9 +2650,9 @@ sub show_tasks {
 # show_alert()
 # Check ConfigTb for last_alert and if found, show it once and clear it
 sub show_alert {
-    my $alert_text = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
+    my $page->{'alert_text'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
 
-    if ($alert_text) { # There is an alert pending
+    if ($page->{'alert_text'}) { # There is an alert pending
         single_db_value("DELETE FROM ConfigTb WHERE `key` = 'last_alert'");
 
         return qq~
@@ -2650,7 +2660,7 @@ sub show_alert {
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
-                $alert_text
+                $page->{'alert_text'}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </div>
@@ -2663,17 +2673,17 @@ sub show_alert {
     } # End show_alert()
 
 ###############################################
-# add_alert($alert_text)
+# add_alert($page->{'alert_text'})
 # Store an alert message in ConfigTb to be shown on next page load
 sub add_alert {
-    my $alert_text = shift;
-    $global->{'dbh'}->do(
+    my $page->{'alert_text'} = shift;
+    $dbh->do(
         "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
         undef,
         'last_alert',
-        $alert_text,
-        $alert_text
-        ) or print STDERR "Failed to set last_alert: " . $global->{'dbh'}->errstr;
+        $page->{'alert_text'},
+        $page->{'alert_text'}
+        ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
     } # End add_alert()
 
 ###############################################
@@ -2754,8 +2764,8 @@ sub start_card {
     $html .= qq~
                 ~;
 
-    if (length $list_colour > 2) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$list_colour;">~;
+    if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
         } else { # Show default bg-
         $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
         }
@@ -2822,16 +2832,16 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
         FROM TasksTb
         };
 
-    my $row = $global->{'dbh'}->selectrow_hashref($sql);
+    my $row = $dbh->selectrow_hashref($sql);
 
     # Merge DB values into existing stats hashref
     @$stats{ keys %$row } = values %$row;
 
-    $stats->{total_lists} = $global->{'dbh'}->selectrow_array('SELECT COUNT(*) FROM ListsTb');
-    $stats->{total_active_lists} = $global->{'dbh'}->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
-    $stats->{stats_first_task_created} = $global->{'dbh'}->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
-    $stats->{stats_first_task_created_daysago} = $global->{'dbh'}->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
-    $stats->{repeating_tasks} = $global->{'dbh'}->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
+    $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
+    $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
+    $stats->{stats_first_task_created} = $dbh->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
+    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
+    $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
 
     $stats->{stats_last_calculated} = time;
     } # End calculate_stats()
@@ -2839,7 +2849,7 @@ sub calculate_stats { # Calculate stats and populate the global $stats hashref
 ###############################################
 # Run any daily tasks we need to. Return if already run today.
 sub run_daily_tasks {
-    my $tasks_ran_today = $global->{'dbh'}->selectrow_array("
+    my $tasks_ran_today = $dbh->selectrow_array("
         SELECT CASE
         WHEN value = date('now') THEN 1
         ELSE 0
@@ -2858,7 +2868,7 @@ sub run_daily_tasks {
 
     ###############################################
     # Look for any recurring tasks that need to be reactivated today
-    my $recurring_sth = $global->{'dbh'}->prepare("
+    my $recurring_sth = $dbh->prepare("
         SELECT id, Title, Description, AddedDate, CompletedDate, ListId, RecurringIntervalDay
         FROM TasksTb
         WHERE IsRecurring = 'on' AND Status = 2 AND CompletedDate IS NOT NULL
@@ -2881,20 +2891,20 @@ sub run_daily_tasks {
             print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}') after $interval_days days\n";
 
             # Reactivate the task
-            $global->{'dbh'}->do("
+            $dbh->do("
                 UPDATE TasksTb
                 SET Status = 1,
                     CompletedDate = NULL,
                     AddedDate = datetime('now')
                 WHERE id = ?
                 ", undef, $task->{'id'}
-                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $global->{'dbh'}->errstr;
+                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $dbh->errstr;
             }
         }
 
     ###############################################
     # We ran run_daily_tasks() today, so let's update the last run time and return
-    $global->{'dbh'}->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $global->{'dbh'}->errstr;
+    $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
 
     # Frivolity: Check if a special date and change the logo
     # If month is December and day is between 20 and 31, show a festive icon
@@ -2959,12 +2969,12 @@ sub save_config {
             ON CONFLICT(key)
             DO UPDATE SET value = excluded.value;";
 
-        $global->{'dbh'}->do(
+        $dbh->do(
             $sql,
             undef,
             $key,
             $config->{$key},
-            ) or warn "Failed to save config key ($key): " . $global->{'dbh'}->errstr;
+            ) or warn "Failed to save config key ($key): " . $dbh->errstr;
         }
     } # End save_config()
 
@@ -3087,7 +3097,7 @@ sub config_show_option {
 sub showalltasks {
     my $html = '';
 
-    my $lists_sth = $global->{'dbh'}->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
+    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
     $lists_sth->execute();
 
     while (my $list = $lists_sth->fetchrow_hashref()) {
@@ -3116,9 +3126,9 @@ sub build_inline_icon {
     } # end build_inline_icon
 
 ###############################################
-# Update the global $db_mtime variable with the current database file modification time
+# Update the global $page->{'db_mtime'} variable with the current database file modification time
 sub update_db_mtime {
-    $db_mtime = (stat($db_path))[9] // 0;
+    $page->{'db_mtime'} = (stat($db_path))[9] // 0;
     }
 
 ##############################################
