@@ -3116,6 +3116,8 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
         }
     } # End action_task_edit
 
+    }
+
    ###############################################
     # Handle editing a task
 
