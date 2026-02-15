@@ -218,7 +218,6 @@ my $app = sub {
 
 
 
-
     ###############################################
     # SHOW functions
 
@@ -243,8 +242,9 @@ my $app = sub {
     # End redirectors
     ###############################################
 
-    ###############################################
-    # Recieve Forms
+
+
+
 
 
 
@@ -266,22 +266,6 @@ my $app = sub {
 
 
 
-
-    ###############################################
-    # Permanently delete LIST nn
-    if ($req->path eq "/list_delete_list") {
-        if ($req->method && uc($req->method) eq 'GET') {
-            my $lid = $req->param('lid');
-            if ($lid > 1) { # Don't allow deleting "All Tasks Lists"
-                print STDERR "INFO: Permanently deleting list $lid\n";
-                my $sth = $dbh->prepare('DELETE FROM ListsTb WHERE id = ?');
-                eval { $sth->execute($lid); 1 } or print STDERR "WARN: Permanent list delete failed: $@";
-                add_alert("List permanently deleted.");
-            }
-        }
-        $res->redirect('/lists');
-        return $res->finalize;
-        } # End /list_delete_list
 
     ###############################################
     # Create a new task
@@ -3124,6 +3108,8 @@ sub receive_form_task_edit { # Receive Edit Task form
             my $list_id = $req->param('ListId') // 0;
             my $is_recurring = sanitize($req->param('IsRecurring') // '');
             my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
+
+            debug("receive_form_task_edit: Received form data for task $task_id - Title: $title, ListId: $list_id, IsRecurring: $is_recurring, RecurringIntervalDay: $recurring_interval");
 
             # Validate recurring interval
             if ($recurring_interval !~ /^\d+$/) {
