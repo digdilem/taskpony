@@ -2227,7 +2227,7 @@ sub show_tasks {
 
             $title_link .= qq~
                     <a
-                    href="/edittask?id=$a->{'id'}"
+                    href="/task_edit/$a->{'id'}"
                     class="text-white text-decoration-none"
                     data-bs-toggle="tooltip" data-bs-placement="auto"
                     data-bs-html="true"
@@ -2248,7 +2248,7 @@ sub show_tasks {
         if ($status == 2) { # Completed tasks
             $title_link .= qq~
                     <a
-                    href="/edittask?id=$a->{'id'}"
+                    href="/task_edit/$a->{'id'}"
                     class="text-white text-decoration-none"
                     data-bs-toggle="tooltip" data-bs-placement="auto"
                     title="$description Completed ~ . human_friendly_date($a->{'CompletedDate'}) . qq~">
@@ -2272,7 +2272,7 @@ sub show_tasks {
 
             $title_link .= qq~
                     <a
-                    href="/edittask?id=$a->{'id'}"
+                    href="/task_edit/$a->{'id'}"
                     class="text-white text-decoration-none"
                     data-bs-toggle="tooltip" data-bs-placement="auto"
                     data-bs-html="true"
@@ -3130,7 +3130,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
         # $res->status(404);
         # $res->body("Task not found");
         # return $res->finalize;
-        # } # End /edittask
+        # } # End /
 
 
 
