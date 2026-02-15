@@ -2784,6 +2784,7 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
     } # end build_inline_icon
 
 sub verify_valid_list { # verify_valid_list() - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
+    my $proposed_list_id = shift || 0;
     my $original_list_id = $page->{'list_id'} || 0;
 
     # 1. Change to something provided by ?lid
