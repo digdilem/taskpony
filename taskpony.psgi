@@ -880,7 +880,7 @@ sub header {
 
             </div>
         </div>
-<!-- End header() -->
+    <!-- End header() -->
     ~;
 
     return $html;
@@ -1595,7 +1595,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             </tr>
              <!-- End show_tasks() -->
         ~;
-    } # End tasks loop
+        } # End tasks loop
 
     # Close table and add JS script to reload page if database has changed (Stats table page only)
     $html .= qq~
@@ -2357,8 +2357,9 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
             return $html;
             } # End if list found
         } # End if list_id > 1
-    } # End /editlist
+    }
 
+} # end show_list_edit
 
 # End SHOW functions
 ###############################################
