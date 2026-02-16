@@ -21,8 +21,8 @@ use FindBin qw($Dir);           # To find Taskpony's Paddock (starting directory
 ###############################################
 # Path to Taskpony installation root and associated dirs.
 my $taskpony_path = $Dir;
-my $db_path = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created
-my $bg_path = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
+#my $global->{'db_path'} = "$Dir/db/taskpony.db";          # Path to Sqlite database file that's valid if native or in docker. If not present, it will be auto created
+#my $global->{'bg_path'} = "$Dir/static/background.jpg";   # Path to the background picture, if used. This should be writeable by the taskpony process to allow uploads and must be in ./static for serving.
 
 my $dbh;                            # Global database handle
 
@@ -57,6 +57,8 @@ our $global = {
     tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app
     debug => 1,                                 # Set to 1 to enable debug messages to STDERR
     running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not
+    db_path => "$Dir/db/taskpony.db",           # Path to Sqlite database file that's valid if native or in docker. This will be updated to the correct path on startup.
+    bg_path => "$Dir/static/background.jpg"     # Path to background image file, valid in docker or native. This will be updated to the correct path on startup.
     };
 
 ###############################################
@@ -1250,11 +1252,11 @@ my $app = sub {
 
         my $src = $upload->path or return [500, [], ['Upload has no temp path']];
 
-        my $tmp = "$bg_path.tmp";  # Write out a temporary file as bg pic may be slow to upload
+        my $tmp = "$global->{'bg_path'}.tmp";  # Write out a temporary file as bg pic may be slow to upload
 
         copy($src, $tmp) or return [500, [], ["Copy failed: $!"]];
 
-        rename $tmp, $bg_path or return [500, [], ["Rename failed: $!"]];
+        rename $tmp, $global->{'bg_path'} or return [500, [], ["Rename failed: $!"]];
 
         add_alert("Background image updated");
         return [302, [ Location => '/config' ], []];
@@ -1339,15 +1341,15 @@ builder { # Enable Static middleware for specific paths, including favicon.ico, 
 # Checks whether the sqlite database file exists and if not, creates it, populates schema, and connects to it
 sub connect_db {
     # Check database exists.
-    if (! -e $db_path) {
+    if (! -e $global->{'db_path'}) {
         # Database file does not exist, so create it and initialise it.
-        print STDERR "Database file $db_path not found. Assuming new install and creating new database\n";
+        print STDERR "Database file $global->{'db_path'} not found. Assuming new install and creating new database\n";
         # Ensure data directory exists
-        my ($data_dir) = $db_path =~ m{^(.*)/[^/]+$};
+        my ($data_dir) = $global->{'db_path'} =~ m{^(.*)/[^/]+$};
 
         if (! -d $data_dir) {
             print STDERR "Data directory $data_dir does not exist, creating it now.\n";
-            mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $db_path\n";
+            mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $global->{'db_path'}\n";
 
             if (! -d $data_dir) {
                 print STDERR "I tried to create the data directory $data_dir but it still does not exist. Cannot continue.\n";
@@ -1360,7 +1362,7 @@ sub connect_db {
         print STDERR "----------------------------------------------------\n\n";
 
         # Create new database connection which will autocreate the new database file
-        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $dbh = DBI->connect("dbi:SQLite:dbname=$global->{'db_path'}", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -1368,10 +1370,10 @@ sub connect_db {
         initialise_database();  # Create tables etc.
 
         } else {
-        print STDERR "Database file $db_path found, connecting to existing database.\n";
+        print STDERR "Database file $global->{'db_path'} found, connecting to existing database.\n";
 
         # The database does exist, so connect to it.
-        $dbh = DBI->connect("dbi:SQLite:dbname=$db_path", "", "", {
+        $dbh = DBI->connect("dbi:SQLite:dbname=$global->{'db_path'}", "", "", {
             RaiseError => 1,
             AutoCommit => 1,
             }) or die $DBI::errstr;
@@ -2503,7 +2505,7 @@ sub set_default_listid { # set_default_listid($list_id) - sets the default list 
     }
 
 sub update_db_mtime {  # Update the global $page->{'db_mtime'} variable with the current database file modification time
-    $page->{'db_mtime'} = (stat($db_path))[9] // 0;
+    $page->{'db_mtime'} = (stat($global->{'db_path'}))[9] // 0;
     }
 
 sub verify_valid_list { # verify_valid_list() - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
@@ -2648,8 +2650,8 @@ sub backup_database {  # Backup the database by rotating old backups and creatin
 
     # Start counting back from the currently defined max backups to keep. Delete the oldest, then rename each one down by 1, then create the new backup as .0
     for (my $i = $config->{cfg_backup_number_to_keep} - 1; $i >= 0; $i--) {
-        my $old_backup = "$db_path.$i";
-        my $new_backup = "$db_path." . ($i + 1);
+        my $old_backup = "$global->{'db_path'}.$i";
+        my $new_backup = "$global->{'db_path'}." . ($i + 1);
         print STDERR "Processing backup rotation: $old_backup to $new_backup\n";
 
         if (-e $old_backup) {
@@ -2665,9 +2667,9 @@ sub backup_database {  # Backup the database by rotating old backups and creatin
             }
         }
     # Now create the new backup as .0
-    my $new_backup_0 = "$db_path.0";
-    print STDERR "Creating new backup by copying $db_path to $new_backup_0\n";
-    copy($db_path, $new_backup_0) or print STDERR "WARN: Failed to create new backup $new_backup_0: $!\n";
+    my $new_backup_0 = "$global->{'db_path'}.0";
+    print STDERR "Creating new backup by copying $global->{'db_path'} to $new_backup_0\n";
+    copy($global->{'db_path'}, $new_backup_0) or print STDERR "WARN: Failed to create new backup $new_backup_0: $!\n";
     } # End backup_database()
 
 sub run_daily_tasks {  # Run any daily tasks we need to. Return if already run today.
@@ -2780,7 +2782,7 @@ sub calculate_stats { # calculate_stats() Calculate stats and populate the globa
     } # End calculate_stats()
 
 sub config_load { # config_load() - Load all key/value pairs from ConfigTb into $config hashref
-    print STDERR "Loading configuration from $db_path in ConfigTb\n";
+    print STDERR "Loading configuration from $global->{'db_path'} in ConfigTb\n";
 
     # List through $config keys and lead each of them from ConfigTb
     for my $key (keys %$config) {
