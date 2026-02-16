@@ -95,10 +95,10 @@ my $stats = {
     };
 
 # New icons to be saved in /static/icons and alt text matches the filename.svg
-# my $icons = {
-#     chart => build_tabler_icon('Statistics'),  # Chart icon
-#     };
+my $icons = {
+    chart => build_tabler_icon('Statistics'),  # Chart icon
 
+    };
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
 my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
 my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
@@ -548,24 +548,11 @@ sub connect_db {
             print STDERR "Data directory $data_dir does not exist, creating it now.\n";
             mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $global->{'db_path'}\n";
 
-# Checks whether the sqlite database file exists and if not, creates it, populates schema, and connects to it
-sub connect_db {
-    # Check database exists.
-    if (! -e $global->{'db_path'}) {
-        # Database file does not exist, so create it and initialise it.
-        print STDERR "Database file $global->{'db_path'} not found. Assuming new install and creating new database\n";
-        # Ensure data directory exists
-        my ($data_dir) = $global->{'db_path'} =~ m{^(.*)/[^/]+$};
-
-        if (! -d $data_dir) {
-            print STDERR "Data directory $data_dir does not exist, creating it now.\n";
-            mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $global->{'db_path'}\n";
-
             if (! -d $data_dir) {
                 print STDERR "I tried to create the data directory $data_dir but it still does not exist. Cannot continue.\n";
                 exit 1;
                 }
-            }
+            #}
 
         print STDERR "----------------------------------------------------\n";
         print STDERR "Welcome to $global->{'app_title'}!\n";
@@ -590,7 +577,6 @@ sub connect_db {
             }
 
     # Check for any needed schema upgrades each time we connect
-    check_database_upgrade();
     }  # End connect_db()
 
 ###############################################
@@ -880,7 +866,7 @@ sub header {
 
             </div>
         </div>
-    <!-- End header() -->
+<!-- End header() -->
     ~;
 
     return $html;
@@ -1595,7 +1581,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             </tr>
              <!-- End show_tasks() -->
         ~;
-        } # End tasks loop
+    } # End tasks loop
 
     # Close table and add JS script to reload page if database has changed (Stats table page only)
     $html .= qq~
@@ -2357,9 +2343,8 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
             return $html;
             } # End if list found
         } # End if list_id > 1
-    }
+    } # End /editlist
 
-} # end show_list_edit
 
 # End SHOW functions
 ###############################################
@@ -3112,82 +3097,82 @@ sub receive_form_task_add { # Receive Add Task form. No direct output
     add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
     } # End /receive_form_task_add
 
-# sub receive_form_list { # Receive Add or Edit List form. No direct output  (action param = add|edit)
-#     my ($req) = @_;
-#     my $action = $req->param('action') // '';
-#     my $page->{'list_id'} = $req->param('list_id') // 0;
-#     my $title = sanitize($req->param('Title') // '');
-#     my $desc = sanitize($req->param('Description') // '');
+sub receive_form_list { # Receive Add or Edit List form. No direct output  (action param = add|edit)
+    my ($req) = @_;
+    my $action = $req->param('action') // '';
+    my $page->{'list_id'} = $req->param('list_id') // 0;
+    my $title = sanitize($req->param('Title') // '');
+    my $desc = sanitize($req->param('Description') // '');
 
-#     # Add new list
-#     if ($action eq 'add' && length $title) {
-#         my $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description) VALUES (?, ?)' );
-#         eval { $sth->execute($title, $desc); 1 } or print STDERR "Insert failed: $@";
-#         add_alert("List '$title' added.");
-#         $stats->{'total_lists'} += 1;
-#         $stats->{'total_active_lists'} += 1;
-#         }
+    # Add new list
+    if ($action eq 'add' && length $title) {
+        my $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description) VALUES (?, ?)' );
+        eval { $sth->execute($title, $desc); 1 } or print STDERR "Insert failed: $@";
+        add_alert("List '$title' added.");
+        $stats->{'total_lists'} += 1;
+        $stats->{'total_active_lists'} += 1;
+        }
 
-#     if ($action eq 'edit' && $page->{'list_id'} > 1 && length $title) {  # Edit existing list
-#         my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?' );
-#         eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
-#         add_alert("List updated.");
-#         }
+    if ($action eq 'edit' && $page->{'list_id'} > 1 && length $title) {  # Edit existing list
+        my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ? WHERE id = ?' );
+        eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
+        add_alert("List updated.");
+        }
 
-#     if ($action eq 'delete_orphan' && $page->{'list_id'} > 1) {
-#         # Delete list, leave tasks orphaned (no list assignment)
-#         my $sth = $dbh->prepare( 'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?' );
-#         eval { $sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
-#         add_alert("List deleted. Active tasks have been orphaned.");
-#         $stats->{'total_lists'} -= 1;
-#         $stats->{'total_active_lists'} -= 1;
+    if ($action eq 'delete_orphan' && $page->{'list_id'} > 1) {
+        # Delete list, leave tasks orphaned (no list assignment)
+        my $sth = $dbh->prepare( 'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?' );
+        eval { $sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
+        add_alert("List deleted. Active tasks have been orphaned.");
+        $stats->{'total_lists'} -= 1;
+        $stats->{'total_active_lists'} -= 1;
 
-#         my $current_active = return_default_listid();  # Check if deleted list was the active list, if so switch to default
-#         if ($current_active == $page->{'list_id'}) { verify_valid_list(); } #  We deleted the active list. Ensure default list points to a valid list
-#         }
+        my $current_active = return_default_listid();  # Check if deleted list was the active list, if so switch to default
+        if ($current_active == $page->{'list_id'}) { verify_valid_list(); } #  We deleted the active list. Ensure default list points to a valid list
+        }
 
-#     if ($action eq 'delete_complete' && $page->{'list_id'} > 1) { # Mark all tasks in this list as completed, then delete list
-#         my $update_sth = $dbh->prepare( 'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1' );
-#         eval { $update_sth->execute($page->{'list_id'}); 1 } or print STDERR "Task completion failed: $@";
-#         my $delete_sth = $dbh->prepare( 'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?' );
-#         eval { $delete_sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
-#         add_alert("List deleted and all active tasks marked as completed.");
-#         $stats->{'total_lists'} -= 1;
-#         $stats->{'total_active_lists'} -= 1;
+    if ($action eq 'delete_complete' && $page->{'list_id'} > 1) { # Mark all tasks in this list as completed, then delete list
+        my $update_sth = $dbh->prepare( 'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE ListId = ? AND Status = 1' );
+        eval { $update_sth->execute($page->{'list_id'}); 1 } or print STDERR "Task completion failed: $@";
+        my $delete_sth = $dbh->prepare( 'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?' );
+        eval { $delete_sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
+        add_alert("List deleted and all active tasks marked as completed.");
+        $stats->{'total_lists'} -= 1;
+        $stats->{'total_active_lists'} -= 1;
 
-#         # Check if deleted list was the active list, if so switch to default
-#         my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-#         if ($current_active == $page->{'list_id'}) {
-#             my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
-#             if ($default_list) { $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list); }
-#             }
-#         }
+        # Check if deleted list was the active list, if so switch to default
+        my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+        if ($current_active == $page->{'list_id'}) {
+            my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+            if ($default_list) { $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list); }
+            }
+        }
 
-#     if ($action eq 'delete_move' && $page->{'list_id'} > 1) { # Move all active tasks to another list, then delete the list
-#         my $target_list_id = $req->param('target_list_id') // 0;
+    if ($action eq 'delete_move' && $page->{'list_id'} > 1) { # Move all active tasks to another list, then delete the list
+        my $target_list_id = $req->param('target_list_id') // 0;
 
-#         if ($target_list_id > 1 && $target_list_id != $page->{'list_id'}) {
-#             my $move_sth = $dbh->prepare( 'UPDATE TasksTb SET ListId = ? WHERE ListId = ? AND Status = 1' );
-#             eval { $move_sth->execute($target_list_id, $page->{'list_id'}); 1 } or print STDERR "Task move failed: $@";
+        if ($target_list_id > 1 && $target_list_id != $page->{'list_id'}) {
+            my $move_sth = $dbh->prepare( 'UPDATE TasksTb SET ListId = ? WHERE ListId = ? AND Status = 1' );
+            eval { $move_sth->execute($target_list_id, $page->{'list_id'}); 1 } or print STDERR "Task move failed: $@";
 
-#             my $delete_sth = $dbh->prepare( 'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?' );
-#             eval { $delete_sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
+            my $delete_sth = $dbh->prepare( 'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?' );
+            eval { $delete_sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
 
-#             add_alert("List deleted and active tasks moved to target list.");
-#             $stats->{'total_lists'} -= 1;
-#             $stats->{'total_active_lists'} -= 1;
+            add_alert("List deleted and active tasks moved to target list.");
+            $stats->{'total_lists'} -= 1;
+            $stats->{'total_active_lists'} -= 1;
 
-#             # Check if deleted list was the active list, if so switch to default
-#             my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-#             if ($current_active == $page->{'list_id'}) {
-#                 my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
-#                 if ($default_list) {
-#                     $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
-#                     }
-#                 }
-#             }
-#         }
-#     } # End receive_form_list_add
+            # Check if deleted list was the active list, if so switch to default
+            my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+            if ($current_active == $page->{'list_id'}) {
+                my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+                if ($default_list) {
+                    $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                    }
+                }
+            }
+        }
+    } # End receive_form_list_add
 
 sub receive_form_list { # Receive Add or Edit List form. No direct output (List_id (if 0, new list), $req)
     my ($editlist_id, $req) = @_;
@@ -3199,15 +3184,15 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
     my $clear_colours = $req->param('clear_colours') // '';
     if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
     if (length $title && $page->{'list_id'} > 1) {
-        my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
-        if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
-        eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
-        $page->{'list_colour'} = $colour;
-        add_alert("List '$title' updated.");
-        } # End /receive_form_list form submission handling
-    } # End receive_form_list
+    my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
+    if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
+    eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
+    $page->{'list_colour'} = $colour;
+    add_alert("List '$title' updated.");
+    } # End /receive_form_list form submission handling
 
-}
+
+
 
 # End Receive functions
 ###############################################
