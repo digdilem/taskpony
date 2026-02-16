@@ -1286,7 +1286,7 @@ my $app = sub {
 
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
-                        <form method="post" action="/add" class="d-flex align-items-center gap-2 m-0">
+                        <form method="post" action="/task_form_add" class="d-flex align-items-center gap-2 m-0">
                             <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$page->{'list_name'}' " />
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
@@ -3112,7 +3112,7 @@ sub action_task_add { # Show the add task form
     $html .= qq~
         <div class="container py-2">
             <h3 class="mb-3">Add Task</h3>
-            <form method="post" action="/add" class="row g-3">
+            <form method="post" action="/task_form_add" class="row g-3">
             <div class="col-12">
                 <label class="form-label">Title</label>
                 <input name="Title" class="form-control" required maxlength="255" />
