@@ -95,10 +95,10 @@ my $stats = {
     };
 
 # New icons to be saved in /static/icons and alt text matches the filename.svg
-my $icons = {
-    chart => build_tabler_icon('Statistics'),  # Chart icon
+# my $icons = {
+#     chart => build_tabler_icon('Statistics'),  # Chart icon
+#     };
 
-    };
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
 my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
 my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
@@ -3207,7 +3207,7 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
         } # End /receive_form_list form submission handling
     } # End receive_form_list
 
-
+}
 
 # End Receive functions
 ###############################################
