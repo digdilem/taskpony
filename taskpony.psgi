@@ -150,11 +150,11 @@ my $app = sub {
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers and preflight checks we should ensure are done on each page load
-    if ($page->{'list_id'} == 0) { $page->{'list_id'} = 1; }   # Ensure we have a list id set, default to 1 if not. This should never be 0, but just in case.
+    if ($page->{'list_id'} == 0) { $page->{'list_id'} = return_default_listid(); }   # if this is 0, Taskpony has probably just restarted so load the default list
     if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) {
         $page->{'list_id'} = $req->param('lid');  # Set active list to supplied (only if numeric)
         set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
-    }
+        }
     verify_valid_list();      # Verify active list details are valid
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
