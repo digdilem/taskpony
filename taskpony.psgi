@@ -2528,6 +2528,7 @@ sub return_default_listid { # return_default_listid() - returns the default list
 
 sub set_default_listid { # set_default_listid($list_id) - sets the default list id in ConfigTb
     my ($list_id) = @_;
+    print STDERR "Setting default list id to $list_id in ConfigTb.\n";
     $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
         undef,
         'active_list',
