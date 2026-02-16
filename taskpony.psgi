@@ -2308,64 +2308,64 @@ sub show_lists { # show_lists() - Multi-tabbed lists page
     } # End /lists
 
 sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details. If $list_id is 0, show blank form to add a new list. If $list_id is 1, redirect to /lists as "All" list cannot be edited
-    # my $list_id = shift;
-    # my $edit_title = "Edit List";
+    my $list_id = shift;
+    my $edit_title = "Edit List";
 
-    # if ($list_id == 0) { $edit_title = "Add New List"; } # It's a new list. Show blank form
+    if ($list_id == 0) { $edit_title = "Add New List"; } # It's a new list. Show blank form
 
-    # if ($list_id > 1) { # Don't allow editing of "All" list (id=1)
-    #     my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
-    #     $sth->execute($list_id);
-    #     my $list= $sth->fetchrow_hashref();
+    if ($list_id > 1) { # Don't allow editing of "All" list (id=1)
+        my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
+        $sth->execute($list_id);
+        my $list= $sth->fetchrow_hashref();
 
-    #     if ($list) {
-    #         my $html = header();
-    #         $html .= start_card($edit_title, $icon_list, 0);
-    #         $html .= qq~
-    #                 <form method="post" action="/list_form/$list_id" class="row g-3">
-    #                     <div class="col-12">
-    #                         <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
-    #                         <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
+        if ($list) {
+            my $html = header();
+            $html .= start_card($edit_title, $icon_list, 0);
+            $html .= qq~
+                    <form method="post" action="/list_form/$list_id" class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
+                            <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
 
-    #                         <br>
-    #                         <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="A brief description of this List">Description</label>
-    #                         <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
-    #                         <br>
+                            <br>
+                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="A brief description of this List">Description</label>
+                            <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
+                            <br>
 
-    #                         <div class="row align-items-center">
-    #                             <div class="col-md-6">
-    #                                 <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
-    #                                 <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
-    #                             </div>
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
+                                    <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
+                                </div>
 
-    #                             <div class="col-md-6 d-flex align-items-center">
-    #                                 <div class="form-check">
-    #                                     <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
-    #                                     <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
-    #                                         Clear Highlight Colour
-    #                                     </label>
-    #                                 </div>
-    #                             </div>
-    #                         </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
+                                        <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
+                                            Clear Highlight Colour
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
-    #                         <div class="text-end">
-    #                             <button class="btn btn-primary" type="submit">Save List</button>
-    #                             <a class="btn btn-secondary" href="/lists">Cancel</a>
-    #                         </div>
-    #                     <hr>
-    #                     ~;
-    #             if ($list_id > 1) { $html .= qq~<p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>~; } # It's an existing list, show some metadata
-    #             $html .= qq~
-    #                     </div>
-    #                 </form>
-    #             </div>
-    #         ~;
-    #         $html .= end_card(0);
-    #         $html .= footer();
-    #         return $html;
-    #         } # End if list_id > 1
-    #     }
-
+                            <div class="text-end">
+                                <button class="btn btn-primary" type="submit">Save List</button>
+                                <a class="btn btn-secondary" href="/lists">Cancel</a>
+                            </div>
+                        <hr>
+                        ~;
+                if ($list_id > 1) { $html .= qq~<p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>~; } # It's an existing list, show some metadata
+                $html .= qq~
+                        </div>
+                    </form>
+                </div>
+            ~;
+            $html .= end_card(0);
+            $html .= footer();
+            return $html;
+            } # End if list_id > 1
+        }
+        }
     } # end show_list_edit
 
 # End SHOW functions
