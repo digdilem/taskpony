@@ -51,12 +51,12 @@ our $global = {
     app_version => '0.6',                       # Version of app
     database_schema_version => 2,               # Current database schema version. Do not change this, it will be modified during updates.
     github_version_url => 'https://api.github.com/repos/digdilem/taskpony/releases/latest',     # Used to get latest version for upgrade notification
-app_releases_page => 'https://github.com/digdilem/taskpony',                                    # Where new versions are
+    app_releases_page => 'https://github.com/digdilem/taskpony',                                # Where new versions are
     new_version_available => 0,                 # Set to 1 if a new version is available on github
     taskpony_icon => 'taskpony-logo.png',       # Default icon file name in ./static dir
-    tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app.
+    tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app
     debug => 1,                                 # Set to 1 to enable debug messages to STDERR
-    running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not.
+    running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not
     };
 
 ###############################################
@@ -139,7 +139,6 @@ print STDERR "+------------------------------------+\n\n";
 # Start main loop
 
 my $static_dir = catdir($FindBin::Bin);
-my $global->{'running_in_docker'} = 0;  # 1 if in docker, 0 if not
 if (-f '/.dockerenv') { $global->{'running_in_docker'} = 1; }  # Test for this magical file that docker created.
 
 my $app = sub {
@@ -159,8 +158,6 @@ my $app = sub {
     verify_valid_list($list_switched);      # Verify active list details are valid, force reload if switched
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
-
-
 
     $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. !!
 
