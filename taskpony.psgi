@@ -552,7 +552,7 @@ sub connect_db {
                 print STDERR "I tried to create the data directory $data_dir but it still does not exist. Cannot continue.\n";
                 exit 1;
                 }
-            }
+            #}
 
         print STDERR "----------------------------------------------------\n";
         print STDERR "Welcome to $global->{'app_title'}!\n";
