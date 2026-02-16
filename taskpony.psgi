@@ -3199,13 +3199,13 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
     my $clear_colours = $req->param('clear_colours') // '';
     if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
     if (length $title && $page->{'list_id'} > 1) {
-    my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
-    if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
-    eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
-    $page->{'list_colour'} = $colour;
-    add_alert("List '$title' updated.");
-    } # End /receive_form_list form submission handling
-
+        my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
+        if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
+        eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
+        $page->{'list_colour'} = $colour;
+        add_alert("List '$title' updated.");
+        } # End /receive_form_list form submission handling
+    } # End receive_form_list
 
 
 
