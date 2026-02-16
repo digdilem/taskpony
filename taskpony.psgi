@@ -180,6 +180,9 @@ my $app = sub {
     if ($req->path =~ m{^/task_activate/(\d+)$})        { action_task_activate($1);     $res->redirect('/'); return $res->finalize; }
     # Action /task_edit/nn - Show edit form for task nn, or if POST, update task nn and redirect to home page. Function returns full html
     if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
+    # Action /task_add - Show add task form (No number)
+    if ($req->path eq "/task_add")                      { $res->body(action_task_add());       return $res->finalize; }
+
 
     #     LIST ACTIONS
     # Set LIST nn as UnDeleted (Active)
@@ -207,8 +210,10 @@ my $app = sub {
 
     ###############################################
     # RECEIVE functions
-    # Receive edit task form
+    # Receive edit task form. No output, redirect to root
     if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
+    # Receive add task form. No output, redirect to root
+    if ($req->path eq "/task_form_add")                      { receive_form_task_add($req);  $res->redirect('/');  return $res->finalize; }
 
     # Show a page with all lists and tasks
     if ($req->path eq '/show_all_tasks')                     { $res->body(show_all_tasks());   return $res->finalize; }
@@ -252,52 +257,7 @@ my $app = sub {
 
 
     ###############################################
-    # Create a new task
-    if ($req->path eq "/add") {
 
-        # If POST, sanitize input and insert into DB
-        if ($req->method && uc($req->method) eq 'POST') {
-            my $title = sanitize($req->param('Title') // '');
-            my $desc  = sanitize($req->param('Description') // '');
-
-            if (length $title) {
-                my $sth = $dbh->prepare(
-                    'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)'
-                    );
-                eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
-                }
-
-            $stats->{'tasks_added_today'} += 1;
-            add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
-            $res->redirect('/');
-            return $res->finalize;
-            } # End /add form submission handling
-
-        # If page, show the add-task form
-        my $html = header();
-        $html .= qq~
-            <div class="container py-2">
-                <h3 class="mb-3">Add Task</h3>
-                <form method="post" action="/add" class="row g-3">
-                <div class="col-12">
-                    <label class="form-label">Title</label>
-                    <input name="Title" class="form-control" required maxlength="255" />
-                </div>
-                <div class="col-12">
-                    <label class="form-label">Description</label>
-                    <textarea name="Description" class="form-control" rows="4" maxlength="2000"></textarea>
-                </div>
-                <div class="col-12">
-                    <button class="btn btn-primary" type="submit">Create Task</button>
-                    <a class="btn btn-secondary" href="/">Cancel</a>
-                </div>
-                </form>
-            </div>
-            ~;
-        $html .= footer();
-        $res->body($html);
-        return $res->finalize;
-        } # End /add
 
 
 
@@ -3147,6 +3107,35 @@ sub action_list_harddelete_alltasks { # Permanently delete all tasks in List NN
         }
     } # End action_list_harddelete_alltasks
 
+sub action_task_add { # Show the add task form
+    my $html = header();
+    $html .= qq~
+        <div class="container py-2">
+            <h3 class="mb-3">Add Task</h3>
+            <form method="post" action="/add" class="row g-3">
+            <div class="col-12">
+                <label class="form-label">Title</label>
+                <input name="Title" class="form-control" required maxlength="255" />
+            </div>
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea name="Description" class="form-control" rows="4" maxlength="2000"></textarea>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">Create Task</button>
+                <a class="btn btn-secondary" href="/">Cancel</a>
+            </div>
+            </form>
+        </div>
+        ~;
+    $html .= footer();
+    return $html;
+    } # End action_task_add
+
+
+
+
+
 
 
 
@@ -3210,6 +3199,23 @@ sub receive_form_task_edit { # Receive Edit Task form
         add_alert("Error updating task #$task_id: Task not found.");
         }
     } # End receive_form_task_edit
+
+sub receive_form_task_add { # Receive Add Task form. No direct output
+    my ($req) = @_;
+
+    my $title = sanitize($req->param('Title') // '');
+    my $desc  = sanitize($req->param('Description') // '');
+
+    if (length $title) {
+        my $sth = $dbh->prepare( 'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)' );
+        eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
+        }
+
+    $stats->{'tasks_added_today'} += 1;
+    add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
+    } # End /receive_form_task_add
+
+
 
 
 # End Receive functions
