@@ -217,9 +217,11 @@ my $app = sub {
     if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
     # Receive add task form. No output, redirect to root
     if ($req->path eq "/task_form_add")                      { receive_form_task_add($req);  $res->redirect('/');  return $res->finalize; }
-
     # Show a page with all lists and tasks
     if ($req->path eq '/show_all_tasks')                     { $res->body(show_all_tasks());   return $res->finalize; }
+    # Stats page - show calculated statistics
+    if ($req->path eq "/stats")                              { $res->body(show_stats());       return $res->finalize; }
+
 
     ###############################################
     # MISC functions
@@ -1119,127 +1121,7 @@ my $app = sub {
         } # End /config
 
         ###############################################
-        # Stats page - show calculated statistics
-        if ($req->path eq "/stats") {
-            my $html = header();
-            $html .= start_card('Statistics', $icon_chart, 0);
 
-            $html .= qq~
-                <div class="table-responsive">
-                <table class="table table-dark table-striped">
-                    <thead>
-                        <tr><th>Statistic</th><th>Value</th></tr>
-                    </thead>
-                    <tbody>
-            ~;
-
-            $html .= qq~
-                        <tr class="table-borderless">
-                        <td class="fw-semibold">Tasks</td>
-                        <td>
-                            <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
-                            <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
-                            <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
-                            <span class="badge bg-info">Repeating: $stats->{'repeating_tasks'}</span>
-                            </div>
-                        </td>
-                        </tr>
-
-                        <tr>
-                        <td class="fw-semibold pt-3">Today</td>
-                        <td class="pt-3">
-                            <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-success">Added: $stats->{'tasks_added_today'}</span>
-                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_today'}</span>
-                            </div>
-                        </td>
-                        </tr>
-
-                        <tr>
-                        <td class="fw-semibold pt-3">Past Week</td>
-                        <td class="pt-3">
-                            <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-success">Added: $stats->{'tasks_added_past_week'}</span>
-                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_week'}</span>
-                            </div>
-                        </td>
-                        </tr>
-
-                        <tr class="text-muted">
-                        <td class="pt-2">Past Month</td>
-                        <td class="pt-2">
-                            <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-success">Added: $stats->{'tasks_added_past_month'}</span>
-                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_month'}</span>
-                            </div>
-                        </td>
-                        </tr>
-
-                        <tr class="text-muted">
-                        <td>Past Year</td>
-                        <td>
-                            <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-success">Added: $stats->{'tasks_added_past_year'}</span>
-                            <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_year'}</span>
-                            </div>
-                        </td>
-                        </tr>
-
-                        <tr>
-                        <td class="fw-semibold pt-3">Lists</td>
-                        <td class="pt-3">
-                            <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-primary">Total Lists: $stats->{'total_lists'}</span>
-                            <span class="badge bg-success">Currently Active: $stats->{'total_active_lists'}</span>
-                            </div>
-                        </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <ul>
-                    <li>
-                        <span class="pt-3 small text-white-50">
-                            First task created:
-                                <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
-                                <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="pt-3 small text-white-50">
-                            Database schema version: <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$global->{'database_schema_version'}</strong>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="pt-3 small text-white-50">~;
-                            if ($global->{'running_in_docker'} == 1) {
-                                $html .= qq~Running inside Docker ~;
-                                } else {
-                                $html .= qq~Running on host as a native service ~;
-                                }
-                            $html .= qq~
-                        </span>
-                    </li>
-                    <li>
-                        <span class="pt-3 small text-white-50">
-                            Database path: <strong class="text-white">$global->{'db_path'}</strong>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="pt-3 small text-white-50">
-                            Background image path: <strong class="text-white">$global->{'bg_path'}</strong>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-            ~;
-
-            $html .= end_card(0);
-            $html .= footer();
-            $res->body($html);
-            return $res->finalize;
-            } # End /stats
 
     ###############################################
 
@@ -2490,6 +2372,126 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
     return $html;
     } # End show_tasks()
+
+sub show_stats { # show_stats() - Show various stats about the tasks and lists in a table format
+    my $html = header();
+    $html .= start_card('Statistics', $icon_chart, 0);
+
+    $html .= qq~
+        <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr><th>Statistic</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+    ~;
+
+    $html .= qq~
+                <tr class="table-borderless">
+                <td class="fw-semibold">Tasks</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary">Total: $stats->{'total_tasks'}</span>
+                    <span class="badge bg-success">Active: $stats->{'active_tasks'}</span>
+                    <span class="badge bg-secondary">Completed: $stats->{'completed_tasks'}</span>
+                    <span class="badge bg-info">Repeating: $stats->{'repeating_tasks'}</span>
+                    </div>
+                </td>
+                </tr>
+
+                <tr>
+                <td class="fw-semibold pt-3">Today</td>
+                <td class="pt-3">
+                    <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success">Added: $stats->{'tasks_added_today'}</span>
+                    <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_today'}</span>
+                    </div>
+                </td>
+                </tr>
+
+                <tr>
+                <td class="fw-semibold pt-3">Past Week</td>
+                <td class="pt-3">
+                    <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success">Added: $stats->{'tasks_added_past_week'}</span>
+                    <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_week'}</span>
+                    </div>
+                </td>
+                </tr>
+
+                <tr class="text-muted">
+                <td class="pt-2">Past Month</td>
+                <td class="pt-2">
+                    <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success">Added: $stats->{'tasks_added_past_month'}</span>
+                    <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_month'}</span>
+                    </div>
+                </td>
+                </tr>
+
+                <tr class="text-muted">
+                <td>Past Year</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-success">Added: $stats->{'tasks_added_past_year'}</span>
+                    <span class="badge bg-secondary">Completed: $stats->{'tasks_completed_past_year'}</span>
+                    </div>
+                </td>
+                </tr>
+
+                <tr>
+                <td class="fw-semibold pt-3">Lists</td>
+                <td class="pt-3">
+                    <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-primary">Total Lists: $stats->{'total_lists'}</span>
+                    <span class="badge bg-success">Currently Active: $stats->{'total_active_lists'}</span>
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ul>
+            <li>
+                <span class="pt-3 small text-white-50">
+                    First task created:
+                        <strong class="text-white">$stats->{'stats_first_task_created'}</strong>
+                        <span class="ms-2">($stats->{'stats_first_task_created_daysago'} days ago)</span>
+                </span>
+            </li>
+            <li>
+                <span class="pt-3 small text-white-50">
+                    Database schema version: <strong class="text-white">$config->{'database_schema_version'}</strong> Required: <strong class="text-white">$global->{'database_schema_version'}</strong>
+                </span>
+            </li>
+            <li>
+                <span class="pt-3 small text-white-50">~;
+                    if ($global->{'running_in_docker'} == 1) {
+                        $html .= qq~Running inside Docker ~;
+                        } else {
+                        $html .= qq~Running on host as a native service ~;
+                        }
+                    $html .= qq~
+                </span>
+            </li>
+            <li>
+                <span class="pt-3 small text-white-50">
+                    Database path: <strong class="text-white">$global->{'db_path'}</strong>
+                </span>
+            </li>
+            <li>
+                <span class="pt-3 small text-white-50">
+                    Background image path: <strong class="text-white">$global->{'bg_path'}</strong>
+                </span>
+            </li>
+        </ul>
+    </div>
+    ~;
+
+    $html .= end_card(0);
+    $html .= footer();
+    return $html;
+    } # End /stats
 
 
 # End SHOW functions
