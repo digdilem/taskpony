@@ -270,269 +270,269 @@ my $app = sub {
 
 
 
-    # ###############################################
-    # # Start building page
-    # my $html = header();
+    ###############################################
+    # Start building page
+    my $html = header();
 
-    # ###############################################
-    # # Step through named paths
-    # ###############################################
-
-
-
-
-    #     ###############################################
-    #     # Handle config changes
-    # if ($req->path eq "/config") {
-    #     # If POST, update the config in DB and redirect to root
-    #     if ($req->method && uc($req->method) eq 'POST') {
-
-    #         if ($req->param('save_config') eq 'true') {
-    #             print STDERR "Config form received\n";
-
-    #             # Loop through config keys and try to get them from param
-    #             for my $key (keys %$config) {
-    #                 my $new_val;
-    #                 $new_val = $req->param($key); # || $config->{$key};
-
-    #                 if ($new_val) {
-    #                     debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
-    #                     } else { # No parameter passed for key, store existing
-    #                     debug("No parameter passed for ($key), using existing [$config->{$key}]");
-    #                     # Special handling for checkboxes which will return void if not set
-    #                     if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
-    #                         $new_val = 'off';
-    #                         debug("Belay that, this is a checkbox, set it to off");
-    #                         } else {
-    #                         $new_val = $config->{$key}; # No value supplied, use existing
-    #                         }
-    #                     }
-
-    #                 # Set current local config value
-    #                 $config->{$key} = $new_val;
-
-    #                 } # End keys lookup
-    #             # Save config to db
-    #             save_config();
-    #             }
-
-    #         add_alert("Configuration saved");
-    #         $res->redirect('/');
-    #         return $res->finalize;
-    #         } # End /config form submission handling
-
-    #     ###############################################
-    #     # Show the Settings page
-
-    #     my $html .= header();
-
-    #     $html .= start_card("Settings", $icon_gear, 0);
-    #     $html .= qq~
-    #         <form method="post" action="/config" style="display:inline;">
-    #         <input type="hidden" name="save_config" value="true">
-
-    #         <div class="container">~;
-
-    #         # Row One
-    #         $html .= qq~
-    #             <div class="row">
-
-    #                 <!-- COLUMN ONE ############################################### -->
-    #                 <div class="col">
-    #                     <div class="card bg-dark text-white" style="width: 18rem;">
-    #                         <h5 class="card-title">Task List Settings</h5>
-    #                     </div>
-
-    #                 <div class="card-body">
-    #                 ~;
-
-    #                 # Draw Row 1 - Visual Settings
-    #                 $html .= config_show_option('cfg_include_datatable_search','Display Filter Box','Show the filter box at the top right of the Tasks table','check',0,0);
-    #                 $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0);
-    #                 $html .= config_show_option('cfg_show_dates','Show Dates','Include the Date when a Task was added or completed in the Task List','check',0,0);
-    #                 $html .= config_show_option('cfg_show_lists','Show Lists','Include the List name a task belongs to in the Task List','check',0,0);
-
-    #                 $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);
-    #                 $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
-    #                 $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
-
-    #         $html .= qq~
-    #             </div>
-    #         </div>
-    #         ~;
-
-    #         # Row Two
-    #         $html .= qq~
-    #             <div class="col">
-    #                 <div class="card bg-dark text-white" style="width: 18rem;">
-    #                     <h5 class="card-title">Other Settings</h5>
-    #                 </div>
-
-    #             <div class="card-body">
-    #             ~;
-
-    #             $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
-    #             $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
-    #             $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
-    #             $html .= config_show_option('cfg_header_colour','Default Highlight Colour','Select default colour for panel header backgrounds and highlights','colour',0,0);
-    #             $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
-
-    #         $html .= qq~
-
-    #         <br/>
-    #         <div class="text-end">
-    #             <button class="btn btn-primary">Save Settings</button>
-    #         </div>
-
-    #         </div>
-
-    #         ~;
-
-    #         # End the main form
-    #         $html .= qq~
-    #                     </div>
-    #                 </div>
-    #             </div>
-    #         </form>
-    #         ~;
-
-    #         $html .= end_card(0);
-
-    #         $html .= start_card('Background Image Upload', $icon_image, 0);
-
-    #         # Start a second form for the background image upload
-    #         $html .= qq~
-    #         <form method="post" action="/background_set" enctype="multipart/form-data">
-    #             <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
-    #                 <label for="background" class="form-label mb-0 flex-grow-1"
-    #                     data-bs-toggle="tooltip" data-bs-placement="auto"
-    #                     title="If enabled above, Taskpony can show a background image on the page">
-    #                     Change the background image
-    #                 </label>
-
-    #                 <div class="d-flex align-items-center gap-2">
-    #                     <input
-    #                         class="form-control"
-    #                         style="width: 200px;"
-    #                         type="file"
-    #                         id="background"
-    #                         name="background"
-    #                         accept="image/jpeg"
-    #                         required>
-    #                     <button type="submit" class="btn btn-success text-nowrap">
-    #                         Go
-    #                     </button>
-    #                 </div>
-    #             </div>
-
-    #             <div class="form-text mt-1">
-    #                 Upload a JPG to replace the current background image.
-    #             </div>
-    #         </form>
-    #         ~;
-
-    #     $html .= end_card(0);
-    #     $html .= footer();
-    #     $res->body($html);
-    #     return $res->finalize;
-    #     } # End /config
-
-    #     ###############################################
-
-
-    # ###############################################
-
-    # ###############################################
-    # # /background_set  = Receive new background image upload
-    # if ($req->method eq 'POST' && $req->path eq '/background_set') {
-
-    #     my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
-
-    #     if ($upload->size > 5 * 1024 * 1024) {
-    #         print STDERR "Uploaded background is too large\n";
-    #         add_alert("Uploaded image was too large. Size limited to 5MB");
-    #         return [302, [ Location => '/config' ], []];
-    #         }
-
-    #     my $type = $upload->content_type;
-    #     my $ext =
-    #         $type eq 'image/jpeg' ? 'jpg' :
-    #         return [400, [], ['Unsupported type']];
-
-    #     my $src = $upload->path or return [500, [], ['Upload has no temp path']];
-
-    #     my $tmp = "$global->{'bg_path'}.tmp";  # Write out a temporary file as bg pic may be slow to upload
-
-    #     copy($src, $tmp) or return [500, [], ["Copy failed: $!"]];
-
-    #     rename $tmp, $global->{'bg_path'} or return [500, [], ["Rename failed: $!"]];
-
-    #     add_alert("Background image updated");
-    #     return [302, [ Location => '/config' ], []];
-    #     } # End /background_set
+    ###############################################
+    # Step through named paths
+    ###############################################
 
 
 
 
+        ###############################################
+        # Handle config changes
+    if ($req->path eq "/config") {
+        # If POST, update the config in DB and redirect to root
+        if ($req->method && uc($req->method) eq 'POST') {
 
-    # ###############################################
-    # # /show-recurring Show a page with all recurring tasks
-    # if ($req->path eq '/show-recurring') {
-    #     my $html = header();
-    #     $html .= start_card('Recurring Tasks', $icon_repeat, 1);
-    #     $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
-    #     $html .= end_card(1);
-    #     $html .= footer();
-    #     $res->content_type('text/html');
-    #     $res->body($html);
-    #     return $res->finalize;
-    #     }
+            if ($req->param('save_config') eq 'true') {
+                print STDERR "Config form received\n";
 
-    # # End individual page handling.
-    # ###############################################
-    # # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
+                # Loop through config keys and try to get them from param
+                for my $key (keys %$config) {
+                    my $new_val;
+                    $new_val = $req->param($key); # || $config->{$key};
 
-    # ###############################################
-    # ###############################################
-    # # End named paths
+                    if ($new_val) {
+                        debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
+                        } else { # No parameter passed for key, store existing
+                        debug("No parameter passed for ($key), using existing [$config->{$key}]");
+                        # Special handling for checkboxes which will return void if not set
+                        if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
+                            $new_val = 'off';
+                            debug("Belay that, this is a checkbox, set it to off");
+                            } else {
+                            $new_val = $config->{$key}; # No value supplied, use existing
+                            }
+                        }
 
-    # # Set default titlebar to be the quick add form for the selected list
-    # my $titlebar = qq~</h2>
-    #                     <form method="post" action="/task_form_add" class="d-flex align-items-center gap-2 m-0">
-    #                         <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$page->{'list_name'}' " />
-    #                         <button class="btn btn-primary" type="submit">Add</button>
-    #                     </form>
-    #                     <h2>
-    #                 ~;
+                    # Set current local config value
+                    $config->{$key} = $new_val;
 
-    # # If showing all lists, change titlebar to show what is being displayed instead of the form
-    # if ($page->{'list_id'} == 1) {
-    #     if ($page->{'show_completed'} == 1) {
-    #         $titlebar = "Showing completed tasks from all lists";
-    #         } else {
-    #         $titlebar = "Showing active tasks from all lists";
-    #         }
-    #     } # End if ($page->{'list_id'} == 1)
+                    } # End keys lookup
+                # Save config to db
+                save_config();
+                }
 
-    # $html .= start_card($titlebar,'',1);
+            add_alert("Configuration saved");
+            $res->redirect('/');
+            return $res->finalize;
+            } # End /config form submission handling
 
-    # ####################################
-    # # Show main list of tasks
+        ###############################################
+        # Show the Settings page
 
-    # # Show completed tasks if ?sc=1
-    # if ($page->{'show_completed'} == 1) {
-    #     $html .= show_tasks(2,$page->{'list_id'},0);
-    #     } else { # Else show active tasks
-    #     $html .= show_tasks(1,$page->{'list_id'},0);
-    #     }
+        my $html .= header();
 
-    # # End list of tasks, continue with box
-    # #####################################
+        $html .= start_card("Settings", $icon_gear, 0);
+        $html .= qq~
+            <form method="post" action="/config" style="display:inline;">
+            <input type="hidden" name="save_config" value="true">
 
-    # $html .= end_card(1);
-    # $html .= footer();
-    # $res->body($html);
-    # return $res->finalize;
+            <div class="container">~;
+
+            # Row One
+            $html .= qq~
+                <div class="row">
+
+                    <!-- COLUMN ONE ############################################### -->
+                    <div class="col">
+                        <div class="card bg-dark text-white" style="width: 18rem;">
+                            <h5 class="card-title">Task List Settings</h5>
+                        </div>
+
+                    <div class="card-body">
+                    ~;
+
+                    # Draw Row 1 - Visual Settings
+                    $html .= config_show_option('cfg_include_datatable_search','Display Filter Box','Show the filter box at the top right of the Tasks table','check',0,0);
+                    $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0);
+                    $html .= config_show_option('cfg_show_dates','Show Dates','Include the Date when a Task was added or completed in the Task List','check',0,0);
+                    $html .= config_show_option('cfg_show_lists','Show Lists','Include the List name a task belongs to in the Task List','check',0,0);
+
+                    $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);
+                    $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
+                    $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
+
+            $html .= qq~
+                </div>
+            </div>
+            ~;
+
+            # Row Two
+            $html .= qq~
+                <div class="col">
+                    <div class="card bg-dark text-white" style="width: 18rem;">
+                        <h5 class="card-title">Other Settings</h5>
+                    </div>
+
+                <div class="card-body">
+                ~;
+
+                $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
+                $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
+                $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
+                $html .= config_show_option('cfg_header_colour','Default Highlight Colour','Select default colour for panel header backgrounds and highlights','colour',0,0);
+                $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
+
+            $html .= qq~
+
+            <br/>
+            <div class="text-end">
+                <button class="btn btn-primary">Save Settings</button>
+            </div>
+
+            </div>
+
+            ~;
+
+            # End the main form
+            $html .= qq~
+                        </div>
+                    </div>
+                </div>
+            </form>
+            ~;
+
+            $html .= end_card(0);
+
+            $html .= start_card('Background Image Upload', $icon_image, 0);
+
+            # Start a second form for the background image upload
+            $html .= qq~
+            <form method="post" action="/background_set" enctype="multipart/form-data">
+                <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
+                    <label for="background" class="form-label mb-0 flex-grow-1"
+                        data-bs-toggle="tooltip" data-bs-placement="auto"
+                        title="If enabled above, Taskpony can show a background image on the page">
+                        Change the background image
+                    </label>
+
+                    <div class="d-flex align-items-center gap-2">
+                        <input
+                            class="form-control"
+                            style="width: 200px;"
+                            type="file"
+                            id="background"
+                            name="background"
+                            accept="image/jpeg"
+                            required>
+                        <button type="submit" class="btn btn-success text-nowrap">
+                            Go
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-text mt-1">
+                    Upload a JPG to replace the current background image.
+                </div>
+            </form>
+            ~;
+
+        $html .= end_card(0);
+        $html .= footer();
+        $res->body($html);
+        return $res->finalize;
+        } # End /config
+
+        ###############################################
+
+
+    ###############################################
+
+    ###############################################
+    # /background_set  = Receive new background image upload
+    if ($req->method eq 'POST' && $req->path eq '/background_set') {
+
+        my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
+
+        if ($upload->size > 5 * 1024 * 1024) {
+            print STDERR "Uploaded background is too large\n";
+            add_alert("Uploaded image was too large. Size limited to 5MB");
+            return [302, [ Location => '/config' ], []];
+            }
+
+        my $type = $upload->content_type;
+        my $ext =
+            $type eq 'image/jpeg' ? 'jpg' :
+            return [400, [], ['Unsupported type']];
+
+        my $src = $upload->path or return [500, [], ['Upload has no temp path']];
+
+        my $tmp = "$global->{'bg_path'}.tmp";  # Write out a temporary file as bg pic may be slow to upload
+
+        copy($src, $tmp) or return [500, [], ["Copy failed: $!"]];
+
+        rename $tmp, $global->{'bg_path'} or return [500, [], ["Rename failed: $!"]];
+
+        add_alert("Background image updated");
+        return [302, [ Location => '/config' ], []];
+        } # End /background_set
+
+
+
+
+
+    ###############################################
+    # /show-recurring Show a page with all recurring tasks
+    if ($req->path eq '/show-recurring') {
+        my $html = header();
+        $html .= start_card('Recurring Tasks', $icon_repeat, 1);
+        $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
+        $html .= end_card(1);
+        $html .= footer();
+        $res->content_type('text/html');
+        $res->body($html);
+        return $res->finalize;
+        }
+
+    # End individual page handling.
+    ###############################################
+    # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
+
+    ###############################################
+    ###############################################
+    # End named paths
+
+    # Set default titlebar to be the quick add form for the selected list
+    my $titlebar = qq~</h2>
+                        <form method="post" action="/task_form_add" class="d-flex align-items-center gap-2 m-0">
+                            <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$page->{'list_name'}' " />
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </form>
+                        <h2>
+                    ~;
+
+    # If showing all lists, change titlebar to show what is being displayed instead of the form
+    if ($page->{'list_id'} == 1) {
+        if ($page->{'show_completed'} == 1) {
+            $titlebar = "Showing completed tasks from all lists";
+            } else {
+            $titlebar = "Showing active tasks from all lists";
+            }
+        } # End if ($page->{'list_id'} == 1)
+
+    $html .= start_card($titlebar,'',1);
+
+    ####################################
+    # Show main list of tasks
+
+    # Show completed tasks if ?sc=1
+    if ($page->{'show_completed'} == 1) {
+        $html .= show_tasks(2,$page->{'list_id'},0);
+        } else { # Else show active tasks
+        $html .= show_tasks(1,$page->{'list_id'},0);
+        }
+
+    # End list of tasks, continue with box
+    #####################################
+
+    $html .= end_card(1);
+    $html .= footer();
+    $res->body($html);
+    return $res->finalize;
     };   # End main loop, pages and paths handling
 
 builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.
@@ -3197,21 +3197,21 @@ sub receive_form_task_add { # Receive Add Task form. No direct output
 #     } # End receive_form_list_add
 
 sub receive_form_list { # Receive Add or Edit List form. No direct output (List_id (if 0, new list), $req)
-    my ($editlist_id, $req) = @_;
-    debug("receive_form_list: Received form data for list $editlist_id - Title: " . ($req->param('Title') // '') . ", Clear Colours: " . ($req->param('clear_colours') // ''));
+    # my ($editlist_id, $req) = @_;
+    # debug("receive_form_list: Received form data for list $editlist_id - Title: " . ($req->param('Title') // '') . ", Clear Colours: " . ($req->param('clear_colours') // ''));
 
-    my $title = sanitize($req->param('Title') // '');
-    my $desc = sanitize($req->param('Description') // '');
-    my $colour = sanitize($req->param('Colour') // '');
-    my $clear_colours = $req->param('clear_colours') // '';
-    if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
-    if (length $title && $page->{'list_id'} > 1) {
-        my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
-        if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
-        eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
-        $page->{'list_colour'} = $colour;
-        add_alert("List '$title' updated.");
-        } # End /receive_form_list form submission handling
+    # my $title = sanitize($req->param('Title') // '');
+    # my $desc = sanitize($req->param('Description') // '');
+    # my $colour = sanitize($req->param('Colour') // '');
+    # my $clear_colours = $req->param('clear_colours') // '';
+    # if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
+    # if (length $title && $page->{'list_id'} > 1) {
+    #     my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
+    #     if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
+    #     eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
+    #     $page->{'list_colour'} = $colour;
+    #     add_alert("List '$title' updated.");
+    #     } # End /receive_form_list form submission handling
     } # End receive_form_list
 
 
