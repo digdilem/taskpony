@@ -3051,72 +3051,72 @@ sub action_task_add { # Show the add task form
 ###############################################
 
 sub receive_form_task_edit { # Receive Edit Task form
-    my ($task_id, $req) = @_;
-    if ($task_id && $task_id =~ /^\d+$/) {
-        my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
-        $sth->execute($task_id);
-        my $task = $sth->fetchrow_hashref() or print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
+    # my ($task_id, $req) = @_;
+    # if ($task_id && $task_id =~ /^\d+$/) {
+    #     my $sth = $dbh->prepare('SELECT * FROM TasksTb WHERE id = ?');
+    #     $sth->execute($task_id);
+    #     my $task = $sth->fetchrow_hashref() or print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
 
-        if ($task) {
-            my $title = sanitize($req->param('Title') // '');
-            my $desc  = sanitize($req->param('Description') // '');
-            my $list_id = $req->param('ListId') // 0;
-            my $is_recurring = sanitize($req->param('IsRecurring') // '');
-            my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
+    #     if ($task) {
+    #         my $title = sanitize($req->param('Title') // '');
+    #         my $desc  = sanitize($req->param('Description') // '');
+    #         my $list_id = $req->param('ListId') // 0;
+    #         my $is_recurring = sanitize($req->param('IsRecurring') // '');
+    #         my $recurring_interval = sanitize($req->param('RecurringIntervalDay') // '');
 
-            debug("receive_form_task_edit: Received form data for task $task_id - Title: $title, ListId: $list_id, IsRecurring: $is_recurring, RecurringIntervalDay: $recurring_interval");
+    #         debug("receive_form_task_edit: Received form data for task $task_id - Title: $title, ListId: $list_id, IsRecurring: $is_recurring, RecurringIntervalDay: $recurring_interval");
 
-            # Validate list_id is numeric
-            if ($list_id !~ /^\d+$/) {
-                print STDERR "WARN: Task $task_id list_id is not numeric. Keeping original list.\n";
-                $list_id = $task->{'ListId'};
-                }
+    #         # Validate list_id is numeric
+    #         if ($list_id !~ /^\d+$/) {
+    #             print STDERR "WARN: Task $task_id list_id is not numeric. Keeping original list.\n";
+    #             $list_id = $task->{'ListId'};
+    #             }
 
-            # Validate recurring interval
-            if ($recurring_interval !~ /^\d+$/) {
-                print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
-                $recurring_interval = 1;
-                }
-            if ($recurring_interval < 1) {
-                print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
-                $recurring_interval = 1;
-                }
-            if ($recurring_interval > 365) {
-                print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
-                $recurring_interval = 365;
-                }
-            if (length $title && $list_id > 1) {
-                my $sth = $dbh->prepare(
-                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, IsRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
-                    );
-                eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update for $task_id failed: $@";
-                debug("Task $task_id updated");
-                add_alert("Task #$task_id updated");
-                } else {
-                print STDERR "WARN: Invalid data submitted in edit form for task ID ($task_id)\n";
-                add_alert("Error updating task #$task_id: Invalid input data.");
-                }
-            }
-        return;
-        } else {
-        print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
-        add_alert("Error updating task #$task_id: Task not found.");
-        }
+    #         # Validate recurring interval
+    #         if ($recurring_interval !~ /^\d+$/) {
+    #             print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
+    #             $recurring_interval = 1;
+    #             }
+    #         if ($recurring_interval < 1) {
+    #             print STDERR "WARN: Task $task_id recurring_interval is below minimum (1). Resetting to 1.\n";
+    #             $recurring_interval = 1;
+    #             }
+    #         if ($recurring_interval > 365) {
+    #             print STDERR "WARN: Task $task_id recurring_interval is above maximum (365). Resetting to 365.\n";
+    #             $recurring_interval = 365;
+    #             }
+    #         if (length $title && $list_id > 1) {
+    #             my $sth = $dbh->prepare(
+    #                 'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, IsRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
+    #                 );
+    #             eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update for $task_id failed: $@";
+    #             debug("Task $task_id updated");
+    #             add_alert("Task #$task_id updated");
+    #             } else {
+    #             print STDERR "WARN: Invalid data submitted in edit form for task ID ($task_id)\n";
+    #             add_alert("Error updating task #$task_id: Invalid input data.");
+    #             }
+    #         }
+    #     return;
+    #     } else {
+    #     print STDERR "WARN: No task found with ID ($task_id) passed to receive_form_task_edit\n";
+    #     add_alert("Error updating task #$task_id: Task not found.");
+    #     }
     } # End receive_form_task_edit
 
 sub receive_form_task_add { # Receive Add Task form. No direct output
-    # my ($req) = @_;
+    my ($req) = @_;
 
-    # my $title = sanitize($req->param('Title') // '');
-    # my $desc  = sanitize($req->param('Description') // '');
+    my $title = sanitize($req->param('Title') // '');
+    my $desc  = sanitize($req->param('Description') // '');
 
-    # if (length $title) {
-    #     my $sth = $dbh->prepare( 'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)' );
-    #     eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
-    #     }
+    if (length $title) {
+        my $sth = $dbh->prepare( 'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)' );
+        eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
+        }
 
-    # $stats->{'tasks_added_today'} += 1;
-    # add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
+    $stats->{'tasks_added_today'} += 1;
+    add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
     } # End /receive_form_task_add
 
 # sub receive_form_list { # Receive Add or Edit List form. No direct output  (action param = add|edit)
