@@ -158,10 +158,12 @@ my $app = sub {
         set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
         $list_switched = 1;
         }
+    check_database_upgrade();
     verify_valid_list($list_switched);      # Verify active list details are valid, force reload if switched
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
 
+#!!
     $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. !!
 
     ###############################################
@@ -266,19 +268,6 @@ my $app = sub {
 
 
 
-
-    ###############################################
-
-
-
-
-    ###############################################
-    # Lists Management page
-#     if ($req->path eq "/lists") {
-
-
-        ###############################################
-        # Handle editing a list
 
         ###############################################
         # Handle config changes
@@ -588,7 +577,6 @@ sub connect_db {
             }
 
     # Check for any needed schema upgrades each time we connect
-    check_database_upgrade();
     }  # End connect_db()
 
 ###############################################
@@ -3140,9 +3128,7 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output  (acti
         $stats->{'total_active_lists'} -= 1;
 
         my $current_active = return_default_listid();  # Check if deleted list was the active list, if so switch to default
-        if ($current_active == $page->{'list_id'}) { # We deleted the active list
-            verify_valid_list(); # Ensure default list points to a valid list
-            }
+        if ($current_active == $page->{'list_id'}) { verify_valid_list(); } #  We deleted the active list. Ensure default list points to a valid list
         }
 
     if ($action eq 'delete_complete' && $page->{'list_id'} > 1) { # Mark all tasks in this list as completed, then delete list
@@ -3196,14 +3182,10 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
     my $desc = sanitize($req->param('Description') // '');
     my $colour = sanitize($req->param('Colour') // '');
     my $clear_colours = $req->param('clear_colours') // '';
-    if ($clear_colours eq 'on') {  # Remove override as toggle
-        $colour = '';
-        }
+    if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
     if (length $title && $page->{'list_id'} > 1) {
     my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
-    if ($editlist_id == 0) { # It's a new list, so we should insert, not update
-        $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' );
-        }
+    if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
     eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
     $page->{'list_colour'} = $colour;
     add_alert("List '$title' updated.");
@@ -3221,5 +3203,7 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
 ##############################################
 # End all Functions
 
+
 #################################################
 # End of Taskpony
+
