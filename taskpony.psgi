@@ -3198,6 +3198,7 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output  (acti
                 my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
                 if ($default_list) {
                     $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+                    }
                 }
             }
         }
