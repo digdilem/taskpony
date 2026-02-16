@@ -457,7 +457,7 @@ my $app = sub {
                 <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a></span>
               </div>
               <div class="card-body">
-                <form method="post" action="/lists" class="row g-3">
+                <form method="post" action="/list_form" class="row g-3">
                   <input type="hidden" name="action" value="add" />
                   <div class="col-12">
                     <label class="form-label">Title</label>
@@ -645,7 +645,7 @@ my $app = sub {
               </div>
               <div class="modal-body">
                 <p>How would you like to handle any existing tasks in <strong id="modalListTitle"></strong>?</p>
-                <form id="deleteListForm" method="post" action="/lists">
+                <form id="deleteListForm" method="post" action="/list_form">
                   <input type="hidden" name="list_id" id="modalListId" value="">
                   <div class="mb-3">
                     <div class="form-check">
