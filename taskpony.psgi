@@ -2365,7 +2365,7 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
             return $html;
             } # End if list_id > 1
         }
-        }
+
     } # end show_list_edit
 
 # End SHOW functions
@@ -3229,3 +3229,4 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
 #################################################
 # End of Taskpony
 
+}
