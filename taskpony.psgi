@@ -2782,6 +2782,7 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
 
 sub verify_valid_list { # verify_valid_list() - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
     # Check currently active list is valid
+    debug("Verifying active list id ($page->{'list_id'}) is valid and active...\n");
     my $changed_list_id = 0;
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $page->{'list_id'});
     if (!$exists or ($exists == 0) ) { # Not viable, let's try to get from config
