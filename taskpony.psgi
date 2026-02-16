@@ -55,7 +55,8 @@ app_releases_page => 'https://github.com/digdilem/taskpony',                    
     new_version_available => 0,                 # Set to 1 if a new version is available on github
     taskpony_icon => 'taskpony-logo.png',       # Default icon file name in ./static dir
     tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app.
-    debug => 1,                                  # Set to 1 to enable debug messages to STDERR
+    debug => 1,                                 # Set to 1 to enable debug messages to STDERR
+    running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not.
     };
 
 ###############################################
@@ -134,14 +135,12 @@ print STDERR "|  [ ] Do the thing                  |\n";
 print STDERR "|  [ ] Buy milk                      |\n";
 print STDERR "+------------------------------------+\n\n";
 
-# Get additional config values.
-
 ####################################
 # Start main loop
 
 my $static_dir = catdir($FindBin::Bin);
-my $running_in_docker = 0;  # 1 if in docker, 0 if not
-if (-f '/.dockerenv') { $running_in_docker = 1; }  # Test for this magical file that docker created.
+my $global->{'running_in_docker'} = 0;  # 1 if in docker, 0 if not
+if (-f '/.dockerenv') { $global->{'running_in_docker'} = 1; }  # Test for this magical file that docker created.
 
 my $app = sub {
     my $env = shift;
@@ -156,7 +155,7 @@ my $app = sub {
         $page->{'list_id'} = $req->param('lid');  # Set active list to supplied (only if numeric)
         set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
         $list_switched = 1;
-    }
+        }
     verify_valid_list($list_switched);      # Verify active list details are valid, force reload if switched
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
@@ -1254,7 +1253,7 @@ my $app = sub {
                     </li>
                     <li>
                         <span class="pt-3 small text-white-50">~;
-                            if ($running_in_docker == 1) {
+                            if ($global->{'running_in_docker'} == 1) {
                                 $html .= qq~Running inside Docker ~;
                                 } else {
                                 $html .= qq~Running on host as a native service ~;
