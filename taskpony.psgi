@@ -150,6 +150,7 @@ my $app = sub {
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers and preflight checks we should ensure are done on each page load
+    if ($page->{'list_id'} == 0) { $page->{'list_id'} = 1; }   # Ensure we have a list id set, default to 1 if not. This should never be 0, but just in case.
     if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) { $page->{'list_id'} = $req->param('lid'); }        # Set active list to supplied (only if numeric)
     verify_valid_list();      # Verify active list details are valid
     calculate_stats();                          # Update stats hashref if needed
@@ -338,12 +339,10 @@ my $app = sub {
                 $stats->{'total_active_lists'} -= 1;
 
                 # Check if deleted list was the active list, if so switch to default
-                my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-                if ($current_active == $page->{'list_id'}) {
-                    if ($page->{'default_listid'}) {
-                        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $page->{'default_listid'}, $page->{'default_listid'});
+                my $current_active = return_default_listid();
+                if ($current_active == $page->{'list_id'}) { # We deleted the active list
+                    verify_valid_list(); # Ensure default list points to a valid list
                     }
-                }
                 } elsif ($action eq 'delete_complete' && $page->{'list_id'} > 1) {
                 # Mark all tasks in this list as completed, then delete list
                 my $update_sth = $dbh->prepare(
@@ -2792,7 +2791,7 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
         if ($cfg_active_list && $cfg_active_list =~ /^\d+$/) {
             print STDERR "INFO: Active list id from ConfigTb: $cfg_active_list. \n";
             # Recheck if this new config is viable
-            $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $page->{'cfg_active_list'});
+            $exists = return_default_listid();
             if (!$exists or ($exists == 0) ) { # Not viable, let's try to get from config
                 print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is not valid or is deleted. Attempting to load first viable list.\n";
 
@@ -2823,17 +2822,24 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
         # Save the new active list id to config for next time
-        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
-            undef,
-            'active_list',
-            $page->{'list_id'},
-            $page->{'list_id'}
-            ) or print STDERR "Failed to save active_list to ConfigTb: " . $dbh->errstr;
+        set_default_listid($page->{'list_id'});
         }
 
     } # End verify_valid_list()
 
+sub return_default_listid { # return_default_listid() - returns the default list id from ConfigTb
+    return single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+    }
 
+sub set_default_listid { # set_default_listid($list_id) - sets the default list id in ConfigTb
+    my ($list_id) = @_;
+    $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
+        undef,
+        'active_list',
+        $list_id,
+        $list_id
+        ) or print STDERR "Failed to save active_list to ConfigTb: " . $dbh->errstr;
+    }
 
 
 # End BUILD functions
