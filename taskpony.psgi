@@ -95,9 +95,9 @@ my $stats = {
     };
 
 # New icons to be saved in /static/icons and alt text matches the filename.svg
-my $icons = {
-    chart => build_tabler_icon('Statistics'),  # Chart icon
-    };
+# my $icons = {
+#     chart => build_tabler_icon('Statistics'),  # Chart icon
+#     };
 
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
 my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
@@ -2355,16 +2355,17 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
             $html .= end_card(0);
             $html .= footer();
             return $html;
-            } # End if list_id > 1
-        }
+            } # End if list found
+        } # End if list_id > 1
+    }
 
-    } # end show_list_edit
+} # end show_list_edit
 
 # End SHOW functions
 ###############################################
 
 
-} } # Adding random brackets
+
 
 
 
@@ -3206,7 +3207,7 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
         } # End /receive_form_list form submission handling
     } # End receive_form_list
 
-
+}
 
 # End Receive functions
 ###############################################
