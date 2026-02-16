@@ -3105,18 +3105,18 @@ sub receive_form_task_edit { # Receive Edit Task form
     } # End receive_form_task_edit
 
 sub receive_form_task_add { # Receive Add Task form. No direct output
-    my ($req) = @_;
+    # my ($req) = @_;
 
-    my $title = sanitize($req->param('Title') // '');
-    my $desc  = sanitize($req->param('Description') // '');
+    # my $title = sanitize($req->param('Title') // '');
+    # my $desc  = sanitize($req->param('Description') // '');
 
-    if (length $title) {
-        my $sth = $dbh->prepare( 'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)' );
-        eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
-        }
+    # if (length $title) {
+    #     my $sth = $dbh->prepare( 'INSERT INTO TasksTb (Title, Description, ListId) VALUES (?, ?, ?)' );
+    #     eval { $sth->execute($title, $desc, $page->{'list_id'}); 1 } or print STDERR "WARN: Task insert into list $page->{'list_id'} failed: $@";
+    #     }
 
-    $stats->{'tasks_added_today'} += 1;
-    add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
+    # $stats->{'tasks_added_today'} += 1;
+    # add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
     } # End /receive_form_task_add
 
 # sub receive_form_list { # Receive Add or Edit List form. No direct output  (action param = add|edit)
@@ -3197,21 +3197,21 @@ sub receive_form_task_add { # Receive Add Task form. No direct output
 #     } # End receive_form_list_add
 
 sub receive_form_list { # Receive Add or Edit List form. No direct output (List_id (if 0, new list), $req)
-    # my ($editlist_id, $req) = @_;
-    # debug("receive_form_list: Received form data for list $editlist_id - Title: " . ($req->param('Title') // '') . ", Clear Colours: " . ($req->param('clear_colours') // ''));
+    my ($editlist_id, $req) = @_;
+    debug("receive_form_list: Received form data for list $editlist_id - Title: " . ($req->param('Title') // '') . ", Clear Colours: " . ($req->param('clear_colours') // ''));
 
-    # my $title = sanitize($req->param('Title') // '');
-    # my $desc = sanitize($req->param('Description') // '');
-    # my $colour = sanitize($req->param('Colour') // '');
-    # my $clear_colours = $req->param('clear_colours') // '';
-    # if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
-    # if (length $title && $page->{'list_id'} > 1) {
-    #     my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
-    #     if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
-    #     eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
-    #     $page->{'list_colour'} = $colour;
-    #     add_alert("List '$title' updated.");
-    #     } # End /receive_form_list form submission handling
+    my $title = sanitize($req->param('Title') // '');
+    my $desc = sanitize($req->param('Description') // '');
+    my $colour = sanitize($req->param('Colour') // '');
+    my $clear_colours = $req->param('clear_colours') // '';
+    if ($clear_colours eq 'on') { $colour = ''; } # Remove override as toggle
+    if (length $title && $page->{'list_id'} > 1) {
+        my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
+        if ($editlist_id == 0) { $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' ); } # It's a new list, so we should insert, not update
+        eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
+        $page->{'list_colour'} = $colour;
+        add_alert("List '$title' updated.");
+        } # End /receive_form_list form submission handling
     } # End receive_form_list
 
 
