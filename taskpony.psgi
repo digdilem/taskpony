@@ -2300,397 +2300,77 @@ sub show_tasks {
     } # End show_tasks()
 
 ###############################################
-# show_alert()
-# Check ConfigTb for last_alert and if found, show it once and clear it
-sub show_alert {
-    my $page->{'alert_text'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
 
-    if ($page->{'alert_text'}) { # There is an alert pending
-        single_db_value("DELETE FROM ConfigTb WHERE `key` = 'last_alert'");
-
-        return qq~
-        <div class="row g-3 mb-2">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
-                $page->{'alert_text'}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            </div>
-        </div>
-        ~;
-        } else {
-        # No alerts to show, return empty string
-        return '';
-        }
-    } # End show_alert()
 
 ###############################################
-# add_alert($page->{'alert_text'})
-# Store an alert message in ConfigTb to be shown on next page load
-sub add_alert {
-    my $page->{'alert_text'} = shift;
-    $dbh->do(
-        "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
-        undef,
-        'last_alert',
-        $page->{'alert_text'},
-        $page->{'alert_text'}
-        ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
-    } # End add_alert()
+
 
 ###############################################
-# human_friendly_date($db_date)
-# Convert a database datetime string into a human friendly relative time string
-sub human_friendly_date {
-    my ($db_date) = @_;
-    return '' unless defined $db_date;
 
-    my ($year, $month, $day, $hour, $min, $sec) =  $db_date =~ /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
-
-    return $db_date unless $year;  # Return original if parse fails
-
-    my $db_time = timelocal($sec, $min, $hour, $day, $month - 1, $year);
-    my $now = time();
-    my $diff_seconds = $now - $db_time;
-
-    return 'Just now' if $diff_seconds < 60;
-
-    my $diff_minutes = int($diff_seconds / 60);
-    return "$diff_minutes minute" . ($diff_minutes == 1 ? '' : 's') . " ago" if $diff_minutes < 60;
-
-    my $diff_hours = int($diff_seconds / 3600);
-    return "$diff_hours hour" . ($diff_hours == 1 ? '' : 's') . " ago" if $diff_hours < 24;
-
-    my $diff_days = int($diff_seconds / 86400);
-    return 'Yesterday' if $diff_days == 1;
-    return "$diff_days days ago" if $diff_days < 7;
-
-    my $diff_weeks = int($diff_days / 7);
-    return "$diff_weeks week" . ($diff_weeks == 1 ? '' : 's') . " ago" if $diff_weeks < 4;
-
-    my $diff_months = int($diff_days / 30);
-    $diff_months = 1 if $diff_months < 1;
-    return "$diff_months month" . ($diff_months == 1 ? '' : 's') . " ago" if $diff_months < 12;
-
-    my $diff_years = int($diff_days / 365);
-    return "$diff_years year" . ($diff_years == 1 ? '' : 's') . " ago";
-    } # End human_friendly_date()
 
 ###############################################
-# config_load()
-# Load all key/value pairs from ConfigTb into $config hashref
-sub config_load {
-    print STDERR "Loading configuration from $db_path in ConfigTb\n";
 
-    # List through $config keys and lead each of them from ConfigTb
-    for my $key (keys %$config) {
-        my $saved_value = single_db_value("SELECT value FROM ConfigTb WHERE key = '$key'");
-        if ($saved_value) {
-            debug("OK: Loaded value ($saved_value) from ConfigTb for ($key)");
-            $config->{$key} = $saved_value;
-            } else {
-            debug("WARN: no value found in ConfigTb for ($key), using config default");  # Value already declared at head, no need to change
-            }
+
+###############################################
+
+
+###############################################
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+
+###############################################
+# SHOW functions - Functions that show html
+
+sub show_all_tasks {    # Loop through all active lists and show a panel for each with the tasks in that list.
+    my $html = header();
+
+    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
+    $lists_sth->execute();
+
+    while (my $list = $lists_sth->fetchrow_hashref()) {
+        $html .= start_card($list->{'Title'}, '', 0);
+        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
+        $html .= end_card(0);
         }
 
-    check_latest_release();
-    } # End config_load()
-
-###############################################
-# Open a consistent bootstrap 5 card for most pages.
-# Takes a title and optional icon HTML to show in the header. If $table_card is set to 1, it will add an id to the card that allows it to be hidden until the datatable is fully loaded, which reduces flicker.
-# Opens 2 divs, or 3 if table_card is set, but does not close them. Call end_card() to close the divs.
-sub start_card {
-    my $card_title = shift || 'Title Missing';
-    my $card_icon = shift || '';
-    my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
-
-    my $html = qq~
-<!-- start_card($table_card) $card_title -->
-<!-- ############################################################################################## -->
-            <div class="card shadow-sm mb-4">
-            ~;
-
-    if ($table_card == 1) { $html .= qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
-
-    $html .= qq~
-                ~;
-
-    if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
-        } else { # Show default bg-
-        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
-        }
-
-    $html .= qq~
-                            <h2 >
-                                $card_title
-                                ~;
-                            if ($card_icon ne '') {
-                                $html .= qq~
-                        <div class="float-end">$card_icon</div>
-                        ~;
-                                }
-                            $html .= qq~
-                            </h2>
-                    </div>
-
-                    <div class="card-body bg-dark text-white rounded-bottom">
-<!-- End start_card() header -->
-                    ~;
+    $html .= footer();
     return $html;
-    } # End start_card()
+    } # End show_all_tasks()
 
-###############################################
-# Close the card  ($table_card,$is_mini_card parameter is used to determine whether to close the div that hides the card until datatables is loaded)
-# Closes 2 divs, or 3 if $table_card is set to 1
-sub end_card {
-    my $html = "<!-- Start end_card() -->\n";
-    my $table_card = shift || 0;
-    if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
-    $html .= qq~
-                </div>
-            </div>
-            <!-- close end_card() ############################################################################################## -->
-                ~;
-    return $html;
-    } # End end_card()
+sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
+    my $icon_name = shift;
+    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
+    } # end build_tabler_icon
 
-###############################################
-# calculate_stats()
-sub calculate_stats { # Calculate stats and populate the global $stats hashref
-    # Check to see whether we've run this recently. If so, return before hitting the database
-    if ( $stats->{stats_last_calculated} && time - $stats->{stats_last_calculated} < $stats->{'calculate_stats_interval'} ) { return; }
+sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixels and raw SVG code, and returns the SVG wrapped in a span with the correct size styling to make it match the text size
+    my ($size, $svg) = @_;
 
-    # Before we get onto working out the stats, check whether the daily tasks have been run today
-    run_daily_tasks();  # Will return early if already run today
+    return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
+        </span>~;
+    } # end build_inline_icon
 
-    print STDERR "Calculating task statistics...\n";
-    my $sql = q{
-        SELECT
-            COUNT(*)                                                    AS total_tasks,
-            IFNULL(SUM(CompletedDate IS NULL), 0)                                 AS active_tasks,
-
-            IFNULL(SUM(date(AddedDate) = date('now','localtime')), 0)             AS tasks_added_today,
-            IFNULL(SUM(AddedDate >= date('now','-7 days','localtime')), 0)        AS tasks_added_past_week,
-            IFNULL(SUM(AddedDate >= date('now','-1 month','localtime')), 0)       AS tasks_added_past_month,
-            IFNULL(SUM(AddedDate >= date('now','-1 year','localtime')), 0)        AS tasks_added_past_year,
-
-            IFNULL(SUM(CompletedDate IS NOT NULL), 0)                              AS completed_tasks,
-            IFNULL(SUM(date(CompletedDate) = date('now','localtime')), 0)         AS tasks_completed_today,
-            IFNULL(SUM(CompletedDate >= date('now','-7 days','localtime')), 0)    AS tasks_completed_past_week,
-            IFNULL(SUM(CompletedDate >= date('now','-1 month','localtime')), 0)   AS tasks_completed_past_month,
-            IFNULL(SUM(CompletedDate >= date('now','-1 year','localtime')), 0)    AS tasks_completed_past_year
-        FROM TasksTb
-        };
-
-    my $row = $dbh->selectrow_hashref($sql);
-
-    # Merge DB values into existing stats hashref
-    @$stats{ keys %$row } = values %$row;
-
-    $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
-    $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
-    $stats->{stats_first_task_created} = $dbh->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
-    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
-    $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
-
-    $stats->{stats_last_calculated} = time;
-    } # End calculate_stats()
-
-###############################################
-# Run any daily tasks we need to. Return if already run today.
-sub run_daily_tasks {
-    my $tasks_ran_today = $dbh->selectrow_array("
-        SELECT CASE
-        WHEN value = date('now') THEN 1
-        ELSE 0
-        END
-        FROM ConfigTb
-        WHERE key = 'cfg_last_daily_run';
-        ");
-
-    if ($tasks_ran_today == 1) { return; }  # Already ran today, return
-
-    print STDERR "Running daily tasks...\n";
-
-    ###############################################
-    # Run daily tasks here, such as backing up the database, sending email summaries, etc.
-    backup_database();  # Backup the database by one iteration
-
-    ###############################################
-    # Look for any recurring tasks that need to be reactivated today
-    my $recurring_sth = $dbh->prepare("
-        SELECT id, Title, Description, AddedDate, CompletedDate, ListId, RecurringIntervalDay
-        FROM TasksTb
-        WHERE IsRecurring = 'on' AND Status = 2 AND CompletedDate IS NOT NULL
-        ");
-    $recurring_sth->execute();
-
-    while (my $task = $recurring_sth->fetchrow_hashref()) {
-        my $completed_date = $task->{'CompletedDate'};
-        my $interval_days = $task->{'RecurringIntervalDay'} // 1;  # Default to 1 day if not set
-
-        # Calculate the next activation date
-        my $next_activation_date = single_db_value("
-            SELECT date(?, '+' || ? || ' days')
-            ", $completed_date, $interval_days);
-
-        debug("Recurring task ID $task->{id} ('$task->{Title}') completed on $completed_date with interval $interval_days days. Next activation date: $next_activation_date\n");
-
-        # If the next activation date is today or earlier, reactivate the task
-        if ($next_activation_date le single_db_value("SELECT date('now')")) {
-            print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}') after $interval_days days\n";
-
-            # Reactivate the task
-            $dbh->do("
-                UPDATE TasksTb
-                SET Status = 1,
-                    CompletedDate = NULL,
-                    AddedDate = datetime('now')
-                WHERE id = ?
-                ", undef, $task->{'id'}
-                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $dbh->errstr;
-            }
-        }
-
-    ###############################################
-    # We ran run_daily_tasks() today, so let's update the last run time and return
-    $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
-
-    # Frivolity: Check if a special date and change the logo
-    # If month is December and day is between 20 and 31, show a festive icon
-    my ($sec,$min,$hour,$mday,$mon,$year) = localtime();
-    if ( ($mon == 11) && ($mday >= 20) && ($mday <= 31) ) {
-        $global->{'taskpony_icon'} = 'taskpony-logo-xmas.png';
-        print STDERR "Taskponies love Christmas!\n";
-        } else {
-        $global->{'taskpony_icon'} = 'taskpony-logo.png';  # Reset to normal logo
-        }
-    # Back to seriousness
-
-
-    return;
-    } # End run_daily_tasks()
-
-###############################################
-# Backup the database by rotating old backups and creating a new one. Will only be called once a day from run_daily_tasks() logic
-sub backup_database {
-    print STDERR "Backing up database...  Keeping " . $config->{cfg_backup_number_to_keep} . " backups\n";
-
-    # Start counting back from the currently defined max backups to keep. Delete the oldest, then rename each one down by 1, then create the new backup as .0
-    for (my $i = $config->{cfg_backup_number_to_keep} - 1; $i >= 0; $i--) {
-        my $old_backup = "$db_path.$i";
-        my $new_backup = "$db_path." . ($i + 1);
-        print STDERR "Processing backup rotation: $old_backup to $new_backup\n";
-
-        if (-e $old_backup) {
-            if ($i == $config->{cfg_backup_number_to_keep} - 1) {
-                # This is the oldest backup, delete it
-                print STDERR "Deleting oldest backup: $old_backup\n";
-                unlink $old_backup or print STDERR "WARN: Failed to delete old backup $old_backup: $!\n";
-                } else {
-                # Rename the backup down by 1
-                print STDERR "Renaming backup: $old_backup to $new_backup\n";
-                rename $old_backup, $new_backup or print STDERR "WARN: Failed to rename backup $old_backup to $new_backup: $!\n";
-                }
-            }
-        }
-    # Now create the new backup as .0
-    my $new_backup_0 = "$db_path.0";
-    print STDERR "Creating new backup by copying $db_path to $new_backup_0\n";
-    copy($db_path, $new_backup_0) or print STDERR "WARN: Failed to create new backup $new_backup_0: $!\n";
-    } # End backup_database()
-
-###############################################
-# save_config()
-# Save contents of $config hashref to ConfigTb
-sub save_config {
-    print STDERR "Saving configuration\n";
-
-    # First, check any numbers are sensible
-    ensure_sensible_config_range('cfg_task_pagination_length', 3, 1000);        # Number of tasks to show per page
-    ensure_sensible_config_range('cfg_description_short_length', 3, 1000);      # Number of characters to show in task list before truncating description
-    ensure_sensible_config_range('cfg_list_short_length', 1, 100);             # Number of characters to show in task list before truncating list name
-    ensure_sensible_config_range('cfg_backup_number_to_keep', 1, 100);           # Number of database backups to keep
-
-    # Loop through $config keys and save each of them to ConfigTb
-    for my $key (keys %$config) {
-        my $sql = "INSERT INTO ConfigTb (`key`,`value`)
-            VALUES (?, ?)
-            ON CONFLICT(key)
-            DO UPDATE SET value = excluded.value;";
-
-        $dbh->do(
-            $sql,
-            undef,
-            $key,
-            $config->{$key},
-            ) or warn "Failed to save config key ($key): " . $dbh->errstr;
-        }
-    } # End save_config()
-
-###############################################
-# ensure_sensible_config_range($value, $min, $max)
-# Ensure a numeric value is within a sensible range, otherwise return the nearest bound
-# This may now be redundant with bootstrap range values sanitising on input, but it's good to have server-side checks too
-sub ensure_sensible_config_range {
-    my ($config_key, $min, $max) = @_;
-    my $value = $config->{$config_key};
-
-    if ($value !~ /^\d+$/) {
-        print STDERR "WARN: Config value for $config_key is not a number. Resetting to $min.\n";
-        $config->{$config_key} = $min;
-        }
-    if ($value < $min) {
-        print STDERR "WARN: Config value for $config_key ($value) is below minimum ($min). Resetting to $min.\n";
-        $config->{$config_key} = $min;
-        }
-    if ($value > $max) {
-        print STDERR "WARN: Config value for $config_key ($value) is above maximum ($max). Resetting to $max.\n";
-        $config->{$config_key} = $max;
-        }
-    } # End ensure_sensible_config_range()
-
-###############################################
-# check_latest_release()
-# Get latest release from github
-sub check_latest_release {
-    if ($config->{'cfg_version_check'} ne 'on') { return; }             # If disabled, return early
-    if ($global->{'new_version_available'} == 1) { return; }                       # No point checking again if we know there is a new version waiting
-
-    my $github_latest_version;
-
-    my $http = HTTP::Tiny->new(
-        agent => "taskpony-version-check/$global->{'app_version'}",
-        timeout => 10
-        );
-
-    my $res = $http->get($global->{'github_version_url'});
-    if ($res->{success}) {
-        my $data = decode_json($res->{content});
-        $github_latest_version = $data->{tag_name};
-        $github_latest_version =~ s/\D//g;   # Just return the digits for numeric comparison
-        } else {
-        print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
-        return;
-        }
-
-    my $normalised_app_version = $global->{'app_version'};
-    $normalised_app_version =~ s/\D//g;
-
-    if ($github_latest_version > $normalised_app_version) {
-        print STDERR "New version of $global->{'app_title'} is available\n";
-        $global->{'new_version_available'} = 1;
-        }
-    return;
-    }  # End check_latest_release()
-
-###############################################
-# config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper);
-# Output a line of a setting  for /config forms
-sub config_show_option {
+sub config_show_option { # config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper); Output a line of a setting  for /config forms
     my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
 
     my $retstr= qq~
@@ -2745,44 +2425,120 @@ sub config_show_option {
     return $retstr;
     } # end config_show_option()
 
-###############################################
-# SHOW functions
-###############################################
+sub start_card { # start_card() Open a consistent bootstrap 5 card for most pages. # Takes a title and optional icon HTML to show in the header.
+    # If $table_card is set to 1, it will add an id to the card that allows it to be hidden until the datatable is fully loaded, which reduces flicker.
+    # Opens 2 divs, or 3 if table_card is set, but does not close them. Call end_card() to close the divs.
+    my $card_title = shift || 'Title Missing';
+    my $card_icon = shift || '';
+    my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
 
-sub show_all_tasks {    # Loop through all active lists and show a panel for each with the tasks in that list.
-    my $html = header();
+    my $html = qq~
+    <!-- start_card($table_card) $card_title -->
+    <!-- ############################################################################################## -->
+            <div class="card shadow-sm mb-4">
+            ~;
 
-    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
-    $lists_sth->execute();
+    if ($table_card == 1) { $html .= qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
 
-    while (my $list = $lists_sth->fetchrow_hashref()) {
-        $html .= start_card($list->{'Title'}, '', 0);
-        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
-        $html .= end_card(0);
+    $html .= qq~
+                ~;
+
+    if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
+        } else { # Show default bg-
+        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
         }
 
-    $html .= footer();
+    $html .= qq~
+                            <h2 >
+                                $card_title
+                                ~;
+                            if ($card_icon ne '') {
+                                $html .= qq~
+                        <div class="float-end">$card_icon</div>
+                        ~;
+                                }
+                            $html .= qq~
+                            </h2>
+                    </div>
+
+                    <div class="card-body bg-dark text-white rounded-bottom">
+    <!-- End start_card() header -->
+                    ~;
     return $html;
-    } # End show_all_tasks()
+    } # End start_card()
+
+sub end_card {  # end_card($is_table_card) - Close a card previously opened with start_card(). If $is_table_card is 1, it will also close the div that hides the card until datatables is loaded, and add a script to show the card once datatables is loaded.
+    my $html = "<!-- Start end_card() -->\n";
+    my $table_card = shift || 0;
+    if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
+    $html .= qq~
+                </div>
+            </div>
+            <!-- close end_card() ############################################################################################## -->
+                ~;
+    return $html;
+    } # End end_card()
+
+sub add_alert { # add_alert($page->{'alert_text'}) - Store an alert message in ConfigTb to be shown on next page load
+    my $page->{'alert_text'} = shift;
+    $dbh->do(
+        "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
+        undef,
+        'last_alert',
+        $page->{'alert_text'},
+        $page->{'alert_text'}
+        ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
+    } # End add_alert()
+
+sub show_alert { # show_alert() - Check ConfigTb for last_alert and if found, show it once and clear it
+    my $page->{'alert_text'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
+
+    if ($page->{'alert_text'}) { # There is an alert pending
+        single_db_value("DELETE FROM ConfigTb WHERE `key` = 'last_alert'");
+
+        return qq~
+        <div class="row g-3 mb-2">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
+                $page->{'alert_text'}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+        ~;
+        } else {
+        # No alerts to show, return empty string
+        return '';
+        }
+    } # End show_alert()
+
 
 # End SHOW functions
 ###############################################
 
+
 ###############################################
-# BUILD functions - things that build HTML
+# MISC functions - things that don't fit anywhere else
 
-sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
-    my $icon_name = shift;
-    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
-    } # end build_tabler_icon
+sub return_default_listid { # return_default_listid() - returns the default list id from ConfigTb
+    return single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+    }
 
-sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixels and raw SVG code, and returns the SVG wrapped in a span with the correct size styling to make it match the text size
-    my ($size, $svg) = @_;
+sub set_default_listid { # set_default_listid($list_id) - sets the default list id in ConfigTb
+    my ($list_id) = @_;
+    $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
+        undef,
+        'active_list',
+        $list_id,
+        $list_id
+        ) or print STDERR "Failed to save active_list to ConfigTb: " . $dbh->errstr;
+    }
 
-    return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
-        </span>~;
-    } # end build_inline_icon
+sub update_db_mtime {  # Update the global $page->{'db_mtime'} variable with the current database file modification time
+    $page->{'db_mtime'} = (stat($db_path))[9] // 0;
+    }
 
 sub verify_valid_list { # verify_valid_list() - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
     # Check currently active list is valid
@@ -2848,31 +2604,276 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
 
     } # End verify_valid_list()
 
-sub return_default_listid { # return_default_listid() - returns the default list id from ConfigTb
-    return single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-    }
+sub check_latest_release {      # check_latest_release()   Get latest release from github
+    if ($config->{'cfg_version_check'} ne 'on') { return; }             # If disabled, return early
+    if ($global->{'new_version_available'} == 1) { return; }            # No point checking again if we know there is a new version waiting
 
-sub set_default_listid { # set_default_listid($list_id) - sets the default list id in ConfigTb
-    my ($list_id) = @_;
-    $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
-        undef,
-        'active_list',
-        $list_id,
-        $list_id
-        ) or print STDERR "Failed to save active_list to ConfigTb: " . $dbh->errstr;
-    }
+    my $github_latest_version;
+
+    my $http = HTTP::Tiny->new(
+        agent => "taskpony-version-check/$global->{'app_version'}",
+        timeout => 10
+        );
+
+    my $res = $http->get($global->{'github_version_url'});
+    if ($res->{success}) {
+        my $data = decode_json($res->{content});
+        $github_latest_version = $data->{tag_name};
+        $github_latest_version =~ s/\D//g;   # Just return the digits for numeric comparison
+        } else {
+        print STDERR "Latest version check from github failed. Non-fatal, continuing\n";
+        return;
+        }
+
+    my $normalised_app_version = $global->{'app_version'};
+    $normalised_app_version =~ s/\D//g;
+
+    if ($github_latest_version > $normalised_app_version) {
+        print STDERR "New version of $global->{'app_title'} is available\n";
+        $global->{'new_version_available'} = 1;
+        }
+    return;
+    }  # End check_latest_release()
+
+sub ensure_sensible_config_range { # ensure_sensible_config_range($value, $min, $max)  Ensure a numeric value is within a sensible range, otherwise return the nearest bound
+    my ($config_key, $min, $max) = @_;
+    my $value = $config->{$config_key};
+
+    if ($value !~ /^\d+$/) {
+        print STDERR "WARN: Config value for $config_key is not a number. Resetting to $min.\n";
+        $config->{$config_key} = $min;
+        }
+    if ($value < $min) {
+        print STDERR "WARN: Config value for $config_key ($value) is below minimum ($min). Resetting to $min.\n";
+        $config->{$config_key} = $min;
+        }
+    if ($value > $max) {
+        print STDERR "WARN: Config value for $config_key ($value) is above maximum ($max). Resetting to $max.\n";
+        $config->{$config_key} = $max;
+        }
+    } # End ensure_sensible_config_range()
+
+sub save_config {  # save_config() Save contents of $config hashref to ConfigTb
+    print STDERR "Saving configuration\n";
+
+    # First, check any numbers are sensible
+    ensure_sensible_config_range('cfg_task_pagination_length', 3, 1000);        # Number of tasks to show per page
+    ensure_sensible_config_range('cfg_description_short_length', 3, 1000);      # Number of characters to show in task list before truncating description
+    ensure_sensible_config_range('cfg_list_short_length', 1, 100);             # Number of characters to show in task list before truncating list name
+    ensure_sensible_config_range('cfg_backup_number_to_keep', 1, 100);           # Number of database backups to keep
+
+    # Loop through $config keys and save each of them to ConfigTb
+    for my $key (keys %$config) {
+        my $sql = "INSERT INTO ConfigTb (`key`,`value`)
+            VALUES (?, ?)
+            ON CONFLICT(key)
+            DO UPDATE SET value = excluded.value;";
+
+        $dbh->do(
+            $sql,
+            undef,
+            $key,
+            $config->{$key},
+            ) or warn "Failed to save config key ($key): " . $dbh->errstr;
+        }
+    } # End save_config()
+
+sub backup_database {  # Backup the database by rotating old backups and creating a new one. Will only be called once a day from run_daily_tasks() logic
+    print STDERR "Backing up database...  Keeping " . $config->{cfg_backup_number_to_keep} . " backups\n";
+
+    # Start counting back from the currently defined max backups to keep. Delete the oldest, then rename each one down by 1, then create the new backup as .0
+    for (my $i = $config->{cfg_backup_number_to_keep} - 1; $i >= 0; $i--) {
+        my $old_backup = "$db_path.$i";
+        my $new_backup = "$db_path." . ($i + 1);
+        print STDERR "Processing backup rotation: $old_backup to $new_backup\n";
+
+        if (-e $old_backup) {
+            if ($i == $config->{cfg_backup_number_to_keep} - 1) {
+                # This is the oldest backup, delete it
+                print STDERR "Deleting oldest backup: $old_backup\n";
+                unlink $old_backup or print STDERR "WARN: Failed to delete old backup $old_backup: $!\n";
+                } else {
+                # Rename the backup down by 1
+                print STDERR "Renaming backup: $old_backup to $new_backup\n";
+                rename $old_backup, $new_backup or print STDERR "WARN: Failed to rename backup $old_backup to $new_backup: $!\n";
+                }
+            }
+        }
+    # Now create the new backup as .0
+    my $new_backup_0 = "$db_path.0";
+    print STDERR "Creating new backup by copying $db_path to $new_backup_0\n";
+    copy($db_path, $new_backup_0) or print STDERR "WARN: Failed to create new backup $new_backup_0: $!\n";
+    } # End backup_database()
+
+sub run_daily_tasks {  # Run any daily tasks we need to. Return if already run today.
+    my $tasks_ran_today = $dbh->selectrow_array("
+        SELECT CASE
+        WHEN value = date('now') THEN 1
+        ELSE 0
+        END
+        FROM ConfigTb
+        WHERE key = 'cfg_last_daily_run';
+        ");
+
+    if ($tasks_ran_today == 1) { return; }  # Already ran today, return
+
+    print STDERR "Running daily tasks...\n";
+
+    # Run daily tasks here, such as backing up the database, sending email summaries, etc.
+    backup_database();  # Backup the database by one iteration
+
+    # Look for any recurring tasks that need to be reactivated today
+    my $recurring_sth = $dbh->prepare("
+        SELECT id, Title, Description, AddedDate, CompletedDate, ListId, RecurringIntervalDay
+        FROM TasksTb
+        WHERE IsRecurring = 'on' AND Status = 2 AND CompletedDate IS NOT NULL
+        ");
+    $recurring_sth->execute();
+
+    while (my $task = $recurring_sth->fetchrow_hashref()) {
+        my $completed_date = $task->{'CompletedDate'};
+        my $interval_days = $task->{'RecurringIntervalDay'} // 1;  # Default to 1 day if not set
+
+        # Calculate the next activation date
+        my $next_activation_date = single_db_value("
+            SELECT date(?, '+' || ? || ' days')
+            ", $completed_date, $interval_days);
+
+        debug("Recurring task ID $task->{id} ('$task->{Title}') completed on $completed_date with interval $interval_days days. Next activation date: $next_activation_date\n");
+
+        # If the next activation date is today or earlier, reactivate the task
+        if ($next_activation_date le single_db_value("SELECT date('now')")) {
+            print STDERR "Reactivating recurring task ID $task->{id} ('$task->{Title}') after $interval_days days\n";
+
+            # Reactivate the task
+            $dbh->do("
+                UPDATE TasksTb
+                SET Status = 1,
+                    CompletedDate = NULL,
+                    AddedDate = datetime('now')
+                WHERE id = ?
+                ", undef, $task->{'id'}
+                ) or print STDERR "WARN: Failed to reactivate recurring task ID $task->{id}: " . $dbh->errstr;
+            }
+        }
+
+    # We ran run_daily_tasks() today, so let's update the last run time and return
+    $dbh->do("UPDATE ConfigTb SET value = date('now') WHERE key = 'cfg_last_daily_run'") or print STDERR "WARN: Failed to update last daily run date: " . $dbh->errstr;
+
+    # Frivolity: Check if a special date and change the logo
+    # If month is December and day is between 20 and 31, show a festive icon
+    my ($sec,$min,$hour,$mday,$mon,$year) = localtime();
+    if ( ($mon == 11) && ($mday >= 20) && ($mday <= 31) ) {
+        $global->{'taskpony_icon'} = 'taskpony-logo-xmas.png';
+        print STDERR "Taskponies love Christmas!\n";
+        } else {
+        $global->{'taskpony_icon'} = 'taskpony-logo.png';  # Reset to normal logo
+        }
+    # Back to seriousness
+
+    return;
+    } # End run_daily_tasks()
+
+sub calculate_stats { # calculate_stats() Calculate stats and populate the global $stats hashref
+    # Check to see whether we've run this recently. If so, return before hitting the database
+    if ( $stats->{stats_last_calculated} && time - $stats->{stats_last_calculated} < $stats->{'calculate_stats_interval'} ) { return; }
+
+    # Before we get onto working out the stats, check whether the daily tasks have been run today
+    run_daily_tasks();  # Will return early if already run today
+
+    print STDERR "Calculating task statistics...\n";
+    my $sql = q{
+        SELECT
+            COUNT(*)                                                    AS total_tasks,
+            IFNULL(SUM(CompletedDate IS NULL), 0)                                 AS active_tasks,
+
+            IFNULL(SUM(date(AddedDate) = date('now','localtime')), 0)             AS tasks_added_today,
+            IFNULL(SUM(AddedDate >= date('now','-7 days','localtime')), 0)        AS tasks_added_past_week,
+            IFNULL(SUM(AddedDate >= date('now','-1 month','localtime')), 0)       AS tasks_added_past_month,
+            IFNULL(SUM(AddedDate >= date('now','-1 year','localtime')), 0)        AS tasks_added_past_year,
+
+            IFNULL(SUM(CompletedDate IS NOT NULL), 0)                              AS completed_tasks,
+            IFNULL(SUM(date(CompletedDate) = date('now','localtime')), 0)         AS tasks_completed_today,
+            IFNULL(SUM(CompletedDate >= date('now','-7 days','localtime')), 0)    AS tasks_completed_past_week,
+            IFNULL(SUM(CompletedDate >= date('now','-1 month','localtime')), 0)   AS tasks_completed_past_month,
+            IFNULL(SUM(CompletedDate >= date('now','-1 year','localtime')), 0)    AS tasks_completed_past_year
+        FROM TasksTb
+        };
+
+    my $row = $dbh->selectrow_hashref($sql);
+
+    # Merge DB values into existing stats hashref
+    @$stats{ keys %$row } = values %$row;
+
+    $stats->{total_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb');
+    $stats->{total_active_lists} = $dbh->selectrow_array('SELECT COUNT(*) FROM ListsTb WHERE DeletedDate IS NULL');
+    $stats->{stats_first_task_created} = $dbh->selectrow_array("SELECT IFNULL(MIN(AddedDate), 'N/A') FROM TasksTb");
+    $stats->{stats_first_task_created_daysago} = $dbh->selectrow_array("SELECT IFNULL(CAST((julianday('now') - julianday(MIN(AddedDate))) AS INTEGER), 0) FROM TasksTb");
+    $stats->{repeating_tasks} = $dbh->selectrow_array('SELECT COUNT(*) From TasksTb WHERE IsRecurring = "on"');
+
+    $stats->{stats_last_calculated} = time;
+    } # End calculate_stats()
+
+sub config_load { # config_load() - Load all key/value pairs from ConfigTb into $config hashref
+    print STDERR "Loading configuration from $db_path in ConfigTb\n";
+
+    # List through $config keys and lead each of them from ConfigTb
+    for my $key (keys %$config) {
+        my $saved_value = single_db_value("SELECT value FROM ConfigTb WHERE key = '$key'");
+        if ($saved_value) {
+            debug("OK: Loaded value ($saved_value) from ConfigTb for ($key)");
+            $config->{$key} = $saved_value;
+            } else {
+            debug("WARN: no value found in ConfigTb for ($key), using config default");  # Value already declared at head, no need to change
+            }
+        }
+
+    check_latest_release();
+    } # End config_load()
+
+sub human_friendly_date { # human_friendly_date($db_date) - Convert a database datetime string into a human friendly relative time string
+    my ($db_date) = @_;
+    return '' unless defined $db_date;
+
+    my ($year, $month, $day, $hour, $min, $sec) =  $db_date =~ /(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/;
+
+    return $db_date unless $year;  # Return original if parse fails
+
+    my $db_time = timelocal($sec, $min, $hour, $day, $month - 1, $year);
+    my $now = time();
+    my $diff_seconds = $now - $db_time;
+
+    return 'Just now' if $diff_seconds < 60;
+
+    my $diff_minutes = int($diff_seconds / 60);
+    return "$diff_minutes minute" . ($diff_minutes == 1 ? '' : 's') . " ago" if $diff_minutes < 60;
+
+    my $diff_hours = int($diff_seconds / 3600);
+    return "$diff_hours hour" . ($diff_hours == 1 ? '' : 's') . " ago" if $diff_hours < 24;
+
+    my $diff_days = int($diff_seconds / 86400);
+    return 'Yesterday' if $diff_days == 1;
+    return "$diff_days days ago" if $diff_days < 7;
+
+    my $diff_weeks = int($diff_days / 7);
+    return "$diff_weeks week" . ($diff_weeks == 1 ? '' : 's') . " ago" if $diff_weeks < 4;
+
+    my $diff_months = int($diff_days / 30);
+    $diff_months = 1 if $diff_months < 1;
+    return "$diff_months month" . ($diff_months == 1 ? '' : 's') . " ago" if $diff_months < 12;
+
+    my $diff_years = int($diff_days / 365);
+    return "$diff_years year" . ($diff_years == 1 ? '' : 's') . " ago";
+    } # End human_friendly_date()
 
 
-# End BUILD functions
+
+
+
+
+# End MISC functions
 ###############################################
 
-
-
-###############################################
-# Update the global $page->{'db_mtime'} variable with the current database file modification time
-sub update_db_mtime {
-    $page->{'db_mtime'} = (stat($db_path))[9] // 0;
-    }
 
 ###############################################
 # ACTION functions - things that change stuff
