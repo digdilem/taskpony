@@ -271,7 +271,7 @@ my $app = sub {
 
     ###############################################
     # Lists Management page
-    if ($req->path eq "/lists") {
+#     if ($req->path eq "/lists") {
 
 
         ###############################################
@@ -2113,17 +2113,12 @@ sub show_lists { # show_lists() - Multi-tabbed lists page
                 </thead>
                 <tbody>
     ~;
-    my $deleted_list_sth = $dbh->prepare(
-        'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC'
-        );  # Don't select ListsTb.id=1, "All"
+    my $deleted_list_sth = $dbh->prepare( 'SELECT id, Title, DeletedDate FROM ListsTb WHERE DeletedDate IS NOT NULL AND id != 1 ORDER BY DeletedDate DESC' );  # Don't select ListsTb.id=1, "All"
     $deleted_list_sth->execute();
     # Step through deleted lists
     while (my $a = $deleted_list_sth->fetchrow_hashref()) {
         my $title = html_escape($a->{'Title'});
-        my $tasks_in_list = single_db_value(
-            'SELECT COUNT(*) FROM TasksTb WHERE ListId = ?',
-            $a->{'id'}
-            ) // 0;
+        my $tasks_in_list = single_db_value( 'SELECT COUNT(*) FROM TasksTb WHERE ListId = ?', $a->{'id'} ) // 0;
 
         $html .= qq~
                     <tr>
