@@ -2818,7 +2818,7 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
     if ( (!$page->{'list_name'} ) || ($page->{'list_colour'} ) ) { $changed_list_id = 1; }
 
     if ($changed_list_id == 1) { # Something has changed, reload related values
-        print STDERR "INFO: Related list values (name or colour) are not valid. Reloading from database.\n";
+        print STDERR "INFO: Related list values (name or colour) are not valid. List changed or $global->{'app_title'} restarted. Restoring from database.\n";
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
         # Save the new active list id to config for next time
