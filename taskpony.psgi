@@ -122,6 +122,7 @@ my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z"
 my $smallicon_repeat = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
 my $smallicon_edit = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
 my $smallicon_listnumbers = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />');
+my $smallicon_plus = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" />');
 
 # Preflight checks
 print STDERR "Loading Taskpony $global->{'app_version'}...\n";
@@ -2222,6 +2223,12 @@ sub show_tasks {
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
                 $smallicon_edit
+            </a>
+
+            <a href="/task_add" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            data-bs-toggle="tooltip" data-bs-placement="auto"
+            title="Add a new task">
+                $smallicon_plus
             </a>
             ~;
             }
