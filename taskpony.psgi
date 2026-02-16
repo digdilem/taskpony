@@ -1221,6 +1221,16 @@ my $app = sub {
                             $html .= qq~
                         </span>
                     </li>
+                    <li>
+                        <span class="pt-3 small text-white-50">
+                            Database path: <strong class="text-white">$global->{'db_path'}</strong>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="pt-3 small text-white-50">
+                            Background image path: <strong class="text-white">$global->{'bg_path'}</strong>
+                        </span>
+                    </li>
                 </ul>
             </div>
             ~;
