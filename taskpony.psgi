@@ -151,11 +151,13 @@ my $app = sub {
 
     # Global modifiers and preflight checks we should ensure are done on each page load
     if ($page->{'list_id'} == 0) { $page->{'list_id'} = return_default_listid(); }   # if this is 0, Taskpony has probably just restarted so load the default list
+    my $list_switched = 0;
     if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) {
         $page->{'list_id'} = $req->param('lid');  # Set active list to supplied (only if numeric)
         set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
-        }
-    verify_valid_list();      # Verify active list details are valid
+        $list_switched = 1;
+    }
+    verify_valid_list($list_switched);      # Verify active list details are valid, force reload if switched
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
 
@@ -2784,8 +2786,9 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
 
 sub verify_valid_list { # verify_valid_list() - checks whether a list id is valid and active, sets global $page->{'list_id'} to a good value
     # Check currently active list is valid
+    my $force_reload = shift // 0;
     debug("Verifying active list id ($page->{'list_id'}) is valid and active...\n");
-    my $changed_list_id = 0;
+    my $changed_list_id = $force_reload ? 1 : 0;
 
     # Step 1: Check if current list_id is viable
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $page->{'list_id'});
