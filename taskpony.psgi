@@ -2546,20 +2546,19 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
     # Step 1: Check if current list_id is viable
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $page->{'list_id'});
     if (!$exists or ($exists == 0) ) { # Not viable, let's try to get from config
-        print STDERR "INFO: Current active list ($page->{'list_id'}) is not valid or is deleted. Trying to find a better value from ConfigTb.\n";
+        debug("INFO: Current active list ($page->{'list_id'}) is not valid or is deleted. Trying to find a better value from ConfigTb.\n");
 
         my $cfg_active_list = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
         if ($cfg_active_list && $cfg_active_list =~ /^\d+$/) {
-            print STDERR "INFO: Found active_list from ConfigTb: $cfg_active_list. Checking if it's viable.\n";
+            debug("INFO: Found active_list from ConfigTb: $cfg_active_list. Checking if it's viable.\n");
             # Recheck if this ConfigTb value is viable in the database
             $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $cfg_active_list);
             if ($exists && $exists > 0) { # ConfigTb value is valid and viable
-                print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is valid. Setting active list to this.\n";
+                debug("INFO: Active list id from ConfigTb ($cfg_active_list) is valid. Setting active list to this.\n");
                 $page->{'list_id'} = $cfg_active_list;
                 $changed_list_id = 1;
                 } else { # ConfigTb value is not viable, need to find first viable list
-                    print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is not valid or is deleted. Attempting to load first viable list.\n";
-
+                    debug("INFO: Active list id from ConfigTb ($cfg_active_list) is not valid or is deleted. Attempting to load first viable list.\n");
                     my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
                     if ($new_list_id && $new_list_id =~ /^\d+$/) {
                         print STDERR "INFO: First viable list id is $new_list_id. Setting active list to this.\n";
@@ -2573,10 +2572,10 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
                     }
                 }
             } else { # No valid list_id in ConfigTb either, find first viable list
-            print STDERR "INFO: No valid active_list in ConfigTb. Attempting to load first viable list.\n";
+            debug("INFO: No valid active_list in ConfigTb. Attempting to load first viable list.");
             my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
             if ($new_list_id && $new_list_id =~ /^\d+$/) {
-                print STDERR "INFO: First viable list id is $new_list_id. Setting active list to this.\n";
+                debug("INFO: First viable list id is $new_list_id. Setting active list to this.");
                 $page->{'list_id'} = $new_list_id;
                 $changed_list_id = 1;
                 } else {
@@ -2592,7 +2591,7 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
     if ( (!$page->{'list_name'} ) || (!$page->{'list_colour'} ) ) { $changed_list_id = 1; }
 
     if ($changed_list_id == 1) { # Something has changed, reload related values
-        print STDERR "INFO: Related list values (name or colour) are not valid. List changed or $global->{'app_title'} restarted. Restoring values for list id $page->{'list_id'} from database.\n";
+        debug("INFO: Related list values (name or colour) are not valid. List changed or $global->{'app_title'} restarted. Restoring values for list id $page->{'list_id'} from database.");
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
         # Save the new active list id to config for next time
