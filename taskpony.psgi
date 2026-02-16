@@ -548,11 +548,24 @@ sub connect_db {
             print STDERR "Data directory $data_dir does not exist, creating it now.\n";
             mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $global->{'db_path'}\n";
 
+# Checks whether the sqlite database file exists and if not, creates it, populates schema, and connects to it
+sub connect_db {
+    # Check database exists.
+    if (! -e $global->{'db_path'}) {
+        # Database file does not exist, so create it and initialise it.
+        print STDERR "Database file $global->{'db_path'} not found. Assuming new install and creating new database\n";
+        # Ensure data directory exists
+        my ($data_dir) = $global->{'db_path'} =~ m{^(.*)/[^/]+$};
+
+        if (! -d $data_dir) {
+            print STDERR "Data directory $data_dir does not exist, creating it now.\n";
+            mkdir $data_dir or print STDERR "FATAL: Inability to create data directory $data_dir to create the database file, $global->{'db_path'}\n";
+
             if (! -d $data_dir) {
                 print STDERR "I tried to create the data directory $data_dir but it still does not exist. Cannot continue.\n";
                 exit 1;
                 }
-            #}
+            }
 
         print STDERR "----------------------------------------------------\n";
         print STDERR "Welcome to $global->{'app_title'}!\n";
@@ -577,6 +590,7 @@ sub connect_db {
             }
 
     # Check for any needed schema upgrades each time we connect
+    check_database_upgrade();
     }  # End connect_db()
 
 ###############################################
