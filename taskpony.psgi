@@ -2807,11 +2807,13 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
                     add_alert("Error: No viable lists found in database. Please create a list to get started.");
                     }
                 } else { # Changed to config value, which is viable and a better choice than currently active
-            print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is valid. Setting active list to this.\n";
-            $page->{'list_id'} = $cfg_active_list;
-            $changed_list_id = 1;
+                    print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is valid. Setting active list to this.\n";
+                    $page->{'list_id'} = $cfg_active_list;
+                    $changed_list_id = 1;
+                }
             }
         }
+
     # Check that the related list values are viable
     if ( (!$page->{'list_name'} ) || ($page->{'list_colour'} ) ) { $changed_list_id = 1; }
 
