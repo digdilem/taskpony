@@ -2785,7 +2785,7 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
     my $changed_list_id = 0;
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $page->{'list_id'});
     if (!$exists or ($exists == 0) ) { # Not viable, let's try to get from config
-        print STDERR "INFO: Current active list ($original_list_id) is not valid or is deleted. Fetching from config.\n";
+        print STDERR "INFO: Current active list ($page->{'list_id'}) is not valid or is deleted. Trying to find a better value from config from config.\n";
 
         my $cfg_active_list = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
         if ($cfg_active_list && $cfg_active_list =~ /^\d+$/) {
@@ -2821,6 +2821,13 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
         print STDERR "INFO: Related list values (name or colour) are not valid. Reloading from database.\n";
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
+        # Save the new active list id to config for next time
+        $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
+            undef,
+            'active_list',
+            $page->{'list_id'},
+            $page->{'list_id'}
+            ) or print STDERR "Failed to save active_list to ConfigTb: " . $dbh->errstr;
         }
 
     } # End verify_valid_list()
