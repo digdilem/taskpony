@@ -2355,11 +2355,10 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
             $html .= end_card(0);
             $html .= footer();
             return $html;
-            } # End if list found
-        } # End if list_id > 1
-    }
+            } # End if list_id > 1
+        }
 
-} # end show_list_edit
+    } # end show_list_edit
 
 # End SHOW functions
 ###############################################
