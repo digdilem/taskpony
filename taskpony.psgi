@@ -3207,7 +3207,7 @@ sub receive_form_list { # Receive Add or Edit List form. No direct output (List_
         } # End /receive_form_list form submission handling
     } # End receive_form_list
 
-}
+
 
 # End Receive functions
 ###############################################
