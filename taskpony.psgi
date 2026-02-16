@@ -227,7 +227,7 @@ my $app = sub {
     # Receive edit task form. No output, redirect to root
     if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
     # Receive add task form. No output, redirect to root
-    if ($req->path eq "/task_form_add")                      { receive_form_task_add($req);  $res->redirect('/');  return $res->finalize; }
+    if ($req->path eq "/task_form_add")                      { receive_form_task_add($req);        $res->redirect('/');  return $res->finalize; }
     # Receive Lists form
     if ($req->path =~ m{^/list_form/(\d+)$})                 { receive_form_list($1, $req);        $res->redirect('/lists'); return $res->finalize; }
 
@@ -235,11 +235,24 @@ my $app = sub {
     # MISC functions
 
     # /api/ping check - suitable for health checks
-    if ($req->path eq "/api/ping")     { $res->header('Content-Type' => 'text/plain');  $res->header('Cache-Control' => 'no-cache, no-store');  $res->body('pong');  return $res->finalize;  }
+    if ($req->path eq "/api/ping")     {
+        $res->header('Content-Type' => 'text/plain');
+        $res->header('Cache-Control' => 'no-cache, no-store');
+        $res->body('pong');
+        return $res->finalize;
+        }
 
     # /api/dbstate check - returns simple JSON with last mtime of the database
-    if ($req->path eq "/api/dbstate") {  update_db_mtime();  $res->header('Content-Type' => 'text/plain'); $res->header('Cache-Control' => 'no-cache, no-store'); $res->body($page->{'db_mtime'}); return $res->finalize; }
+    if ($req->path eq "/api/dbstate")  {
+        update_db_mtime();
+        $res->header('Content-Type' => 'text/plain');
+        $res->header('Cache-Control' => 'no-cache, no-store');
+        $res->body($page->{'db_mtime'});
+        return $res->finalize;
+        }
 
+
+}; ## RANDOM
 
     # End redirectors
     ###############################################
@@ -2299,9 +2312,7 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
     my $list_id = shift;
     my $edit_title = "Edit List";
 
-    if ($list_id == 0) { # It's a new list. Show blank form
-        $edit_title = "Add New List";
-        }
+    if ($list_id == 0) { $edit_title = "Add New List"; } # It's a new list. Show blank form
 
     if ($list_id > 1) { # Don't allow editing of "All" list (id=1)
         my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
@@ -2344,9 +2355,7 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
                             </div>
                         <hr>
                         ~;
-                if ($list_id > 1) { # It's an existing list, show some metadata
-                        $html .= qq~<p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>~;
-                        }
+                if ($list_id > 1) { $html .= qq~<p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>~; } # It's an existing list, show some metadata
                 $html .= qq~
                         </div>
                     </form>
@@ -2364,7 +2373,7 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
 ###############################################
 
 
-} } } # Adding random brackets
+
 
 
 
