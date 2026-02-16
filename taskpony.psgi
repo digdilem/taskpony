@@ -61,7 +61,7 @@ app_releases_page => 'https://github.com/digdilem/taskpony',                    
 ###############################################
 # Page specific variables.
 our $page = {
-    list_id => 1,                   # Current list id
+    list_id => 0,                   # Current list id
     list_name => '',                # Current list name
     list_colour => '',              # Current list highlight colour (overrides default)
     alert_text => '',               # If set, show this alert text on page load
@@ -2528,7 +2528,7 @@ sub return_default_listid { # return_default_listid() - returns the default list
 
 sub set_default_listid { # set_default_listid($list_id) - sets the default list id in ConfigTb
     my ($list_id) = @_;
-    print STDERR "Setting default list id to $list_id in ConfigTb.\n";
+    debug("Setting default list id to $list_id in ConfigTb");
     $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
         undef,
         'active_list',
