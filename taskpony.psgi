@@ -151,7 +151,10 @@ my $app = sub {
 
     # Global modifiers and preflight checks we should ensure are done on each page load
     if ($page->{'list_id'} == 0) { $page->{'list_id'} = 1; }   # Ensure we have a list id set, default to 1 if not. This should never be 0, but just in case.
-    if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) { $page->{'list_id'} = $req->param('lid'); }        # Set active list to supplied (only if numeric)
+    if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) {
+        $page->{'list_id'} = $req->param('lid');  # Set active list to supplied (only if numeric)
+        set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
+    }
     verify_valid_list();      # Verify active list details are valid
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
@@ -2783,39 +2786,54 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
     # Check currently active list is valid
     debug("Verifying active list id ($page->{'list_id'}) is valid and active...\n");
     my $changed_list_id = 0;
+
+    # Step 1: Check if current list_id is viable
     my $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $page->{'list_id'});
     if (!$exists or ($exists == 0) ) { # Not viable, let's try to get from config
-        print STDERR "INFO: Current active list ($page->{'list_id'}) is not valid or is deleted. Trying to find a better value from config from config.\n";
+        print STDERR "INFO: Current active list ($page->{'list_id'}) is not valid or is deleted. Trying to find a better value from ConfigTb.\n";
 
         my $cfg_active_list = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
         if ($cfg_active_list && $cfg_active_list =~ /^\d+$/) {
-            print STDERR "INFO: Active list id from ConfigTb: $cfg_active_list. \n";
-            # Recheck if this new config is viable
-            $exists = return_default_listid();
-            if (!$exists or ($exists == 0) ) { # Not viable, let's try to get from config
-                print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is not valid or is deleted. Attempting to load first viable list.\n";
+            print STDERR "INFO: Found active_list from ConfigTb: $cfg_active_list. Checking if it's viable.\n";
+            # Recheck if this ConfigTb value is viable in the database
+            $exists = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NULL", $cfg_active_list);
+            if ($exists && $exists > 0) { # ConfigTb value is valid and viable
+                print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is valid. Setting active list to this.\n";
+                $page->{'list_id'} = $cfg_active_list;
+                $changed_list_id = 1;
+                } else { # ConfigTb value is not viable, need to find first viable list
+                    print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is not valid or is deleted. Attempting to load first viable list.\n";
 
-                my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
-                if ($new_list_id && $new_list_id =~ /^\d+$/) {
-                    print STDERR "INFO: First viable list id is $new_list_id. Setting active list to this.\n";
-                    $page->{'list_id'} = $new_list_id;
-                    $changed_list_id = 1;
+                    my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
+                    if ($new_list_id && $new_list_id =~ /^\d+$/) {
+                        print STDERR "INFO: First viable list id is $new_list_id. Setting active list to this.\n";
+                        $page->{'list_id'} = $new_list_id;
+                        $changed_list_id = 1;
                     } else {
-                    print STDERR "ERROR: No viable lists found in database. This should not be possible as there should always be at least one valid list. Setting active list to 1 (All lists) and showing error message on page.\n";
-                    $page->{'list_id'} = 1;  # Set to 1 to show error message on page
-                    $changed_list_id = 1;
-                    add_alert("Error: No viable lists found in database. Please create a list to get started.");
+                        print STDERR "ERROR: No viable lists found in database. This should not be possible as there should always be at least one valid list. Setting active list to 1 (All lists) and showing error message on page.\n";
+                        $page->{'list_id'} = 1;  # Set to 1 to show error message on page
+                        $changed_list_id = 1;
+                        add_alert("Error: No viable lists found in database. Please create a list to get started.");
                     }
-                } else { # Changed to config value, which is viable and a better choice than currently active
-                    print STDERR "INFO: Active list id from ConfigTb ($cfg_active_list) is valid. Setting active list to this.\n";
-                    $page->{'list_id'} = $cfg_active_list;
-                    $changed_list_id = 1;
+                }
+            } else { # No valid list_id in ConfigTb either, find first viable list
+            print STDERR "INFO: No valid active_list in ConfigTb. Attempting to load first viable list.\n";
+            my $new_list_id = single_db_value("SELECT `id` FROM ListsTb WHERE DeletedDate IS NULL ORDER BY id ASC LIMIT 1");
+            if ($new_list_id && $new_list_id =~ /^\d+$/) {
+                print STDERR "INFO: First viable list id is $new_list_id. Setting active list to this.\n";
+                $page->{'list_id'} = $new_list_id;
+                $changed_list_id = 1;
+                } else {
+                print STDERR "ERROR: No viable lists found in database. This should not be possible as there should always be at least one valid list. Setting active list to 1 (All lists) and showing error message on page.\n";
+                $page->{'list_id'} = 1;  # Set to 1 to show error message on page
+                $changed_list_id = 1;
+                add_alert("Error: No viable lists found in database. Please create a list to get started.");
                 }
             }
         }
 
     # Check that the related list values are viable
-    if ( (!$page->{'list_name'} ) || ($page->{'list_colour'} ) ) { $changed_list_id = 1; }
+    if ( (!$page->{'list_name'} ) || (!$page->{'list_colour'} ) ) { $changed_list_id = 1; }
 
     if ($changed_list_id == 1) { # Something has changed, reload related values
         print STDERR "INFO: Related list values (name or colour) are not valid. List changed or $global->{'app_title'} restarted. Restoring values for list id $page->{'list_id'} from database.\n";
