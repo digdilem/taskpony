@@ -433,20 +433,20 @@ my $app = sub {
 
         # Build the tab navigation
         $html .= qq~
-        <ul class="nav nav-tabs mb-4" id="listsTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="add-list-tab" data-bs-toggle="tab" data-bs-target="#add-list" type="button" role="tab" aria-controls="add-list" aria-selected="false">Add New List</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="inactive-lists-tab" data-bs-toggle="tab" data-bs-target="#inactive-lists" type="button" role="tab" aria-controls="inactive-lists" aria-selected="false">Inactive Lists</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="list-actions-tab" data-bs-toggle="tab" data-bs-target="#list-actions" type="button" role="tab" aria-controls="list-actions" aria-selected="false">List Actions</button>
-          </li>
-        </ul>
+                <ul class="nav nav-tabs mb-4" id="listsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="add-list-tab" data-bs-toggle="tab" data-bs-target="#add-list" type="button" role="tab" aria-controls="add-list" aria-selected="false">Add New List</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="inactive-lists-tab" data-bs-toggle="tab" data-bs-target="#inactive-lists" type="button" role="tab" aria-controls="inactive-lists" aria-selected="false">Inactive Lists</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="list-actions-tab" data-bs-toggle="tab" data-bs-target="#list-actions" type="button" role="tab" aria-controls="list-actions" aria-selected="false">List Actions</button>
+                    </li>
+                </ul>
 
         <div class="tab-content" id="listsTabContent">
           <!-- Active Lists Tab -->
