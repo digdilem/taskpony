@@ -95,9 +95,9 @@ my $stats = {
     };
 
 # New icons to be saved in /static/icons and alt text matches the filename.svg
-# my $icons = {
-#     chart => build_tabler_icon('Statistics'),  # Chart icon
-#     };
+my $icons = {
+    chart => build_tabler_icon('Statistics'),  # Chart icon
+    };
 
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
 my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
