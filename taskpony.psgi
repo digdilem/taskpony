@@ -3155,6 +3155,12 @@ sub receive_form_task_edit { # Receive Edit Task form
 
             debug("receive_form_task_edit: Received form data for task $task_id - Title: $title, ListId: $list_id, IsRecurring: $is_recurring, RecurringIntervalDay: $recurring_interval");
 
+            # Validate list_id is numeric
+            if ($list_id !~ /^\d+$/) {
+                print STDERR "WARN: Task $task_id list_id is not numeric. Keeping original list.\n";
+                $list_id = $task->{'ListId'};
+                }
+
             # Validate recurring interval
             if ($recurring_interval !~ /^\d+$/) {
                 print STDERR "WARN: Task $task_id recurring_interval is not a number. Resetting to 1.\n";
@@ -3170,7 +3176,7 @@ sub receive_form_task_edit { # Receive Edit Task form
                 }
             if (length $title && $list_id > 1) {
                 my $sth = $dbh->prepare(
-                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, isRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
+                    'UPDATE TasksTb SET Title = ?, Description = ?, ListId = ?, IsRecurring = ?, RecurringIntervalDay = ? WHERE id = ?'
                     );
                 eval { $sth->execute($title, $desc, $list_id, $is_recurring, $recurring_interval, $task_id); 1 } or print STDERR "Task update for $task_id failed: $@";
                 debug("Task $task_id updated");
