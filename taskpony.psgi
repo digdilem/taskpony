@@ -2364,7 +2364,7 @@ sub show_list_edit { # show_list_edit($list_id) - Show form to edit list details
 ###############################################
 
 
-}
+} } # Adding random brackets
 
 
 
