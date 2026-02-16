@@ -1909,10 +1909,227 @@ sub debug {
     } # End debug()
 
 ###############################################
-# show_tasks($status, $page->{'list_id'}, $not_hidden, $show_recurring)
-# Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
-# If $show_recurring is 1, shows all recurring tasks regardless of status
-sub show_tasks {
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+###############################################
+
+
+
+###############################################
+# SHOW functions - Functions that show html
+
+sub show_all_tasks {    # Loop through all active lists and show a panel for each with the tasks in that list.
+    my $html = header();
+
+    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
+    $lists_sth->execute();
+
+    while (my $list = $lists_sth->fetchrow_hashref()) {
+        $html .= start_card($list->{'Title'}, '', 0);
+        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
+        $html .= end_card(0);
+        }
+
+    $html .= footer();
+    return $html;
+    } # End show_all_tasks()
+
+sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
+    my $icon_name = shift;
+    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
+    } # end build_tabler_icon
+
+sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixels and raw SVG code, and returns the SVG wrapped in a span with the correct size styling to make it match the text size
+    my ($size, $svg) = @_;
+
+    return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
+        </span>~;
+    } # end build_inline_icon
+
+sub config_show_option { # config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper); Output a line of a setting  for /config forms
+    my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
+
+    my $retstr= qq~
+        <!-- Display config option for $key -->
+        <div class="d-flex align-items-center justify-content-between p-3 bg-dark text-white rounded" style="max-width: 500px;">
+            <label class="form-check-label" for="$key" data-bs-toggle="tooltip" data-bs-placement="auto" title="$description" >
+            $title
+            </label> ~;
+
+    if ($type eq 'check') {  # Checkbox
+        $retstr .= qq~
+            <div class="form-check form-switch mb-0">
+                <input class="form-check-input " type="checkbox" role="switch" id="autoUpdateToggle" name="$key" ~;
+
+            if ($config->{$key} eq 'on') { $retstr .= " checked "; }
+
+            $retstr .= qq~>
+            </div>
+            ~;
+        }
+
+    if ($type eq 'number') { # Numerical entry
+        $retstr .= qq~
+            <input type="number" class="form-control w-25"
+                value="$config->{$key}"
+                name="$key"
+                min="$num_range_lower" max="$num_range_upper">
+            ~;
+        }
+
+    if ($type eq 'colour') { # Colour picker
+        $retstr .= qq~
+            <select class="form-select w-25" id="themeColor" name="$key">
+                <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
+                <option value="primary" class="bg-primary text-white">Primary</option>
+                <option value="secondary" class="bg-secondary text-white">Secondary</option>
+                <option value="success" class="bg-success text-white">Success</option>
+                <option value="danger" class="bg-danger text-white">Danger</option>
+                <option value="warning" class="bg-warning text-dark">Warning</option>
+                <option value="info" class="bg-info text-dark">Info</option>
+                <option value="light" class="bg-light text-dark">Light</option>
+                <option value="dark" class="bg-dark text-white">Dark</option>
+            </select>
+            ~;
+        }
+
+    $retstr .= qq~
+        </div>
+        <!-- End Display config option for $key -->
+        ~;
+
+    return $retstr;
+    } # end config_show_option()
+
+sub start_card { # start_card() Open a consistent bootstrap 5 card for most pages. # Takes a title and optional icon HTML to show in the header.
+    # If $table_card is set to 1, it will add an id to the card that allows it to be hidden until the datatable is fully loaded, which reduces flicker.
+    # Opens 2 divs, or 3 if table_card is set, but does not close them. Call end_card() to close the divs.
+    my $card_title = shift || 'Title Missing';
+    my $card_icon = shift || '';
+    my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
+
+    my $html = qq~
+    <!-- start_card($table_card) $card_title -->
+    <!-- ############################################################################################## -->
+            <div class="card shadow-sm mb-4">
+            ~;
+
+    if ($table_card == 1) { $html .= qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
+
+    $html .= qq~
+                ~;
+
+    if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
+        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
+        } else { # Show default bg-
+        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
+        }
+
+    $html .= qq~
+                            <h2 >
+                                $card_title
+                                ~;
+                            if ($card_icon ne '') {
+                                $html .= qq~
+                        <div class="float-end">$card_icon</div>
+                        ~;
+                                }
+                            $html .= qq~
+                            </h2>
+                    </div>
+
+                    <div class="card-body bg-dark text-white rounded-bottom">
+    <!-- End start_card() header -->
+                    ~;
+    return $html;
+    } # End start_card()
+
+sub end_card {  # end_card($is_table_card) - Close a card previously opened with start_card(). If $is_table_card is 1, it will also close the div that hides the card until datatables is loaded, and add a script to show the card once datatables is loaded.
+    my $html = "<!-- Start end_card() -->\n";
+    my $table_card = shift || 0;
+    if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
+    $html .= qq~
+                </div>
+            </div>
+            <!-- close end_card() ############################################################################################## -->
+                ~;
+    return $html;
+    } # End end_card()
+
+sub add_alert { # add_alert($page->{'alert_text'}) - Store an alert message in ConfigTb to be shown on next page load
+    my $page->{'alert_text'} = shift;
+    $dbh->do(
+        "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
+        undef,
+        'last_alert',
+        $page->{'alert_text'},
+        $page->{'alert_text'}
+        ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
+    } # End add_alert()
+
+sub show_alert { # show_alert() - Check ConfigTb for last_alert and if found, show it once and clear it
+    my $page->{'alert_text'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
+
+    if ($page->{'alert_text'}) { # There is an alert pending
+        single_db_value("DELETE FROM ConfigTb WHERE `key` = 'last_alert'");
+
+        return qq~
+        <div class="row g-3 mb-2">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
+                $page->{'alert_text'}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+        ~;
+        } else {
+        # No alerts to show, return empty string
+        return '';
+        }
+    } # End show_alert()
+
+sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_recurring)
+    # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
+    # If $show_recurring is 1, shows all recurring tasks regardless of status
+
     my ($status, $list_id_param, $not_hidden, $show_recurring) = @_;
     $page->{'list_id'} = $list_id_param;
     $show_recurring = $show_recurring // 0;  # Default to 0 if not provided
@@ -2261,221 +2478,6 @@ sub show_tasks {
 
     return $html;
     } # End show_tasks()
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-
-###############################################
-# SHOW functions - Functions that show html
-
-sub show_all_tasks {    # Loop through all active lists and show a panel for each with the tasks in that list.
-    my $html = header();
-
-    my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
-    $lists_sth->execute();
-
-    while (my $list = $lists_sth->fetchrow_hashref()) {
-        $html .= start_card($list->{'Title'}, '', 0);
-        $html .= show_tasks(1, $list->{'id'}, 1);  # Show active tasks for this list, not hidden
-        $html .= end_card(0);
-        }
-
-    $html .= footer();
-    return $html;
-    } # End show_all_tasks()
-
-sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
-    my $icon_name = shift;
-    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
-    } # end build_tabler_icon
-
-sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixels and raw SVG code, and returns the SVG wrapped in a span with the correct size styling to make it match the text size
-    my ($size, $svg) = @_;
-
-    return qq~<span style="font-size: ~ . $size . qq~px; line-height:1;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">$svg</svg>
-        </span>~;
-    } # end build_inline_icon
-
-sub config_show_option { # config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper); Output a line of a setting  for /config forms
-    my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
-
-    my $retstr= qq~
-        <!-- Display config option for $key -->
-        <div class="d-flex align-items-center justify-content-between p-3 bg-dark text-white rounded" style="max-width: 500px;">
-            <label class="form-check-label" for="$key" data-bs-toggle="tooltip" data-bs-placement="auto" title="$description" >
-            $title
-            </label> ~;
-
-    if ($type eq 'check') {  # Checkbox
-        $retstr .= qq~
-            <div class="form-check form-switch mb-0">
-                <input class="form-check-input " type="checkbox" role="switch" id="autoUpdateToggle" name="$key" ~;
-
-            if ($config->{$key} eq 'on') { $retstr .= " checked "; }
-
-            $retstr .= qq~>
-            </div>
-            ~;
-        }
-
-    if ($type eq 'number') { # Numerical entry
-        $retstr .= qq~
-            <input type="number" class="form-control w-25"
-                value="$config->{$key}"
-                name="$key"
-                min="$num_range_lower" max="$num_range_upper">
-            ~;
-        }
-
-    if ($type eq 'colour') { # Colour picker
-        $retstr .= qq~
-            <select class="form-select w-25" id="themeColor" name="$key">
-                <option value="$config->{cfg_header_colour}" class="bg-$config->{cfg_header_colour} text-white">Current choice</option>
-                <option value="primary" class="bg-primary text-white">Primary</option>
-                <option value="secondary" class="bg-secondary text-white">Secondary</option>
-                <option value="success" class="bg-success text-white">Success</option>
-                <option value="danger" class="bg-danger text-white">Danger</option>
-                <option value="warning" class="bg-warning text-dark">Warning</option>
-                <option value="info" class="bg-info text-dark">Info</option>
-                <option value="light" class="bg-light text-dark">Light</option>
-                <option value="dark" class="bg-dark text-white">Dark</option>
-            </select>
-            ~;
-        }
-
-    $retstr .= qq~
-        </div>
-        <!-- End Display config option for $key -->
-        ~;
-
-    return $retstr;
-    } # end config_show_option()
-
-sub start_card { # start_card() Open a consistent bootstrap 5 card for most pages. # Takes a title and optional icon HTML to show in the header.
-    # If $table_card is set to 1, it will add an id to the card that allows it to be hidden until the datatable is fully loaded, which reduces flicker.
-    # Opens 2 divs, or 3 if table_card is set, but does not close them. Call end_card() to close the divs.
-    my $card_title = shift || 'Title Missing';
-    my $card_icon = shift || '';
-    my $table_card = shift || 0;  # If 1, forces a reload after datatables to reduce flicker
-
-    my $html = qq~
-    <!-- start_card($table_card) $card_title -->
-    <!-- ############################################################################################## -->
-            <div class="card shadow-sm mb-4">
-            ~;
-
-    if ($table_card == 1) { $html .= qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
-
-    $html .= qq~
-                ~;
-
-    if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
-        } else { # Show default bg-
-        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
-        }
-
-    $html .= qq~
-                            <h2 >
-                                $card_title
-                                ~;
-                            if ($card_icon ne '') {
-                                $html .= qq~
-                        <div class="float-end">$card_icon</div>
-                        ~;
-                                }
-                            $html .= qq~
-                            </h2>
-                    </div>
-
-                    <div class="card-body bg-dark text-white rounded-bottom">
-    <!-- End start_card() header -->
-                    ~;
-    return $html;
-    } # End start_card()
-
-sub end_card {  # end_card($is_table_card) - Close a card previously opened with start_card(). If $is_table_card is 1, it will also close the div that hides the card until datatables is loaded, and add a script to show the card once datatables is loaded.
-    my $html = "<!-- Start end_card() -->\n";
-    my $table_card = shift || 0;
-    if ($table_card == 1) { $html = qq~                            </div>  <!-- End hideUntilShow div for the table -->~; }  # Close the div that hides the card until datatables is loaded
-    $html .= qq~
-                </div>
-            </div>
-            <!-- close end_card() ############################################################################################## -->
-                ~;
-    return $html;
-    } # End end_card()
-
-sub add_alert { # add_alert($page->{'alert_text'}) - Store an alert message in ConfigTb to be shown on next page load
-    my $page->{'alert_text'} = shift;
-    $dbh->do(
-        "INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?;",
-        undef,
-        'last_alert',
-        $page->{'alert_text'},
-        $page->{'alert_text'}
-        ) or print STDERR "Failed to set last_alert: " . $dbh->errstr;
-    } # End add_alert()
-
-sub show_alert { # show_alert() - Check ConfigTb for last_alert and if found, show it once and clear it
-    my $page->{'alert_text'} = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'last_alert' LIMIT 1");
-
-    if ($page->{'alert_text'}) { # There is an alert pending
-        single_db_value("DELETE FROM ConfigTb WHERE `key` = 'last_alert'");
-
-        return qq~
-        <div class="row g-3 mb-2">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <div id="alert1" class="alert alert-success alert-dismissible fade show" role="alert">
-                $page->{'alert_text'}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            </div>
-        </div>
-        ~;
-        } else {
-        # No alerts to show, return empty string
-        return '';
-        }
-    } # End show_alert()
 
 
 # End SHOW functions
