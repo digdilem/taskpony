@@ -150,17 +150,14 @@ my $app = sub {
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers and preflight checks we should ensure are done on each page load
-
+    if ($req->param('lid')) { $page->{'list_id'} = $req->param('lid'); }        # Set active list to supplied
+    verify_valid_list($page->{'list_id'});      # Verify active list details are valid
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
-    if ($req->param('lid')) {
-        $page->{'list_id'} = $req->param('lid');
-        verify_valid_list($page->{'list_id'});      # If lid specified, verify it is valid, if not valid, ensure the chosen list is viable
-        }
+
+
 
     $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. !!
-
-
 
     ###############################################
     # Preflight checks done. First, check with simple redirectors
@@ -2819,6 +2816,10 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
     if ($page->{'default_listid'} == 0) {  # If this is 0, it needs reloading.
         $page->{'default_listid'} = single_db_value("SELECT `id` FROM ListsTb WHERE `isDefault` = 1") || 0;
         }
+
+    # Ensure related values are viable
+    if (! $page->{'list_name'})     { $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List'; }
+    if (! $page->{'list_colour'})   { $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0'; }
 
     } # End verify_valid_list()
 
