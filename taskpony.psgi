@@ -2221,10 +2221,14 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
  sub show_list_edit { # show_list_edit() - Show the form to edit a list, pre-populated with the list details
     my $edit_listid = shift;
     my $list;
-    if ($edit_listid) {
+    my $gutter_text = 'This will be a new list which will be created when you click "Save List"';
+    my $card_title = "Create New List";
+    if ($edit_listid) { # Editing an existing list, so load details
         my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
         $sth->execute($edit_listid);
         $list = $sth->fetchrow_hashref();
+        $gutter_text = "This is list id #$edit_listid which was created on $list->{'CreatedDate'}";
+        $card_title = "Edit List: $list->{'Title'}";
         } else { # No listid supplied, assume it's new. Prime some values
         $list->{'Title'} = '';
         $list->{'Description'} = '';
@@ -2232,7 +2236,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
         }
 
     my $html = header();
-    $html .= start_card("Edit List", $icon_list, 0);
+    $html .= start_card($card_title, $icon_list, 0);
     $html .= qq~
             <form method="post" action="/list_form/$edit_listid" class="row g-3">
                 <div class="col-12">
@@ -2266,17 +2270,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
                         <a class="btn btn-secondary" href="/lists">Cancel</a>
                     </div>
                 <hr>
-                ~;
-    if ($edit_listid) {
-        $html .= qq~
-                <p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>
-                ~;
-                } else {
-        $html .= qq~
-                <p class="text-$config->{'cfg_header_colour'}">This will be a new list which will be created when you click "Save List"</p>
-                ~;
-                }
-        $html .= qq~
+                <p class="text-$config->{'cfg_header_colour'}">$gutter_text</p>
                 </div>
             </form>
         </div>
