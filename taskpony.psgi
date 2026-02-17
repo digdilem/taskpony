@@ -2828,6 +2828,22 @@ sub action_list_harddelete_alltasks { # Permanently delete all tasks in List NN
         }
     } # End action_list_harddelete_alltasks
 
+sub action_list_make_inactive { # Make List nn inactive by setting DeletedDate to current timestamp
+    my ($list_id) = @_;
+    if ($list_id && $list_id =~ /^\d+$/) {
+        if ($list_id > 1) { # Don't allow deleting "All Tasks Lists"
+            print STDERR "ACTION: Making list $list_id inactive\n";
+            my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ? LIMIT 1');
+            eval { $sth->execute($list_id); 1 } or print STDERR "WARN: List make inactive failed: $@";
+            add_alert("List #$list_id made inactive.");
+            } else {
+            print STDERR "WARN: Attempt to make list with invalid ID ($list_id) inactive passed to action_list_make_inactive\n";
+            }
+        } else {
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_make_inactive\n";
+        }
+    } # End action_list_make_inactive
+
 sub action_task_add { # Show the add task form
     my $html = header();
     $html .= qq~
