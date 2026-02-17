@@ -218,7 +218,9 @@ my $app = sub {
     # Receive add task form. No output, redirect to root
     if ($req->path eq "/task_form_add")                      { receive_form_task_add($req);  $res->redirect('/');  return $res->finalize; }
     # Show a page with all lists and tasks
-    if ($req->path eq '/show_all_tasks')                     { $res->body(show_all_tasks());   return $res->finalize; }
+    if ($req->path eq '/show_tasks_all')                     { $res->body(show_tasks_all());                        return $res->finalize; }
+    # Show a page with all recurring tasks
+    if ($req->path eq '/show-recurring')                     { $res->body(show_tasks_recurring());                  return $res->finalize; }
     # Stats page - show calculated statistics
     if ($req->path eq "/stats")                              { $res->body(show_stats());       return $res->finalize; }
     # Receive Lists form
@@ -285,9 +287,7 @@ my $app = sub {
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="add-list-tab" data-bs-toggle="tab" data-bs-target="#add-list" type="button" role="tab" aria-controls="add-list" aria-selected="false">Add New List</button>
-                    </li>
+
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="inactive-lists-tab" data-bs-toggle="tab" data-bs-target="#inactive-lists" type="button" role="tab" aria-controls="inactive-lists" aria-selected="false">Inactive Lists</button>
                     </li>
@@ -543,7 +543,7 @@ my $app = sub {
               </div>
               <div class="card-body">
                 <p>
-                  <a href="/show_all_tasks" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
+                  <a href="/show_tasks_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
                     $icon_listletters Show All Tasks
                   </a>
                 </p>
@@ -1021,18 +1021,7 @@ my $app = sub {
 
 
 
-    ###############################################
-    # /show-recurring Show a page with all recurring tasks
-    if ($req->path eq '/show-recurring') {
-        my $html = header();
-        $html .= start_card('Recurring Tasks', $icon_repeat, 1);
-        $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
-        $html .= end_card(1);
-        $html .= footer();
-        $res->content_type('text/html');
-        $res->body($html);
-        return $res->finalize;
-        }
+
 
     # End individual page handling.
     ###############################################
@@ -1710,7 +1699,7 @@ sub debug {
 ###############################################
 # SHOW functions - Functions that show html
 
-sub show_all_tasks {    # Loop through all active lists and show a panel for each with the tasks in that list.
+sub show_tasks_all {    # Loop through all active lists and show a panel for each with the tasks in that list.
     my $html = header();
 
     my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
@@ -1724,7 +1713,7 @@ sub show_all_tasks {    # Loop through all active lists and show a panel for eac
 
     $html .= footer();
     return $html;
-    } # End show_all_tasks()
+    } # End show_tasks_all()
 
 sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
     my $icon_name = shift;
@@ -2213,7 +2202,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
         <!-- Show Gutter Righthand side -->
         <span class="float-end muted d-flex gap-3">
             <!-- Show link to all tasks in all lists -->
-            <a href="/show_all_tasks" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/show_tasks_all" class="text-$config->{'cfg_header_colour'} text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto"
                 title="Show all active tasks in lists">
                 $smallicon_listnumbers
@@ -2356,6 +2345,14 @@ sub show_stats { # show_stats() - Show various stats about the tasks and lists i
     return $html;
     } # End /stats
 
+sub show_tasks_recurring { # show_tasks_recurring() - Show all recurring tasks in a single table, regardless of list or status, with an indicator of their status and interval
+    my $html = header();
+    $html .= start_card('Recurring Tasks', $icon_repeat, 1);
+    $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
+    $html .= end_card(1);
+    $html .= footer();
+    return $html;
+    }
 
 # !! Show add list
         #   <!-- Add New List Tab -->
