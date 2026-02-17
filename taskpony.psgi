@@ -221,6 +221,8 @@ my $app = sub {
     if ($req->path eq "/lists")                              { $res->body(show_lists());                return $res->finalize; }
     # Main landing page, the current task list
     if ($req->path eq "/" )                                  { $res->body(show_maintasks());            return $res->finalize; }
+    # Show the edit list form
+    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_form_list($1));          return $res->finalize; }
 
 
     ###############################################
@@ -285,91 +287,7 @@ my $app = sub {
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!  Beware unclosed HTML tags in this section, it's very easy to break the whole page with a small typo here. Check the indentation carefully if you edit this section. !!!!!!!!!!!!!!!!!!!!!!!!!!
         ###############################################
-        # Handle editing a list
-        if ($req->path eq "/editlist") {
-            my $page->{'list_id'} = $req->param('id') // 0;
 
-            # If POST, update the list in DB and redirect
-            if ($req->method && uc($req->method) eq 'POST') {
-                my $title = sanitize($req->param('Title') // '');
-                my $desc = sanitize($req->param('Description') // '');
-                my $colour = sanitize($req->param('Colour') // '');
-                my $clear_colours = $req->param('clear_colours') // '';
-                if ($clear_colours eq 'on') {  # Remove override
-                    $colour = '';
-                    }
-
-                if (length $title && $page->{'list_id'} > 1) {
-                    my $sth = $dbh->prepare(
-                        'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?'
-                    );
-                eval { $sth->execute($title, $desc, $colour, $page->{'list_id'}); 1 } or print STDERR "Update failed: $@";
-                $page->{'list_colour'} = $colour;
-                add_alert("List '$title' updated.");
-                }
-
-                $res->redirect('/lists');
-                return $res->finalize;
-                } # End /editlist form submission handling
-
-            # If GET, show the edit-list form
-            if ($page->{'list_id'} > 1) {
-                my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
-                $sth->execute($page->{'list_id'});
-                my $list= $sth->fetchrow_hashref();
-
-                if ($list) {
-                    my $html = header();
-                    $html .= start_card("Edit List", $icon_list, 0);
-                    $html .= qq~
-                            <form method="post" action="/editlist?id=$page->{'list_id'}" class="row g-3">
-                                <div class="col-12">
-                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
-                                    <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
-
-                                    <br>
-                                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="A brief description of this List">Description</label>
-                                    <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
-
-                                    <br>
-
-                                    <div class="row align-items-center">
-                                        <div class="col-md-6">
-                                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
-                                            <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
-                                        </div>
-
-                                        <div class="col-md-6 d-flex align-items-center">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
-                                                <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
-                                                    Clear Highlight Colour
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-end">
-                                        <button class="btn btn-primary" type="submit">Save List</button>
-                                        <a class="btn btn-secondary" href="/lists">Cancel</a>
-                                    </div>
-                                <hr>
-                                <p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>
-                                </div>
-                            </form>
-                        </div>
-                    ~;
-                    $html .= end_card(0);
-                    $html .= footer();
-                    $res->body($html);
-                    return $res->finalize;
-                    }
-                }
-
-            $res->status(404);
-            $res->body("List not found");
-            return $res->finalize;
-            } # End /editlist
 
 
 
@@ -2300,7 +2218,63 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
     return $html;
     } # End show_tasks()
 
+ sub show_list_edit { # show_list_edit() - Show the form to edit a list, pre-populated with the list details
+    my $edit_listid = shift;
+    my $list;
+    if ($edit_listid) {
+        my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
+        $sth->execute($edit_listid);
+        $list = $sth->fetchrow_hashref();
+        } else { # No listid supplied, assume it's new. Prime some values
+        $list->{'Title'} = '';
+        $list->{'Description'} = '';
+        $list->{'id'} = 0;
+        }
 
+    my $html = header();
+    $html .= start_card("Edit List", $icon_list, 0);
+    $html .= qq~
+            <form method="post" action="/list_form/$edit_listid" class="row g-3">
+                <div class="col-12">
+                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
+                    <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
+
+                    <br>
+                    <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="A brief description of this List">Description</label>
+                    <textarea name="Description" class="form-control" rows="4" maxlength="2000">~ . html_escape($list->{'Description'} // '') . qq~</textarea>
+
+                    <br>
+
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
+                            <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
+                        </div>
+
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
+                                <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
+                                    Clear Highlight Colour
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary" type="submit">Save List</button>
+                        <a class="btn btn-secondary" href="/lists">Cancel</a>
+                    </div>
+                <hr>
+                <p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>
+                </div>
+            </form>
+        </div>
+    ~;
+    $html .= end_card(0);
+    $html .= footer();
+    return $html;
+    } # End show_list_edit()
 
 
 
@@ -3145,6 +3119,46 @@ sub receive_settings_background { # Receive Settings form for background image u
     add_alert("Background image updated");
     return [302, [ Location => '/settings' ], []];
     } # End receive_settings_background()
+
+sub receive_form_list { # Receive New/edited list form
+    my $edit_id = shift;
+    debug("receive_form_list: Received form submission for list ID ($edit_id)");
+
+    if ($edit_id && $edit_id =~ /^\d+$/ && $edit_id > 0) { # We've received an edited form with an id
+        my $title = sanitize($req->param('Title') // '');
+        my $desc = sanitize($req->param('Description') // '');
+        my $colour = sanitize($req->param('Colour') // '');
+        my $clear_colours = $req->param('clear_colours') // '';
+        if ($clear_colours eq 'on') {  # Remove override
+            $colour = '';
+            }
+
+        if (length $title && $page->{'list_id'} > 1) {
+            my $sth = $dbh->prepare( 'UPDATE ListsTb SET Title = ?, Description = ?, Colour = ?   WHERE id = ?' );
+            eval { $sth->execute($title, $desc, $colour, $edit_id); 1 } or print STDERR "Update failed: $@";
+            $page->{'list_colour'} = $colour;
+            add_alert("List '$title' updated");
+            } else {
+            print STDERR "WARN: Invalid data submitted in edit form for list ID ($edit_id)\n";
+            add_alert("Error updating list #$edit_id: Invalid input data.");
+            }
+        } else { # No ID, this is a new list
+        my $title = sanitize($req->param('Title') // '');
+        my $desc = sanitize($req->param('Description') // '');
+        my $colour = sanitize($req->param('Colour') // '');
+        if (length $title) {
+            my $sth = $dbh->prepare( 'INSERT INTO ListsTb (Title, Description, Colour) VALUES (?, ?, ?)' );
+            eval { $sth->execute($title, $desc, $colour); 1 } or print STDERR "Insert failed: $@";
+            add_alert("List '$title' added");
+            } else {
+            print STDERR "WARN: Invalid data submitted in add form for new list\n";
+            add_alert("Error adding new list: Invalid input data.");
+            }
+        }
+    } # end receive_form_list()
+
+
+
 
 
 
