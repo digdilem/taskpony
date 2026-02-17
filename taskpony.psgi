@@ -97,6 +97,7 @@ my $stats = {
 # New icons to be saved in /static/icons and alt text matches the filename.svg
 my $icons = {
     chart => build_tabler_icon('Statistics'),  # Chart icon
+    plus => build_tabler_icon('Plus'),  # Plus icon
 
     };
 my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
@@ -1627,7 +1628,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
             <span>$icon_list</span>
             <span>Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</a></span>
-            <span> NEW LIST </span>
+            <span class="float-end"><a href="/list_edit/0" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a New List">$icon_plus</a></span>
             </div>
             <div class="card-body">
             <div class="table-responsive">
