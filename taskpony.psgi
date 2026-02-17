@@ -200,6 +200,8 @@ my $app = sub {
     if ($req->path =~ m{^/list_set_alltasks_completed/(\d+)$})      { action_list_set_alltasks_completed($1);   $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete all tasks in LIST nn
     if ($req->path =~ m{^/list_harddelete_alltasks/(\d+)$})         { action_list_harddelete_alltasks($1);      $res->redirect('/lists'); return $res->finalize; }
+    # Change a list from active to inactive
+    if ($req->path =~ m{^/list_make_inactive/(\d+)$})     { action_list_make_inactive($1);  $res->redirect('/lists'); return $res->finalize; }
 
 
 
@@ -1749,7 +1751,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         </a>
                         <!-- Set List as Inactive -->
                         <a href="/list_make_inactive/$list->{'id'}" class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
-                        data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Inactive. This will hide the list and its tasks from the main view, but they can be restored later if needed."
+                        data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Inactive. This will hide the list and its tasks from the main view, but they can be restored later if needed. Tasks will still appear in the 'All Tasks' view"
                         onclick="return confirm('Are you sure you want to make this list inactive?');">
                             $icon_trash
                         </a>
