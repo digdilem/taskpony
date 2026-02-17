@@ -222,7 +222,7 @@ my $app = sub {
     # Main landing page, the current task list
     if ($req->path eq "/" )                                  { $res->body(show_maintasks());            return $res->finalize; }
     # Show the edit list form
-    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_form_list($1));          return $res->finalize; }
+    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1));          return $res->finalize; }
 
 
     ###############################################
