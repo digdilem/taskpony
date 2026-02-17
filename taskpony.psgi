@@ -27,7 +27,7 @@ my $taskpony_path = $Dir;
 my $dbh;                            # Global database handle
 
 our $config = {
-    # Default user editable configuration values. Don't change them here, use /config page.
+    # Default user editable configuration values. Don't change them here, use /settings page.
     cfg_task_pagination_length => 25,           # Number of tasks to show per page
     cfg_description_short_length => 35,         # Number of characters to show in task list before truncating description (Cosmetic only)
     cfg_list_short_length => 20,                # Number of characters to show in list column in task display before truncating (Cosmetic only)
@@ -210,6 +210,8 @@ my $app = sub {
 
     ###############################################
     # SHOW functions
+    # Show the settings page
+    if ($req->path eq "/settings")                           { $res->body(show_settings());     return $res->finalize; }
 
     ###############################################
     # RECEIVE functions
@@ -378,7 +380,7 @@ my $app = sub {
         if ($upload->size > 5 * 1024 * 1024) {
             print STDERR "Uploaded background is too large\n";
             add_alert("Uploaded image was too large. Size limited to 5MB");
-            return [302, [ Location => '/config' ], []];
+            return [302, [ Location => '/settings' ], []];
             }
 
         my $type = $upload->content_type;
@@ -395,7 +397,7 @@ my $app = sub {
         rename $tmp, $global->{'bg_path'} or return [500, [], ["Rename failed: $!"]];
 
         add_alert("Background image updated");
-        return [302, [ Location => '/config' ], []];
+        return [302, [ Location => '/settings' ], []];
         } # End /background_set
 
 
@@ -787,7 +789,7 @@ sub header {
                     $icon_chart
                 </a>
 
-                <a href="/config"
+                <a href="/settings"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Settings" aria-label="Settings">
                     $icon_gear
@@ -1109,7 +1111,7 @@ sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixe
         </span>~;
     } # end build_inline_icon
 
-sub config_show_option { # config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper); Output a line of a setting  for /config forms
+sub config_show_option { # config_show_option($key, $title, $description, $type (check, number, colour), $num_range_lower, $numrange_upper); Output a line of a setting  for /settings   forms
     my ($key, $title, $description, $type, $num_range_lower, $num_range_upper) = @_;
 
     my $retstr= qq~
@@ -2201,6 +2203,129 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
     } # End show_lists()
 
 
+sub show_settings { # show_settings() - Show a form with all the configurable settings and allow them to be updated
+    my $html .= header();
+
+    $html .= start_card("Settings", $icon_gear, 0);
+    $html .= qq~
+        <form method="post" action="/settings_form" style="display:inline;">
+        <input type="hidden" name="save_config" value="true">
+
+        <div class="container">~;
+
+        # Row One
+        $html .= qq~
+            <div class="row">
+
+                <!-- COLUMN ONE ############################################### -->
+                <div class="col">
+                    <div class="card bg-dark text-white" style="width: 18rem;">
+                        <h5 class="card-title">Task List Settings</h5>
+                    </div>
+
+                <div class="card-body">
+                ~;
+
+                # Draw Row 1 - Visual Settings
+                $html .= config_show_option('cfg_include_datatable_search','Display Filter Box','Show the filter box at the top right of the Tasks table','check',0,0);
+                $html .= config_show_option('cfg_include_datatable_buttons','Display export buttons','Display the export buttons at the end of the Tasks list - Copy, CSV, PDF, etc','check',0,0);
+                $html .= config_show_option('cfg_show_dates','Show Dates','Include the Date when a Task was added or completed in the Task List','check',0,0);
+                $html .= config_show_option('cfg_show_lists','Show Lists','Include the List name a task belongs to in the Task List','check',0,0);
+
+                $html .= config_show_option('cfg_task_pagination_length','Number of Tasks to show on each page','How many tasks to show on each page before paginating. Range 3-1000','number',3,1000);
+                $html .= config_show_option('cfg_description_short_length','Max length of popup Task descriptions','Maximum characters to display of the popup Task description in the Task list before truncating it. Range 3-1000','number',3,1000);
+                $html .= config_show_option('cfg_list_short_length','Max length of List name in Tasks list','Maximum characters to display of the List title in the rightmost column before truncating it in the Tasks list. Range 1-100','number',1,100);
+
+        $html .= qq~
+            </div>
+        </div>
+        ~;
+
+        # Row Two
+        $html .= qq~
+            <div class="col">
+                <div class="card bg-dark text-white" style="width: 18rem;">
+                    <h5 class="card-title">Other Settings</h5>
+                </div>
+
+            <div class="card-body">
+            ~;
+
+            $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
+            $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
+            $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
+            $html .= config_show_option('cfg_header_colour','Default Highlight Colour','Select default colour for panel header backgrounds and highlights','colour',0,0);
+            $html .= config_show_option('cfg_background_image','Enable background image','If checked, an JPG can be uploaded through this form below and will be used as a background','check',0,0);
+
+        $html .= qq~
+
+        <br/>
+        <div class="text-end">
+            <button class="btn btn-primary">Save Settings</button>
+        </div>
+
+        </div>
+
+        ~;
+
+        # End the main form
+        $html .= qq~
+                    </div>
+                </div>
+            </div>
+        </form>
+        ~;
+
+        $html .= end_card(0);
+
+        $html .= start_card('Background Image Upload', $icon_image, 0);
+
+        # Start a second form for the background image upload
+        $html .= qq~
+        <form method="post" action="/background_set" enctype="multipart/form-data">
+            <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
+                <label for="background" class="form-label mb-0 flex-grow-1"
+                    data-bs-toggle="tooltip" data-bs-placement="auto"
+                    title="If enabled above, Taskpony can show a background image on the page">
+                    Change the background image
+                </label>
+
+                <div class="d-flex align-items-center gap-2">
+                    <input
+                        class="form-control"
+                        style="width: 200px;"
+                        type="file"
+                        id="background"
+                        name="background"
+                        accept="image/jpeg"
+                        required>
+                    <button type="submit" class="btn btn-success text-nowrap">
+                        Go
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-text mt-1">
+                Upload a JPG to replace the current background image.
+            </div>
+        </form>
+        ~;
+
+    $html .= end_card(0);
+    $html .= footer();
+    $res->body($html);
+    return $res->finalize;
+    } # End show_settings()
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2981,6 +3106,37 @@ sub receive_form_task_add { # Receive Add Task form. No direct output
     $stats->{'tasks_added_today'} += 1;
     add_alert("Task '$title' added.  That's $stats->{'tasks_added_today'} new tasks today!");
     } # End /receive_form_task_add
+
+sub receive_settings { # Receive Settings form. No direct output
+    my ($req) = @_;
+
+    # Loop through config keys and try to get them from param
+    for my $key (keys %$config) {
+        my $new_val;
+        $new_val = $req->param($key);
+
+        if ($new_val) {
+            debug("Config value returned: ($key) = ($new_val) [$config->{$key}]");
+            } else { # No parameter passed for key, store existing
+            debug("No parameter passed for ($key), using existing [$config->{$key}]");
+            # Special handling for checkboxes which will return void if not set
+            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
+                $new_val = 'off';
+                debug("Belay that, this is a checkbox, set it to off");
+                } else {
+                $new_val = $config->{$key}; # No value supplied, use existing
+                }
+            }
+
+        # Set current local config value
+        $config->{$key} = $new_val;
+
+        } # End keys lookup
+
+    # Save config to db
+    save_config();
+    add_alert("Configuration saved");
+    }
 
 # sub receive_form_list { # Receive Add or Edit List form. No direct output  (action param = add|edit)
 #     my ($req) = @_;
