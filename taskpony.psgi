@@ -220,7 +220,7 @@ my $app = sub {
     # Show /lists page with all lists and management options
     if ($req->path eq "/lists")                              { $res->body(show_lists());                return $res->finalize; }
     # Main landing page, the current task list
-    if ($req->path eq "/" )                                  { $res->body(show_tasks());            return $res->finalize; }
+    if ($req->path eq "/" )                                  { $res->body(show_maintasks());            return $res->finalize; }
 
 
     ###############################################
@@ -2259,7 +2259,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
     return $html;
     } # End show_settings()
 
-sub show_tasks { # show_tasks() - Show the main list of tasks, either active or completed, for a given list or all lists
+sub show_maintasks { # show_maintasks() - Show the main list of tasks, either active or completed, for a given list or all lists
     my $html = header();
 
     # Set default titlebar to be the quick add form for the selected list
