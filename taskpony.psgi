@@ -1426,7 +1426,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
         if ($page->{'list_id'} != 1) {  # Not "All lists", so show link to add task to this list
             $html .= qq~
-            <a href="/editlist?id=$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/list_edit/$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
                 $smallicon_edit
@@ -1699,7 +1699,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <td>
                         <strong>
-                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit List Details"><a class="text-white text-decoration-none" href="/editlist?id=$list->{'id'}">
+                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit List Details"><a class="text-white text-decoration-none" href="/list_edit/$list->{'id'}">
                             $title
                         </a>
                         </span>
