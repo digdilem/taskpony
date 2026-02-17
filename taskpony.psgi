@@ -228,7 +228,7 @@ my $app = sub {
     # Show /lists page with all lists and management options
     if ($req->path eq "/lists")                              { $res->body(show_lists());       return $res->finalize; }
     # Receieve settings form submission
-    if ($req->path eq "/settings_form")                      { receive_form_settings($req);    $res->redirect('/settings'); return $res->finalize; }
+    if ($req->path eq "/settings_form")                      { receive_settings($req);    $res->redirect('/settings'); return $res->finalize; }
 
     # Receive Lists form
 #    if ($req->path eq "/list_form")                          { receive_form_list($req);        $res->redirect('/lists'); return $res->finalize; }
