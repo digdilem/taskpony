@@ -650,7 +650,7 @@ sub header {
                 <a href="/stats"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Statistics" >
-                    $icon_chart
+                    $icons->{'chart'}
                 </a>
 
                 <a href="/settings"
@@ -1474,7 +1474,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
 sub show_stats { # show_stats() - Show various stats about the tasks and lists in a table format
     my $html = header();
-    $html .= start_card('Statistics', $icon_chart, 0);
+    $html .= start_card('Statistics', $icons->{'chart'}, 0);
 
     $html .= qq~
         <div class="table-responsive">
