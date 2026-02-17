@@ -210,7 +210,18 @@ my $app = sub {
     ###############################################
     # !SHOW functions
     # Show the settings page
-    if ($req->path eq "/settings")                           { $res->body(show_settings());     return $res->finalize; }
+    if ($req->path eq "/settings")                           { $res->body(show_settings());             return $res->finalize; }
+    # Show a page with all lists and tasks
+    if ($req->path eq '/show_tasks_all')                     { $res->body(show_tasks_all());            return $res->finalize; }
+    # Show a page with all recurring tasks
+    if ($req->path eq '/show-recurring')                     { $res->body(show_tasks_recurring());      return $res->finalize; }
+    # Stats page - show calculated statistics
+    if ($req->path eq "/stats")                              { $res->body(show_stats());                return $res->finalize; }
+    # Show /lists page with all lists and management options
+    if ($req->path eq "/lists")                              { $res->body(show_lists());                return $res->finalize; }
+    # Main landing page, the current task list
+    if ($req->path eq "/" )                                  { $res->body(show_tasks());            return $res->finalize; }
+
 
     ###############################################
     # !RECEIVE functions
@@ -218,14 +229,6 @@ my $app = sub {
     if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
     # Receive add task form. No output, redirect to root
     if ($req->path eq "/task_form_add")                      { receive_form_task_add($req);  $res->redirect('/');  return $res->finalize; }
-    # Show a page with all lists and tasks
-    if ($req->path eq '/show_tasks_all')                     { $res->body(show_tasks_all());                        return $res->finalize; }
-    # Show a page with all recurring tasks
-    if ($req->path eq '/show-recurring')                     { $res->body(show_tasks_recurring());                  return $res->finalize; }
-    # Stats page - show calculated statistics
-    if ($req->path eq "/stats")                              { $res->body(show_stats());       return $res->finalize; }
-    # Show /lists page with all lists and management options
-    if ($req->path eq "/lists")                              { $res->body(show_lists());       return $res->finalize; }
     # Receieve settings form submission
     if ($req->path eq "/settings_form")                      { receive_settings($req);    $res->redirect('/settings'); return $res->finalize; }
     # Receive background image upload form submission
@@ -391,43 +394,6 @@ my $app = sub {
     ###############################################
     # End named paths
 
-    # Set default titlebar to be the quick add form for the selected list
-    my $titlebar = qq~</h2>
-                        <form method="post" action="/task_form_add" class="d-flex align-items-center gap-2 m-0">
-                            <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$page->{'list_name'}' " />
-                            <button class="btn btn-primary" type="submit">Add</button>
-                        </form>
-                        <h2>
-                    ~;
-
-    # If showing all lists, change titlebar to show what is being displayed instead of the form
-    if ($page->{'list_id'} == 1) {
-        if ($page->{'show_completed'} == 1) {
-            $titlebar = "Showing completed tasks from all lists";
-            } else {
-            $titlebar = "Showing active tasks from all lists";
-            }
-        } # End if ($page->{'list_id'} == 1)
-
-    $html .= start_card($titlebar,'',1);
-
-    ####################################
-    # Show main list of tasks
-
-    # Show completed tasks if ?sc=1
-    if ($page->{'show_completed'} == 1) {
-        $html .= show_tasks(2,$page->{'list_id'},0);
-        } else { # Else show active tasks
-        $html .= show_tasks(1,$page->{'list_id'},0);
-        }
-
-    # End list of tasks, continue with box
-    #####################################
-
-    $html .= end_card(1);
-    $html .= footer();
-    $res->body($html);
-    return $res->finalize;
     };   # End main loop, pages and paths handling
 
 builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.
@@ -2293,7 +2259,46 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
     return $html;
     } # End show_settings()
 
+sub show_tasks { # show_tasks() - Show the main list of tasks, either active or completed, for a given list or all lists
+    my $html = header();
 
+    # Set default titlebar to be the quick add form for the selected list
+    my $titlebar = qq~</h2>
+                        <form method="post" action="/task_form_add" class="d-flex align-items-center gap-2 m-0">
+                            <input name="Title" id="tasktitle" autofocus class="form-control" required maxlength="200" placeholder="Add a new task to '$page->{'list_name'}' " />
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </form>
+                        <h2>
+                    ~;
+
+    # If showing all lists, change titlebar to show what is being displayed instead of the form
+    if ($page->{'list_id'} == 1) {
+        if ($page->{'show_completed'} == 1) {
+            $titlebar = "Showing completed tasks from all lists";
+            } else {
+            $titlebar = "Showing active tasks from all lists";
+            }
+        }
+
+    $html .= start_card($titlebar,'',1);
+
+    ####################################
+    # Show main list of tasks
+
+    # Show completed tasks if ?sc=1
+    if ($page->{'show_completed'} == 1) {
+        $html .= show_tasks(2,$page->{'list_id'},0);
+        } else { # Else show active tasks
+        $html .= show_tasks(1,$page->{'list_id'},0);
+        }
+
+    # End list of tasks, continue with box
+    #####################################
+
+    $html .= end_card(1);
+    $html .= footer();
+    return $html;
+    } # End show_tasks()
 
 
 
