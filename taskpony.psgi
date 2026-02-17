@@ -1748,17 +1748,11 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                             $icon_rotate_left
                         </a>
                         <!-- Set List as Inactive -->
-                        <button type="button"
-                        class="btn btn-outline-danger"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteListModal"
-                        data-bs-placement="auto"
-                        title="Set List as Inactive"
-                        data-list-id="$list->{'id'}"
-                        data-list-title="$title"
-                        data-active-tasks="$active_count">
+                        <a href="/list_make_inactive/$list->{'id'}" class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                        data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Inactive. This will hide the list and its tasks from the main view, but they can be restored later if needed."
+                        onclick="return confirm('Are you sure you want to make this list inactive?');">
                             $icon_trash
-                        </button>
+                        </a>
                         </div>
                     </td>
                     <!-- End Actions column -->
@@ -1932,8 +1926,6 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         $move_lists_json .= ',' if $i < $#move_lists;
         }
     $move_lists_json .= ']';
-
-
 
     $html .= footer();
     return $html;

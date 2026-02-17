@@ -4,6 +4,9 @@
 
 # 0.6
 
+## Breaking Change
+- Many URLs have changed to a new form. This may break bookmarks you have for specific areas in the task. An entirely new and consistent url scheme has been adopted.
+
 ## Features
 
 - New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks. Button under Lists -> List Actions
