@@ -237,7 +237,7 @@ my $app = sub {
     if ($req->path eq '/settings_background_form')           { receive_settings_background($req); $res->redirect('/settings'); return $res->finalize; }
 
     # Receive Lists form
-#    if ($req->path eq "/list_form")                          { receive_form_list($req);        $res->redirect('/lists'); return $res->finalize; }
+    if ($req->path =~ m{^/list_form/(\d+)$})                 { receive_form_list($req, $1);        $res->redirect('/lists'); return $res->finalize; }
 
     ###############################################
     # !MISC functions
@@ -3121,7 +3121,7 @@ sub receive_settings_background { # Receive Settings form for background image u
     } # End receive_settings_background()
 
 sub receive_form_list { # Receive New/edited list form
-    my $edit_id = shift;
+    my ($req,$edit_id) = @_;
     debug("receive_form_list: Received form submission for list ID ($edit_id)");
 
     if ($edit_id && $edit_id =~ /^\d+$/ && $edit_id > 0) { # We've received an edited form with an id
