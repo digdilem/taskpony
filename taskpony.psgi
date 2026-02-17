@@ -2273,7 +2273,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
                 ~;
                 } else {
         $html .= qq~
-                <p class="text-muted">This will be a new list which will be created when you click "Save List"</p>
+                <p class="text-$config->{'cfg_header_colour'}">This will be a new list which will be created when you click "Save List"</p>
                 ~;
                 }
         $html .= qq~
