@@ -303,6 +303,7 @@ my $app = sub {
               <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
                 <span>$icon_list</span>
                 <span>Active Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Currently Active Lists which appear in the List Pulldown above">$icon_info</a></span>
+                <span> NEW LIST </span>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
