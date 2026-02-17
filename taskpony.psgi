@@ -173,8 +173,7 @@ my $app = sub {
     if ($req->path eq "/favicon.ico") {  $res->redirect('./static/favicon.ico'); return $res->finalize; }
 
     ###############################################
-    # ACTION functions
-    #     TASK ACTIONS
+    # !ACTION functions
     # Action /task_complete/nn - Mark task nn as completed and redirect to home page
     if ($req->path =~ m{^/task_complete/(\d+)$})        { action_task_complete($1);     $res->redirect('/'); return $res->finalize; }
     # Action /task_delete/nn - Permanently delete task nn and redirect to home page
@@ -187,7 +186,7 @@ my $app = sub {
     if ($req->path eq "/task_add")                      { $res->body(action_task_add());       return $res->finalize; }
 
 
-    #     LIST ACTIONS
+    # !LIST ACTIONS
     # Set LIST nn as UnDeleted (Active)
     if ($req->path =~ m{^/list_undelete/(\d+)$})        { action_list_undelete($1);     $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete LIST nn and redirect to lists page
@@ -209,12 +208,12 @@ my $app = sub {
 
 
     ###############################################
-    # SHOW functions
+    # !SHOW functions
     # Show the settings page
     if ($req->path eq "/settings")                           { $res->body(show_settings());     return $res->finalize; }
 
     ###############################################
-    # RECEIVE functions
+    # !RECEIVE functions
     # Receive edit task form. No output, redirect to root
     if ($req->path =~ m{^/task_form_edit/(\d+)$})            { receive_form_task_edit($1, $req);   $res->redirect('/');  return $res->finalize; }
     # Receive add task form. No output, redirect to root
@@ -229,12 +228,14 @@ my $app = sub {
     if ($req->path eq "/lists")                              { $res->body(show_lists());       return $res->finalize; }
     # Receieve settings form submission
     if ($req->path eq "/settings_form")                      { receive_settings($req);    $res->redirect('/settings'); return $res->finalize; }
+    # Receive background image upload form submission
+    if ($req->path eq '/settings_background_form')           { receive_settings_background($req); $res->redirect('/settings'); return $res->finalize; }
 
     # Receive Lists form
 #    if ($req->path eq "/list_form")                          { receive_form_list($req);        $res->redirect('/lists'); return $res->finalize; }
 
     ###############################################
-    # MISC functions
+    # !MISC functions
 
     # /api/ping check - suitable for health checks
     if ($req->path eq "/api/ping")     { $res->header('Content-Type' => 'text/plain');  $res->header('Cache-Control' => 'no-cache, no-store');  $res->body('pong');  return $res->finalize;  }
@@ -375,33 +376,6 @@ my $app = sub {
     ###############################################
 
     ###############################################
-    # /background_set  = Receive new background image upload
-    if ($req->method eq 'POST' && $req->path eq '/background_set') {
-
-        my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
-
-        if ($upload->size > 5 * 1024 * 1024) {
-            print STDERR "Uploaded background is too large\n";
-            add_alert("Uploaded image was too large. Size limited to 5MB");
-            return [302, [ Location => '/settings' ], []];
-            }
-
-        my $type = $upload->content_type;
-        my $ext =
-            $type eq 'image/jpeg' ? 'jpg' :
-            return [400, [], ['Unsupported type']];
-
-        my $src = $upload->path or return [500, [], ['Upload has no temp path']];
-
-        my $tmp = "$global->{'bg_path'}.tmp";  # Write out a temporary file as bg pic may be slow to upload
-
-        copy($src, $tmp) or return [500, [], ["Copy failed: $!"]];
-
-        rename $tmp, $global->{'bg_path'} or return [500, [], ["Rename failed: $!"]];
-
-        add_alert("Background image updated");
-        return [302, [ Location => '/settings' ], []];
-        } # End /background_set
 
 
 
@@ -2285,7 +2259,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
         # Start a second form for the background image upload
         $html .= qq~
-        <form method="post" action="/background_set" enctype="multipart/form-data">
+        <form method="post" action="/settings_background_form" enctype="multipart/form-data">
             <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
                 <label for="background" class="form-label mb-0 flex-grow-1"
                     data-bs-toggle="tooltip" data-bs-placement="auto"
@@ -3139,6 +3113,50 @@ sub receive_settings { # Receive Settings form. No direct output
     save_config();
     add_alert("Configuration saved");
     }
+
+sub receive_settings_background { # Receive Settings form for background image upload. No direct output
+    my ($req) = @_;
+    my $upload = $req->upload('background') or return [400, [], ['No file uploaded']];
+
+    if ($upload->size > 5 * 1024 * 1024) {
+        print STDERR "Uploaded background is too large\n";
+        add_alert("Uploaded image was too large. Size limited to 5MB");
+        return [302, [ Location => '/settings' ], []];
+        }
+
+    my $type = $upload->content_type;
+    my $ext =
+        $type eq 'image/jpeg' ? 'jpg' :
+        return [400, [], ['Unsupported type']];
+
+    my $src = $upload->path or return [500, [], ['Upload has no temp path']];
+
+    my $tmp = "$global->{'bg_path'}.tmp";  # Write out a temporary file as bg pic may be slow to upload
+
+    copy($src, $tmp) or return [500, [], ["Copy failed: $!"]];
+
+    rename $tmp, $global->{'bg_path'} or return [500, [], ["Rename failed: $!"]];
+
+    add_alert("Background image updated");
+    return [302, [ Location => '/settings' ], []];
+    } # End receive_settings_background()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # sub receive_form_list { # Receive Add or Edit List form. No direct output  (action param = add|edit)
 #     my ($req) = @_;
