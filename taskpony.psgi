@@ -1626,9 +1626,8 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <div class="tab-pane fade show active" id="active-lists" role="tabpanel" aria-labelledby="active-lists-tab">
         <div class="card bg-dark text-white">
             <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-            <span>$icon_list</span>
-            <span>Active Lists</span>
-            <div class="float-end"><a href="/list_edit/0" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a New List">PLUS $icons->{'plus'}</a></div>
+                <span>$icon_list Active Lists</span>
+                <div class="ms-auto"><a href="/list_edit/0" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a New List">$icons->{'plus'}</a></div>
             </div>
             <div class="card-body">
             <div class="table-responsive">
