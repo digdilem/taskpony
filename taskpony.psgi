@@ -227,6 +227,9 @@ my $app = sub {
     if ($req->path eq "/stats")                              { $res->body(show_stats());       return $res->finalize; }
     # Show /lists page with all lists and management options
     if ($req->path eq "/lists")                              { $res->body(show_lists());       return $res->finalize; }
+    # Receieve settings form submission
+    if ($req->path eq "/settings_form")                      { receive_form_settings($req);    $res->redirect('/settings'); return $res->finalize; }
+
     # Receive Lists form
 #    if ($req->path eq "/list_form")                          { receive_form_list($req);        $res->redirect('/lists'); return $res->finalize; }
 
@@ -2313,8 +2316,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
     $html .= end_card(0);
     $html .= footer();
-    $res->body($html);
-    return $res->finalize;
+    return $html;
     } # End show_settings()
 
 
