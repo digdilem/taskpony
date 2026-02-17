@@ -450,32 +450,7 @@ my $app = sub {
             </div>
           </div>
 
-          <!-- Add New List Tab -->
-          <div class="tab-pane fade" id="add-list" role="tabpanel" aria-labelledby="add-list-tab">
-            <div class="card bg-dark text-white">
-              <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-                <span>$icon_list_add</span>
-                <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a></span>
-              </div>
-              <div class="card-body">
-                <form method="post" action="/list_form" class="row g-3">
-                  <input type="hidden" name="action" value="add" />
-                  <div class="col-12">
-                    <label class="form-label">Title</label>
-                    <input name="Title" class="form-control" required maxlength="255" placeholder="Give your new list a useful name" />
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Description</label>
-                    <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
-                  </div>
-                  <div class="col-12 text-end">
-                    <button class="btn btn-primary" type="submit">Add List</button>
-                    <a class="btn btn-secondary" href="/">Cancel</a>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+
 
           <!-- Inactive Lists Tab -->
           <div class="tab-pane fade" id="inactive-lists" role="tabpanel" aria-labelledby="inactive-lists-tab">
@@ -2382,6 +2357,34 @@ sub show_stats { # show_stats() - Show various stats about the tasks and lists i
     } # End /stats
 
 
+# !! Show add list
+        #   <!-- Add New List Tab -->
+        #   <div class="tab-pane fade" id="add-list" role="tabpanel" aria-labelledby="add-list-tab">
+        #     <div class="card bg-dark text-white">
+        #       <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+        #         <span>$icon_list_add</span>
+        #         <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a></span>
+        #       </div>
+        #       <div class="card-body">
+        #         <form method="post" action="/list_form" class="row g-3">
+        #           <input type="hidden" name="action" value="add" />
+        #           <div class="col-12">
+        #             <label class="form-label">Title</label>
+        #             <input name="Title" class="form-control" required maxlength="255" placeholder="Give your new list a useful name" />
+        #           </div>
+        #           <div class="col-12">
+        #             <label class="form-label">Description</label>
+        #             <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
+        #           </div>
+        #           <div class="col-12 text-end">
+        #             <button class="btn btn-primary" type="submit">Add List</button>
+        #             <a class="btn btn-secondary" href="/">Cancel</a>
+        #           </div>
+        #         </form>
+        #       </div>
+        #     </div>
+        #   </div>
+
 # End SHOW functions
 ###############################################
 
@@ -3225,6 +3228,9 @@ sub receive_form_task_add { # Receive Add Task form. No direct output
 #     #         }
 
 #     } # End receive_form_list_add
+
+
+
 
 
 
