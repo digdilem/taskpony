@@ -2266,7 +2266,17 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
                         <a class="btn btn-secondary" href="/lists">Cancel</a>
                     </div>
                 <hr>
+                ~;
+    if ($edit_listid) {
+        $html .= qq~
                 <p class="text-$config->{'cfg_header_colour'}">This is list id #$list->{'id'} which was created on $list->{'CreatedDate'}</p>
+                ~;
+                } else {
+        $html .= qq~
+                <p class="text-muted">This will be a new list which will be created when you click "Save List"</p>
+                ~;
+                }
+        $html .= qq~
                 </div>
             </form>
         </div>
