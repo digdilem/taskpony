@@ -222,7 +222,7 @@ my $app = sub {
     # Stats page - show calculated statistics
     if ($req->path eq "/stats")                              { $res->body(show_stats());       return $res->finalize; }
     # Receive Lists form
-    #if ($req->path eq "/list_form")                          { receive_form_list($req);        $res->redirect('/lists'); return $res->finalize; }
+#    if ($req->path eq "/list_form")                          { receive_form_list($req);        $res->redirect('/lists'); return $res->finalize; }
 
     ###############################################
     # MISC functions
@@ -3203,27 +3203,27 @@ sub receive_form_task_add { # Receive Add Task form. No direct output
 #             }
 #         }
 
-    # if ($action eq 'delete' && $page->{'list_id'} > 1) { # Legacy delete (orphan) - for backwards compatibility
-    #     # Legacy delete (orphan) - for backwards compatibility
-    #     my $sth = $dbh->prepare(
-    #         'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
-    #         );
+#     # if ($action eq 'delete' && $page->{'list_id'} > 1) { # Legacy delete (orphan) - for backwards compatibility
+#     #     # Legacy delete (orphan) - for backwards compatibility
+#     #     my $sth = $dbh->prepare(
+#     #         'UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+#     #         );
 
-    #     eval { $sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
-    #     add_alert("List deleted.");
-    #     $stats->{'total_lists'} -= 1;
-    #     $stats->{'total_active_lists'} -= 1;
+#     #     eval { $sth->execute($page->{'list_id'}); 1 } or print STDERR "Delete failed: $@";
+#     #     add_alert("List deleted.");
+#     #     $stats->{'total_lists'} -= 1;
+#     #     $stats->{'total_active_lists'} -= 1;
 
-    #     # Check if deleted list was the active list, if so switch to default
-    #     my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
-    #     if ($current_active == $page->{'list_id'}) {
-    #         my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
-    #         if ($default_list) {
-    #             $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
-    #             }
-    #         }
+#     #     # Check if deleted list was the active list, if so switch to default
+#     #     my $current_active = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+#     #     if ($current_active == $page->{'list_id'}) {
+#     #         my $default_list = single_db_value("SELECT `id` FROM ListsTb WHERE IsDefault = 1 AND DeletedDate IS NULL LIMIT 1");
+#     #         if ($default_list) {
+#     #             $dbh->do("INSERT INTO ConfigTb (`key`,`value`) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?", undef, 'active_list', $default_list, $default_list);
+#     #             }
+#     #         }
 
-    } # End receive_form_list_add
+#     } # End receive_form_list_add
 
 
 
