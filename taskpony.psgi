@@ -54,7 +54,7 @@ our $global = {
     app_releases_page => 'https://github.com/digdilem/taskpony',                                # Where new versions are
     new_version_available => 0,                 # Set to 1 if a new version is available on github
     taskpony_icon => 'taskpony-logo.png',       # Default icon file name in ./static dir
-    tooltip_delay => 'show: 250, hide: 10',     # Global tooltip delay for all tooltips in the app
+    tooltip_delay => 'show: 250, hide: 1',     # Global tooltip delay for all tooltips in the app
     debug => 1,                                 # Set to 1 to enable debug messages to STDERR
     running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not
     db_path => "$Dir/db/taskpony.db",           # Path to Sqlite database file that's valid if native or in docker. This will be updated to the correct path on startup.
@@ -98,29 +98,29 @@ my $stats = {
 my $icons = {
     chart => build_tabler_icon('Statistics'),  # Chart icon
     plus => build_tabler_icon('Plus'),  # Plus icon
-
+    edit = build_tabler_icon('Edit'),    # Edit / pencil icon
+    gear = build_tabler_icon('Settings'),  # Settings gear cog
+    grave = build_tabler_icon('Grave'),  # Grave icon
+    image = build_tabler_icon('Image'),  # Image / picture icon
+    info = build_tabler_icon('Info'),  # Info icon
+    list = build_tabler_icon('List'),      # List icon
+    list_add = build_tabler_icon('ListAdd'),  # List with plus icon
+    repeat = build_tabler_icon('Repeat'),  # Repeat / recurring icon
+    rotate_left = build_tabler_icon('ArrowLeft'),  # Rotate left icon
+    rotate_right = build_tabler_icon('ArrowRight'),  # Rotate right icon
+    sleep = build_tabler_icon('Zzz'),  # Sleep / Zzz icon
+    star_off = build_tabler_icon('StarOff'),  # Star outline icon
+    star_on = build_tabler_icon('StarOn'),    # Star filled icon
+    trash = build_tabler_icon('Trash'),  # Trash can icon
+    xcircle = build_tabler_icon('XCircle'),  # X in circle icon
+#    listletters = build_tabler_icon('ListLetters'),  # List with letters icon
     };
-my $icon_chart = build_tabler_icon('Statistics');  # Chart icon
-my $icon_edit = build_tabler_icon('Edit');    # Edit / pencil icon
-my $icon_gear = build_tabler_icon('Settings');  # Settings gear cog
-my $icon_grave = build_tabler_icon('Grave');  # Grave icon
-my $icon_image = build_tabler_icon('Image');  # Image / picture icon
-my $icon_info = build_tabler_icon('Info');  # Info icon
-my $icon_list = build_tabler_icon('List');      # List icon
-my $icon_list_add = build_tabler_icon('ListAdd');  # List with plus icon
-my $icon_repeat = build_tabler_icon('Repeat');  # Repeat / recurring icon
-my $icon_rotate_left = build_tabler_icon('ArrowLeft');  # Rotate left icon
-my $icon_rotate_right = build_tabler_icon('ArrowRight');  # Rotate right icon
-my $icon_sleep = build_tabler_icon('Zzz');  # Sleep / Zzz icon
-my $icon_star_off = build_tabler_icon('StarOff');  # Star outline icon
-my $icon_star_on = build_tabler_icon('StarOn');    # Star filled icon
-my $icon_trash = build_tabler_icon('Trash');  # Trash can icon
-my $icon_xcircle = build_tabler_icon('XCircle');  # X in circle icon
-my $icon_listletters = build_tabler_icon('ListLetters');  # List with letters icon
+
 
 # These small icons need to be inline, so we can style them to match the current highlght colour
 my $smallicon_comment = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
-my $smallicon_link = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');my $smallicon_link_slash = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
+my $smallicon_link = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');
+my $smallicon_link_slash = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
 my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />');
 my $smallicon_repeat = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
 my $smallicon_edit = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
@@ -623,7 +623,7 @@ sub header {
                 <a href="/?sc=1"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_completed_tasks completed tasks in '$page->{'list_name'}'" >
-                    $icon_rotate_left
+                    $icons->{'rotate_left'}
                 </a>
                 ~;
                 } else { # We're showing completed tasks, so show button for the active list
@@ -635,7 +635,7 @@ sub header {
                 <a href="/"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_active_tasks active tasks in '$page->{'list_name'}'" >
-                    $icon_rotate_right
+                    $icons->{'rotate_right'}
                 </a>
                 ~;
                 } # End active/completed button
@@ -644,7 +644,7 @@ sub header {
                 <a href="/lists"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Manage Lists" >
-                    $icon_list
+                    $icons->{'list'}
                 </a>
 
                 <a href="/stats"
@@ -656,7 +656,7 @@ sub header {
                 <a href="/settings"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center justify-content-center btn-icon"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Settings" aria-label="Settings">
-                    $icon_gear
+                    $icons->{'gear'}
                 </a>
 
             </div>
@@ -1289,7 +1289,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                      ~;
 
             $checkbox .= qq~
-                <a href="/task_activate/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Active">$icon_rotate_left</a>
+                <a href="/task_activate/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Active">$icons->{'rotate_left'}</a>
                 ~;
             }
 
@@ -1594,7 +1594,7 @@ sub show_stats { # show_stats() - Show various stats about the tasks and lists i
 
 sub show_tasks_recurring { # show_tasks_recurring() - Show all recurring tasks in a single table, regardless of list or status, with an indicator of their status and interval
     my $html = header();
-    $html .= start_card('Recurring Tasks', $icon_repeat, 1);
+    $html .= start_card('Recurring Tasks', $icons->{'repeat'}, 1);
     $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
     $html .= end_card(1);
     $html .= footer();
@@ -1628,7 +1628,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <div class="tab-pane fade show active" id="active-lists" role="tabpanel" aria-labelledby="active-lists-tab">
         <div class="card bg-dark text-white">
             <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-                <span>$icon_list Active Lists</span>
+                <span>$icons->{'list'} Active Lists</span>
                 <div class="ms-auto"><a href="/list_edit/0" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a New List">$icons->{'plus'}</a></div>
             </div>
             <div class="card-body">
@@ -1729,9 +1729,9 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this as the Default List" >
                             ~;
                             if ($list->{'IsDefault'} == 1) {
-                                $html .= $icon_star_on;
+                                $html .= $icons->{'star_on'};
                                 } else {
-                                $html .= $icon_star_off;
+                                $html .= $icons->{'star_off'};
                                 }
                             $html .= qq~
                         </a>
@@ -1740,20 +1740,20 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                         onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
-                            $icon_rotate_right
+                            $icons->{'rotate_right'}
                         </a>
                         <!-- Set all tasks Completed Button -->
                         <a href="/list_set_alltasks_completed/$list->{'id'}"
                         class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                         onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
-                            $icon_rotate_left
+                            $icons->{'rotate_left'}
                         </a>
                         <!-- Set List as Inactive -->
                         <a href="/list_make_inactive/$list->{'id'}" class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Inactive. This will hide the list and its tasks from the main view, but they can be restored later if needed. Tasks will still appear in the 'All Tasks' view"
                         onclick="return confirm('Are you sure you want to make this list inactive?');">
-                            $icon_trash
+                            $icons->{'trash'}
                         </a>
                         </div>
                     </td>
@@ -1776,8 +1776,8 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <div class="tab-pane fade" id="inactive-lists" role="tabpanel" aria-labelledby="inactive-lists-tab">
         <div class="card bg-dark text-white">
             <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-            <span>$icon_sleep</span>
-            <span>Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icon_info</a></span>
+            <span>$icons->{'sleep'}</span>
+            <span>Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icons->{'info'}</a></span>
             </div>
             <div class="card-body">
             <div class="table-responsive">
@@ -1824,21 +1824,21 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <a href="/list_undelete/$a->{'id'}"
                         class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
-                            $icon_rotate_right
+                            $icons->{'rotate_right'}
                         </a>
                         <!-- Delete all Tasks -->
                         <a href="/list_harddelete_alltasks/$a->{'id'}"
                         class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
                         onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
-                            $icon_xcircle
+                            $icons->{'xcircle'}
                         </a>
                         <!-- Permanently delete this List -->
                         <a href="/list_hard_delete/$a->{'id'}"
                         class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                         onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
-                            $icon_grave
+                            $icons->{'grave'}
                         </a>
                         </div>
                     </td>
@@ -1858,18 +1858,18 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <div class="tab-pane fade" id="list-actions" role="tabpanel" aria-labelledby="list-actions-tab">
         <div class="card bg-dark text-white">
             <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-            <span>$icon_list</span>
+            <span>$icons->{'list'}</span>
             <span>List Actions</span>
             </div>
             <div class="card-body">
             <p>
                 <a href="/show_tasks_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
-                $icon_listletters Show All Tasks
+                $icons->{'list'}letters Show All Tasks
                 </a>
             </p>
             <p>
                 <a href="/show-recurring" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all recurring tasks from all lists on a single, sorted page">
-                $icon_repeat Show Recurring Tasks
+                $icons->{'repeat'} Show Recurring Tasks
                 </a>
             </p>
             </div>
@@ -1937,7 +1937,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
 sub show_settings { # show_settings() - Show a form with all the configurable settings and allow them to be updated
     my $html .= header();
 
-    $html .= start_card("Settings", $icon_gear, 0);
+    $html .= start_card("Settings", $icons->{'gear'}, 0);
     $html .= qq~
         <form method="post" action="/settings_form" style="display:inline;">
         <input type="hidden" name="save_config" value="true">
@@ -2009,7 +2009,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
         $html .= end_card(0);
 
-        $html .= start_card('Background Image Upload', $icon_image, 0);
+        $html .= start_card('Background Image Upload', $icons->{'image'}, 0);
 
         # Start a second form for the background image upload
         $html .= qq~
@@ -2106,7 +2106,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
         }
 
     my $html = header();
-    $html .= start_card($card_title, $icon_list, 0);
+    $html .= start_card($card_title, $icons->{'list'}, 0);
     $html .= qq~
             <form method="post" action="/list_form/$edit_listid" class="row g-3">
                 <div class="col-12">
@@ -2169,8 +2169,8 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
         #   <div class="tab-pane fade" id="add-list" role="tabpanel" aria-labelledby="add-list-tab">
         #     <div class="card bg-dark text-white">
         #       <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-        #         <span>$icon_list_add</span>
-        #         <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icon_info</a></span>
+        #         <span>$icons->{'list'}_add</span>
+        #         <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icons->{'info'}</a></span>
         #       </div>
         #       <div class="card-body">
         #         <form method="post" action="/list_form" class="row g-3">
@@ -2623,7 +2623,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
             my $task_status = 'Completed';
             if ($task->{'Status'} == 1) { $task_status = 'Active'; }
 
-            $html .= start_card("Edit Task #$task_id - $task_status", $icon_edit, 0);
+            $html .= start_card("Edit Task #$task_id - $task_status", $icons->{'edit'}, 0);
 
             $html .= qq~
                         <form method="post" action="/task_form_edit/$task_id" class="row g-3">
