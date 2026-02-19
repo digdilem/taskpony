@@ -2270,15 +2270,20 @@ sub verify_valid_list { # verify_valid_list() - checks whether a list id is vali
             }
         }
 
-    # Check that the related list values are viable
-    if ( (!$page->{'list_name'} ) || (!$page->{'list_colour'} ) ) { $changed_list_id = 1; }
-
-    if ($changed_list_id == 1) { # Something has changed, reload related values
-        debug("INFO: Related list values (name or colour) are not valid. List changed or $global->{'app_title'} restarted. Restoring values for list id $page->{'list_id'} from database.");
+    # Always ensure the related list values are populated (even if list_id didn't change)
+    # Only call set_default_listid if the list_id actually changed
+    if ($changed_list_id == 1) { # List ID changed, reload related values and save to config
+        debug("INFO: List ID changed to $page->{'list_id'}. Restoring values from database.");
         $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
         $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
         # Save the new active list id to config for next time
         set_default_listid($page->{'list_id'});
+        } else { # List ID didn't change, but ensure related values are populated if missing
+        if ( (!$page->{'list_name'} ) || (!$page->{'list_colour'} ) ) {
+            debug("INFO: Related list values are missing but list ID didn't change. Populating from database without saving.");
+            $page->{'list_name'} = single_db_value("SELECT `Title` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || 'Unknown List';
+            $page->{'list_colour'} = single_db_value("SELECT `Colour` FROM ListsTb WHERE `id` = ?", $page->{'list_id'}) || '0';
+            }
         }
 
     } # End verify_valid_list()
