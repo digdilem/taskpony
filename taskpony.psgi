@@ -156,6 +156,7 @@ my $app = sub {
     my $list_switched = 0;
     if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) {
         $page->{'list_id'} = $req->param('lid');  # Set active list to supplied (only if numeric)
+        debug("List ID supplied in URL, switching to list id $page->{'list_id'} and calling set_default_listid()");
         set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
         $list_switched = 1;
         }
