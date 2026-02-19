@@ -886,6 +886,7 @@ sub single_db_value {
     # single_db_value($sql, @params)
     # Execute a SQL query that returns a single value
     my ($sql, @params) = @_;
+    debug("Executing single_db_value with SQL: $sql and params: " . join(', ', @params));
     my $sth = $dbh->prepare($sql);
     $sth->execute(@params);
     my ($value) = $sth->fetchrow_array();
