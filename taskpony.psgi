@@ -152,7 +152,6 @@ my $app = sub {
     if (not $dbh->ping) { connect_db(); }      # Reconnect to DB if needed
 
     # Global modifiers and preflight checks we should ensure are done on each page load
-    if ($page->{'list_id'} == 0) { $page->{'list_id'} = return_default_listid(); }   # if this is 0, Taskpony has probably just restarted so load the default list
     my $list_switched = 0;
     if ($req->param('lid') && $req->param('lid') =~ /^\d+$/) {
         $page->{'list_id'} = $req->param('lid');  # Set active list to supplied (only if numeric)
@@ -160,6 +159,9 @@ my $app = sub {
         set_default_listid($page->{'list_id'});  # Save the selection to ConfigTb for next time
         $list_switched = 1;
         }
+    if ($page->{'list_id'} == 0)        { $page->{'list_id'} = return_default_listid(); }         # if this is 0, Taskpony has probably just restarted so load the default list
+    if ($page->{'default_listid'} == 0) { $page->{'default_listid'} = return_default_listid(); }
+
     verify_valid_list($list_switched);      # Verify active list details are valid, force reload if switched
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
@@ -595,8 +597,7 @@ sub header {
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
                 <a href="/?lid=$page->{'default_listid'}" class="d-flex align-items-center gap-2 text-white text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto" title="Switch to Default List"
-                >
+                data-bs-toggle="tooltip" data-bs-placement="auto" title="Switch to Default List" >
                     <img src="/static/$global->{'taskpony_icon'}" width="82" height="82" alt="logo">
                 </a>
                 <a href="/" class="d-flex align-items-center gap-2 text-white text-decoration-none"

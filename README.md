@@ -244,7 +244,6 @@ If the upgrade includes any database schema changes, Taskpony should automatical
 
 Stop the existing container and repeat the installation instructions to pull the new image.
 
-
 # Documentation
 
 Follow the [install guides](#installation) above, and you should be able to access Taskpony on http port 5000 with your web browser.
@@ -391,6 +390,8 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
 
  ## Support
+
+It would help others learn about Taskpony if you << href="https://github.com/digdilem/taskpony">gave it a Github Star</a> and mentioned it to your friends!
 
 In terms of helping the project, then filing Bug Reports and Suggestions for improvement via the [Issues](http://gitea.digdilem.org/flash/taskpony/issues) system is very helpful.
 
