@@ -213,8 +213,8 @@ my $app = sub {
     if ($req->path =~ m{^/list_set_alltasks_completed/(\d+)$})      { action_list_set_alltasks_completed($1);   $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete all tasks in LIST nn
     if ($req->path =~ m{^/list_harddelete_alltasks/(\d+)$})         { action_list_harddelete_alltasks($1);      $res->redirect('/lists'); return $res->finalize; }
-    # Change a list from active to inactive
-    if ($req->path =~ m{^/list_make_inactive/(\d+)$})     { action_list_make_inactive($1);  $res->redirect('/lists'); return $res->finalize; }
+    # Change a list from active to archived
+    if ($req->path =~ m{^/list_archive/(\d+)$})     { action_list_archive($1);  $res->redirect('/lists'); return $res->finalize; }
 
 
 
@@ -1629,7 +1629,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                 </li>
 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="inactive-lists-tab" data-bs-toggle="tab" data-bs-target="#inactive-lists" type="button" role="tab" aria-controls="inactive-lists" aria-selected="false">Inactive Lists</button>
+                    <button class="nav-link" id="archived-lists-tab" data-bs-toggle="tab" data-bs-target="#archived-lists" type="button" role="tab" aria-controls="archived-lists" aria-selected="false">Archived Lists</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="list-actions-tab" data-bs-toggle="tab" data-bs-target="#list-actions" type="button" role="tab" aria-controls="list-actions" aria-selected="false">List Actions</button>
@@ -1763,10 +1763,10 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
                                 $icons->{'rotate_left'}
                             </a>
-                            <!-- Set List as Inactive -->
-                            <a href="/list_make_inactive/$list->{'id'}" class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
-                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Inactive. This will hide the list and its tasks from the main view, but they can be restored later if needed. Tasks will still appear in the 'All Tasks' view"
-                            onclick="return confirm('Are you sure you want to make this list inactive?');">
+                            <!-- Set List as Archived -->
+                            <a href="/list_archive/$list->{'id'}" class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                            data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Archived. This will hide the list and its tasks from the main view, but they can be restored later if needed. Tasks will still appear in the 'All Tasks' view"
+                            onclick="return confirm('Are you sure you want to archive this list?');">
                                 $icons->{'sleep'}
                             </a>
                         </div>
@@ -1786,12 +1786,12 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
 
 
 
-        <!-- Inactive Lists Tab -->
-        <div class="tab-pane fade" id="inactive-lists" role="tabpanel" aria-labelledby="inactive-lists-tab">
+        <!-- Archived Lists Tab -->
+        <div class="tab-pane fade" id="archived-lists" role="tabpanel" aria-labelledby="archived-lists-tab">
         <div class="card bg-dark text-white">
             <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
             <span>$icons->{'sleep'}</span>
-            <span>Inactive Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Inactive. You can choose to restore these lists or permanently delete them">$icons->{'info'}</a></span>
+            <span>Archived Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Archived. You can choose to restore these lists or permanently delete them">$icons->{'info'}</a></span>
             </div>
             <div class="card-body">
             <div class="table-responsive">
@@ -1859,7 +1859,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <!-- End Actions column -->
                     </tr>
         ~;
-        } # End inactive lists loop
+        } # End archived lists loop
     $html .= qq~
                 </tbody>
                 </table>
@@ -2152,7 +2152,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
                     <div class="text-end">
                         <button class="btn btn-primary" type="submit">Save List</button>
                         <a class="btn btn-secondary" href="/lists">Cancel</a>
-                        <a class="btn btn-danger" href="/list_make_delete/$list->{'id'}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Make this List inactive" onclick="return confirm('Are you sure you want to make this list inactive?');">Make Inactive List</a>
+                        <a class="btn btn-danger" href="/list_archive/$list->{'id'}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Archive this List" onclick="return confirm('Are you sure you want to archive this list?');">Archive List</a>
                     </div>
                 <hr>
                 <p class="text-$config->{'cfg_header_colour'}">$gutter_text</p>
@@ -2848,21 +2848,21 @@ sub action_list_harddelete_alltasks { # Permanently delete all tasks in List NN
         }
     } # End action_list_harddelete_alltasks
 
-sub action_list_make_inactive { # Make List nn inactive by setting DeletedDate to current timestamp
+sub action_list_archive { # Make List nn archived by setting DeletedDate to current timestamp
     my ($list_id) = @_;
     if ($list_id && $list_id =~ /^\d+$/) {
         if ($list_id > 1) { # Don't allow deleting "All Tasks Lists"
-            print STDERR "ACTION: Making list $list_id inactive\n";
+            print STDERR "ACTION: Archiving list $list_id\n";
             my $sth = $dbh->prepare('UPDATE ListsTb SET DeletedDate = CURRENT_TIMESTAMP WHERE id = ? LIMIT 1');
-            eval { $sth->execute($list_id); 1 } or print STDERR "WARN: List make inactive failed: $@";
-            add_alert("List #$list_id made inactive.");
+            eval { $sth->execute($list_id); 1 } or print STDERR "WARN: List archive failed: $@";
+            add_alert("List #$list_id archived.");
             } else {
-            print STDERR "WARN: Attempt to make list with invalid ID ($list_id) inactive passed to action_list_make_inactive\n";
+            print STDERR "WARN: Attempt to archive list with invalid ID ($list_id) passed to action_list_archive\n";
             }
         } else {
-        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_make_inactive\n";
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_archive\n";
         }
-    } # End action_list_make_inactive
+    } # End action_list_archive
 
 sub action_task_add { # Show the add task form
     my $html = header();
