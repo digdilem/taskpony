@@ -9,6 +9,7 @@
 
 ## Non Breaking Change
 - List edit page: Title no longer edits the list, but jumps to it. Instead, there is an Edit List button in the Actions column. Tasks columns are combined to save space.
+- Terminology: "Inactive" lists renamed to "Archived". Makes for betterer English. All links and references updated.
 
 ## Features
 

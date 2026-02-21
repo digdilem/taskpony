@@ -202,7 +202,7 @@ my $app = sub {
 
     # !LIST ACTIONS
     # Set LIST nn as UnDeleted (Active)
-    if ($req->path =~ m{^/list_undelete/(\d+)$})        { action_list_undelete($1);     $res->redirect('/lists'); return $res->finalize; }
+    if ($req->path =~ m{^/list_unarchive/(\d+)$})        { action_list_unarchive($1);     $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete LIST nn and redirect to lists page
     if ($req->path =~ m{^/list_hard_delete/(\d+)$})     { action_list_hard_delete($1);  $res->redirect('/lists'); return $res->finalize; }
     # Set a LIST as the default list
@@ -1835,9 +1835,9 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <td class="text-end">
                         <div class="btn-group" role="group">
                         <!-- Default Button -->
-                        <a href="/list_undelete/$a->{'id'}"
+                        <a href="/list_unarchive/$a->{'id'}"
                         class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
-                        data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Active" >
+                        data-bs-toggle="tooltip" data-bs-placement="auto" title="Unarchive this list" >
                             $icons->{'rotate_right'}
                         </a>
                         <!-- Delete all Tasks -->
@@ -2762,7 +2762,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
 
     }
 
-sub action_list_undelete { # Undelete list nn from ListsTb by setting DeletedDate to NULL
+sub action_list_unarchive { # Undelete list nn from ListsTb by setting DeletedDate to NULL
     my ($list_id) = @_;
     if ($list_id && $list_id =~ /^\d+$/) {
         if ($list_id > 1) { # Don't allow undeleting "All Tasks Lists"
@@ -2771,12 +2771,12 @@ sub action_list_undelete { # Undelete list nn from ListsTb by setting DeletedDat
             eval { $sth->execute($list_id); 1 } or print STDERR "WARN: List undelete failed: $@";
             add_alert("List #$list_id restored.");
             } else {
-            print STDERR "WARN: Attempt to undelete list with invalid ID ($list_id) passed to action_list_undelete\n";
+            print STDERR "WARN: Attempt to undelete list with invalid ID ($list_id) passed to action_list_unarchive\n";
             }
         } else {
-        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_undelete\n";
+        print STDERR "WARN: Invalid list ID ($list_id) passed to action_list_unarchive\n";
         }
-    } # End action_list_undelete
+    } # End action_list_unarchive
 
 sub action_list_hard_delete {  # Permanently delete List nn
     my ($list_id) = @_;
