@@ -7,6 +7,9 @@
 ## Breaking Change
 - Many URLs have changed to a new form. This may break bookmarks you have for specific areas in the task. An entirely new and consistent url scheme has been adopted.
 
+## Non Breaking Change
+- List edit page: Title no longer edits the list, but jumps to it. Instead, there is an Edit List button in the Actions column. Tasks columns are combined to save space.
+
 ## Features
 
 - New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks. Button under Lists -> List Actions

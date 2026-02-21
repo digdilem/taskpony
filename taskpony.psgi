@@ -2152,6 +2152,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
                     <div class="text-end">
                         <button class="btn btn-primary" type="submit">Save List</button>
                         <a class="btn btn-secondary" href="/lists">Cancel</a>
+                        <a class="btn btn-danger" href="/list_make_delete/$list->{'id'}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Make this List inactive" onclick="return confirm('Are you sure you want to make this list inactive?');">Make Inactive List</a>
                     </div>
                 <hr>
                 <p class="text-$config->{'cfg_header_colour'}">$gutter_text</p>
