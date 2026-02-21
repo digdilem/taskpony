@@ -2682,7 +2682,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
 
                                         $html .= qq~>
                                         <span data-bs-toggle="tooltip" data-bs-placement="auto" title="When you complete this task, it will automatically become active again after the selected number of days.">
-                                            $smallicon_info
+                                            $smallicons->{'info'}
                                         </span>
                                         </div>
                                     </div>
@@ -2697,7 +2697,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
                                                     days
                                                 </span>
                                                 <span data-bs-toggle="tooltip" data-bs-placement="auto" title="How many days after completion should this task re-activate? Range 1-365">
-                                                    $smallicon_info
+                                                    $smallicons->{'info'}
                                                 </span>
                                         </div>
                                     </div>
