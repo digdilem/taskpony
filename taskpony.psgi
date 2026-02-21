@@ -2203,7 +2203,8 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 # MISC functions - things that don't fit anywhere else
 
 sub return_default_listid { # return_default_listid() - returns the default list id from ConfigTb
-    return single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+    #return single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'active_list' LIMIT 1");
+    return single_db_value("SELECT `id` FROM ListsTb WHERE isDefault = 1 AND DeletedDate IS NULL LIMIT 1");
     }
 
 sub set_default_listid { # set_default_listid($list_id) - sets the default list id in ConfigTb
