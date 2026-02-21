@@ -1711,7 +1711,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <td>
                         <strong>
-                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit List Details"><a class="text-white text-decoration-none" href="/list_edit/$list->{'id'}">
+                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none" href="/?lid=$list->{'id'}">
                             $title
                         </a>
                         </span>
