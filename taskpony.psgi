@@ -1443,7 +1443,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             <a href="/list_edit/$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
-                $icon->{'edit'}
+                $icons->{'edit'}
             </a>
 
             <a href="/task_add" class="text-$config->{'cfg_header_colour'} text-decoration-none"
