@@ -1722,12 +1722,10 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     </td>
                     <td align="right">
                         <a href="/?lid=$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
-                        $active_count
-                        </a>
-                    </td>
-                    <td align="right">
+                            $active_count
+                        </a> /
                         <a href="/?lid=$list->{'id'}&sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
-                        $completed_count
+                            $completed_count
                         </a>
                     </td>
                     <!-- Actions column -->
