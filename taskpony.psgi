@@ -1651,8 +1651,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <th>List</th>
                     <th>Description</th>
-                    <th class="text-end">Active Tasks</th>
-                    <th class="text-end">Completed Tasks</th>
+                    <th class="text-end">Active/Completed Tasks</th>
                     <th class="text-end">Actions</th>
                     </tr>
                 </thead>
@@ -1678,9 +1677,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <td align="right">
                         <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
                         $all_active
-                        </a>
-                    </td>
-                    <td align="right">
+                        </a> /
                         <a href="/?lid=1&sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
                         $all_completed
                         </a>
