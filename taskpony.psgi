@@ -680,7 +680,7 @@ sub footer {
                 </div>
             </div>
         </main>
-        <footer class="text-center text-white-50 text-decoration-none py-2">
+        <footer class="text-center text-white-50 py-2">
             <p>
             ~;
 
@@ -697,7 +697,7 @@ sub footer {
         }
 
     $html .= qq~
-            <a href="https://github.com/digdilem/taskpony">$global->{'app_title'} v.$global->{'app_version'}</a> by <a href="https://digdilem.org/" class="text-white">Digital Dilemma</a>
+            <a href="https://github.com/digdilem/taskpony" class="text-white text-decoration-none">$global->{'app_title'} v.$global->{'app_version'}</a> by <a href="https://digdilem.org/" class="text-white text-decoration-none">Digital Dilemma</a>
             </p>
         </footer>
 
