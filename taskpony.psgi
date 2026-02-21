@@ -1755,7 +1755,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <a href="/list_make_inactive/$list->{'id'}" class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this List as Inactive. This will hide the list and its tasks from the main view, but they can be restored later if needed. Tasks will still appear in the 'All Tasks' view"
                         onclick="return confirm('Are you sure you want to make this list inactive?');">
-                            $icons->{'trash'}
+                            $icons->{'sleep'}
                         </a>
                         </div>
                     </td>
