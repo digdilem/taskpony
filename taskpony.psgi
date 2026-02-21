@@ -977,7 +977,7 @@ sub show_tasks_all {    # Loop through all active lists and show a panel for eac
 
 sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
     my ($icon_name) = @_;
-    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="$class" />~;
+    return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="icon-white" />~;
     } # end build_tabler_icon
 
 sub build_inline_icon {  # build_inline_icon($size, $svg) = takes a size in pixels and raw SVG code, and returns the SVG wrapped in a span with the correct size styling to make it match the text size
