@@ -98,7 +98,7 @@ my $stats = {
 my $icons = {
     chart => build_tabler_icon('Statistics'),  # Chart icon
     plus => build_tabler_icon('Plus'),  # Plus icon
-    edit => build_tabler_icon('Edit',1),    # Edit / pencil icon
+    edit => build_tabler_icon('Edit'),    # Edit / pencil icon
     gear => build_tabler_icon('Settings'),  # Settings gear cog
     grave => build_tabler_icon('Grave'),  # Grave icon
     image => build_tabler_icon('Image'),  # Image / picture icon
@@ -116,25 +116,25 @@ my $icons = {
 #    listletters => build_tabler_icon('ListLetters'),  # List with letters icon
     };
 
-# my $smallicons = {
-#     comment => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />'),
-#     link => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />'),
-#     link_slash => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />'),
-#      repeat => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />'),
-#     edit => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />'),
-#     listnumbers => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />'),
-#     plus => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" />'),
-#     );
+my $smallicons = { # Similar idea as above, but these are coloured in the current highlight colour
+    comment => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />'),
+    link => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />'),
+#    link_slash => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />'),
+     repeat => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />'),
+    edit => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />'),
+    listnumbers => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />'),
+    plus => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" />'),
+    );
 
-# These small icons need to be inline, so we can style them to match the current highlght colour
-my $smallicon_comment = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
-my $smallicon_link = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');
-my $smallicon_link_slash = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
- my $smallicon_repeat = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
-my $smallicon_edit = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
-my $smallicon_listnumbers = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />');
-my $smallicon_plus = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" />');
-my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />');
+# # These small icons need to be inline, so we can style them to match the current highlght colour
+# my $smallicons->{'comment'} = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />');
+# my $smallicons->{'link'} = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />');
+# my $smallicons->{'link'}_slash = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />');
+#  my $smallicons->{'repeat'} = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" />');
+# my $smallicons->{'edit'} = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />');
+# my $smallicons->{'listnumbers'} = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />');
+# my $smallicons->{'plus'} = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" />');
+# my $smallicon_info = build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />');
 
 
 # Preflight checks
@@ -976,8 +976,7 @@ sub show_tasks_all {    # Loop through all active lists and show a panel for eac
     } # End show_tasks_all()
 
 sub build_tabler_icon { # build_tabler_icon($icon_name) = takes the Name of the SVG file, which matches its Alt Text
-    my ($icon_name, $current_colour) = @_;
-    my $class = $current_colour ? "icon-current-color" : "icon-white";
+    my ($icon_name) = @_;
     return qq~<img src="/static/icons/$icon_name.svg" alt="$icon_name" class="$class" />~;
     } # end build_tabler_icon
 
@@ -1253,7 +1252,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
             # Prefix task title with an orphaned marker, coloured red
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This task belongs to a deleted list">
-                $smallicon_link_slash
+                $smallicons->{'link'}_slash
             </span>
             ~;
             }
@@ -1261,7 +1260,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
         # Add a repeat icon if the task is recurring
         if (defined $a->{'IsRecurring'} && $a->{'IsRecurring'} eq 'on') {
             $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This is a repeating task. Once completed, it will reactivate after $a->{RecurringIntervalDay} days">
-                $smallicon_repeat
+                $smallicons->{'repeat'}
             </span> ~;
             }
 
@@ -1281,7 +1280,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                         $title
                     ~;
             if ($description) {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $smallicon_comment
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $smallicons->{'comment'}
                 </span>
                 ~;
                 }
@@ -1327,7 +1326,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                         $title <span class="text-muted small">$status_indicator</span>
                     ~;
             if ($description) {
-                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $smallicon_comment
+                $title_link .= qq~<span class="text-$config->{cfg_header_colour}">&nbsp; $smallicons->{'comment'}
                 </span>
                 ~;
                 }
@@ -1437,7 +1436,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             <a href="/?lid=$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to this list">
-                $smallicon_link
+                $smallicons->{'link'}
             </a>
         ~;
 
@@ -1452,7 +1451,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             <a href="/task_add" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Add a new task">
-                $smallicon_plus
+                $smallicons->{'plus'}
             </a>
             ~;
             }
@@ -1466,14 +1465,14 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             <a href="/show_tasks_all" class="text-$config->{'cfg_header_colour'} text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto"
                 title="Show all active tasks in lists">
-                $smallicon_listnumbers
+                $smallicons->{'listnumbers'}
             </a>
 
             <!-- Show link to recurring tasks -->
             <a href="/show-recurring" class="text-$config->{'cfg_header_colour'} text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto"
                 title="Show recurring tasks">
-                $smallicon_repeat
+                $smallicons->{'repeat'}
             </a>
             ~;
 
