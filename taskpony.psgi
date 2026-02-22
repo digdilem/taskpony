@@ -1733,13 +1733,13 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <div class="btn-group" role="group">
                             <!-- Edit Button -->
                             <a href="/list_edit/$list->{'id'}"
-                            class="btn btn-sm btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            class="btn btn-sm  d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Edit this List" >
                                 $icons->{'edit'}
                             </a>
                             <!-- Default Button -->
                             <a href="/list_set_default/$list->{'id'}"
-                            class="btn btn-sm btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            class="btn btn-sm  d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set this as the Default List" >
                                 ~;
                                 if ($list->{'IsDefault'} == 1) {
@@ -1751,14 +1751,14 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                             </a>
                             <!-- Set all tasks Active Button -->
                             <a href="/list_set_alltasks_active/$list->{'id'}"
-                            class="btn btn-sm btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            class="btn btn-sm  d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Active"
                             onclick="return confirm('Are you sure you want to set ALL tasks in this list as Active?');">
                                 $icons->{'rotate_right'}
                             </a>
                             <!-- Set all tasks Completed Button -->
                             <a href="/list_set_alltasks_completed/$list->{'id'}"
-                            class="btn btn-sm btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                            class="btn btn-sm  d-inline-flex align-items-center justify-content-center btn-icon"
                             data-bs-toggle="tooltip" data-bs-placement="auto" title="Set all Tasks in this List as Completed"
                             onclick="return confirm('Are you sure you want to mark ALL tasks in this list as Completed?');">
                                 $icons->{'rotate_left'}
