@@ -4,6 +4,8 @@
 
 # 0.6
 
+- This was effectively a full rewrite to split all operations into their own functions to make ongoing development easier and safer. This was a huge operation and also included a lot of new and changed features as I re-assessed the whole project and where I felt it should be going.
+
 ## Breaking Change
 - Many URLs have changed to a new form. This may break bookmarks you have for specific areas in the task. An entirely new and consistent url scheme has been adopted.
 
@@ -22,8 +24,6 @@
 - Tooltips now made prettier and added a 250ms delay before they show up.
 - Extensive code rewrite and tidying. This involves changing many endpoint for consistency, neatness and clarity. Eg, /ust=NN now becomes /task_activate/NNN
 - Added a proper 404 page
-
-
 ## Bugfixes
 
 - More work on tidying output html and chasing down stray divs.
