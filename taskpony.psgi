@@ -50,7 +50,7 @@ our $config = {
 our $global = {
     app_title => 'Taskpony',                    # Name of app
     app_version => '0.6',                       # Version of app
-    database_schema_version => 2,               # Target database schema version. If config value is below this, then auto upgrade will be attempted.
+    database_schema_version => 3,               # Target database schema version. If config value is below this, then auto upgrade will be attempted.
     github_version_url => 'https://api.github.com/repos/digdilem/taskpony/releases/latest',     # Used to get latest version for upgrade notification
     app_releases_page => 'https://github.com/digdilem/taskpony',                                # Where new versions are
     new_version_available => 0,                 # Set to 1 if a new version is available on github
@@ -412,6 +412,8 @@ sub check_database_upgrade  {
     if ($current_db_version < $global->{'database_schema_version'}) { # If current is lower than required, we need to upgrade
         print STDERR "INFO: Database schema version is $current_db_version - $global->{'app_title'} requires schema $global->{'database_schema_version'}.\n";
 
+        ###############################################
+        # Upgrade schema from 1 to 2
         if ($current_db_version == 1) {
             ###############################################
             # Add schema step changes here, v.1 to v.2
@@ -440,7 +442,33 @@ sub check_database_upgrade  {
                 }
             } # End db v.1 to v.2 upgrade
 
-        # !! Add future db v.2 to v.3 upgrade steps here !!
+        ###############################################
+        # Upgrade schema from 2 to 3 (Taskpony v.0.6)
+        if ($current_db_version < $global->{'database_schema_version'}) { # Upgrade from schema 2 to schema 3  (Taskpony v0.6)
+            print STDERR "Upgrading database schema from version 2 to version 3.\n";
+
+            # List of queries required to upgrade from v.2 to v.3
+            my @db_upgrade_steps_2_to_3 = (
+                "ALTER TABLE `TasksTb` ADD COLUMN `TimesCompleted` INTEGER NULL DEFAULT '0';",      # Add column to count how many times a recurring task has been completed
+                "UPDATE ConfigTb SET `value` = '3' WHERE `key` = 'database_schema_version';",       # Update version number in ConfigTb
+                );
+
+            foreach my $upgrade_query (@db_upgrade_steps_2_to_3) {
+                print STDERR "Applying DB upgrade step: $upgrade_query\n";
+                eval { $dbh->do($upgrade_query); 1 } or print STDERR "WARN: Failed to apply DB upgrade step: $upgrade_query : " . $dbh->errstr;
+                }
+
+            # Re-fetch current DB version after upgrade steps to ensure it's updated
+            $current_db_version = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'database_schema_version' LIMIT 1") || 1;
+
+            if ($current_db_version != 3) {
+                print STDERR "WARN: Database schema upgrade to version 3 did not complete successfully. Current version is still $current_db_version.\n";
+                } else {
+                print STDERR "INFO: Database schema successfully upgraded to version 3  .\n";
+                }
+            } # End db v.2 to v.3 upgrade
+
+        # !! Add future db v.3 to v.4 upgrade steps here !!
 
         } else {
         print STDERR "Database schema version is up to date at version $current_db_version. Required version is $global->{'database_schema_version'}. We're good.\n";
