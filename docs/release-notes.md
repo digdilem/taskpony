@@ -30,6 +30,7 @@
 
 - More work on tidying output html and chasing down stray divs.
 - Submitting a form after editing a list now returns you to either the active tasks or the List edit page, depending on where you came from.
+- On long tasks, the page would shift left a few pixels when the scrollbar appeared on some browsers. Fixed. 
 
 
 # 0.5

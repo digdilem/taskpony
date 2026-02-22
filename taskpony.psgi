@@ -60,6 +60,7 @@ our $global = {
     running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not
     db_path => "$Dir/db/taskpony.db",           # Path to Sqlite database file that's valid if native or in docker. This will be updated to the correct path on startup.
     bg_path => "$Dir/static/background.jpg"     # Path to background image file, valid in docker or native. This will be updated to the correct path on startup.
+    csv_export => 'taskpony_tasks_export.csv'   # Default filename for CSV exports
     };
 
 ###############################################
@@ -187,6 +188,8 @@ my $app = sub {
     if ($req->path =~ m{^/task_edit/(\d+)$})            { $res->body(action_task_edit($1));   return $res->finalize; }
     # Action /task_add - Show add task form (No number)
     if ($req->path eq "/task_add")                      { $res->body(action_task_add());       return $res->finalize; }
+    # Export all tasks to CSV file and download
+    if ($req->path eq "/tasks_export_all")              { action_tasks_export_all();                 return $res->finalize; }
 
 
     # !LIST ACTIONS
@@ -891,47 +894,6 @@ sub debug {
     } # End debug()
 
 ###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-###############################################
-
-
-
 ###############################################
 # SHOW functions - Functions that show html
 
@@ -1862,6 +1824,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             <span>List Actions</span>
             </div>
             <div class="card-body">
+
             <p>
                 <a href="/show_tasks_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
                 $icons->{'list'}Show All Tasks
@@ -1870,6 +1833,11 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             <p>
                 <a href="/show-recurring" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all recurring tasks from all lists on a single, sorted page">
                 $icons->{'repeat'} Show Recurring Tasks
+                </a>
+            </p>
+            <p>
+                <a href="/tasks_export_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="Export all tasks as a CSV file">
+                $icons->{'FileExport'} Export All Tasks
                 </a>
             </p>
             </div>
@@ -2885,6 +2853,40 @@ sub action_task_add { # Show the add task form
     $html .= footer();
     return $html;
     } # End action_task_add
+
+sub action_tasks_export_all { # Export all tasks as CSV file download
+    my $sth = $dbh->prepare('SELECT id, Status, Title, Description, ListId, AddedDate, StartDate, CompletedDate, IsRecurring, RecurringIntervalDay FROM TasksTb ORDER BY ListId ASC, Status ASC, AddedDate ASC');
+    $sth->execute();
+
+    my @cols = qw(id Status Title Description ListId AddedDate StartDate CompletedDate IsRecurring RecurringIntervalDay);
+    my $csv = '';
+
+    my $escape_csv = sub { # Escape an nonstandard each row
+        my ($val) = @_;
+        $val = '' unless defined $val;
+        $val =~ s/"/""/g;  # escape quotes
+        if ($val =~ /[",\n\r]/) {
+            return '"' . $val . '"';
+        }
+        return $val;
+    };
+
+    $csv .= join(',', map { $escape_csv->($_) } @cols) . "\n";
+
+    # Rows
+    while (my $row = $sth->fetchrow_hashref()) {
+        my @vals = map { defined $row->{$_} ? $row->{$_} : '' } @cols;
+        $csv .= join(',', map { $escape_csv->($_) } @vals) . "\n";
+    }
+
+    # Send CSV as download
+    my $res = Plack::Response->new(200);
+    $res->header('Content-Type' => 'text/csv; charset=utf-8');
+    $res->header('Content-Disposition' => 'attachment; filename="taskpony-tasks.csv"');
+    $res->header('Cache-Control' => 'no-cache, no-store');
+    $res->body($csv);
+    $res->finalize;
+    } # End action_tasks_export_all
 
 # End Action functions
 ###############################################
