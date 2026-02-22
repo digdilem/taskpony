@@ -513,12 +513,12 @@ sub header {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            right: 0;
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: 50px 50px 0 0;
-            border-color: #ffc107 transparent transparent transparent;
+            border-width: 50px 0 0 50px;
+            border-color: transparent transparent transparent #ffc107;
         }
 
         .card-header-accent {
@@ -1584,7 +1584,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <!-- Active Lists Tab -->
         <div class="tab-pane fade show active" id="active-lists" role="tabpanel" aria-labelledby="active-lists-tab">
         <div class="card bg-dark text-white">
-            <div class="card-header card-header-accent bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+            <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
                 <span>$icons->{'list'} Active Lists</span>
                 <div class="ms-auto"><a href="/list_edit/0" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a New List">$icons->{'plus'}</a></div>
             </div>
@@ -1733,7 +1733,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <!-- Archived Lists Tab -->
         <div class="tab-pane fade" id="archived-lists" role="tabpanel" aria-labelledby="archived-lists-tab">
         <div class="card bg-dark text-white">
-            <div class="card-header card-header-accent bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+            <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
             <span>$icons->{'sleep'}</span>
             <span>Archived Lists <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Lists that have been set as Archived. You can choose to restore these lists or permanently delete them">$icons->{'info'}</a></span>
             </div>
@@ -1815,7 +1815,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         <!-- List Actions Tab -->
         <div class="tab-pane fade" id="list-actions" role="tabpanel" aria-labelledby="list-actions-tab">
         <div class="card bg-dark text-white">
-            <div class="card-header card-header-accent bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
+            <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
             <span>$icons->{'list'}</span>
             <span>List Actions</span>
             </div>
