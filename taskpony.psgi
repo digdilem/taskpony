@@ -56,7 +56,7 @@ our $global = {
     new_version_available => 0,                 # Set to 1 if a new version is available on github
     taskpony_icon => 'taskpony-logo.png',       # Default icon file name in ./static dir
     tooltip_delay => 'show: 250, hide: 1',     # Global tooltip delay for all tooltips in the app
-    debug => 0,                                 # Set to 1 to enable debug messages to STDERR
+    debug => 1,                                 # Set to 1 to enable debug messages to STDERR
     running_in_docker => 0,                     # Set to 1 if running in docker, 0 if not
     db_path => "$Dir/db/taskpony.db",           # Path to Sqlite database file that's valid if native or in docker. This will be updated to the correct path on startup.
     bg_path => "$Dir/static/background.jpg"     # Path to background image file, valid in docker or native. This will be updated to the correct path on startup.
@@ -242,7 +242,9 @@ my $app = sub {
     # Receive Lists form
     if ($req->path =~ m{^/list_form/(\d+)$})                 {
             receive_form_list($req, $1);
-            if ($req->param('return_page') == '2') { $res->redirect($req->param('/')); }  # Return to active list page if came from there
+            my $list_edit_return_pagevalue = $req->param('return_page') // 1;
+            debug("Received list form submission for list id $1, return_page value is $list_edit_return_pagevalue");
+            if ($list_edit_return_pagevalue == 2) { $res->redirect($req->param('/')); }  # Return to active list page if came from there
             else { $res->redirect('/lists'); }
             return $res->finalize;
             }
