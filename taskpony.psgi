@@ -1651,7 +1651,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <th>List</th>
                     <th>Description</th>
-                    <th class="text-end">Active/Completed Tasks</th>
+                    <th class="text-end">Tasks</th>
                     <th class="text-end">Actions</th>
                     </tr>
                 </thead>
