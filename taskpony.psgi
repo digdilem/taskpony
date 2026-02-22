@@ -524,8 +524,8 @@ sub header {
 
         .quickswitcher-dot {
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.5);
             box-shadow: 0 0 6px rgba(0,0,0,0.6);
