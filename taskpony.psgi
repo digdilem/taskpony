@@ -554,7 +554,7 @@ sub header {
             -moz-osx-font-smoothing: grayscale;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             max-width: 450px;
-            font-size: 12.5px;
+            font-size: 17.5px;
             line-height: 1.2;
         }
 
