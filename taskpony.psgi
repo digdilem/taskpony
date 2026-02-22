@@ -2189,7 +2189,7 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
     return if ($config->{'cfg_show_quickswitcher'} ne 'on');  # Not configured. Bailing.
     my $html = qq~<div class="quickswitcher-container">~;
     # Loop through lists and show a dot for each, using the list colour if set
-    my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND Colour IS NOT NULL ORDER BY Title ASC');
+    my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND LENGTH(Colour) > 2 ORDER BY Title ASC');
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
         my $title = html_escape($list->{'Title'} // '');
