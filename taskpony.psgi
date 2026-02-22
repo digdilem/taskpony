@@ -1688,8 +1688,14 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <td>
                         <strong>
+                        ~;
+        if ($config->{'cfg_show_quickswitcher'} eq 'on') {
+            $html .= qq~
                             <span class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
-                                &nbsp;
+                            &nbsp;
+            ~;
+            }
+        $html .= qq~
                             <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none"">
                             $title
                         </a>
