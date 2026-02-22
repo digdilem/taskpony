@@ -1008,6 +1008,9 @@ sub start_card { # start_card() Open a consistent bootstrap 5 card for most page
         $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
         }
 
+    my $show_accent_string = "card-header-accent";
+    if (! $list->{'list_colour'} ) { $show_accent_string = " "; } # This list has no override set, so don't show the accent triangle
+
     $html .= qq~
                             <h2 >
                                 $card_title
@@ -1020,8 +1023,7 @@ sub start_card { # start_card() Open a consistent bootstrap 5 card for most page
                             $html .= qq~
                             </h2>
                     </div>
-
-                    <div class="card-body card-header-accent bg-dark text-white rounded-bottom">
+                    <div class="card-body $show_accent_string bg-dark text-white rounded-bottom">
     <!-- End start_card() header -->
                     ~;
     return $html;
