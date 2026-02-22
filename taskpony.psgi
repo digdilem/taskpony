@@ -2023,6 +2023,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
 sub show_maintasks { # show_maintasks() - Show the main list of tasks, either active or completed, for a given list or all lists
     my $status = shift || 1;  # Status to show, but default to showing active tasks
+print STDERR "=== DEBUG: status = $status\n";
     my $html = header();
 
     # Set default titlebar to be the quick add form for the selected list
