@@ -1689,6 +1689,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <td>
                         <strong>
                         <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none" href="/list/$list->{'id'}">
+                            <span class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
                             $title
                         </a>
                         </span>
