@@ -1000,13 +1000,14 @@ sub start_card { # start_card() Open a consistent bootstrap 5 card for most page
     if ($table_card == 1) { $html .= qq~ <div class="card shadow-sm d-none " id="hideUntilShow" >~; }  # If a table, hide the whole card until loaded. div will be closed eith end_card(1)
 
     $html .= qq~
+                <div class="card-header bg-$config->{cfg_header_colour} text-white">
                 ~;
 
-    if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
-        } else { # Show default bg-
-        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
-        }
+    # if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
+    #     $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
+    #     } else { # Show default bg-
+    #$html .= qq~ ~;
+        # }
 
     my $show_accent_string = "card-header-accent";
     if (! $page->{'list_colour'} ) { $show_accent_string = " "; } # This list has no override set, so don't show the accent triangle
