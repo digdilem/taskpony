@@ -16,7 +16,7 @@ Some features for the future that may, or may not, be added.
   - Lists page: Split the three cards into Tabs to keep things above the fold more. Or introduce a quick-add "New List" form like Tasks.
   - Some alternative font choices
   - A link to show orphaned tasks
-  - A link to show recurring tasks
+  - Frivolity: Some sort of extra banner to celebrate every 100 tasks completed?
 
 - Unlikely (Considered and discarded)
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however, and may not be possible within the [Goals](../README.md#goals)

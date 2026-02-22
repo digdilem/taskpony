@@ -191,8 +191,10 @@ my $app = sub {
 
 
     # !LIST ACTIONS
+    # Change active list to NN and show tasks in that list
+    if ($req->path =~ m{^/list/(\d+)$})                 { $page->{'list_id'} = $1;      $res->redirect('/'); return $res->finalize; }
     # Set LIST nn as UnDeleted (Active)
-    if ($req->path =~ m{^/list_unarchive/(\d+)$})        { action_list_unarchive($1);     $res->redirect('/lists'); return $res->finalize; }
+    if ($req->path =~ m{^/list_unarchive/(\d+)$})       { action_list_unarchive($1);     $res->redirect('/lists'); return $res->finalize; }
     # Permanently delete LIST nn and redirect to lists page
     if ($req->path =~ m{^/list_hard_delete/(\d+)$})     { action_list_hard_delete($1);  $res->redirect('/lists'); return $res->finalize; }
     # Set a LIST as the default list
