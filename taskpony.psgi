@@ -2076,7 +2076,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a highlight colour for this List">Highlight Colour</label>
+                            <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="Select a colour for this List which will be displayed in the quickswitcher at the top of the page, if enabled. It also adds a flash top-right.">Quickswitch Colour</label>
                             <input type="color" name="Colour" class="form-control form-control-color" value="~ . html_escape($list->{'Colour'} // '') . qq~" />
                         </div>
 
@@ -2084,7 +2084,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="clear_colours" id="clear_colours">
                                 <label class="form-check-label" for="clear_colours" data-bs-toggle="tooltip" data-bs-placement="auto" title="Check this to remove special highlight colouring for this List">
-                                    Clear Highlight Colour
+                                    Remove from Quickswitcher
                                 </label>
                             </div>
                         </div>
