@@ -223,7 +223,7 @@ my $app = sub {
     # Main landing page, the current task list
     if ($req->path eq "/" )                                  { $res->body(show_maintasks(1));           return $res->finalize; } # Show active tasks
     # As above, but show completed tasks only
-    if ($req->path =~ m{^/task_completed/(\d+)$})            { $res->body(show_maintasks(2));            return $res->finalize; } # Show completed tasks
+    if ($req->path =~ m{^/task_completed/(\d+)$})            { $page->{'list_id'} = $1;  verify_valid_list(1);  $res->body(show_maintasks(2));  return $res->finalize; } # Show completed tasks
     # Show the edit list form (from /lists page)
     if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1,1));          return $res->finalize; }
     # As above, but from the task list page, so we can redirect back there after submission
