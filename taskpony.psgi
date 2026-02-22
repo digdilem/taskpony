@@ -1006,9 +1006,9 @@ sub start_card { # start_card() Open a consistent bootstrap 5 card for most page
                 ~;
 
     if (length $page->{'list_colour'} > 2) {  # This list has a highlight colour override, use it
-        $html .= qq~<div class="card-header text-white" style="background-color:$page->{'list_colour'};">~;
+        $html .= qq~<div class="card-header card-header-accent text-white" style="background-color:$page->{'list_colour'};">~;
         } else { # Show default bg-
-        $html .= qq~ <div class="card-header bg-$config->{cfg_header_colour} text-white">~;
+        $html .= qq~ <div class="card-header card-header-accent bg-$config->{cfg_header_colour} text-white">~;
         }
 
     $html .= qq~
