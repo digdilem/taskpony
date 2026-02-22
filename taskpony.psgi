@@ -568,12 +568,16 @@ sub header {
     # Add the list selection pulldown.
     $html .= list_pulldown($page->{'list_id'});
 
-    # If configured, show to quickswitcher
-    $html .= show_quickswitcher();
 
     # Start the top-right button group
     $html .= qq~
                     </div>
+            ~;
+
+    # If configured, show to quickswitcher
+    $html .= show_quickswitcher();
+
+    $html .= qq~
                     <div class="btn-group" role="group">
             ~;
 
