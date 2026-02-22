@@ -189,7 +189,7 @@ my $app = sub {
     # Action /task_add - Show add task form (No number)
     if ($req->path eq "/task_add")                      { $res->body(action_task_add());       return $res->finalize; }
     # Export all tasks to CSV file and download
-    if ($req->path eq "/tasks_export_all")              { action_tasks_export_all();                 return $res->finalize; }
+    if ($req->path eq "/tasks_export_all")              { return action_tasks_export_all(); }
 
 
     # !LIST ACTIONS
@@ -2887,7 +2887,7 @@ sub action_tasks_export_all { # Export all tasks as CSV file download
     $res->header('Content-Disposition' => 'attachment; filename="taskpony-tasks.csv"');
     $res->header('Cache-Control' => 'no-cache, no-store');
     $res->body($csv);
-    $res->finalize;
+    return $res->finalize;
     } # End action_tasks_export_all
 
 # End Action functions
