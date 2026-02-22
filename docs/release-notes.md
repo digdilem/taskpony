@@ -25,12 +25,13 @@
 - Tooltips now made prettier and added a 250ms delay before they show up.
 - Extensive code rewrite and tidying. This involves changing many endpoint for consistency, neatness and clarity. Eg, /ust=NN now becomes /task_activate/NNN
 - Added a proper 404 page
+- Added an "Export all tasks" function with button from List Actions to generate and send a CSV containing everything.
 
 ## Bugfixes
 
 - More work on tidying output html and chasing down stray divs.
 - Submitting a form after editing a list now returns you to either the active tasks or the List edit page, depending on where you came from.
-- On long tasks, the page would shift left a few pixels when the scrollbar appeared on some browsers. Fixed. 
+- On long tasks, the page would shift left a few pixels when the scrollbar appeared on some browsers. Fixed.
 
 
 # 0.5

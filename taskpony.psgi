@@ -115,6 +115,7 @@ my $icons = {
     star_on => build_tabler_icon('StarOn'),    # Star filled icon
     trash => build_tabler_icon('Trash'),  # Trash can icon
     xcircle => build_tabler_icon('XCircle'),  # X in circle icon
+    fileexport => build_tabler_icon('FileExport'),  # File export icon
     };
 
 my $smallicons = { # Similar idea as above, but these are coloured in the current highlight colour
@@ -1839,7 +1840,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             </p>
             <p>
                 <a href="/tasks_export_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="Export all tasks as a CSV file">
-                $icons->{'FileExport'} Export All Tasks
+                $icons->{'fileexport'} Export All Tasks
                 </a>
             </p>
             </div>
