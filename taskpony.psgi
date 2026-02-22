@@ -598,7 +598,7 @@ sub header {
     <div class="container py-1">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
-                <a href="/?lid=$page->{'default_listid'}" class="d-flex align-items-center gap-2 text-white text-decoration-none"
+                <a href="/list/$page->{'default_listid'}" class="d-flex align-items-center gap-2 text-white text-decoration-none"
                 data-bs-toggle="tooltip" data-bs-placement="auto" title="Switch to Default List" >
                     <img src="/static/$global->{'taskpony_icon'}" width="82" height="82" alt="logo">
                 </a>
@@ -808,10 +808,10 @@ sub footer {
 sub list_pulldown {
     my $selected_lid = shift || $page->{'list_id'};
 
-    # Redirect to root with ?lid=<id> when selection changes (no enclosing form required)
+    # Redirect to root with /list/<id> when selection changes (no enclosing form required)
     my $html = qq~
         <select name="lid"
-            class="form-select form-select-sm" style="width:auto; display:inline-block; margin-left:10px;" onchange="window.location='/?lid=' + encodeURIComponent(this.value)">
+            class="form-select form-select-sm" style="width:auto; display:inline-block; margin-left:10px;" onchange="window.location='/list/' + encodeURIComponent(this.value)">
         ~;
 
     # We should check whether there is a default list. If so, select the oldest non-deleted one.
@@ -1365,7 +1365,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                 } else {
                 $html .= qq~
                         <a
-                        href="/?lid=$a->{'ListId'}"
+                        href="/list/$a->{'ListId'}"
                         class="text-$config->{'cfg_header_colour'} text-decoration-none"
                         data-bs-toggle="tooltip" data-bs-placement="auto"
                         title="Jump to $a->{'ListTitle'}">
@@ -1425,7 +1425,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
         <span class="float-start muted d-flex gap-3">
 
             <!-- Show permanent link to this list -->
-            <a href="/?lid=$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/list/$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Permanent link to this list">
                 $smallicons->{'link'}
@@ -1658,7 +1658,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <td>
                         <strong>
-                        <a href="/?lid=1"  class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
+                        <a href="/list/1"  class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Show all Active Tasks">
                             All Tasks
                         </a>
                         </strong>
@@ -1667,10 +1667,10 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         View tasks from all lists
                     </td>
                     <td align="right">
-                        <a href="/?lid=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
+                        <a href="/list/1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
                         $all_active
                         </a> /
-                        <a href="/?lid=1&sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
+                        <a href="/list/1?sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
                         $all_completed
                         </a>
                     </td>
@@ -1703,7 +1703,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <td>
                         <strong>
-                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none" href="/?lid=$list->{'id'}">
+                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none" href="/list/$list->{'id'}">
                             $title
                         </a>
                         </span>
@@ -1713,10 +1713,10 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         $desc
                     </td>
                     <td align="right">
-                        <a href="/?lid=$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                        <a href="/list/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                             $active_count
                         </a> /
-                        <a href="/?lid=$list->{'id'}&sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
+                        <a href="/list/$list->{'id'}?sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
                             $completed_count
                         </a>
                     </td>
