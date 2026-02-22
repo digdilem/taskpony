@@ -209,12 +209,6 @@ my $app = sub {
     if ($req->path =~ m{^/list_archive/(\d+)$})     { action_list_archive($1);  $res->redirect('/lists'); return $res->finalize; }
 
 
-
-
-
-
-
-
     ###############################################
     # !SHOW functions
     # Show the settings page
@@ -256,70 +250,17 @@ my $app = sub {
     # /api/dbstate check - returns simple JSON with last mtime of the database
     if ($req->path eq "/api/dbstate") {  update_db_mtime();  $res->header('Content-Type' => 'text/plain'); $res->header('Cache-Control' => 'no-cache, no-store'); $res->body($page->{'db_mtime'}); return $res->finalize; }
 
-
-    # End redirectors
+    # End path redirectors
     ###############################################
-
-
-
-
-
-
-
-    # /task_form_edit/nn - If GET, show the edit form for task nn. If POST, update task nn with submitted values and redirect to home page
-
-
-    ###############################################
-
-
-
-
-    ###############################################
-    # Start building page
-    my $html = header();
-
-    ###############################################
-    # Step through named paths
-    ###############################################
-
-
-
-
-    ###############################################
-
-
-
-
-    ###############################################
-    # Lists Management page
-
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!  Beware unclosed HTML tags in this section, it's very easy to break the whole page with a small typo here. Check the indentation carefully if you edit this section. !!!!!!!!!!!!!!!!!!!!!!!!!!
-        ###############################################
-
-
-
-
-        ###############################################
-
-
-    ###############################################
-
-    ###############################################
-
-
-
-
-
-
-
-    # End individual page handling.
-    ###############################################
-    # Default home/tasklist page - If no other paths have taken the request then land here, list tasks and the quickadd form
-
-    ###############################################
-    ###############################################
-    # End named paths
-
+    # If we got here, no path matched. Show a 404
+    $res->status(404);
+    $res->body(qq~
+        404 Not Found
+        Path does not exist: $req->path
+        $global->{'app_title'} has escaped the paddock!
+        <a href="/">Go back to safety</a>
+        ~);
+    return $res->finalize;
     };   # End main loop, pages and paths handling
 
 builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.
