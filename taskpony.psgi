@@ -244,7 +244,7 @@ my $app = sub {
             receive_form_list($req, $1);
             my $list_edit_return_pagevalue = $req->param('return_page') // 1;
             debug("Received list form submission for list id $1, return_page value is $list_edit_return_pagevalue");
-            if ($list_edit_return_pagevalue == 2) { $res->redirect($req->param('/')); }  # Return to active list page if came from there
+            if ($list_edit_return_pagevalue == 2) { $res->redirect(('/')); }  # Return to active list page if came from there
             else { $res->redirect('/lists'); }
             return $res->finalize;
             }
