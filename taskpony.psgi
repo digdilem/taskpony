@@ -2094,7 +2094,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 
 sub show_404 {
     my $badpath = shift;
-    print SDTERR "404 Not Found: $badpath\n";
+    print STDERR "404 Not Found: $badpath\n";
     my $res = Plack::Response->new(404);
     $res->status(404);
     $res->header('Content-Type' => 'text/html; charset=utf-8');
