@@ -514,7 +514,7 @@ sub header {
             right: 0;
             width: 0;
             height: 0;
-            border-top: 40px solid #ffc107;
+            border-top: 40px solid $page->{'list_colour'};
             border-left: 40px solid transparent;
         }
 
