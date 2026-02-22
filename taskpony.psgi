@@ -1826,20 +1826,20 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <div class="btn-group" role="group">
                         <!-- Default Button -->
                         <a href="/list_unarchive/$a->{'id'}"
-                        class="btn btn-outline-light d-inline-flex align-items-center justify-content-center btn-icon"
+                        class="btn btn-sm d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Unarchive this list" >
                             $icons->{'rotate_right'}
                         </a>
                         <!-- Delete all Tasks -->
                         <a href="/list_harddelete_alltasks/$a->{'id'}"
-                        class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                        class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete all $tasks_in_list tasks within this List"
                         onclick="return confirm('Are you sure you want to PERMANENTLY delete ALL tasks in this list?');">
                             $icons->{'xcircle'}
                         </a>
                         <!-- Permanently delete this List -->
                         <a href="/list_hard_delete/$a->{'id'}"
-                        class="btn btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
+                        class="btn btn-sm btn-outline-danger d-inline-flex align-items-center justify-content-center btn-icon"
                         data-bs-toggle="tooltip" data-bs-placement="auto" title="Permanently delete this List"
                         onclick="return confirm('Are you sure you want to PERMANENTLY delete this list?  Any tasks within this list will be orphaned.');">
                             $icons->{'grave'}
