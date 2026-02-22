@@ -514,6 +514,24 @@ sub header {
             border-left-color: #1A2122;
         }
 
+        .quickswitcher-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1 1 auto;
+        }
+
+        .quickswitcher-dot {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 0 6px rgba(0,0,0,0.6);
+            cursor: pointer;
+        }
+
         .card-header-accent::before {
             content: "";
             position: absolute;
@@ -2169,16 +2187,18 @@ sub show_404 {
 
 sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which is a row of coloured dots
     return if ($config->{'cfg_show_quickswitcher'} ne 'on');  # Not configured. Bailing.
-    my $html = '';
+    my $html = qq~<div class="quickswitcher-container">~;
     # Loop through lists and show a dot for each, using the list colour if set
     my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND Colour IS NOT NULL ORDER BY Title ASC');
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
+        my $title = html_escape($list->{'Title'} // '');
         $html .= qq~
             <!-- Quickswitcher dot for list $list->{'Title'} -->
-            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="html_escape($list->{'Title'})"></a>
+            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
             ~;
         }
+    $html .= qq~</div>~;
     return $html;
     } # End show_quickswitcher()
 
