@@ -254,12 +254,37 @@ my $app = sub {
     ###############################################
     # If we got here, no path matched. Show a 404
     $res->status(404);
+    $res->header('Content-Type' => 'text/html; charset=utf-8');
     $res->body(qq~
-        404 Not Found
-        Path does not exist: ~ . $req->path . qq~
-        $global->{'app_title'} has escaped the paddock!
-        ~ .
-        "<a href=\"/\">Go back to safety</a>"
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1">
+            <title>404 Not Found - $global->{'app_title'}</title>
+            <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+            <style>
+                body { background-color: #1A2122; color: white; }
+                .error-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+                .error-card { text-align: center; padding: 40px; background: rgba(15, 23, 36, 0.8); border-radius: 12px; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+                .error-code { font-size: 96px; font-weight: bold; color: #dc3545; margin: 0; line-height: 1; }
+                .error-message { font-size: 24px; margin: 20px 0; }
+                .error-description { color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+                .btn { min-width: 200px; }
+            </style>
+        </head>
+        <body>
+            <div class="error-container">
+                <div class="error-card">
+                    <div class="error-code">404</div>
+                    <h1 class="error-message">Page Not Found</h1>
+                    <p class="error-description">$global->{'app_title'} has escaped the paddock!</p>
+                    <p class="error-description small">Path does not exist: <code style="color: #adb5bd;">~ . $req->path . qq~</code></p>
+                    <a href="/" class="btn btn-lg btn-success">Go back to safety</a>
+                </div>
+            </div>
+        </body>
+        </html>
         ~);
     return $res->finalize;
     };   # End main loop, pages and paths handling
