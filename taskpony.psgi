@@ -1653,6 +1653,8 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <strong>
                         ~;
         if ($config->{'cfg_show_quickswitcher'} eq 'on') {
+            if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
+
             $html .= qq~
                             <span class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
                             &nbsp;
