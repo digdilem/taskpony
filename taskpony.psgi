@@ -41,7 +41,7 @@ our $config = {
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
-    cfg_quickswitch => 'on',                    # Whether to enable quickswitch (press first letter of a tab to switch to it)
+    cfg_show_quickswitcher => 'on',             # Whether to enable quickswitch (Colour buttons at the top)
     database_schema_version => 1,               # Default. Don't ever change this. Current version will be read from the database on startup on existing installs.
     };
 
@@ -1136,7 +1136,6 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
         # Show or hide date column based on config
         if ($config->{'cfg_show_dates'} eq 'on') {
-
             if ($status == 1) {  # Active tasks. Show added date
                 $html .= "            <th>Added</th>\n";
                 } else { # Completed tasks. Show completed date
@@ -2912,7 +2911,7 @@ sub receive_settings { # Receive Settings form. No direct output
             } else { # No parameter passed for key, store existing
             debug("No parameter passed for ($key), using existing [$config->{$key}]");
             # Special handling for checkboxes which will return void if not set
-            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
+            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_show_quickswitcher|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
                 $new_val = 'off';
                 debug("Belay that, this is a checkbox, set it to off");
                 } else {
