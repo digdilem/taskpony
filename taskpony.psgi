@@ -510,15 +510,14 @@ sub header {
         }
 
         .card-header-accent::before {
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             right: 0;
             width: 0;
             height: 0;
-            border-style: solid;
-            border-width: 50px 50px 0 0;
-            border-color: #ffc107 transparent transparent transparent;
+            border-top: 40px solid #ffc107;   
+            border-left: 40px solid transparent;
         }
 
         .card-header-accent {
