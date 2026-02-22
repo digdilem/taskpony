@@ -207,7 +207,6 @@ my $app = sub {
     # Change a list from active to archived
     if ($req->path =~ m{^/list_archive/(\d+)$})     { action_list_archive($1);  $res->redirect('/lists'); return $res->finalize; }
 
-
     ###############################################
     # !SHOW functions
     # Show the settings page
@@ -227,7 +226,6 @@ my $app = sub {
     # As above, but from the task list page, so we can redirect back there after submission
     if ($req->path =~ m{^/list_edit_fromtask/(\d+)$})                 { $res->body(show_list_edit($1,2));          return $res->finalize; }
 
-
     ###############################################
     # !RECEIVE functions
     # Receive edit task form. No output, redirect to root
@@ -239,7 +237,7 @@ my $app = sub {
     # Receive background image upload form submission
     if ($req->path eq '/settings_background_form')           { receive_settings_background($req); $res->redirect('/settings'); return $res->finalize; }
 
-    # Receive Lists form
+    # Receive Lists form (Variable redirect page if came from /lists or /)
     if ($req->path =~ m{^/list_form/(\d+)$})                 {
             receive_form_list($req, $1);
             my $list_edit_return_pagevalue = $req->param('return_page') // 1;
@@ -248,7 +246,6 @@ my $app = sub {
             else { $res->redirect('/lists'); }
             return $res->finalize;
             }
-
 
     ###############################################
     # !MISC functions
@@ -571,6 +568,10 @@ sub header {
     # Add the list selection pulldown.
     $html .= list_pulldown($page->{'list_id'});
 
+    # If configured, show to quickswitcher
+    $html .= show_quickswitcher();
+
+    # Start the top-right button group
     $html .= qq~
                     </div>
                     <div class="btn-group" role="group">
@@ -805,6 +806,7 @@ sub list_pulldown {
     $html .= '</select>';
     return $html;
     } # End list_pulldown()
+
 
 ###############################################
 # sanitize($s)
@@ -2161,9 +2163,22 @@ sub show_404 {
     return $res->finalize;
     }
 
+sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which is a row of coloured dots
+    return if ($config->{'cfg_show_quickswitcher'} ne 'on');  # Not configured. Bailing.
+    my $html = '';
+    # Loop through lists and show a dot for each, using the list colour if set
+    my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND Colour IS NOT NULL ORDER BY Title ASC');
+    $sth->execute();
+    while (my $list = $sth->fetchrow_hashref()) {
+        $html .= qq~
+            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="html_escape($list->{'Title'})"></a>
+            ~;
+        }
+    return $html;
+    } # End show_quickswitcher()
+
 # End SHOW functions
 ###############################################
-
 
 ###############################################
 # MISC functions - things that don't fit anywhere else
