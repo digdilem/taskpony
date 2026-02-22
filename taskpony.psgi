@@ -517,8 +517,8 @@ sub header {
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: 50px 0 0 50px;
-            border-color: transparent transparent transparent #ffc107;
+            border-width: 0 50px 50px 0;
+            border-color: #ffc107 transparent transparent transparent;
         }
 
         .card-header-accent {
