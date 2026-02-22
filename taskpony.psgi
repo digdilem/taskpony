@@ -2580,7 +2580,7 @@ sub action_task_complete { # Set task nn as completed  (Status 2) in TasksTb
     if ($task_id && $task_id =~ /^\d+$/) {  # Check it's a valid numeric ID before we do anything
         print STDERR "ACTION: Marking task $task_id as complete\n";
         my $sth = $dbh->prepare(
-            'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP WHERE id = ?'
+            'UPDATE TasksTb SET Status = 2, CompletedDate = CURRENT_TIMESTAMP, TimesCompleted = TimesCompleted + 1 WHERE id = ?'
             );
         eval { $sth->execute($task_id); 1 } or print STDERR "Setting task $task_id as completed failed: $@";
         $stats->{'tasks_completed_today'} += 1;
