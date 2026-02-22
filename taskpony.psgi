@@ -70,7 +70,6 @@ our $page = {
     list_name => '',                # Current list name
     list_colour => '',              # Current list highlight colour (overrides default)
     alert_text => '',               # If set, show this alert text on page load
-    show_completed => 0,            # If set to 1, show completed tasks instead of active ones
     do_mtime => 1,                  # If set to 1, the page will check /api/dbstate every $page->{'db_interval_check_ms'} milliseconds to see if the database has changed
     db_interval_check_ms => 60000,  # How many milliseconds between checking /api/dbstate for changes to know when to reload the tasks page
     default_listid => 0,            # default ListId from ListsTb
@@ -167,8 +166,6 @@ my $app = sub {
     calculate_stats();                          # Update stats hashref if needed
     update_db_mtime();                          # Ensure we have the latest mtime cached as $page->{'db_mtime'}
 
-    $page->{'show_completed'} = $req->param('sc') // 0;   # If ?sc=1 we want to show completed tasks. !!
-
     ###############################################
     # Preflight checks done. First, check with simple redirectors
     ###############################################
@@ -224,7 +221,9 @@ my $app = sub {
     # Show /lists page with all lists and management options
     if ($req->path eq "/lists")                              { $res->body(show_lists());                return $res->finalize; }
     # Main landing page, the current task list
-    if ($req->path eq "/" )                                  { $res->body(show_maintasks());            return $res->finalize; }
+    if ($req->path eq "/" )                                  { $res->body(show_maintasks(1));           return $res->finalize; } # Show active tasks
+    # As above, but show completed tasks only
+    if ($req->path =~ m{^/task_completed/(\d+)$})            { $res->body(show_maintasks(2));            return $res->finalize; } # Show completed tasks
     # Show the edit list form (from /lists page)
     if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1,1));          return $res->finalize; }
     # As above, but from the task list page, so we can redirect back there after submission
@@ -451,6 +450,7 @@ sub check_database_upgrade  {
 ###############################################
 # Return HTML header for all pages
 sub header {
+    my $status = shift || 1;  # Status of Tasks to show (1 = active, 2 = completed)
     my $html = qq~
     <!doctype html>
     <html lang="en" class="dark">
@@ -605,13 +605,13 @@ sub header {
             ~;
 
     # Show completed/active button
-    if ($page->{'show_completed'} == 0) {  # We're on the active tasks page, so show button for completeds
+    if ($status == 1) {  # We're on the active tasks page, so show button for completeds
                 my $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2 AND ListId = $page->{'list_id'}");
                 if ($page->{'list_id'} == 1) {
                     $cnt_completed_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 2");
                     }
                 $html .= qq~
-                <a href="/?sc=1"
+                <a href="/task_completed/$page->{'list_id'}"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_completed_tasks completed tasks in '$page->{'list_name'}'" >
                     $icons->{'rotate_left'}
@@ -623,7 +623,7 @@ sub header {
                     $cnt_active_tasks = single_db_value("SELECT COUNT(*) FROM TasksTb WHERE Status = 1");
                     }
                 $html .= qq~
-                <a href="/"
+                <a href="/list/$page->{'list_id'}"
                     class="btn btn-sm btn-$config->{'cfg_header_colour'} d-inline-flex align-items-center"
                     data-bs-toggle="tooltip" data-bs-placement="auto" title="Show $cnt_active_tasks active tasks in '$page->{'list_name'}'" >
                     $icons->{'rotate_right'}
@@ -1619,7 +1619,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <a href="/list/1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Active Tasks">
                         $all_active
                         </a> /
-                        <a href="/list/1?sc=1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
+                        <a href="/task_completed/1" class="text-white text-decoration-none" data-bs-placement="auto" title="Show all Completed Tasks">
                         $all_completed
                         </a>
                     </td>
@@ -1675,7 +1675,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         <a href="/list/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                             $active_count
                         </a> /
-                        <a href="/list/$list->{'id'}?sc=1" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
+                        <a href="/task_completed/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to completed tasks for $title">
                             $completed_count
                         </a>
                     </td>
@@ -2022,6 +2022,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
     } # End show_settings()
 
 sub show_maintasks { # show_maintasks() - Show the main list of tasks, either active or completed, for a given list or all lists
+    my $status = shift || 1;  # Status to show, but default to showing active tasks
     my $html = header();
 
     # Set default titlebar to be the quick add form for the selected list
@@ -2035,7 +2036,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($page->{'list_id'} == 1) {
-        if ($page->{'show_completed'} == 1) {
+        if ($status == 2) {
             $titlebar = "Showing completed tasks from all lists";
             } else {
             $titlebar = "Showing active tasks from all lists";
@@ -2047,8 +2048,8 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
     ####################################
     # Show main list of tasks
 
-    # Show completed tasks if ?sc=1
-    if ($page->{'show_completed'} == 1) {
+    # Show completed tasks
+    if ($status == 2) {
         $html .= show_tasks(2,$page->{'list_id'},0);
         } else { # Else show active tasks
         $html .= show_tasks(1,$page->{'list_id'},0);
