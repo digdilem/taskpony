@@ -1833,14 +1833,16 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                 $icons->{'list'}Show All Tasks
                 </a>
             </p>
-            <p>
-                <a href="/show-recurring" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all recurring tasks from all lists on a single, sorted page">
-                $icons->{'repeat'} Show Recurring Tasks
-                </a>
-            </p>
+
             <p>
                 <a href="/tasks_export_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="Export all tasks as a CSV file">
                 $icons->{'fileexport'} Export All Tasks
+                </a>
+            </p>
+
+            <p>
+                <a href="/show-recurring" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all recurring tasks from all lists on a single, sorted page">
+                $icons->{'repeat'} Show Recurring Tasks
                 </a>
             </p>
             </div>
