@@ -2122,7 +2122,7 @@ sub show_404 {
                     <div class="error-code">404</div>
                     <h1 class="error-message">Page Not Found</h1>
                     <p class="error-description">$global->{'app_title'} has escaped the paddock!</p>
-                    <p class="error-description small">Path does not exist: <span class="text-muted">$badpath</span></p>
+                    <p class="error-description small">Path does not exist: <span class="text-white">$badpath</span></p>
                     <a href="/" class="btn btn-lg btn-success">Go back to safety</a>
                 </div>
             </div>
