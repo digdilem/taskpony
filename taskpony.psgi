@@ -222,8 +222,10 @@ my $app = sub {
     if ($req->path eq "/lists")                              { $res->body(show_lists());                return $res->finalize; }
     # Main landing page, the current task list
     if ($req->path eq "/" )                                  { $res->body(show_maintasks());            return $res->finalize; }
-    # Show the edit list form
-    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1));          return $res->finalize; }
+    # Show the edit list form (from /lists page)
+    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1,1));          return $res->finalize; }
+    # As above, but from the task list page, so we can redirect back there after submission
+    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1,2));          return $res->finalize; }
 
 
     ###############################################
@@ -238,7 +240,13 @@ my $app = sub {
     if ($req->path eq '/settings_background_form')           { receive_settings_background($req); $res->redirect('/settings'); return $res->finalize; }
 
     # Receive Lists form
-    if ($req->path =~ m{^/list_form/(\d+)$})                 { receive_form_list($req, $1);        $res->redirect('/lists'); return $res->finalize; }
+    if ($req->path =~ m{^/list_form/(\d+)$})                 {
+            receive_form_list($req, $1);
+            if ($req->param('return_page') == '2') { $res->redirect($req->param('/')); }  # Return to active list page if came from there
+            else { $res->redirect('/lists'); }
+            return $res->finalize;
+            }
+
 
     ###############################################
     # !MISC functions
@@ -2047,7 +2055,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
     } # End show_tasks()
 
  sub show_list_edit { # show_list_edit() - Show the form to edit a list, pre-populated with the list details
-    my $edit_listid = shift;
+    my ($edit_listid, $from_page) = @_;  # $from_page: 1 = return to /lists, 2 = return to /list/X, 3 = return to where you were before
     my $list;
     my $gutter_text = 'This will be a new list which will be created when you click "Save List"';
     my $card_title = "Create New List";
@@ -2067,6 +2075,8 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
     $html .= start_card($card_title, $icons->{'list'}, 0);
     $html .= qq~
             <form method="post" action="/list_form/$edit_listid" class="row g-3">
+                <input type="hidden" name="return_page" id="return_page" value="$from_page" />
+
                 <div class="col-12">
                     <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="auto" title="The name of this List">Title</label>
                     <input name="Title" class="form-control" required maxlength="255" value="~ . html_escape($list->{'Title'}) . qq~" />
