@@ -2122,7 +2122,7 @@ sub show_404 {
                     <div class="error-code">404</div>
                     <h1 class="error-message">Page Not Found</h1>
                     <p class="error-description">$global->{'app_title'} has escaped the paddock!</p>
-                    <p class="error-description small">Path does not exist: <code style="color: #adb5bd;">~ . $req->path . qq~</code></p>
+                    <p class="error-description small">Path does not exist: <code style="color: #adb5bd;">$badpath</code></p>
                     <a href="/" class="btn btn-lg btn-success">Go back to safety</a>
                 </div>
             </div>
@@ -2131,39 +2131,6 @@ sub show_404 {
         ~);
     return $res->finalize;
     }
-
-
-
-
-
-
-# !! Show add list
-        #   <!-- Add New List Tab -->
-        #   <div class="tab-pane fade" id="add-list" role="tabpanel" aria-labelledby="add-list-tab">
-        #     <div class="card bg-dark text-white">
-        #       <div class="card-header bg-$config->{'cfg_header_colour'} text-white d-flex align-items-center gap-2">
-        #         <span>$icons->{'list'}_add</span>
-        #         <span>Add a New List <a href=# class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Create a new List to organize your tasks">$icons->{'info'}</a></span>
-        #       </div>
-        #       <div class="card-body">
-        #         <form method="post" action="/list_form" class="row g-3">
-        #           <input type="hidden" name="action" value="add" />
-        #           <div class="col-12">
-        #             <label class="form-label">Title</label>
-        #             <input name="Title" class="form-control" required maxlength="255" placeholder="Give your new list a useful name" />
-        #           </div>
-        #           <div class="col-12">
-        #             <label class="form-label">Description</label>
-        #             <textarea name="Description" class="form-control" rows="3" maxlength="2000" placeholder="Optional description for your new list"></textarea>
-        #           </div>
-        #           <div class="col-12 text-end">
-        #             <button class="btn btn-primary" type="submit">Add List</button>
-        #             <a class="btn btn-secondary" href="/">Cancel</a>
-        #           </div>
-        #         </form>
-        #       </div>
-        #     </div>
-        #   </div>
 
 # End SHOW functions
 ###############################################
