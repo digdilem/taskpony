@@ -513,12 +513,12 @@ sub header {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            right: 0;
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: 50px 50px 0 0;
-            border-color: #ffc107 transparent transparent transparent;
+            border-width: 200px 200px 0 0;
+            border-color: #ffc107 #ffc107 transparent transparent;
         }
 
         .card-header-accent {
