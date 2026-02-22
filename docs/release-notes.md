@@ -15,7 +15,7 @@
 
 ## Features
 
-- Quickswitch dots. On each list you can set a Quickswitch colour which will appear at the top of every page. Click the dot to switch to that list - just a little quicker than selecting from the list for frequently used lists. This replaces the Highlight Colour option which just changed the card header background, so to help remind you which list you're in there's a little flash at the top right of the card for highlighted lists. Lists page also shows what colour is selected for each list - IF enabled.
+- Quickswitch dots. On each list you can set a Quickswitch colour which will appear at the top of every page. Click the dot to switch to that list - just a little quicker than selecting from the list for frequently used lists. This replaces the Highlight Colour option which just changed the card header background, so to help remind you which list you're in there's a little flash at the top right of the card for highlighted lists. Lists page also shows what colour is selected for each list - IF enabled.  All this is toggled on and off with the new "Show Quick Switcher" variable in the Settings page.
 - New page /showalltasks  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks. Button under Lists -> List Actions
 - New page /show-recurring  Lists all the tasks, active or completed, which are set as Recurring. Button under Lists -> List Actions. This page makes it easier to review recurring tasks.
 - New card under /lists for "List Actions" to contain new functions.
