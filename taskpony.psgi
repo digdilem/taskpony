@@ -554,8 +554,8 @@ sub header {
             -moz-osx-font-smoothing: grayscale;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             max-width: 450px;
-            font-size: 19.5px;
-            line-height: 1.4;
+            font-size: 12.5px;
+            line-height: 1.2;
         }
 
         .tooltip-arrow::before {
@@ -1868,7 +1868,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             <div class="card-body">
             <p>
                 <a href="/show_tasks_all" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all tasks from all lists on a single, sorted page">
-                $icons->{'list'}letters Show All Tasks
+                $icons->{'list'}Show All Tasks
                 </a>
             </p>
             <p>
