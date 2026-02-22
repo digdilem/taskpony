@@ -2171,6 +2171,7 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
         $html .= qq~
+            <!-- Quickswitcher dot for list $list->{'Title'} -->
             <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="html_escape($list->{'Title'})"></a>
             ~;
         }
