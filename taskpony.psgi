@@ -225,7 +225,7 @@ my $app = sub {
     # Show the edit list form (from /lists page)
     if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1,1));          return $res->finalize; }
     # As above, but from the task list page, so we can redirect back there after submission
-    if ($req->path =~ m{^/list_edit/(\d+)$})                 { $res->body(show_list_edit($1,2));          return $res->finalize; }
+    if ($req->path =~ m{^/list_edit_fromtask/(\d+)$})                 { $res->body(show_list_edit($1,2));          return $res->finalize; }
 
 
     ###############################################
@@ -1395,7 +1395,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
         if ($page->{'list_id'} != 1) {  # Not "All lists", so show link to add task to this list
             $html .= qq~
-            <a href="/list_edit/$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+            <a href="/list_edit_fromtask/$page->{'list_id'}" class="text-$config->{'cfg_header_colour'} text-decoration-none"
             data-bs-toggle="tooltip" data-bs-placement="auto"
             title="Edit this list">
                 $smallicons->{'edit'}
