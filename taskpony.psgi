@@ -2731,8 +2731,11 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
                                 <a class="btn btn-danger" href="/task_delete/$task_id">Delete Task</a>
                             </div>
 
-                            <br>
+                            <hr>
                             <p class="text-secondary">
+                                <strong>Task ID:</strong> $task->{'id'}<br>
+                                <strong>Status:</strong> $task_status<br>
+                                <strong>Times Completed:</strong> $task->{'TimesCompleted'}<br>
                                 This task was created $task->{'AddedDate'}
                                 ~;
                                 if ($task->{'CompletedDate'}) {
@@ -2740,9 +2743,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
                                     }
                                 $html .= qq~
                             </p>
-
                             </div>
-
                         </form>
                 ~;
 
