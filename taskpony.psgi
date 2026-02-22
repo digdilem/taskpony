@@ -899,7 +899,7 @@ sub debug {
 # SHOW functions - Functions that show html
 
 sub show_tasks_all {    # Loop through all active lists and show a panel for each with the tasks in that list.
-    my $html = header();
+    my $html = header(0);
 
     my $lists_sth = $dbh->prepare("SELECT id, Title FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC");
     $lists_sth->execute();
@@ -1427,7 +1427,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
     } # End show_tasks()
 
 sub show_stats { # show_stats() - Show various stats about the tasks and lists in a table format
-    my $html = header();
+    my $html = header(0);
     $html .= start_card('Statistics', $icons->{'chart'}, 0);
 
     $html .= qq~
@@ -1547,7 +1547,7 @@ sub show_stats { # show_stats() - Show various stats about the tasks and lists i
     } # End /stats
 
 sub show_tasks_recurring { # show_tasks_recurring() - Show all recurring tasks in a single table, regardless of list or status, with an indicator of their status and interval
-    my $html = header();
+    my $html = header(0);
     $html .= start_card('Recurring Tasks', $icons->{'repeat'}, 1);
     $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
     $html .= end_card(1);
@@ -1556,7 +1556,7 @@ sub show_tasks_recurring { # show_tasks_recurring() - Show all recurring tasks i
     }
 
 sub show_lists { # show_lists() - Show all lists with stats on how many active and completed tasks in each, and links to view each list, edit the list, and add a task to the list
-    my $html = header();
+    my $html = header(0);
 
     # Page - Display List of Lists #List
     ###############################################
@@ -2023,8 +2023,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
 sub show_maintasks { # show_maintasks() - Show the main list of tasks, either active or completed, for a given list or all lists
     my $status = shift || 1;  # Status to show, but default to showing active tasks
-print STDERR "=== DEBUG: status = $status\n";
-    my $html = header();
+    my $html = header($status);
 
     # Set default titlebar to be the quick add form for the selected list
     my $titlebar = qq~</h2>
@@ -2081,7 +2080,7 @@ print STDERR "=== DEBUG: status = $status\n";
         $list->{'id'} = 0;
         }
 
-    my $html = header();
+    my $html = header(0);
     $html .= start_card($card_title, $icons->{'list'}, 0);
     $html .= qq~
             <form method="post" action="/list_form/$edit_listid" class="row g-3">
@@ -2596,7 +2595,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
         my $task = $sth->fetchrow_hashref() or print STDERR "WARN: No task found with ID ($task_id) passed to action_task_edit\n";
 
         if ($task) {
-            my $html = header();
+            my $html = header(0);
 
             # Build list dropdown for later use in the form
             my $list_dropdown = qq~<select name="ListId" class="form-select" required>~;
@@ -2837,7 +2836,7 @@ sub action_list_archive { # Make List nn archived by setting DeletedDate to curr
     } # End action_list_archive
 
 sub action_task_add { # Show the add task form
-    my $html = header();
+    my $html = header(0);
     $html .= qq~
         <div class="container py-2">
             <h3 class="mb-3">Add Task</h3>
