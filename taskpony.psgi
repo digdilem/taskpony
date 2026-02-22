@@ -1666,7 +1666,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
     ~;
 
     my $list_sth = $dbh->prepare(
-        'SELECT id, Title, Description, IsDefault FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC'
+        'SELECT id, Title, Description, Colour, IsDefault FROM ListsTb WHERE DeletedDate IS NULL AND id != 1 ORDER BY Title ASC'
         );  # Don't select ListsTb.id=1, "All"
     $list_sth->execute();
 
@@ -1688,8 +1688,9 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                     <tr>
                     <td>
                         <strong>
-                        <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none" href="/list/$list->{'id'}">
                             <span class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
+                                &nbsp;
+                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none"">
                             $title
                         </a>
                         </span>
