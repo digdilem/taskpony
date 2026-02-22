@@ -258,7 +258,8 @@ my $app = sub {
         404 Not Found
         Path does not exist: ~ . $req->path . qq~
         $global->{'app_title'} has escaped the paddock!
-        <a href="/">Go back to safety</a>
+        ~ .
+        "<a href=\"/\">Go back to safety</a>"
         ~);
     return $res->finalize;
     };   # End main loop, pages and paths handling
