@@ -41,7 +41,8 @@ our $config = {
     cfg_backup_number_to_keep => 7,             # Number of daily DB backups to keep
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
-    database_schema_version => 1,               # Don't change this. True version will be read from the database on startup.
+    cfg_quickswitch => 'on',                    # Whether to enable quickswitch (press first letter of a tab to switch to it)
+    database_schema_version => 1,               # Default. Don't ever change this. Current version will be read from the database on startup on existing installs.
     };
 
 ###############################################
@@ -49,7 +50,7 @@ our $config = {
 our $global = {
     app_title => 'Taskpony',                    # Name of app
     app_version => '0.6',                       # Version of app
-    database_schema_version => 2,               # Current database schema version. Do not change this, it will be modified during updates.
+    database_schema_version => 2,               # Target database schema version. If config value is below this, then auto upgrade will be attempted.
     github_version_url => 'https://api.github.com/repos/digdilem/taskpony/releases/latest',     # Used to get latest version for upgrade notification
     app_releases_page => 'https://github.com/digdilem/taskpony',                                # Where new versions are
     new_version_available => 0,                 # Set to 1 if a new version is available on github
@@ -113,7 +114,6 @@ my $icons = {
     star_on => build_tabler_icon('StarOn'),    # Star filled icon
     trash => build_tabler_icon('Trash'),  # Trash can icon
     xcircle => build_tabler_icon('XCircle'),  # X in circle icon
-#    listletters => build_tabler_icon('ListLetters'),  # List with letters icon
     };
 
 my $smallicons = { # Similar idea as above, but these are coloured in the current highlight colour
@@ -123,7 +123,6 @@ my $smallicons = { # Similar idea as above, but these are coloured in the curren
     edit => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415" /><path d="M16 5l3 3" />'),
     listnumbers => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11 6h9" /><path d="M11 12h9" /><path d="M12 18h8" /><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4" /><path d="M6 10v-6l-2 2" />'),
     plus => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" />'),
-#    link_slash => build_inline_icon(16,'<path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 22v-2" /><path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" /><path d="M20 17h2" /><path d="M2 7h2" /><path d="M7 2v2" />'),
     };
 
 
@@ -252,9 +251,8 @@ my $app = sub {
 
     # End path redirectors
     ###############################################
-    # If we got here, no path matched. Show a 404
-    show_404($req->path); # This will print a 404 message to STDERR and return a 404 page to the client
-
+    # If we got here, no path matched. Show a 404 to STDERR and return a 404 page to the client
+    show_404($req->path);
     };   # End main loop, pages and paths handling
 
 builder { # Enable Static middleware for specific paths, including favicon.ico, css and js  Launches main loop on first run.
@@ -401,7 +399,7 @@ sub check_database_upgrade  {
     # Check database_schema_version in ConfigTb and compare to this script's $global->{'database_schema_version'}  - assume v.1 if it's missing
     my $current_db_version = single_db_value("SELECT `value` FROM ConfigTb WHERE `key` = 'database_schema_version' LIMIT 1") || 1;
 
-    if ($current_db_version < $global->{'database_schema_version'}) {
+    if ($current_db_version < $global->{'database_schema_version'}) { # If current is lower than required, we need to upgrade
         print STDERR "INFO: Database schema version is $current_db_version - $global->{'app_title'} requires schema $global->{'database_schema_version'}.\n";
 
         if ($current_db_version == 1) {
@@ -412,9 +410,9 @@ sub check_database_upgrade  {
             # List of queries required to upgrade from v.1 to v.2
             my @db_upgrade_steps_1_to_2 = (
                 "UPDATE ListsTb SET Title = 'All Tasks' WHERE Title = 'All Lists';",                # Change name of 'All Lists' to 'All Tasks'
-                "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';",       # Update version number in ConfigTb
                 "ALTER TABLE TasksTb ADD COLUMN IsRecurring TEXT DEFAULT 'off';",                   # New column to indicate whether task is recurring
                 "ALTER TABLE TasksTb ADD COLUMN RecurringIntervalDay INTEGER DEFAULT 1;",           # New column to indicate recurring interval in days
+                "UPDATE ConfigTb SET `value` = '2' WHERE `key` = 'database_schema_version';",       # Update version number in ConfigTb
                 );
 
             foreach my $upgrade_query (@db_upgrade_steps_1_to_2) {
@@ -516,7 +514,7 @@ sub header {
             right: 0;
             width: 0;
             height: 0;
-            border-top: 40px solid #ffc107;   
+            border-top: 40px solid #ffc107;
             border-left: 40px solid transparent;
         }
 
@@ -1939,6 +1937,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
             <div class="card-body">
             ~;
 
+            $html .= config_show_option('cfg_show_quickswitcher','Show Quick Switcher','Show the quick switcher at the top of every page','check',0,0);
             $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
             $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
             $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
