@@ -1681,7 +1681,8 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         $html .= qq~
                     <tr>
                     <td>
-                        <strong>
+                        <a href="/list/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                            <strong>
                         ~;
         if ($config->{'cfg_show_quickswitcher'} eq 'on') {
             if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
@@ -1690,13 +1691,11 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                             <span class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
                             &nbsp;
             ~;
-            }
+            } # End quickswitcher colour dot if enabled
         $html .= qq~
-                            <span data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to List"><a class="text-white text-decoration-none"">
                             $title
+                            </strong>
                         </a>
-                        </span>
-                        </strong>
                     </td>
                     <td>
                         $desc
@@ -2159,7 +2158,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
         my $sth = $dbh->prepare('SELECT * FROM ListsTb WHERE id = ?');
         $sth->execute($edit_listid);
         $list = $sth->fetchrow_hashref();
-        $gutter_text = "This is list id #$edit_listid which was created on $list->{'CreatedDate'}";
+        $gutter_text = "This is list #$edit_listid which was created on $list->{'CreatedDate'}";
         $card_title = "Edit List: $list->{'Title'}";
         } else { # No listid supplied, assume it's new. Prime some values
         $list->{'Title'} = '';
