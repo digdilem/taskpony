@@ -1596,7 +1596,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
     $html .= qq~
             <ul class="nav nav-tabs mb-4" id="listsTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
+                    <button class="nav-link active bg-$config->{cfg_header_colour} text-white" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
                 </li>
 
                 <li class="nav-item" role="presentation">
