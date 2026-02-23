@@ -1552,7 +1552,7 @@ sub show_stats { # show_stats() - Show various stats about the tasks and lists i
                         } else {
                         my $local_hostname = `hostname`;
                         chomp($local_hostname);
-                        $html .= qq~Running on host '$local_hostname' as a native service ~;
+                        $html .= qq~Running on host <strong class="text-white">$local_hostname</strong> as a native service ~;
                         }
                     $html .= qq~
                 </span>
