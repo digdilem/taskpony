@@ -492,7 +492,6 @@ sub header {
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" href="/static/css/taskpony.css">
 
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/jquery.dataTables.min.js"></script>
@@ -506,6 +505,84 @@ sub header {
     <script src="/static/js/vfs_fonts.js"></script>
 
     <script src="/static/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        html { overflow-y: scroll; }
+        body { background-color: #1A2122; }
+        .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
+        .muted { color: rgba(255,255,255,0.65); }
+        .dt-hidden { visibility: hidden; }
+        .header-bar { min-height: 72px; }
+        .dataTables_paginate .paginate_button.disabled { display: none !important; }
+        .icon { width: 1em; height: 1em; vertical-align: middle; }
+        .icon-white { filter: brightness(0) invert(1); }
+        .icon-highlight { filter: brightness(1.2) saturate(1.5); }
+
+        /* Improved tooltip styling */
+        .tooltip-inner {
+            background-color: #1A2122;
+            border: 3px solid #ffffff;
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            max-width: 450px;
+            font-size: 17.5px;
+            line-height: 1.2;
+        }
+
+        .tooltip-arrow::before {
+            border-top-color: #1A2122;
+        }
+
+        .bs-tooltip-top .tooltip-arrow::before,
+        .bs-tooltip-bottom .tooltip-arrow::before {
+            border-top-color: #1A2122;
+        }
+
+        .bs-tooltip-start .tooltip-arrow::before,
+        .bs-tooltip-end .tooltip-arrow::before {
+            border-left-color: #1A2122;
+        }
+
+        .quickswitcher-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1 1 auto;
+        }
+
+        .quickswitcher-dot {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 0 6px rgba(0,0,0,0.6);
+            cursor: pointer;
+        }
+
+        .card-header-accent::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 40px solid $page->{'list_colour'};
+            border-left: 40px solid transparent;
+        }
+
+        .card-header-accent {
+            position: relative;
+            overflow: hidden;
+        }
+
+    </style>
+
     </head>
     <body
         class="text-white d-flex flex-column min-vh-100"
@@ -1517,7 +1594,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
 
     # Build the tab navigation
     $html .= qq~
-            <ul class="nav nav-tabs mb-4" id="listsTabs" role="tablist">
+			<ul class="nav nav-tabs mb-4 bg-$config->{cfg_header_colour}" id="listsTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="active-lists-tab" data-bs-toggle="tab" data-bs-target="#active-lists" type="button" role="tab" aria-controls="active-lists" aria-selected="true">Active Lists</button>
                 </li>
