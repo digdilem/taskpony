@@ -1550,7 +1550,9 @@ sub show_stats { # show_stats() - Show various stats about the tasks and lists i
                     if ($global->{'running_in_docker'} == 1) {
                         $html .= qq~Running inside Docker ~;
                         } else {
-                        $html .= qq~Running on host as a native service ~;
+                        my $local_hostname = `hostname`;
+                        chomp($local_hostname);
+                        $html .= qq~Running on host '$local_hostname' as a native service ~;
                         }
                     $html .= qq~
                 </span>
