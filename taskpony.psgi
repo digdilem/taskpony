@@ -1923,7 +1923,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         push @move_lists, { id => $ml->{'id'}, title => html_escape($ml->{'Title'}) };
         } # End move lists building
 
-    # Convert to JSON for JavaScript use
+    # Convert to JSON for JavaScript use.
     my $move_lists_json = '[';
     foreach my $i (0 .. $#move_lists) {
         my $ml = $move_lists[$i];
