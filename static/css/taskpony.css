@@ -1,87 +1,106 @@
-
-    <style>
-        html { overflow-y: scroll; }
-        body { background-color: #1A2122; }
-        .card-dark { background-color: #0f1724; border-color: rgba(255,255,255,0.05); }
-        .muted { color: rgba(255,255,255,0.65); }
-        .dt-hidden { visibility: hidden; }
-        .header-bar { min-height: 72px; }
-        .dataTables_paginate .paginate_button.disabled { display: none !important; }
-        .icon { width: 1em; height: 1em; vertical-align: middle; }
-        .icon-white { filter: brightness(0) invert(1); }
-        .icon-highlight { filter: brightness(1.2) saturate(1.5); }
-
-        /* Improved tooltip styling */
-        .tooltip-inner {
-            background-color: #1A2122;
-            border: 3px solid #ffffff;
-            border-radius: 8px;
-            padding: 12px 18px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            max-width: 450px;
-            font-size: 17.5px;
-            line-height: 1.2;
-        }
-
-        .tooltip-arrow::before {
-            border-top-color: #1A2122;
-        }
-
-        .bs-tooltip-top .tooltip-arrow::before,
-        .bs-tooltip-bottom .tooltip-arrow::before {
-            border-top-color: #1A2122;
-        }
-
-        .bs-tooltip-start .tooltip-arrow::before,
-        .bs-tooltip-end .tooltip-arrow::before {
-            border-left-color: #1A2122;
-        }
-
-        .quickswitcher-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            flex: 1 1 auto;
-        }
-
-        .quickswitcher-dot {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.5);
-            box-shadow: 0 0 6px rgba(0,0,0,0.6);
-            cursor: pointer;
-        }
-
-        .card-header-accent::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-top: 40px solid $page->{'list_colour'};
-            border-left: 40px solid transparent;
-        }
-
-        .card-header-accent {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link > li.active > a {
-  color: #3c5a78;
-  font-size: 16px;
-}
-.nav-link > li > a {
-  color: #575757;
+html {
+    overflow-y: scroll;
 }
 
+body {
+    background-color: #1A2122;
+}
 
+.card-dark {
+    background-color: #0f1724;
+    border-color: rgba(255, 255, 255, 0.05);
+}
 
-    </style>
+.muted {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.dt-hidden {
+    visibility: hidden;
+}
+
+.header-bar {
+    min-height: 72px;
+}
+
+.dataTables_paginate .paginate_button.disabled {
+    display: none !important;
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.icon-white {
+    filter: brightness(0) invert(1);
+}
+
+.icon-highlight {
+    filter: brightness(1.2) saturate(1.5);
+}
+
+/* Improved tooltip styling */
+.tooltip-inner {
+    background-color: #1A2122;
+    border: 3px solid #ffffff;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    max-width: 450px;
+    font-size: 17.5px;
+    line-height: 1.2;
+}
+
+.tooltip-arrow::before {
+    border-top-color: #1A2122;
+}
+
+.bs-tooltip-top .tooltip-arrow::before,
+.bs-tooltip-bottom .tooltip-arrow::before {
+    border-top-color: #1A2122;
+}
+
+.bs-tooltip-start .tooltip-arrow::before,
+.bs-tooltip-end .tooltip-arrow::before {
+    border-left-color: #1A2122;
+}
+
+.quickswitcher-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+}
+
+.quickswitcher-dot {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+}
+
+.card-header-accent::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 40px solid $page->{'list_colour'};
+    border-left: 40px solid transparent;
+}
+
+.card-header-accent {
+    position: relative;
+    overflow: hidden;
+}
+
