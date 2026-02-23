@@ -74,6 +74,14 @@
             overflow: hidden;
         }
 
+        .nav-link > li.active > a {
+  color: #3c5a78;
+  font-size: 16px;
+}
+.nav-link > li > a {
+  color: #575757;
+}
+
 
 
     </style>

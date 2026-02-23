@@ -506,8 +506,6 @@ sub header {
     <script src="/static/js/vfs_fonts.js"></script>
 
     <script src="/static/js/bootstrap.bundle.min.js"></script>
-
-
     </head>
     <body
         class="text-white d-flex flex-column min-vh-100"
