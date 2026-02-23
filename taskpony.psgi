@@ -2028,9 +2028,11 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
         $html .= end_card(0);
 
+        $html .= qq~
         </div> <!-- End General Settings tab pane -->
 
         <div class="tab-pane fade" id="background-settings" role="tabpanel" aria-labelledby="background-settings-tab">
+        ~;
 
         $html .= start_card('Background Image Upload', $icons->{'image'}, 0);
 
