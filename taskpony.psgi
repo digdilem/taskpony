@@ -1898,7 +1898,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             </p>
 
             <p>
-                <a href="/show-orphaned" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all orphaned tasks from all lists on a single, sorted page">
+                <a href="/show-orphaned" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View any active but orphaned tasks">
                 $icons->{'unlink'} Show Orphaned Tasks
                 </a>
             </p>
