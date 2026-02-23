@@ -216,6 +216,8 @@ my $app = sub {
     if ($req->path eq '/show_tasks_all')                     { $res->body(show_tasks_all());            return $res->finalize; }
     # Show a page with all recurring tasks
     if ($req->path eq '/show-recurring')                     { $res->body(show_tasks_recurring());      return $res->finalize; }
+    # Show a page with all orphaned tasks
+    if ($req->path eq '/show-orphaned')                      { $res->body(show_tasks_orphaned());       return $res->finalize; }
     # Stats page - show calculated statistics
     if ($req->path eq "/stats")                              { $res->body(show_stats());                return $res->finalize; }
     # Show /lists page with all lists and management options
@@ -1102,17 +1104,20 @@ sub show_alert { # show_alert() - Check ConfigTb for last_alert and if found, sh
         }
     } # End show_alert()
 
-sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_recurring)
+sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_recurring, $show_orphaned)
     # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
     # If $show_recurring is 1, shows all recurring tasks regardless of status
+    # If $show_orphaned is 1, shows all active tasks that do not belong to an active list
 
-    my ($status, $list_id_param, $not_hidden, $show_recurring) = @_;
+    my ($status, $list_id_param, $not_hidden, $show_recurring, $show_orphaned) = @_;
     $page->{'list_id'} = $list_id_param;
     $show_recurring = $show_recurring // 0;  # Default to 0 if not provided
+    $show_orphaned = $show_orphaned // 0;    # Default to 0 if not provided
 
     # Build SQL query
     my $sql = "
-        SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.IsRecurring, t.RecurringIntervalDay, p.Title AS ListTitle
+        SELECT t.id, t.Title, t.Description, t.AddedDate, t.CompletedDate, t.ListId, t.Status, t.IsRecurring, t.RecurringIntervalDay,
+               p.Title AS ListTitle, p.DeletedDate AS ListDeletedDate
         FROM TasksTb t
         LEFT JOIN ListsTb p ON t.ListId = p.id
         WHERE 1=1
@@ -1120,7 +1125,12 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
 
     my @params;  # Array to hold parameters for the query
 
-    if ($show_recurring == 1) {
+    if ($show_orphaned == 1) {
+        # Orphaned tasks: active tasks whose list is not active (archived or missing)
+        $sql .= " AND t.Status = 1 AND (p.id IS NULL OR p.DeletedDate IS NOT NULL) ";
+        debug("show_tasks: Showing orphaned active tasks");
+        }
+        elsif ($show_recurring == 1) {
         # Show all recurring tasks regardless of status
         $sql .= " AND t.IsRecurring = 'on' ";
         debug("show_tasks: Showing all recurring tasks");
@@ -1130,16 +1140,17 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
         push @params, $status;
         }
 
-    if ($page->{'list_id'} != 1 && $show_recurring != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
+    if ($page->{'list_id'} != 1 && $show_recurring != 1 && $show_orphaned != 1) {  # list_id is 1, which means ALL lists. If it's not 1, then filter by list_id
         $sql .= " AND t.ListId = $page->{'list_id'} ";
         debug("show_tasks: Filtering tasks for list_id: [$page->{'list_id'}]");
         } else {
-        if ($show_recurring != 1) {
+        if ($show_recurring != 1 && $show_orphaned != 1) {
             debug("show_tasks: Showing tasks for ALL lists");
             }
         }
 
-    # Append ordering and finish query. If showing recurring, sort by interval and title. Otherwise, sort by date
+    # Append ordering and finish query.
+    # If showing recurring, sort by interval and title. If showing orphaned or normal views, sort by date
     if ($show_recurring == 1) {
         $sql .= " ORDER BY t.RecurringIntervalDay ASC, t.Title ASC ";
         } elsif ($status == 2) {
@@ -1213,14 +1224,15 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
         my $list_title = substr(html_escape($a->{'ListTitle'} // 'Unknown'),0,$config->{cfg_list_short_length});
 
         ###############################################
-        # Check to see whether the List this task belongs to is deleted and if so, show it as being orphaned
+        # Check to see whether the List this task belongs to is inactive or missing, and if so, show it as being orphaned
 
-        my $list_deleted = single_db_value("SELECT COUNT(*) FROM ListsTb WHERE id = ? AND DeletedDate IS NOT NULL", $a->{'ListId'}) // 0;
-        if ($list_deleted != 0) { # List is deleted, this task is an orphan
+        my $list_deleted = 0;
+        if (!defined $a->{'ListTitle'} || (defined $a->{'ListDeletedDate'} && $a->{'ListDeletedDate'} ne '')) {
+            $list_deleted = 1;
             $list_title = '[--No List--]';
 
             # Prefix task title with an orphaned marker, coloured red
-            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This task belongs to a deleted list">
+            $title_link .= qq~<span class="text-$config->{cfg_header_colour}" data-bs-toggle="tooltip" data-bs-placement="auto" title="This task belongs to an inactive or missing list">
                 $smallicons->{'link'}_slash
             </span>
             ~;
@@ -1443,6 +1455,13 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                 title="Show recurring tasks">
                 $smallicons->{'repeat'}
             </a>
+
+            <!-- Show link to orphaned tasks -->
+            <a href="/show-orphaned" class="text-$config->{'cfg_header_colour'} text-decoration-none"
+                data-bs-toggle="tooltip" data-bs-placement="auto"
+                title="Show orphaned tasks">
+                $smallicons->{'orphan'}
+            </a>
             ~;
 
         $html .= qq~
@@ -1580,6 +1599,15 @@ sub show_tasks_recurring { # show_tasks_recurring() - Show all recurring tasks i
     my $html = header(0);
     $html .= start_card('Recurring Tasks', $icons->{'repeat'}, 1);
     $html .= show_tasks(0, 0, 1, 1);  # status=0 (all), list_id=0 (all), not_hidden=1, show_recurring=1
+    $html .= end_card(1);
+    $html .= footer();
+    return $html;
+    }
+
+sub show_tasks_orphaned { # show_tasks_orphaned() - Show all orphaned tasks in a single table, regardless of list or status, with an indicator of their status and interval
+    my $html = header(0);
+    $html .= start_card('Orphaned Tasks', $icons->{'orphan'}, 1);
+    $html .= show_tasks(1, 0, 1, 0, 1);  # status=1 (active), list_id=0 (all), not_hidden=1, show_recurring=0, show_orphaned=1
     $html .= end_card(1);
     $html .= footer();
     return $html;
