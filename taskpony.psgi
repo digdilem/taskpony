@@ -1691,10 +1691,10 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             ~;
             } # End quickswitcher colour dot if enabled
         $html .= qq~
-                        <a href="/list/$list->{'id'}" class="text-white text-decoration-none d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
-                            <strong>
+                        <a href="/list/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+
                                 $title
-                            </strong>
+
                         </a>
                     </td>
                     <td>
