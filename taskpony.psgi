@@ -2069,8 +2069,10 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
     $html .= end_card(0);
 
+    $html .= qq~
         </div> <!-- End Background Settings tab pane -->
     </div> <!-- End settingsTabContent -->
+    ~;
 
     $html .= qq~
     <script>
