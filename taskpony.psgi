@@ -581,6 +581,14 @@ sub header {
             overflow: hidden;
         }
 
+        .nav-tabs > li.active > a {
+        color: #3c5a78;
+        font-size: 16px;
+        }
+        .nav-tabs > li > a {
+        color: #575757;
+        }
+
     </style>
 
     </head>
