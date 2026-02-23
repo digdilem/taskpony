@@ -1940,6 +1940,21 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
 sub show_settings { # show_settings() - Show a form with all the configurable settings and allow them to be updated
     my $html .= header();
 
+    # Settings Tabs navigation (copy look & feel from show_lists)
+    $html .= qq~
+            <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active bg-$config->{cfg_header_colour} text-white" id="general-settings-tab" data-bs-toggle="tab" data-bs-target="#general-settings" type="button" role="tab" aria-controls="general-settings" aria-selected="true">Settings</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link bg-$config->{cfg_header_colour} text-white" id="background-settings-tab" data-bs-toggle="tab" data-bs-target="#background-settings" type="button" role="tab" aria-controls="background-settings" aria-selected="false">Background</button>
+                </li>
+            </ul>
+
+    <div class="tab-content" id="settingsTabContent">
+        <div class="tab-pane fade show active" id="general-settings" role="tabpanel" aria-labelledby="general-settings-tab">
+    ~;
+
     $html .= start_card("Settings", $icons->{'gear'}, 0);
     $html .= qq~
         <form method="post" action="/settings_form" style="display:inline;">
@@ -2013,6 +2028,10 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
         $html .= end_card(0);
 
+        </div> <!-- End General Settings tab pane -->
+
+        <div class="tab-pane fade" id="background-settings" role="tabpanel" aria-labelledby="background-settings-tab">
+
         $html .= start_card('Background Image Upload', $icons->{'image'}, 0);
 
         # Start a second form for the background image upload
@@ -2047,6 +2066,40 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
         ~;
 
     $html .= end_card(0);
+
+        </div> <!-- End Background Settings tab pane -->
+    </div> <!-- End settingsTabContent -->
+
+    $html .= qq~
+    <script>
+    // Save and restore tab selection for Settings using URL hash
+    document.addEventListener('DOMContentLoaded', function() {
+        var settingsTabs = document.getElementById('settingsTabs');
+        if (!settingsTabs) return;
+
+        var hash = window.location.hash;
+
+        // If there's a hash that matches a tab, activate it
+        if (hash) {
+        var targetTab = document.querySelector('[data-bs-target="' + hash + '"]');
+        if (targetTab) {
+            var tab = new bootstrap.Tab(targetTab);
+            tab.show();
+        }
+        }
+
+        // Save the active tab to URL hash when tabs are clicked
+        var tabButtons = settingsTabs.querySelectorAll('.nav-link');
+        tabButtons.forEach(function(button) {
+        button.addEventListener('shown.bs.tab', function(event) {
+            var target = event.target.getAttribute('data-bs-target');
+            window.location.hash = target;
+        });
+        });
+    });
+    </script>
+    ~;
+
     $html .= footer();
     return $html;
     } # End show_settings()

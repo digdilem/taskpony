@@ -19,6 +19,7 @@ Some features for the future that may, or may not, be added.
   - Frivolity: Some sort of extra banner to celebrate every 100 tasks completed?
 
 - Unlikely (Considered and discarded)
+  - Smooshing /Lists, /Settings and /Stats into one multi-tabbed card. This may simplify the header slightly but would change user flow quite a lot. 
   - A List Template system. This might be where you can create a list with a pre-defined set of Tasks already populating it. This might be useful for for repeatable workflows. This may be overly complex to define, however, and may not be possible within the [Goals](../README.md#goals)
   - Groups / teams / multiple users / shared and embeddded tasks = Taskpony is a single user Tasks app. There are several good FOSS groupware/multi-user systems around.
   - Authentication, https = See [security](../README.md#security) for an explanation.
