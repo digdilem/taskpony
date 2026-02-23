@@ -1600,10 +1600,10 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                 </li>
 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="archived-lists-tab" data-bs-toggle="tab" data-bs-target="#archived-lists" type="button" role="tab" aria-controls="archived-lists" aria-selected="false">Archived Lists</button>
+                    <button class="nav-link bg-$config->{cfg_header_colour} text-white" id="archived-lists-tab" data-bs-toggle="tab" data-bs-target="#archived-lists" type="button" role="tab" aria-controls="archived-lists" aria-selected="false">Archived Lists</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="list-actions-tab" data-bs-toggle="tab" data-bs-target="#list-actions" type="button" role="tab" aria-controls="list-actions" aria-selected="false">List Actions</button>
+                    <button class="nav-link bg-$config->{cfg_header_colour} text-white" id="list-actions-tab" data-bs-toggle="tab" data-bs-target="#list-actions" type="button" role="tab" aria-controls="list-actions" aria-selected="false">List Actions</button>
                 </li>
             </ul>
 
