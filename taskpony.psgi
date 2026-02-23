@@ -1107,7 +1107,7 @@ sub show_alert { # show_alert() - Check ConfigTb for last_alert and if found, sh
 sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_recurring, $show_orphaned)
     # Return HTML table of tasks with given status (1=active,2=completed) for given list_id (1=all lists)
     # If $show_recurring is 1, shows all recurring tasks regardless of status
-    # If $show_orphaned is 1, shows all active tasks that do not belong to an active list
+    # If $show_orphaned is 1, shows all active tasks that do not belong to an active list.
 
     my ($status, $list_id_param, $not_hidden, $show_recurring, $show_orphaned) = @_;
     $page->{'list_id'} = $list_id_param;
