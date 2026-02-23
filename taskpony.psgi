@@ -1679,8 +1679,8 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
         my $desc = substr(html_escape($list->{'Description'} // ''), 0, $config->{'cfg_description_short_length'});
 
         $html .= qq~
-                    <tr>
-                    <td class="d-flex align-items-center">
+                    <tr class="d-flex align-items-center">
+                    <td>
                         ~;
         if ($config->{'cfg_show_quickswitcher'} eq 'on') {
             if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
