@@ -2228,7 +2228,10 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 
                     <div class="text-end">
                         <button class="btn btn-primary" type="submit">Save List</button>
-                        <a class="btn btn-secondary" href="/lists">Cancel</a>
+                        ~;
+        if ($from_page == 1) { $html .= qq~ <a class="btn btn-secondary" href="/lists">Cancel</a> ~; }
+                        else { $html .= qq~ <a class="btn btn-secondary" href="/list/$edit_listid">Cancel</a> ~; }
+        $html .= qq~
                         <a class="btn btn-danger" href="/list_archive/$list->{'id'}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Archive this List" onclick="return confirm('Are you sure you want to archive this list?');">Archive List</a>
                     </div>
                 <hr>
