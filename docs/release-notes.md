@@ -6,12 +6,13 @@
 
 - This was effectively a full rewrite to split all operations into their own functions to make ongoing development easier and safer. This was a huge operation and also included a lot of new and changed features as I re-assessed the whole project and where I felt it should be going.
 
-## Breaking Change
+## Potentially Breaking Change
 - Many URLs have changed to a new form. This may break bookmarks you have for specific areas in the task. An entirely new and consistent url scheme has been adopted.
 
 ## Non Breaking Change
 - List edit page: Title no longer edits the list, but jumps to it. Instead, there is an Edit List button in the Actions column. Tasks columns are combined to save space.
 - Terminology: "Inactive" lists renamed to "Archived". Makes for betterer English. All links and references updated.
+- Database schema raised to 3 to add a new column: TasksTb.TimesCompleted. Taskpony will handle this upgrade automatically.
 
 ## Features
 

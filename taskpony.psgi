@@ -715,7 +715,7 @@ sub footer {
         }
 
     $html .= qq~
-            <a href="https://github.com/digdilem/taskpony" class="text-$config->{cfg_header_colour} text-decoration-none">$global->{'app_title'} v.$global->{'app_version'}</a> by <a href="https://digdilem.org/" class="text-$config->{cfg_header_colour} text-decoration-none">Digital Dilemma</a>
+            <a href="https://github.com/digdilem/taskpony" class="text-$config->{cfg_header_colour} text-decoration-none">$global->{'app_title'} v.$global->{'app_version'}</a> by <a href="https://digdilem.org/" class="text-$config->{cfg_header_colour} text-decoration-none">Simon Avery</a>
             </p>
         </footer>
 
