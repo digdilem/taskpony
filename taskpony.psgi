@@ -1680,7 +1680,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
 
         $html .= qq~
                     <tr>
-                    <td>
+                    <td class="d-flex align-items-center">
                         ~;
         if ($config->{'cfg_show_quickswitcher'} eq 'on') {
             if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
@@ -1691,7 +1691,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             ~;
             } # End quickswitcher colour dot if enabled
         $html .= qq~
-                        <a href="/list/$list->{'id'}" class="text-white text-decoration-none vertical-align: middle;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
+                        <a href="/list/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                             <strong>
                                 $title
                             </strong>
