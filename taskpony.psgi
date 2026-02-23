@@ -1600,7 +1600,7 @@ sub show_tasks_recurring { # show_tasks_recurring() - Show all recurring tasks i
 
 sub show_tasks_orphaned { # show_tasks_orphaned() - Show all orphaned tasks in a single table, regardless of list or status, with an indicator of their status and interval
     my $html = header(0);
-    $html .= start_card('Orphaned Tasks', $icons->{'orphan'}, 1);
+    $html .= start_card('Active Orphaned Tasks', $icons->{'orphan'}, 1);
     $html .= show_tasks(1, 0, 1, 0, 1);  # status=1 (active), list_id=0 (all), not_hidden=1, show_recurring=0, show_orphaned=1
     $html .= end_card(1);
     $html .= footer();
