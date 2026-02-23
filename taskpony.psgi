@@ -1456,13 +1456,6 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                 title="Show recurring tasks">
                 $smallicons->{'repeat'}
             </a>
-
-            <!-- Show link to orphaned tasks -->
-            <a href="/show-orphaned" class="text-$config->{'cfg_header_colour'} text-decoration-none"
-                data-bs-toggle="tooltip" data-bs-placement="auto"
-                title="Show orphaned tasks">
-                $smallicons->{'orphan'}
-            </a>
             ~;
 
         $html .= qq~
@@ -1901,6 +1894,12 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             <p>
                 <a href="/show-recurring" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all recurring tasks from all lists on a single, sorted page">
                 $icons->{'repeat'} Show Recurring Tasks
+                </a>
+            </p>
+
+            <p>
+                <a href="/show-orphaned" class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-placement="auto" title="View all orphaned tasks from all lists on a single, sorted page">
+                $smallicons->{'link_slash'} Show Orphaned Tasks
                 </a>
             </p>
             </div>
