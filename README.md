@@ -5,13 +5,13 @@
 # TASKPONY
 
 - ![T](https://img.shields.io/badge/-T-blue) ransparent - Open source and openly described. Even the database schema is documented.
-- ![A](https://img.shields.io/badge/-A-blue) ir-gapped - Entirely self-contained. Runs without internet access, external services, or tracking.
-- ![S](https://img.shields.io/badge/-S-blue) imple - Easy to install, easy to understand, and easy to operate.
-- ![K](https://img.shields.io/badge/-K-blue) eep everything - Unlimited tasks and unlimited lists — no artificial limits.
-- ![P](https://img.shields.io/badge/-P-blue) rivate - Your data stays with you. No cloud, no telemetry, no external dependencies.
+- ![A](https://img.shields.io/badge/-A-blue) ir-gapped. Runs entirely without internet access, external services, or tracking.
+- ![S](https://img.shields.io/badge/-S-blue) imple - Easy to install. Easy to understand. Easy to operate.
+- ![K](https://img.shields.io/badge/-K-blue) eep everything - Unlimited tasks and unlimited lists.
+- ![P](https://img.shields.io/badge/-P-blue) rivate - Your data stays with you. No cloud. No telemetry. Easily exported.
 - ![O](https://img.shields.io/badge/-O-blue) pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
 - ![N](https://img.shields.io/badge/-N-blue) o clutter - A focused interface that shows only what you actually need.
-- ![Y](https://img.shields.io/badge/-Y-blue) ours - Free to use and always will be. No commercial edition, no hosted version.
+- ![Y](https://img.shields.io/badge/-Y-blue) ours - Free to use and always will be. No commercial edition, no hosted upsell version.
 
 | Desktop View                                                | Mobile View                                      |
 |-------------------------------------------------------------|--------------------------------------------------|
@@ -19,11 +19,11 @@
 
 # Features
 
-Taskpony supports unlimited Tasks organised within unlimited Lists, repeating tasks and free movement of tasks within Lists. Tasks can be exported to the clipboard, CSV, PDF or cleanly printed.
+Taskpony is a self-hosted tasks app. Unlike many, it's explicitly a single-user app intended to be simple to pick up and use. Whilst there are a great many features, I've tried to keep the interface clean, configurable and uncluttered.
 
 No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included. The list will automatically reload if another browser has changed the database to ensure it's up to date.
 
-See some more [Screenshots](#screenshots)
+See some [Screenshots](#screenshots)
 
 # Demo
 
@@ -73,7 +73,9 @@ Copy this to your chosen directory, inspect and adjust as desired, and run: `doc
 
 On completion, Taskpony should be available on http://localhost:5000
 
-The default version mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.
+The default compose file mounts a persistant volume in `./data` where the Sqlite database `taskpony.db` will be created automatically.
+
+* Stopping Docker-Compose Taskpony: Change to the directory where you saved `docker-compose.yml` and type `docker compose stop`
 
 ### Troubleshooting Docker Compose
 
@@ -90,6 +92,8 @@ Install docker and run something like the following.
 Within a few seconds, Taskpony should be available to your web browser on port 5000
 
 If you want it to run on a different port, change the *first* 5000 to something else.
+
+* Stopping Docker Taskpony: `docker stop $(docker ps -q --filter ancestor=digdilem/taskpony:latest)`
 
 ### Troubleshoooting Docker
 
@@ -159,6 +163,8 @@ ExecStart=/usr/bin/plackup -r -p 5000 /opt/taskpony/taskpony.psgi
 WorkingDirectory=/opt/taskpony
 ```
 
+* Uninstalling Linux Service: `systemctl disable --now taskpony` to permanently stop the service, then remove files from `/opt/taskpony`
+
 ### Troubleshooting
 
 See output logs with `journalctl -u taskpony` or the current status with `systemctl status taskpony`
@@ -201,6 +207,28 @@ Use a reverse proxy - see [#security](#security)
 
 No. It may do in the future but there are no initial plans to do so.
 
+> Can I export my tasks?
+
+Yes, there are three ways.
+
+1. If "Display Export Buttons" is toggled, you can export any of the existing lists by clicking "Copy" or "CSV" buttons to copy that list's tasks to Clipboard or to save as a CSV file
+2. Under Lists -> List Actions, click "Export all tasks" to save a CSV file of all tasks, active and and completed, from all lists.
+3. The Taskpony database is a simple Sqlite3 database. It can be read by any compatible database tool like HeidiSql or interacted with on the command line.
+
+> Can I import tasks from other Task Managers?
+
+No - or at least, this is not a feature I have planned. If you think there's a strong need, please suggest it on [the github page](https://github.com/digdilem/taskpony)
+
+> Can I import tasks from other copies of Taskpony?
+
+Yes, just copy `db/Taskpony.db` from one installation to another. All configuration, tasks and lists are contained within it.
+
+Do make sure that the version of Taskpony you're copying to is the same or a later version than the one you're copying from, otherwise it may not know about any database changes.
+
+> Can I print my tasks?
+
+Yes, if "Display Export Buttons" is toggled, then there are "PDF" or "Print" buttons that print to PDF or produce a clean and printable view. This is especially useful for creating paper shopping lists and the like.
+
 > Can I use a different database type?
 
 Not presently. SQLite was chosen to keep things small and simple. I think it should suffice for a task application.
@@ -242,7 +270,7 @@ If the upgrade includes any database schema changes, Taskpony should automatical
 
 ## Upgrading Docker
 
-Stop the existing container and repeat the installation instructions to pull the new image.
+Stop the existing container and repeat [the installation instructions](#docker) to pull the new image.
 
 # Documentation
 
@@ -250,9 +278,11 @@ Follow the [install guides](#installation) above, and you should be able to acce
 
 ## About Tasks
 
-- Clicking on the Taskpony Logo and name will load the current Tasks Page.
+- Clicking on the Taskpony Logo will load the default list. Clicking on the Taskpony name will reload the current list.
 
-- The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
+  - The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
+
+  - Next to that, if "Quick Switch Dots" is enabled, could be a row of dots that will switch to different lists.
 
   - Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This quick form will be missing if "All lists" is selected.
 
@@ -421,7 +451,7 @@ It's not necessary to pay to use Taskpony but  but if you wish to show appreciat
 
 ![Lists Pulldown](docs/lists_pulldown.jpg)
 
-![Deleting a List](docs/delete_list.jpg)
+![List Actions](docs/list_actions.jpg)
 
 ![Statistics](docs/stats.jpg)
 
@@ -437,7 +467,7 @@ Taskpony is built with the help of this great FOSS software:
 - [Bootstrap 5](https://getbootstrap.com/) (Bundled)
 - [JQuery](https://jquery.com/) (Bundled)
 - [Datatables](https://datatables.net/) (Bundled)
-- [Tabler Icons](https://tabler.io/) (Embedded SVGs)
+- [Tabler Icons](https://tabler.io/) (Embedded and included SVGs)
 - [Tyna_Janoch](https://pixabay.com/photos/forest-nature-trees-beech-autumn-7573541/) for the example background image
 
 
