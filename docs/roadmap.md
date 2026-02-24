@@ -4,9 +4,10 @@ Where Taskpony is going.
 
 Some ideas for the future that may, or may not, be added.
 
-  - Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks. (Beware repeatable tasks, will need check so that period can't be less than those and vice versa or a repeating task could get deleted before it has a chance to re-activate.)
+  - Configurable and automated deletion of tasks more than NN days since completion, or delete more than NN recent tasks.
+    (Beware repeatable tasks, will need check so that period can't be less than those and vice versa or a repeating task could get deleted before it has a chance to re-activate.)
   - A priority system. Poss traffic-light 3 dots on each task in list for one-touch change. Low, medium, high? Sorted accordingly?
-  - Add default sorting option, rather than just newest-first.
+  - Alternate sorting option, rather than just newest-first.
   - Add colour to tasks. (Possibly based on priority, possibly a per-task setting. Beware making things too messy - we don't want fruit salad)
   - Instead of colours, maybe just a "Star task" option that highlights important tasks. Possibly an additional optional column with quick actions?
   - Multi-language support.
