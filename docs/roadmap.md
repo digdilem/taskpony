@@ -17,7 +17,8 @@ Some ideas for the future that may, or may not, be added.
   - Some alternative font choices
   - Frivolity: Some sort of extra banner to celebrate every 100 tasks completed?
   - Optional sounds.
-  - Top right task icons - perhaps make then flyout on hover to streamline visuals
+  - Top right task icons - perhaps make then flyout on hover to streamline visuals?
+  - Possible "sleep" button for tasks, which hides them for 24 hours without disturbing their recurring values
 
 - Unlikely (Considered and discarded)
   - Smooshing /Lists, /Settings and /Stats into one multi-tabbed card. This may simplify the header slightly but would change user flow quite a lot.

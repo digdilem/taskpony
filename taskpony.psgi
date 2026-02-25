@@ -2828,7 +2828,7 @@ sub action_task_edit { # Show the edit form for task nn. Function returns full h
                                 This task was created $task->{'AddedDate'}
                                 ~;
                                 if ($task->{'CompletedDate'}) {
-                                    $html .= qq~and completed $task->{'CompletedDate'}~;
+                                    $html .= qq~and last completed $task->{'CompletedDate'}~;
                                     }
                                 $html .= qq~
                             </p>
