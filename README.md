@@ -2,28 +2,41 @@
 
 ![Foss](https://img.shields.io/badge/-FOSS-brightgreen) ![Selfhosted](https://img.shields.io/badge/-Self--Hosted-purple) ![Docker](https://img.shields.io/badge/-Docker-blue) ![Productivity](https://img.shields.io/badge/-Productivity-orange)
 
-# TASKPONY
+# Taskpony
 
-- ![T](https://img.shields.io/badge/-T-blue) ransparent - Open source and openly described. Even the database schema is documented.
-- ![A](https://img.shields.io/badge/-A-blue) ir-gapped. Runs entirely without internet access, external services, or tracking.
-- ![S](https://img.shields.io/badge/-S-blue) imple - Easy to install. Easy to understand. Easy to operate.
-- ![K](https://img.shields.io/badge/-K-blue) eep everything - Unlimited tasks and unlimited lists.
-- ![P](https://img.shields.io/badge/-P-blue) rivate - Your data stays with you. No cloud. No telemetry. Easily exported.
-- ![O](https://img.shields.io/badge/-O-blue) pen - Export tasks to CSV, PDF, clipboard, or print cleanly.
-- ![N](https://img.shields.io/badge/-N-blue) o clutter - A focused interface that shows only what you actually need.
-- ![Y](https://img.shields.io/badge/-Y-blue) ours - Free to use and always will be. No commercial edition, no hosted upsell version.
+Taskpony is a small, single‑user task manager you run yourself. It’s designed to be fast, distraction‑free and easy to host on anything from a home server or Raspberry Pi to a small VPS.
+
+- Self‑contained: no external services, trackers or internet access required.
+- Works everywhere: responsive web UI that feels at home on desktop, tablet and mobile.
+- Durable: all data lives in a single SQLite file that’s easy to back up and move.
+
+## Why TASKPONY?
+
+- ![T](https://img.shields.io/badge/-T-blue) ransparent – Open source and openly described. Even the database schema is documented.
+- ![A](https://img.shields.io/badge/-A-blue) ir-gapped – Runs entirely without internet access, external services, or tracking.
+- ![S](https://img.shields.io/badge/-S-blue) imple – Easy to install. Easy to understand. Easy to operate.
+- ![K](https://img.shields.io/badge/-K-blue) eep everything – Unlimited tasks and unlimited lists.
+- ![P](https://img.shields.io/badge/-P-blue) rivate – Your data stays with you. No cloud. No telemetry. Easily exported.
+- ![O](https://img.shields.io/badge/-O-blue) pen – Export tasks to CSV, PDF, clipboard, or print cleanly.
+- ![N](https://img.shields.io/badge/-N-blue) o clutter – A focused interface that shows only what you actually need.
+- ![Y](https://img.shields.io/badge/-Y-blue) ours – Free to use and always will be. No commercial edition, no hosted upsell version.
+
+## Screenshots
 
 | Desktop View                                                | Mobile View                                      |
 |-------------------------------------------------------------|--------------------------------------------------|
 | <img src="docs/tasklist.jpg" height="600" align="center"> | <img src="docs/taskpony_mobile.jpg" height="600" align="center"> |
 
+See more in the [Screenshots](#screenshots) section below.
+
 # Features
 
-Taskpony is a self-hosted tasks app. Unlike many, it's explicitly a single-user app intended to be simple to pick up and use. Whilst there are a great many features, I've tried to keep the interface clean, configurable and uncluttered.
+Taskpony is a self-hosted tasks app. Unlike many, it's explicitly a single-user app intended to be simple to pick up and use. Whilst there are a great many features, the interface aims to stay clean, configurable and uncluttered.
 
-No phone app required. The interface is responsive and scales well to all devices. There are no trackers and does not require access to the internet to function as all required files are included. The list will automatically reload if another browser has changed the database to ensure it's up to date.
-
-See some [Screenshots](#screenshots)
+- No phone app required – just a browser.
+- Responsive layout that scales well from desktop to small screens.
+- No trackers and no required internet access – all assets are bundled.
+- Live auto‑reload when another browser updates the database so you always see the latest state.
 
 # Demo
 
@@ -32,14 +45,30 @@ See some [Screenshots](#screenshots)
 
 # Quick start
 
-Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
+Pick one of these options and then visit port `5000` in your browser:
+
+- **Docker Compose (recommended)** – from the directory containing `docker-compose.yml`:
+
+  ```bash
+  docker compose up -d
+  ```
+
+- **Docker run** – pull and run the latest image directly:
+
+  ```bash
+  docker run -d -p 5000:5000 digdilem/taskpony:latest
+  ```
+
+- **Linux systemd service** – install to `/opt/taskpony` and start the supplied `taskpony.service` unit.
+
+Then open `http://localhost:5000` (or the host's IP on port 5000) to start using Taskpony.
 
 ## Table of contents
 
 - [Features](#features)
 - [Demo](#demo)
-- [Quick Start](#quick-start)
-- [Table of Contents](#table-of-contents)
+- [Quick start](#quick-start)
+- [Table of contents](#table-of-contents)
 - [Installation](#installation)
   - [![Docker Compose](https://img.shields.io/badge/docker-compose-brightgreen)](#docker-compose-recommended)
   - [![Docker Run](https://img.shields.io/badge/docker-run-brightgreen)](#docker)
@@ -63,7 +92,7 @@ Deploy using [Docker Compose](#docker-compose-recommended) and visit port 5000
 
 # Installation
 
-Taskpony is intended to be easy to install and maintain. [Docker Compose](#docker-compose), [Docker](#docker) or as a standalone Linux [systemd service](#linux-service)
+Taskpony is intended to be easy to install and maintain. You can run it with [Docker Compose](#docker-compose-recommended), [Docker](#docker) or as a standalone Linux [systemd service](#linux-service).
 
 ## Docker Compose [Recommended]
 
@@ -95,7 +124,7 @@ If you want it to run on a different port, change the *first* 5000 to something 
 
 * Stopping Docker Taskpony: `docker stop $(docker ps -q --filter ancestor=digdilem/taskpony:latest)`
 
-### Troubleshoooting Docker
+### Troubleshooting Docker
 
 1. Find the container id with `docker ps` (the random string left of `digdilem/taskpony:latest `)
 2. View output logs with `docker logs STRING`  - replacing STRING with the above.
@@ -419,13 +448,13 @@ Because Taskpony's database is a simple sqlite3 file, it would be possible to au
 ## The Name?
  - This software was written on Dartmoor in England. There is a Dartmoor Pony grazing outside of my window as I write this. Dartmoor Ponies are compact, tough and hard working. Also, cute.
 
- ## Support
+## Support
 
-It would help others learn about Taskpony if you << href="https://github.com/digdilem/taskpony">gave it a Github Star</a> and mentioned it to your friends!
+It would help others learn about Taskpony if you [gave it a GitHub star](https://github.com/digdilem/taskpony) and mentioned it to your friends.
 
-In terms of helping the project, then filing Bug Reports and Suggestions for improvement via the [Issues](http://gitea.digdilem.org/flash/taskpony/issues) system is very helpful.
+In terms of helping the project, filing bug reports and suggestions for improvement via [GitHub Issues](https://github.com/digdilem/taskpony/issues) is very helpful.
 
-It's not necessary to pay to use Taskpony but  but if you wish to show appreciation, then thank you!
+It's not necessary to pay to use Taskpony, but if you wish to show appreciation, then thank you!
 
 <a href="https://www.buymeacoffee.com/digdilem">
   <img
