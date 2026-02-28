@@ -2302,7 +2302,7 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
 #            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
         $html .= qq~
             <!-- Quickswitcher dot for list $list->{'l.Title'} -->
-            <a href="/list/$list->{'l.id'}" class="badge rounded-pill" style="background-color: $list->{'l.Colour'}; text-decoration: none;" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title">$list->{'ActiveTaskCount'}</a>
+            <a href="/list/$list->{'id'}" class="badge rounded-pill" style="background-color: $list->{'Colour'}; text-decoration: none;" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title">$list->{'ActiveTaskCount'}</a>
             ~;
 
         }
