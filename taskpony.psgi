@@ -496,6 +496,8 @@ sub header {
     <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
 
+    <link rel="stylesheet" href="/static/css/taskpony.css">
+
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/jquery.dataTables.min.js"></script>
 
