@@ -2298,10 +2298,10 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
             l.DeletedDate IS NULL AND LENGTH(l.Colour) > 2 GROUP BY l.id, l.Title, l.Colour ORDER BY l.Title ASC ");
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
-        my $title = html_escape($list->{'l.Title'} // '');
+        my $title = html_escape($list->{'Title'} // '');
 #            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
         $html .= qq~
-            <!-- Quickswitcher dot for list $list->{'l.Title'} -->
+            <!-- Quickswitcher dot for list $list->{'Title'} -->
             <a href="/list/$list->{'id'}" class="badge rounded-pill" style="background-color: $list->{'Colour'}; text-decoration: none;" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title">$list->{'ActiveTaskCount'}</a>
             ~;
 
