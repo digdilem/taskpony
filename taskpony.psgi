@@ -2293,11 +2293,15 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
         my $title = html_escape($list->{'Title'} // '');
+#            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
         $html .= qq~
             <!-- Quickswitcher dot for list $list->{'Title'} -->
-            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
+            <a href="/list/$list->{'id'}" class="badge rounded-pill" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
             ~;
+
         }
+
+
     $html .= qq~</div>~;
     return $html;
     } # End show_quickswitcher()
