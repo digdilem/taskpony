@@ -550,24 +550,6 @@ sub header {
             border-left-color: #1A2122;
         }
 
-        .quickswitcher-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            flex: 1 1 auto;
-        }
-
-        .quickswitcher-pill {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.5);
-            box-shadow: 0 0 6px rgba(0,0,0,0.6);
-            cursor: pointer;
-        }
-
         .card-header-accent::before {
             content: "";
             position: absolute;
@@ -1711,7 +1693,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                             <span class="badge rounded-pill" style="background-color: $list->{'Colour'};width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour">&nbsp;</span>
 							&nbsp;
             ~;
-            } # End quickswitcher colour dot if enabled
+            } # End quickswitcher colour pill if enabled
         $html .= qq~
                         <a href="/list/$list->{'id'}" class="text-white text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="auto" title="Jump to $title">
                             <strong>
@@ -2027,7 +2009,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
             <div class="card-body">
             ~;
 
-            $html .= config_show_option('cfg_show_quickswitcher','Show Quick Switch Dots','Show the quick switch dots at the top of every page','check',0,0);
+            $html .= config_show_option('cfg_show_quickswitcher','Show Quick Switch Pills','Show the quick switch pills at the top of every page','check',0,0);
             $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
             $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
             $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
