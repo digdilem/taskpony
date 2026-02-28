@@ -2290,14 +2290,12 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
     my $html = qq~<div class="quickswitcher-container">~;
     # Loop through lists and show a dot for each, using the list colour if set
 #    my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND LENGTH(Colour) > 2 ORDER BY Title ASC');
-    my $sth = $dbh->prepare('
-        SELECT l.id, l.Title, l.Colour, COUNT(t.id) AS ActiveTaskCount FROM ListsTb l
+    my $sth = $dbh->prepare("SELECT l.id, l.Title, l.Colour, COUNT(t.id) AS ActiveTaskCount FROM ListsTb l
         LEFT JOIN TasksTb t
             ON t.ListId = l.id
             AND t.status = 'active'
         WHERE
-            l.DeletedDate IS NULL AND LENGTH(l.Colour) > 2 GROUP BY l.id, l.Title, l.Colour ORDER BY l.Title ASC
-        ');
+            l.DeletedDate IS NULL AND LENGTH(l.Colour) > 2 GROUP BY l.id, l.Title, l.Colour ORDER BY l.Title ASC ");
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
         my $title = html_escape($list->{'l.Title'} // '');
