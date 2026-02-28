@@ -1708,7 +1708,7 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
             if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
 # <span class="quickswitcher-pill" style="background-color: $list->{'Colour'}; width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
             $html .= qq~
-                            <span class="badge rounded-pill" style="background-color: $list->{'Colour'};width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
+                            <span class="badge rounded-pill" style="background-color: $list->{'Colour'};width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour">--</span>
 							&nbsp;
             ~;
             } # End quickswitcher colour dot if enabled
