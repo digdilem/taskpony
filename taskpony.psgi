@@ -558,7 +558,7 @@ sub header {
             flex: 1 1 auto;
         }
 
-        .quickswitcher-dot {
+        .quickswitcher-pill {
             display: inline-block;
             width: 24px;
             height: 24px;
@@ -1706,9 +1706,9 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         ~;
         if ($config->{'cfg_show_quickswitcher'} eq 'on') {
             if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
-
+# <span class="quickswitcher-pill" style="background-color: $list->{'Colour'}; width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
             $html .= qq~
-							<span class="quickswitcher-dot" style="background-color: $list->{'Colour'}; width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
+                            <span class="badge rounded-pill" style="background-color: $list->{'Colour'};width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
 							&nbsp;
             ~;
             } # End quickswitcher colour dot if enabled
@@ -2285,10 +2285,10 @@ sub show_404 {
     return $res->finalize;
     }
 
-sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which is a row of coloured dots
+sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which is a row of coloured pills
     return if ($config->{'cfg_show_quickswitcher'} ne 'on');  # Not configured. Bailing.
     my $html = qq~<div class="quickswitcher-container">~;
-    # Loop through lists and show a dot for each, using the list colour if set
+    # Loop through lists and show a pill for each, using the list colour if set
 #    my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND LENGTH(Colour) > 2 ORDER BY Title ASC');
     my $sth = $dbh->prepare("SELECT l.id, l.Title, l.Colour, COUNT(t.id) AS ActiveTaskCount FROM ListsTb l
         LEFT JOIN TasksTb t
@@ -2299,9 +2299,9 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
     $sth->execute();
     while (my $list = $sth->fetchrow_hashref()) {
         my $title = html_escape($list->{'Title'} // '');
-#            <a href="/list/$list->{'id'}" class="quickswitcher-dot" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
+#            <a href="/list/$list->{'id'}" class="quickswitcher-pill" style="background-color: $list->{'Colour'};" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title"></a>
         $html .= qq~
-            <!-- Quickswitcher dot for list $list->{'Title'} -->
+            <!-- Quickswitcher pill for list $list->{'Title'} -->
             <a href="/list/$list->{'id'}" class="badge rounded-pill" style="background-color: $list->{'Colour'}; text-decoration: none;" data-bs-toggle="tooltip" data-bs-placement="auto" title="$title">$list->{'ActiveTaskCount'}</a>
             ~;
 
