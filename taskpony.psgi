@@ -2023,8 +2023,10 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
             </div>
         </form>
 
-        <span class="ms-3" title="Existing background image">
-            <img src="/static/background.jpg" alt="Existing background image" />
+        <span class="container">
+            Existing background image
+
+            <img src="/static/background.jpg" alt="Existing background image" class="img-thumbnail float-start" style="width:33%; height:auto;" />
         </span>
         ~;
 
