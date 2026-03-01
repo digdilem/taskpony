@@ -10,7 +10,7 @@ function playTaskCompleteSound() {
   osc.frequency.setValueAtTime(1200, ctx.currentTime);
   osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.06);
 
-  gain.gain.setValueAtTime(0.08, ctx.currentTime);
+  gain.gain.setValueAtTime(0.064, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
 
   osc.connect(gain);
