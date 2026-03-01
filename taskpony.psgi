@@ -1175,7 +1175,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
         # Show Active tasks. Show checkbox to mark complete
         if ($status == 1) {
             $checkbox = qq~
-                <a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed">✓</a>
+                <a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" onclick="playTaskCompleteSound()">✓</a>
                 ~;
 
             $title_link .= qq~

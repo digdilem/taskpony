@@ -27,4 +27,4 @@ Some ideas for the future that may, or may not, be added.
   - Authentication, https = See [security](../README.md#security) for an explanation.
   - Plugins = It's just a Tasks manager, right? If features are needed, they can be baked in.
   - Statistical graphs = This would mean bundling in a graphing library. For something that many users may not use, it's hard to think of this as anything other than bloat.
-  - A documentation website = the README should be sufficient for what is intended to be a largely self-explanatory tool.
+  - A documentation website = the README should be sufficient for what is intended to be a largely self-explanatory tool? But need more users to determine if that's correct. 
