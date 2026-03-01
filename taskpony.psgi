@@ -2021,7 +2021,9 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
                 </div>
             </div>
 
-
+            <div class="form-text mt-1">
+                Upload a JPG to replace the current background image.
+            </div>
         </form>
         ~;
 
