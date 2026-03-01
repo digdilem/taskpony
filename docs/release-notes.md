@@ -28,6 +28,7 @@
 - Added a proper 404 page
 - Added an "Export all tasks" function with button from List Actions to generate and send a CSV containing everything.
 - Added a new column to TaskTb, TimesCompleted. This increments by one each time a task is marked as completed. This may be useful to show how many times a recurring task, for example, has been ticked off. The count is shown in the gutter of the Edit Task page.
+- Sound: Marking a task as completed or active now has a low click. This is disabled by default. Enable it in the Settings page.
 
 ## Bugfixes
 
