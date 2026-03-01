@@ -42,6 +42,7 @@ our $config = {
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
     cfg_show_quickswitcher => 'on',             # Whether to enable quickswitch (Colour buttons at the top)
+    cfg_play_sound => 'on',                      # Whether to play a sound on task completion
     database_schema_version => 1,               # Default. Don't ever change this. Current version will be read from the database on startup on existing installs.
     };
 
@@ -1175,9 +1176,13 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             }
 
         # Show Active tasks. Show checkbox to mark complete
+        my $insert_soundstring = '';
+        if ($config->{cfg_play_sound} ne 'off') {
+            $insert_soundstring = "onclick=\"playTaskCompleteSound()\"";
+            }
         if ($status == 1) {
             $checkbox = qq~
-                <a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" onclick="playTaskCompleteSound()">✓</a>
+                <a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" $insert_soundstring>✓</a>
                 ~;
 
             $title_link .= qq~
@@ -1212,7 +1217,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
                      ~;
 
             $checkbox .= qq~
-                <a href="/task_activate/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Active">$icons->{'rotate_left'}</a>
+                <a href="/task_activate/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Active" $insert_soundstring>$icons->{'rotate_left'}</a>
                 ~;
             }
 
