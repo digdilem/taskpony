@@ -1176,7 +1176,7 @@ sub show_tasks { # show_tasks($status, $page->{'list_id'}, $not_hidden, $show_re
             }
 
         # Show Active tasks. Show checkbox to mark complete
-        my $insert_soundstring = '';
+        my $insert_soundstring = '';  # Add sound if configured
         if ($config->{cfg_play_sound} ne 'off') {
             $insert_soundstring = "onclick=\"playTaskCompleteSound()\"";
             }
