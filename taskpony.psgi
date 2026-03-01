@@ -2024,8 +2024,10 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
         </form>
         <hr>
         <span class="container">
-            <img src="/static/background.jpg" alt="Existing background image" class="rounded float-start" style="width:33%; height:auto;" />
-            <div class="mt-2">Existing background image</div>
+            <figure>
+                <img src="/static/background.jpg" alt="Existing background image" class="rounded float-start" style="width:33%; height:auto;" />
+                <figcaption>Existing background image</figcaption>
+            </figure>
         </span>
         ~;
 
