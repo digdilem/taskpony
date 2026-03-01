@@ -36,6 +36,8 @@ Taskpony is a self-hosted tasks app. Unlike many, it's explicitly a single-user 
 - No trackers and no required internet access – all assets are bundled.
 - Live auto‑reload when another browser updates the database so you always see the latest state.
 
+[Release Notes](docs/release-notes.md)
+
 # Demo
 
 - [Try the Demo!](https://relieved-irma-digital-dilemma2-5693a6d5.koyeb.app/)
@@ -309,7 +311,7 @@ Follow the [install guides](#installation) above, and you should be able to acce
 
   - The default page shows a pulldown menu at the top with an entry for the Default List (change this in the Lists page) followed by "All Lists" followed by an alpha-sorted list of the remaining Lists.
 
-  - Next to that, if "Quick Switch Dots" is enabled, could be a row of dots that will switch to different lists.
+  - Next to that, if "Quick Switch Pills" are enabled, could be a row of dots that will switch to different lists. They show the number of active tasks in that list.
 
   - Below that is a quick entry form that allows you to add a task to the current list. Because it's autofocused, you can enter multiple tasks by typing, hitting enter, then typing the next one without needing to reselect it with the mouse. This quick form will be missing if "All lists" is selected.
 
