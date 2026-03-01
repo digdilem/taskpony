@@ -2,6 +2,41 @@
 
 ## To upgrade, follow the [Upgrade Instructions](../README.md#upgrading)
 
+# 0.6
+
+- This is almost a full rewrite to split all operations into their own functions to make ongoing development easier and safer. This was a huge operation and also included a lot of new and changed features as I re-assessed the whole project and where I felt it should be going. Despite that, full backward compatibility is kept so upgrading is as simple as before.
+
+## Potentially Breaking Change
+- Many URLs have changed to a new form. This may break bookmarks you have for specific areas in the task. An entirely new and more consistent url scheme has been adopted.
+
+## Behaviour changes
+- Clicking on the Logo now switches to the Default List. "Taskpony" reloads the Active List.
+- List edit page: Fully remade. Title no longer edits the list, but jumps to it. Instead, there is an Edit List button in the Actions column. Tasks columns are combined to save space.
+- Terminology: "Inactive" lists renamed to "Archived". Makes for betterer English. All links and references updated.
+- Database schema raised to 3 to add a new column: TasksTb.TimesCompleted to record how many times a task has been ticked off. Taskpony will handle this upgrade automatically.
+
+## Features
+
+- New feature: Quickswitch pills. On each list you can set a Quickswitch colour which will appear at the top of every page containing the number of active tasks within that list. Click the dot to switch to that lis; just a little quicker than selecting from the list for frequently used lists. This replaces the Highlight Colour option which just changed the card header background, so to help remind you which list you're in there's a little flash at the top right of the card for highlighted lists. Lists page also shows what colour is selected for each list IF enabled.  All this is toggled on and off with the new "Show Quick Switcher" variable in the Settings page.
+- New Features under Manage Lists -> List Actions tab
+  - New Feature "Show all tasks"  Similar in scope to showing "All Tasks", but this displays a card for each list containing that list's tasks. Button under Lists -> List Actions
+  - New Feature "Export all tasks" Generates a CSV with all tasks from all lists, active or not. Button under Lists -> List Actions
+  - New Feature "Show recurring tasks" Shows a list of all recurring tasks, making it easier to find them whether they are active or pending. Button under Lists -> List Actions
+  - New Feature "Show orphaned tasks" Similar to above but shows any active tasks that are assigned to an inactive or deleted list.
+- New form to add a task with description. Accessed by the small "+" icon in the gutter of the tasks view.
+- Tooltips now made prettier and added a 250ms delay before they show up.
+- Added a proper 404 page
+- Added an "Export all tasks" function with button from List Actions to generate and send a CSV containing everything.
+- Added a new column to TaskTb, TimesCompleted. This increments by one each time a task is marked as completed. This may be useful to show how many times a recurring task, for example, has been ticked off. The count is shown in the gutter of the Edit Task page.
+- Sound: Marking a task as completed or active now has a low click. This is disabled by default. Enable it in the Settings page.
+- Background: The Settings page is reworked, moving it into its own tab and also including a thumbnail to the existing background image.
+
+## Bugfixes
+
+- More work on tidying output html and chasing down stray divs.
+- Submitting a form after editing a list now returns you to either the active tasks or the List edit page, depending on where you came from.
+- On long tasks, the page would shift left a few pixels when the scrollbar appeared on some browsers. Fixed.
+
 # 0.5
 
 ## Features:

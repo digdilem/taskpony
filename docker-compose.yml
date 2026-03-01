@@ -5,15 +5,18 @@
 services:
 
   taskpony:
+    # "latest" is recommended, but older versions are also available at https://hub.docker.com/r/digdilem/taskpony/tags
     image: 'digdilem/taskpony:latest'
     container_name: taskpony
     ports:
+      # If you want Taskpony to be available on a different port, change the first number below to that port.
       - "5000:5000"
     volumes:
       # We need a persistent directory mounted in order to save our tasks database.
       - ./data:/opt/taskpony/db
     restart: unless-stopped
 
+    # The optional healthcheck segment helps monitoring software check that Taskpony is running and responsive. If you change the port above, make sure to change it here as well.
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/ping"]
       interval: 60s

@@ -17,9 +17,13 @@ The schema is below.
         CompletedDate = When set as done. Is reset if task unset
         StartDate =  Tasks can be deferred
         ListId = List this task belongs to
+
     Schema 2 added:
         IsRecurring = on|off  Whether a task is set to repeat
         RecurringIntervalDay = Number of days after a task is completed before it is set active
+
+    Schema 3 added:
+        TimesCompleted = Int that increments each time a task is set as completed. Shown on Task Edit page.
 
     / ListsTb  (List of Lists)
         id
