@@ -25,7 +25,7 @@ Taskpony is a small, single‑user task manager you run yourself. It’s designe
 |-------------------------------------------------------------|--------------------------------------------------|
 | <img src="docs/tasklist.jpg" height="600" align="center"> | <img src="docs/taskpony_mobile.jpg" height="600" align="center"> |
 
-See [more Screenshots](#screenshots)
+See [more screenshots](#screenshots)
 
 # Features
 
