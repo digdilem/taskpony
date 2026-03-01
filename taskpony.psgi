@@ -42,7 +42,7 @@ our $config = {
     cfg_version_check => 'on',                  # Whether to occasionally check for new releases
     cfg_background_image => 'on',               # Whether to display a background image
     cfg_show_quickswitcher => 'on',             # Whether to enable quickswitch (Colour buttons at the top)
-    cfg_play_sound => 'on',                      # Whether to play a sound on task completion
+    cfg_play_sound => 'off',                    # Whether to play a sound on task completion
     database_schema_version => 1,               # Default. Don't ever change this. Current version will be read from the database on startup on existing installs.
     };
 
@@ -1639,7 +1639,6 @@ sub show_lists { # show_lists() - Show all lists with stats on how many active a
                         ~;
         if ($config->{'cfg_show_quickswitcher'} eq 'on') {
             if (! $list->{'Colour'}) { $list->{'Colour'} = ' '; }  # Null output to avoid uninitialzed error but we want it to be empty
-# <span class="quickswitcher-pill" style="background-color: $list->{'Colour'}; width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour"></span>
             $html .= qq~
                             <span class="badge rounded-pill" style="background-color: $list->{'Colour'};width: 20px; height: 20px;" data-bs-toggle="tooltip" data-bs-placement="auto" title="Quickswitch Colour">&nbsp;</span>
 							&nbsp;
@@ -1961,6 +1960,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
             ~;
 
             $html .= config_show_option('cfg_show_quickswitcher','Show Quick Switch Pills','Show the quick switch pills at the top of every page','check',0,0);
+            $html .= config_show_option('cfg_play_sound','Play Sound on Task Completion','If enabled, a sound will play when a task is marked as completed or active','check',0,0);
             $html .= config_show_option('cfg_export_all_cols','Export date and list',"When using the export buttons, $global->{'app_title'} will normally just export the Task name. Enable this to include the date and list for each task",'check',0,0);
             $html .= config_show_option('cfg_backup_number_to_keep','Number of daily backups to keep',"Each day, $global->{'app_title'} makes a backup of its database. This setting controls how many days worth of backups to keep. Older backups will be deleted automatically. Range 1-100",'number',1,100);
             $html .= config_show_option('cfg_version_check','Check for new versions','If checked, Taskpony will occasionally check for new versions of itself and show a small badge in the footer if one is available','check',0,0);
@@ -2222,7 +2222,6 @@ sub show_quickswitcher { # show_quickswitcher() - Show the quickswitcher which i
     return if ($config->{'cfg_show_quickswitcher'} ne 'on');  # Not configured. Bailing.
     my $html = qq~<div class="quickswitcher-container">~;
     # Loop through lists and show a pill for each, using the list colour if set
-#    my $sth = $dbh->prepare('SELECT id, Title, Colour FROM ListsTb WHERE DeletedDate IS NULL AND LENGTH(Colour) > 2 ORDER BY Title ASC');
     my $sth = $dbh->prepare("SELECT l.id, l.Title, l.Colour, COUNT(t.id) AS ActiveTaskCount FROM ListsTb l
         LEFT JOIN TasksTb t
             ON t.ListId = l.id
@@ -3044,7 +3043,7 @@ sub receive_settings { # Receive Settings form. No direct output
             } else { # No parameter passed for key, store existing
             debug("No parameter passed for ($key), using existing [$config->{$key}]");
             # Special handling for checkboxes which will return void if not set
-            if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_show_quickswitcher|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists') {
+           if ($key =~ 'cfg_include_datatable_|cfg_export_all_cols|cfg_show_dates|cfg_show_quickswitcher|cfg_version_check|cfg_include_datatable_search|cfg_background_image|cfg_show_lists|cfg_play_sound') {
                 $new_val = 'off';
                 debug("Belay that, this is a checkbox, set it to off");
                 } else {
