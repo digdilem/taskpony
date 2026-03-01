@@ -2022,9 +2022,9 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
             </div>
         </form>
-
+        <hr>
         <span class="container">
-            Existing background image
+            Existing background image<br>
 
             <img src="/static/background.jpg" alt="Existing background image" class="img-thumbnail float-start" style="width:33%; height:auto;" />
         </span>
