@@ -21,13 +21,11 @@ Taskpony is a small, single‑user task manager you run yourself. It’s designe
 - ![N](https://img.shields.io/badge/-N-blue) o clutter – A focused interface that shows only what you actually need.
 - ![Y](https://img.shields.io/badge/-Y-blue) ours – Free to use and always will be. No commercial edition, no hosted upsell version.
 
-## Screenshots
-
 | Desktop View                                                | Mobile View                                      |
 |-------------------------------------------------------------|--------------------------------------------------|
 | <img src="docs/tasklist.jpg" height="600" align="center"> | <img src="docs/taskpony_mobile.jpg" height="600" align="center"> |
 
-See [More Screenshots](#morescreenshots)
+See [more Screenshots](#screenshots)
 
 # Features
 
@@ -86,7 +84,7 @@ Then open `http://localhost:5000` (or the host's IP on port 5000) to start using
 - [Goals](#goals)
   - [Supporting Taskpony](#support)
   - [Roadmap](docs/roadmap.md)
-- [Screenshots](#morescreenshots)
+- [Screenshots](#screenshots)
 - [Credits](#credits)
 - [Licence](#licence)
 
@@ -464,7 +462,7 @@ It's not necessary to pay to use Taskpony, but if you wish to show appreciation,
     height="30">
 </a>
 
-# More Screenshots
+# Screenshots
 
 ![Main Task List](docs/tasklist.jpg)
 
