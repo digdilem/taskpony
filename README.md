@@ -27,7 +27,7 @@ Taskpony is a small, single‑user task manager you run yourself. It’s designe
 |-------------------------------------------------------------|--------------------------------------------------|
 | <img src="docs/tasklist.jpg" height="600" align="center"> | <img src="docs/taskpony_mobile.jpg" height="600" align="center"> |
 
-See more in the [Screenshots](#screenshots) section below.
+See more in the [Screenshots](#morescreenshots) section below.
 
 # Features
 
@@ -86,7 +86,7 @@ Then open `http://localhost:5000` (or the host's IP on port 5000) to start using
 - [Goals](#goals)
   - [Supporting Taskpony](#support)
   - [Roadmap](docs/roadmap.md)
-- [Screenshots](#screenshots)
+- [Screenshots](#morescreenshots)
 - [Credits](#credits)
 - [Licence](#licence)
 
@@ -464,7 +464,7 @@ It's not necessary to pay to use Taskpony, but if you wish to show appreciation,
     height="30">
 </a>
 
-# Screenshots
+# More Screenshots
 
 ![Main Task List](docs/tasklist.jpg)
 
