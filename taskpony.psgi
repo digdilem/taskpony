@@ -497,6 +497,7 @@ sub header {
     <link rel="stylesheet" href="/static/css/buttons.dataTables.min.css">
 
     <link rel="stylesheet" href="/static/css/taskpony.css">
+    <script src="/static/js/taskpony.js"></script>
 
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/jquery.dataTables.min.js"></script>
@@ -510,6 +511,7 @@ sub header {
     <script src="/static/js/vfs_fonts.js"></script>
 
     <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/taskpony.js"></script>
 
 
     </head>
@@ -2076,10 +2078,10 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($page->{'list_id'} == 1) {
-        if ($status == 2) {
-            $titlebar = "Showing completed tasks from all lists";
-            } else {
-            $titlebar = "Showing active tasks from all lists";
+                if ($status == 1) {
+                        $checkbox = qq~
+				<a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" onclick="playTaskCompleteSound();">✓</a>
+				~;
             }
         }
 
