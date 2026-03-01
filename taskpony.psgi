@@ -1996,7 +1996,7 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
 
         $html .= start_card('Background Image Upload', $icons->{'image'}, 0);
 
-        # Start a second form for the background image upload
+        # Start a second form for the background image upload.
         $html .= qq~
         <form method="post" action="/settings_background_form" enctype="multipart/form-data">
             <div class="d-flex flex-wrap align-items-center justify-content-between p-3 bg-dark text-white rounded gap-3">
