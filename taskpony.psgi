@@ -2019,17 +2019,18 @@ sub show_settings { # show_settings() - Show a form with all the configurable se
                         Go
                     </button>
                 </div>
-            </div>
-
-            <div class="form-text mt-1">
-                Upload a JPG to replace the current background image.
+                <span class="ms-3" title="Existing background image">
+                    <img src="/static/background.jpg" alt="Existing background image" style="width:33%; max-width:200px; height:auto;" />
+                </span>
             </div>
         </form>
+
+
         ~;
 
     $html .= end_card(0);
 
-    $html .= qq~
+        $html .= qq~
         </div> <!-- End Background Settings tab pane -->
     </div> <!-- End settingsTabContent -->
     ~;
