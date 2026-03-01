@@ -2078,10 +2078,10 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
 
     # If showing all lists, change titlebar to show what is being displayed instead of the form
     if ($page->{'list_id'} == 1) {
-                if ($status == 1) {
-                        $checkbox = qq~
-				<a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" onclick="playTaskCompleteSound()">✓</a>
-				~;
+        if ($status == 2) {
+            $titlebar = "Showing completed tasks from all lists";
+            } else {
+            $titlebar = "Showing active tasks from all lists";
             }
         }
 
