@@ -2080,7 +2080,7 @@ sub show_maintasks { # show_maintasks() - Show the main list of tasks, either ac
     if ($page->{'list_id'} == 1) {
                 if ($status == 1) {
                         $checkbox = qq~
-				<a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" onclick="playTaskCompleteSound();">✓</a>
+				<a href="/task_complete/$a->{'id'}" class="btn btn-sm btn-outline-$config->{cfg_header_colour} m-0" title="Mark Task as Completed" onclick="playTaskCompleteSound()">✓</a>
 				~;
             }
         }
